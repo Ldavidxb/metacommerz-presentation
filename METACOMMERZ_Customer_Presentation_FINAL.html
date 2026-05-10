@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaCommerz - Supply Chain OS | Complete Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100vh;
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 40px 60px;
+            position: relative;
+            overflow-y: auto;
+            background: linear-gradient(135deg, #1F4E78 0%, #2E75B6 100%);
+            color: white;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide-header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: linear-gradient(135deg, #1F4E78 0%, #2E75B6 100%);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .slide h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .slide h2 {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .slide-subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .capabilities-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 5px solid #FFD700;
+            border-radius: 8px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .capability-item {
+            display: flex;
+            gap: 15px;
+            margin: 12px 0;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+
+        .capability-item::before {
+            content: "▸";
+            color: #FFD700;
+            font-size: 1.3em;
+            min-width: 20px;
+        }
+
+        .workflow-container {
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+            font-size: 0.95em;
+            line-height: 1.8;
+        }
+
+        .workflow-title {
+            color: #FFD700;
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .workflow-steps {
+            display: grid;
+            gap: 0;
+            font-size: 0.95em;
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .workflow-step:last-child {
+            border-bottom: none;
+        }
+
+        .step-arrow {
+            color: #FFD700;
+            margin: 0 12px;
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .step-text {
+            flex: 1;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-left: 4px solid #FFD700;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 0.95em;
+        }
+
+        .feature-card strong {
+            color: #FFD700;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .comparison-section {
+            margin-top: 20px;
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 1.5fr 1.5fr 2fr;
+            gap: 15px;
+            margin: 12px 0;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            border-left: 3px solid #FFD700;
+            font-size: 0.95em;
+        }
+
+        .comparison-capability {
+            font-weight: 700;
+            color: #FFD700;
+        }
+
+        .comparison-old {
+            color: #ff6b6b;
+        }
+
+        .comparison-new {
+            color: #51cf66;
+            font-weight: 600;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 30px;
+            right: 60px;
+            font-size: 1.2em;
+            opacity: 0.7;
+            font-weight: 700;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+            background: rgba(31, 78, 120, 0.95);
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: 2px solid #FFD700;
+            backdrop-filter: blur(10px);
+        }
+
+        button {
+            background: linear-gradient(135deg, #FFD700 0%, #FFC000 100%);
+            color: #1F4E78;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(255, 215, 0, 0.4);
+        }
+
+        .slide-counter {
+            color: white;
+            font-weight: 700;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: #FFD700;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 20px;
+            }
+            
+            .slide h1 { font-size: 2em; }
+            .slide h2 { font-size: 1.6em; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .comparison-row { grid-template-columns: 1fr; }
+        }
+
+        .tagline {
+            font-size: 1.25em;
+            font-style: italic;
+            opacity: 0.95;
+            margin-bottom: 20px;
+        }
+
+        .hero-content {
+            text-align: center;
+        }
+
+        .cta-text {
+            font-size: 1.3em;
+            margin-top: 30px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation-container">
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- SLIDE 1: Platform Overview -->
+    <div class="slide active">
+        <div class="slide-header">
+            <h1>MetaCommerz</h1>
+            <div class="slide-subtitle">End-to-End Supply Chain ERP</div>
+        </div>
+        <div class="slide-content">
+            <div class="tagline">Replace QuickBooks + your order management tool with one unified platform that handles products, orders, contracts, transport, warehouse, finance, and compliance — all connected.</div>
+            
+            <div class="capabilities-box">
+                <div class="capability-item">Multi-tenant with N-tier organization hierarchy</div>
+                <div class="capability-item">Industry vertical plug-ins (Aerospace, Automotive, Consumer, Electronics, Fashion, Healthcare, High Tech, Industrial, Oil & Gas, Pharmaceutical)</div>
+                <div class="capability-item">AI-powered document audit and orchestration</div>
+                <div class="capability-item">Real-time event bus connecting all modules</div>
+            </div>
+        </div>
+        <div class="slide-number">1 / 13</div>
+    </div>
+
+    <!-- SLIDE 2: Product Data Module -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2>Product Data Module</h2>
+            <div class="slide-subtitle">Define Products Once, Use Everywhere</div>
+        </div>
+        <div class="slide-content">
+            <div class="capabilities-box">
+                <div class="capability-item">Complete product master with SKU, dimensions, weight, packing, trade compliance, DGR</div>
+                <div class="capability-item">Industry-specific technical specifications (configurable per vertical)</div>
+                <div class="capability-item">Volume-tier pricing conditions with surcharges and performance targets</div>
+                <div class="capability-item">BOM management (Engineering BOM, Supply Chain BOM, Manufacturing BOM)</div>
+            </div>
+
+            <div class="workflow-container">
+                <div class="workflow-title">Workflow</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step">
+                        <div class="step-text">Create Product</div>
+                        <div class="step-arrow">→</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-text">Define Tech Specs</div>
+                        <div class="step-arrow">→</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-text">Set Pricing Tiers</div>
+                        <div class="step-arrow">→</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-text">Attach to Contracts</div>
+                        <div class="step-arrow">→</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-text">Reference in Orders & BOMs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">2 / 13</div>
+    </div>
+
+    <!-- SLIDE 3: Operations Module -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2>Operations Module</h2>
+            <div class="slide-subtitle">From Requisition to Fulfilment in One Flow</div>
+        </div>
+        <div class="slide-content">
+            <div class="capabilities-box">
+                <div class="capability-item">Purchase requisitions with tiered approval workflows</div>
+                <div class="capability-item">Order management (buyer/vendor purchase orders)</div>
+                <div class="capability-item">Order collaboration and promise tracking</div>
+                <div class="capability-item">MRP engine — auto-generates purchase requisitions from demand</div>
+                <div class="capability-item">Three-way match (PO vs GRN vs Invoice)</div>
+                <div class="capability-item">Volume tier consumption tracking</div>
+            </div>
+
+            <div class="workflow-container">
+                <div class="workflow-title">Workflow</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step"><div class="step-text">Demand Signal</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">MRP Run</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Requisition</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Approval</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Purchase Order</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Vendor Promise</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">GRN</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Three-Way Match</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Payment</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">3 / 13</div>
+    </div>
+
+    <!-- SLIDE 4: Contracts Module -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2>Contracts Module</h2>
+            <div class="slide-subtitle">Structured Contracts with Embedded Pricing</div>
+        </div>
+        <div class="slide-content">
+            <div class="capabilities-box">
+                <div class="capability-item">Export Forward Contracts (EFC) and Import Forward Contracts (IFC)</div>
+                <div class="capability-item">Vendor Purchase Contracts (VPC) and Buyer Sales Contracts (BSC)</div>
+                <div class="capability-item">Contract conditions: pricing tiers, performance metrics, compliance clauses</div>
+                <div class="capability-item">Validity periods, auto-renewal, volume commitments</div>
+            </div>
+
+            <div class="workflow-container">
+                <div class="workflow-title">Workflow</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step"><div class="step-text">Negotiate Terms</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Create Contract</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Define Pricing Conditions</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Link Products</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Track Performance</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Renew/Amend</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">4 / 13</div>
+    </div>
+
+    <!-- SLIDE 5: Transport & Logistics -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2>Transport & Logistics Module</h2>
+            <div class="slide-subtitle">Multi-Modal Freight Management</div>
+        </div>
+        <div class="slide-content">
+            <div class="capabilities-box">
+                <div class="capability-item">Air, Ocean (FCL/LCL), Road (FTL/LTL), Rail freight pricing</div>
+                <div class="capability-item">Spot quote wizard and Freight RFQ with vendor bidding</div>
+                <div class="capability-item">Transport planning: route plans, load plans, carrier allocation, bookings</div>
+                <div class="capability-item">Shipment tracking with milestone events</div>
+                <div class="capability-item">DGR (Dangerous Goods) classification and compliance</div>
+                <div class="capability-item">ULD optimization for air freight</div>
+            </div>
+
+            <div class="workflow-container">
+                <div class="workflow-title">Workflow</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step"><div class="step-text">Create Shipment</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Select Mode</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Get Quotes (Spot/RFQ)</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Award Carrier</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Book</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Track</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Deliver</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Settle Charges</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">5 / 13</div>
+    </div>
+
+    <!-- SLIDE 6: Warehouse & Inventory -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2>Warehouse & Inventory Module</h2>
+            <div class="slide-subtitle">Full Warehouse Operations with Real-Time Visibility</div>
+        </div>
+        <div class="slide-content">
+            <div class="capabilities-box">
+                <div class="capability-item">Warehouse setup with storage locations, zones, bin management</div>
+                <div class="capability-item">Goods receiving (BGRN/VGRN) with staging inspection</div>
+                <div class="capability-item">Pick waves, pick tasks, dock appointments</div>
+                <div class="capability-item">Cross-docking for flow-through</div>
+                <div class="capability-item">Inventory: lot/batch tracking, serial numbers, cycle counts, quality inspections</div>
+                <div class="capability-item">Stock movements, transfers, reservations, safety stock and ATP (Available-to-Promise)</div>
+            </div>
+
+            <div class="workflow-container">
+                <div class="workflow-title">Workflow</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step"><div class="step-text">Receive Goods</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Inspect</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Put Away</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Pick</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Pack</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Ship</div><div class="step-arrow">|</div></div>
+                    <div class="workflow-step"><div class="step-text">Cycle Count</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Adjust</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Replenish</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">6 / 13</div>
+    </div>
+
+    <!-- SLIDE 7: Finance Module -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2>Finance Module</h2>
+            <div class="slide-subtitle">Complete Financial Management</div>
+        </div>
+        <div class="slide-content">
+            <div class="capabilities-box">
+                <div class="capability-item">Chart of accounts, journal entries, fiscal year management</div>
+                <div class="capability-item">AP bills, AR invoices, credit notes</div>
+                <div class="capability-item">Payment processing with split allocation</div>
+                <div class="capability-item">Bank accounts, transactions, reconciliation</div>
+                <div class="capability-item">Loans and installment tracking</div>
+                <div class="capability-item">Financial reports: Trial Balance, P&L, Balance Sheet, Cash Flow</div>
+                <div class="capability-item">Cost centers and project accounting</div>
+            </div>
+
+            <div class="workflow-container">
+                <div class="workflow-title">Workflow</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step"><div class="step-text">Invoice Created</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Approve</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Schedule Payment</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Bank Reconciliation</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Period Close</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Financial Reports</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">7 / 13</div>
+    </div>
+
+    <!-- SLIDE 8: Trade Finance Module -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2>Trade Finance Module</h2>
+            <div class="slide-subtitle">Letters of Credit and Trade Instruments</div>
+        </div>
+        <div class="slide-content">
+            <div class="capabilities-box">
+                <div class="capability-item">Commercial Letter of Credit lifecycle management</div>
+                <div class="capability-item">Applicant and beneficiary management</div>
+                <div class="capability-item">Agreement templates</div>
+                <div class="capability-item">LC compliance checking against shipment documents</div>
+                <div class="capability-item">Integration with document audit for discrepancy detection</div>
+            </div>
+
+            <div class="workflow-container">
+                <div class="workflow-title">Workflow</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step"><div class="step-text">Open LC</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Issue to Bank</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Ship Goods</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Present Documents</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Bank Examines</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Discrepancy Check</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Payment Release</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">8 / 13</div>
+    </div>
+
+    <!-- SLIDE 9: Document Management & Audit -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2>Document Management & Audit</h2>
+            <div class="slide-subtitle">AI-Powered Document Intelligence</div>
+        </div>
+        <div class="slide-content">
+            <div class="capabilities-box">
+                <div class="capability-item">Document creation: Bills of Lading, Airway Bills, Invoices, Packing Lists</div>
+                <div class="capability-item">E-signature integration</div>
+                <div class="capability-item">AI document audit: invoice verification, freight audit, LC compliance, three-way match</div>
+                <div class="capability-item">Tolerance configuration and auto-posting gates</div>
+                <div class="capability-item">Supplier risk profiling from audit history</div>
+                <div class="capability-item">Analytics dashboard with trend detection</div>
+            </div>
+
+            <div class="workflow-container">
+                <div class="workflow-title">Workflow</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step"><div class="step-text">Upload Document</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">AI Extracts Data</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Compare Against Contract/PO</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Flag Discrepancies</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Human Review</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Approve/Reject</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Post</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">9 / 13</div>
+    </div>
+
+    <!-- SLIDE 10: Planning Module -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2>Planning Module</h2>
+            <div class="slide-subtitle">Demand-Driven Planning</div>
+        </div>
+        <div class="slide-content">
+            <div class="capabilities-box">
+                <div class="capability-item">Demand sensing and forecasting</div>
+                <div class="capability-item">Budget planning with approval workflows</div>
+                <div class="capability-item">Forecast feedback loops (actual vs planned)</div>
+                <div class="capability-item">MRP integration for supply planning</div>
+                <div class="capability-item">Enriched planning with capacity constraints</div>
+            </div>
+
+            <div class="workflow-container">
+                <div class="workflow-title">Workflow</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step"><div class="step-text">Forecast Demand</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Set Budgets</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Run MRP</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Generate Supply Plan</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Execute</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Measure Variance</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Adjust</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">10 / 13</div>
+    </div>
+
+    <!-- SLIDE 11: Tender Management -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2>Tender Management</h2>
+            <div class="slide-subtitle">Structured Procurement Sourcing</div>
+        </div>
+        <div class="slide-content">
+            <div class="capabilities-box">
+                <div class="capability-item">Tender creation with multi-criteria evaluation</div>
+                <div class="capability-item">Vendor invitation and response collection</div>
+                <div class="capability-item">AI-assisted bid analysis and scoring</div>
+                <div class="capability-item">Award workflow with approval gates</div>
+                <div class="capability-item">Integration with contracts module for awarded tenders</div>
+            </div>
+
+            <div class="workflow-container">
+                <div class="workflow-title">Workflow</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step"><div class="step-text">Define Requirements</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Create Tender</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Invite Vendors</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Collect Bids</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">AI Score</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Evaluate</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Award</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Convert to Contract</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">11 / 13</div>
+    </div>
+
+    <!-- SLIDE 12: Enterprise Parity Engine -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2>Enterprise Parity Engine (Orchestration)</h2>
+            <div class="slide-subtitle">The Connective Tissue — Everything Talks to Everything</div>
+        </div>
+        <div class="slide-content">
+            <div class="capabilities-box">
+                <div class="capability-item">Event bus: every action in any module publishes events consumed by others</div>
+                <div class="capability-item">Workflow engine: configurable approval chains, escalation, SLA enforcement</div>
+                <div class="capability-item">Landed cost calculation across transport + duties + handling</div>
+                <div class="capability-item">Intercompany transactions for multi-entity operations</div>
+                <div class="capability-item">Supplier scorecards aggregating performance across all modules</div>
+                <div class="capability-item">Compliance engine: trade sanctions, export controls, regulatory checks</div>
+                <div class="capability-item">Production order management linking BOMs to warehouse to finance</div>
+            </div>
+
+            <div class="workflow-container">
+                <div class="workflow-title">End-to-End Orchestration Workflow</div>
+                <div class="workflow-steps">
+                    <div class="workflow-step"><div class="step-text">Customer Order</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Check ATP</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Reserve Inventory</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">If short: MRP</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Requisition</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">PO to Vendor</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Vendor Ships</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Track Transport</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Receive at Warehouse</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Inspect</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Put Away</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Pick for Customer</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Ship</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Generate Invoice</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Three-Way Match</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Collect Payment</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Update Financials</div><div class="step-arrow">→</div></div>
+                    <div class="workflow-step"><div class="step-text">Feed Scorecard</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">12 / 13</div>
+    </div>
+
+    <!-- SLIDE 13: Comparison -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2>Why Replace QuickBooks + Order Tool</h2>
+            <div class="slide-subtitle">Capability Comparison Matrix</div>
+        </div>
+        <div class="slide-content">
+            <div class="comparison-section">
+                <div class="comparison-row">
+                    <div class="comparison-capability">Product master</div>
+                    <div class="comparison-old">Basic item list</div>
+                    <div class="comparison-new">✓ Full specs, BOMs, industry verticals, pricing tiers</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-capability">Orders</div>
+                    <div class="comparison-old">Simple PO</div>
+                    <div class="comparison-new">✓ Requisition → Approval → PO → Promise → Fulfilment</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-capability">Inventory</div>
+                    <div class="comparison-old">Basic stock count</div>
+                    <div class="comparison-new">✓ Lot/serial tracking, ATP, safety stock, cycle counts</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-capability">Transport</div>
+                    <div class="comparison-old">Manual / separate tool</div>
+                    <div class="comparison-new">✓ Multi-modal, RFQ, tracking, DGR</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-capability">Finance</div>
+                    <div class="comparison-old">Basic bookkeeping</div>
+                    <div class="comparison-new">✓ Full GL, AP/AR, bank recon, cost centers, reports</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-capability">Documents</div>
+                    <div class="comparison-old">PDF attachments</div>
+                    <div class="comparison-new">✓ AI audit, compliance gates, e-signature</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-capability">Contracts</div>
+                    <div class="comparison-old">None</div>
+                    <div class="comparison-new">✓ Structured with pricing conditions and performance</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-capability">Planning</div>
+                    <div class="comparison-old">Spreadsheets</div>
+                    <div class="comparison-new">✓ MRP, demand sensing, budget workflows</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-capability">Integration</div>
+                    <div class="comparison-old">Manual data entry</div>
+                    <div class="comparison-new">✓ Event bus — all modules connected automatically</div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">13 / 13</div>
+    </div>
+
+</div>
+
+<div class="navigation">
+    <button id="prevBtn" onclick="previousSlide()">← Previous</button>
+    <span class="slide-counter"><span id="currentSlide">1</span> / 13</span>
+    <button id="nextBtn" onclick="nextSlide()">Next →</button>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides.forEach(s => s.classList.remove('active'));
+        slides[n].classList.add('active');
+        
+        document.getElementById('currentSlide').textContent = n + 1;
+        document.getElementById('progressBar').style.width = ((n + 1) / totalSlides * 100) + '%';
+        
+        document.getElementById('prevBtn').disabled = n === 0;
+        document.getElementById('nextBtn').disabled = n === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+    });
+
+    // Initialize
+    showSlide(0);
+</script>
+
+</body>
+</html>
