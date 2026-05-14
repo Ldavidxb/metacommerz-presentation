@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>mcxOS — Unified Supply Chain Neural Network</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080C18;--bg2:#0D1225;--card:#121930;--card2:#182040;--gold:#F0C430;--blue:#4A90E2;--teal:#0DD4A0;--green:#34D399;--pink:#F472B6;--red:#EF5350;--cyan:#22D3EE;--orange:#FB923C;--white:#E4E8F0;--grey:#7A869A;--dim:#4A5568;--border:rgba(240,196,48,0.12)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:80px}body{background:var(--bg);color:var(--white);font-family:'Outfit',sans-serif;line-height:1.65}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,12,24,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;gap:20px}
+nav .dots{display:flex;flex-direction:column;gap:3px}nav .dots .r{display:flex;gap:3px}nav .dots .d{width:8px;height:8px;border-radius:50%;background:var(--blue)}nav .dots .d.s{width:6px;height:6px}
+nav .brand{font-weight:700;font-size:1rem}nav a{color:var(--grey);text-decoration:none;font-size:0.72rem;font-weight:500;margin-left:12px;transition:color 0.2s}nav a:hover{color:var(--gold)}.nav-r{margin-left:auto;display:flex;flex-wrap:wrap;gap:4px}
+section{max-width:1140px;margin:0 auto;padding:100px 40px 60px}.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:80px}
+.dv{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0.2;max-width:1140px;margin:0 auto}
+h1{font-size:3.6rem;font-weight:900;letter-spacing:-0.03em;line-height:1.1}h2{font-size:1.9rem;font-weight:800;color:var(--gold);margin-bottom:6px}h3{font-size:0.95rem;font-weight:700;color:var(--gold);margin-bottom:8px}
+.sub{font-size:1rem;color:var(--grey);margin-top:8px;font-weight:300}.si{font-size:0.88rem;color:var(--grey);margin-bottom:20px;max-width:800px;line-height:1.8}
+.stats{display:flex;margin:36px 0;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card)}.stat{flex:1;padding:20px 12px;text-align:center;border-right:1px solid var(--border)}.stat:last-child{border:none}.stat .v{font-size:1.5rem;font-weight:800;color:var(--gold)}.stat .l{font-size:0.65rem;color:var(--grey);text-transform:uppercase;letter-spacing:0.08em;margin-top:3px}
+.g{display:grid;gap:14px;margin:16px 0}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g4{grid-template-columns:1fr 1fr 1fr 1fr}
+.c{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:8px;padding:22px;transition:transform 0.15s}.c:hover{transform:translateY(-2px)}
+.c p,.c li{font-size:0.82rem;color:var(--grey);line-height:1.7}.c ul{list-style:none;padding:0}.c ul li{padding:2px 0}.c ul li::before{content:"▸ ";color:var(--gold);font-weight:600}
+.c.bl{border-left-color:var(--blue)}.c.bl h3{color:var(--blue)}.c.tl{border-left-color:var(--teal)}.c.tl h3{color:var(--teal)}.c.pk{border-left-color:var(--pink)}.c.pk h3{color:var(--pink)}
+.c.gn{border-left-color:var(--green)}.c.gn h3{color:var(--green)}.c.or{border-left-color:var(--orange)}.c.or h3{color:var(--orange)}.c.cy{border-left-color:var(--cyan)}.c.cy h3{color:var(--cyan)}
+.bn{background:var(--card2);border:1px solid var(--gold);border-radius:8px;padding:14px 24px;text-align:center;margin:16px 0}.bn p{color:var(--gold);font-weight:600;font-size:0.88rem}
+.wf{display:flex;align-items:center;margin:14px 0;padding:16px;background:var(--card);border-radius:8px;overflow-x:auto;gap:0}
+.wf .s{flex:0 0 auto;padding:8px 12px;border:1px solid var(--border);border-radius:5px;font-size:0.72rem;font-weight:600;color:var(--white);background:var(--bg2);white-space:nowrap}
+.wf .s.hi{border-color:var(--gold);color:var(--gold);background:rgba(240,196,48,0.04)}.wf .s.gr{border-color:var(--green);color:var(--green)}.wf .s.rd{border-color:var(--red);color:var(--red)}.wf .s.tl{border-color:var(--teal);color:var(--teal)}
+.wf .ar{flex:0 0 auto;width:20px;text-align:center;color:var(--gold);font-size:0.75rem;opacity:0.35}
+.mh{display:flex;align-items:baseline;gap:12px;margin-bottom:6px;flex-wrap:wrap}.mh .mn{font-size:0.68rem;font-weight:700;color:var(--bg);background:var(--gold);border-radius:3px;padding:1px 7px}.mh .ms{font-size:0.7rem;color:var(--dim);margin-left:auto}
+table.cmp{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.76rem}table.cmp th{background:var(--card2);padding:9px 10px;text-align:left;font-weight:700;color:var(--white);border-bottom:2px solid var(--gold)}
+table.cmp th:nth-child(2){color:var(--gold)}table.cmp td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--grey)}table.cmp td:first-child{font-weight:600;color:var(--white)}
+table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{color:var(--red)}table.cmp tr:hover td{background:rgba(74,144,226,0.03)}
+.ooda{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin:18px 0}.ooda-s{background:var(--card);border-radius:8px;padding:18px;text-align:center;border-top:3px solid var(--gold);position:relative}
+.ooda-s .on{font-size:1.8rem;font-weight:900;color:var(--gold);opacity:0.15;position:absolute;top:6px;right:10px}.ooda-s h3{font-size:0.85rem;margin-bottom:6px}.ooda-s p{font-size:0.72rem;color:var(--grey)}
+.e2e{background:var(--card);border-radius:8px;padding:18px;margin:14px 0}.e2e-s{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.03)}.e2e-s:last-child{border:none}
+.e2e-n{flex:0 0 26px;height:26px;background:var(--gold);color:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:800}
+.e2e-c{flex:1}.e2e-c strong{color:var(--gold);font-size:0.78rem}.e2e-c p{font-size:0.72rem;color:var(--grey);margin-top:1px}
+.rv{opacity:0;transform:translateY(20px);transition:opacity 0.5s,transform 0.5s}.rv.vis{opacity:1;transform:translateY(0)}
+@media(max-width:768px){section{padding:80px 20px 40px}h1{font-size:2.2rem}h2{font-size:1.3rem}.g2,.g3,.g4{grid-template-columns:1fr}.stats{flex-wrap:wrap}.stat{flex:0 0 33.33%}.ooda{grid-template-columns:1fr 1fr}.nav-r{display:none}}
+</style>
+</head>
+<body>
+<nav><div class="dots"><div class="r"><div class="d s"></div><div class="d"></div></div><div class="r"><div class="d"></div><div class="d s"></div></div></div><span class="brand">mcxOS</span><div class="nav-r"><a href="#platform">Platform</a><a href="#tower">Control Tower</a><a href="#backbone">Backbone</a><a href="#sec">Security</a><a href="#mods">Modules</a><a href="#ai">AI</a><a href="#orch">Orchestration</a><a href="#cmp">Compare</a><a href="#contact">Contact</a></div></nav>
+
+<!-- HERO -->
+<section class="hero" id="platform"><h1>mcxOS Operating System</h1><p class="sub">metacommerz — Unified Supply Chain Neural Network</p>
+<div class="stats"><div class="stat"><div class="v">16</div><div class="l">Modules</div></div><div class="stat"><div class="v">382</div><div class="l">Features</div></div><div class="stat"><div class="v">180+</div><div class="l">Integrations</div></div><div class="stat"><div class="v">50+</div><div class="l">Event Types</div></div><div class="stat"><div class="v">26</div><div class="l">Doc Types</div></div><div class="stat"><div class="v">10</div><div class="l">Verticals</div></div></div></section><div class="dv"></div>
+
+<!-- ERP OVERVIEW -->
+<section class="rv"><h2>End-to-End Supply Chain ERP</h2><div class="bn"><p>The Unified Platform for Modern Commerce</p></div>
+<div class="g g4"><div class="c"><h3>🏢 Multi-Tenant</h3><p>N-tier org hierarchy with row-level security at the database layer.</p></div><div class="c bl"><h3>🏭 10 Verticals</h3><p>Aerospace, Automotive, Consumer, Electronics, Fashion, Healthcare, High Tech, Industrial, Oil &amp; Gas, Pharma.</p></div><div class="c tl"><h3>🤖 AI-Powered</h3><p>Document audit, contract review, tender analysis, OODA-loop autonomous orchestration.</p></div><div class="c pk"><h3>⚡ Event Bus</h3><p>Kafka-backed, 50+ event types connecting all 16 modules. Retry, dead-letter, replay.</p></div></div></section><div class="dv"></div>
+
+<!-- CONTROL TOWER -->
+<section class="rv" id="tower"><h2>Supply Chain Control Tower</h2><p class="si">Orchestrates your entire ecosystem — parent through subsidiaries, vendors at every tier, buyers, traders, distributors, logistics, and warehouses worldwide.</p>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:32px;text-align:center;margin:16px 0">
+<div style="display:inline-block;border:2px solid var(--gold);border-radius:7px;padding:8px 24px;color:var(--gold);font-weight:700;font-size:0.85rem;margin-bottom:12px">Parent Holding Company</div>
+<div style="display:flex;justify-content:center;gap:10px;margin:10px 0;flex-wrap:wrap"><span style="border:1px solid var(--gold);border-radius:5px;padding:5px 14px;color:var(--gold);font-size:0.75rem">Subsidiary</span><span style="border:1px solid var(--gold);border-radius:5px;padding:5px 14px;color:var(--gold);font-size:0.75rem">Subsidiary</span><span style="border:1px solid var(--gold);border-radius:5px;padding:5px 14px;color:var(--gold);font-size:0.75rem">Subsidiary</span></div>
+<div style="display:flex;align-items:center;justify-content:center;gap:28px;margin:16px 0;flex-wrap:wrap">
+<div style="border:2px solid var(--gold);border-radius:50%;width:80px;height:80px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:600;color:var(--gold)">Suppliers</div>
+<div style="background:linear-gradient(135deg,var(--blue),var(--cyan));border-radius:50%;width:130px;height:130px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;color:white;text-align:center">mcxOS<br>Neural Network</div>
+<div style="border:2px solid var(--gold);border-radius:50%;width:80px;height:80px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:600;color:var(--gold)">Buyers</div></div>
+<div style="display:flex;justify-content:center;gap:8px;margin-top:14px;flex-wrap:wrap"><span style="border:1px solid var(--gold);border-radius:5px;padding:5px 12px;color:var(--gold);font-size:0.7rem;background:rgba(240,196,48,0.03)">Traders</span><span style="border:1px solid var(--gold);border-radius:5px;padding:5px 12px;color:var(--gold);font-size:0.7rem;background:rgba(240,196,48,0.03)">3PL/4PL</span><span style="border:1px solid var(--gold);border-radius:5px;padding:5px 12px;color:var(--gold);font-size:0.7rem;background:rgba(240,196,48,0.03)">Warehouse</span><span style="border:1px solid var(--gold);border-radius:5px;padding:5px 12px;color:var(--gold);font-size:0.7rem;background:rgba(240,196,48,0.03)">Customs</span><span style="border:1px solid var(--gold);border-radius:5px;padding:5px 12px;color:var(--gold);font-size:0.7rem;background:rgba(240,196,48,0.03)">Banks</span></div></div>
+<div class="c tl"><h3 style="color:var(--teal)">Beyond Traditional ERP</h3><ul><li><strong>Extended Network:</strong> ALL trading partners at every tier</li><li><strong>Central Control:</strong> One platform orchestrating entire ecosystem</li><li><strong>Full Transparency:</strong> Every transaction in real-time</li><li><strong>Network Effects:</strong> Value increases with every participant</li></ul></div></section><div class="dv"></div>
+
+<!-- ==================== ENHANCED (1): FEDERATED BACKBONE WITH SVG DIAGRAM ==================== -->
+<section class="rv" id="backbone"><h2>mcxOS Backbone — Federated Network</h2>
+<p class="si">Three independent multi-tenant networks — each with their own organizations, vendors, and data — all federated through the mcxOS Backbone for a single unified view.</p>
+<div class="bn" style="border-color:var(--green)"><p style="color:var(--green)">UNIFIED NETWORK FABRIC · COMMON MASTER DATA · SINGLE VERSION OF TRUTH (SVOT)</p></div>
+
+<svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;margin:20px auto;display:block">
+<!-- Tenant A Cloud -->
+<ellipse cx="170" cy="160" rx="155" ry="120" fill="none" stroke="#4A90E2" stroke-width="1.5" stroke-dasharray="6,3" opacity="0.5"/>
+<text x="170" y="70" fill="#4A90E2" font-family="Outfit,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TENANT A — Manufacturing</text>
+<rect x="85" y="95" width="80" height="30" rx="5" fill="#121930" stroke="#4A90E2" stroke-width="1"/><text x="125" y="114" fill="#4A90E2" font-family="Outfit,sans-serif" font-size="9" font-weight="600" text-anchor="middle">Parent Corp</text>
+<rect x="55" y="140" width="65" height="24" rx="4" fill="#121930" stroke="#7A869A" stroke-width="0.8"/><text x="88" y="156" fill="#7A869A" font-family="Outfit,sans-serif" font-size="8" text-anchor="middle">Subsidiary A</text>
+<rect x="130" y="140" width="65" height="24" rx="4" fill="#121930" stroke="#7A869A" stroke-width="0.8"/><text x="162" y="156" fill="#7A869A" font-family="Outfit,sans-serif" font-size="8" text-anchor="middle">Subsidiary B</text>
+<rect x="210" y="140" width="65" height="24" rx="4" fill="#121930" stroke="#7A869A" stroke-width="0.8"/><text x="242" y="156" fill="#7A869A" font-family="Outfit,sans-serif" font-size="8" text-anchor="middle">Subsidiary C</text>
+<rect x="70" y="180" width="55" height="22" rx="3" fill="#121930" stroke="#F0C430" stroke-width="0.7"/><text x="98" y="194" fill="#F0C430" font-family="Outfit,sans-serif" font-size="7" text-anchor="middle">Vendor 1</text>
+<rect x="135" y="180" width="55" height="22" rx="3" fill="#121930" stroke="#F0C430" stroke-width="0.7"/><text x="162" y="194" fill="#F0C430" font-family="Outfit,sans-serif" font-size="7" text-anchor="middle">Vendor 2</text>
+<rect x="200" y="180" width="55" height="22" rx="3" fill="#121930" stroke="#F0C430" stroke-width="0.7"/><text x="228" y="194" fill="#F0C430" font-family="Outfit,sans-serif" font-size="7" text-anchor="middle">Buyer 1</text>
+<rect x="90" y="215" width="130" height="22" rx="3" fill="rgba(74,144,226,0.08)" stroke="#4A90E2" stroke-width="0.8"/><text x="155" y="230" fill="#4A90E2" font-family="Outfit,sans-serif" font-size="8" font-weight="600" text-anchor="middle">RLS: tenant_a · N-Tier Isolation</text>
+
+<!-- Tenant B Cloud -->
+<ellipse cx="730" cy="160" rx="155" ry="120" fill="none" stroke="#0DD4A0" stroke-width="1.5" stroke-dasharray="6,3" opacity="0.5"/>
+<text x="730" y="70" fill="#0DD4A0" font-family="Outfit,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TENANT B — Retail Chain</text>
+<rect x="645" y="95" width="80" height="30" rx="5" fill="#121930" stroke="#0DD4A0" stroke-width="1"/><text x="685" y="114" fill="#0DD4A0" font-family="Outfit,sans-serif" font-size="9" font-weight="600" text-anchor="middle">HQ Retail</text>
+<rect x="615" y="140" width="65" height="24" rx="4" fill="#121930" stroke="#7A869A" stroke-width="0.8"/><text x="648" y="156" fill="#7A869A" font-family="Outfit,sans-serif" font-size="8" text-anchor="middle">Region EU</text>
+<rect x="690" y="140" width="65" height="24" rx="4" fill="#121930" stroke="#7A869A" stroke-width="0.8"/><text x="722" y="156" fill="#7A869A" font-family="Outfit,sans-serif" font-size="8" text-anchor="middle">Region APAC</text>
+<rect x="770" y="140" width="65" height="24" rx="4" fill="#121930" stroke="#7A869A" stroke-width="0.8"/><text x="802" y="156" fill="#7A869A" font-family="Outfit,sans-serif" font-size="8" text-anchor="middle">Region US</text>
+<rect x="635" y="180" width="55" height="22" rx="3" fill="#121930" stroke="#F0C430" stroke-width="0.7"/><text x="662" y="194" fill="#F0C430" font-family="Outfit,sans-serif" font-size="7" text-anchor="middle">Supplier X</text>
+<rect x="700" y="180" width="55" height="22" rx="3" fill="#121930" stroke="#F0C430" stroke-width="0.7"/><text x="728" y="194" fill="#F0C430" font-family="Outfit,sans-serif" font-size="7" text-anchor="middle">3PL</text>
+<rect x="765" y="180" width="55" height="22" rx="3" fill="#121930" stroke="#F0C430" stroke-width="0.7"/><text x="792" y="194" fill="#F0C430" font-family="Outfit,sans-serif" font-size="7" text-anchor="middle">Distrib.</text>
+<rect x="650" y="215" width="130" height="22" rx="3" fill="rgba(13,212,160,0.08)" stroke="#0DD4A0" stroke-width="0.8"/><text x="715" y="230" fill="#0DD4A0" font-family="Outfit,sans-serif" font-size="8" font-weight="600" text-anchor="middle">RLS: tenant_b · N-Tier Isolation</text>
+
+<!-- Tenant C Cloud -->
+<ellipse cx="450" cy="100" rx="130" ry="85" fill="none" stroke="#F472B6" stroke-width="1.5" stroke-dasharray="6,3" opacity="0.5"/>
+<text x="450" y="40" fill="#F472B6" font-family="Outfit,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TENANT C — Logistics Co</text>
+<rect x="395" y="60" width="80" height="26" rx="5" fill="#121930" stroke="#F472B6" stroke-width="1"/><text x="435" y="77" fill="#F472B6" font-family="Outfit,sans-serif" font-size="9" font-weight="600" text-anchor="middle">4PL Group</text>
+<rect x="370" y="100" width="55" height="22" rx="3" fill="#121930" stroke="#7A869A" stroke-width="0.8"/><text x="398" y="114" fill="#7A869A" font-family="Outfit,sans-serif" font-size="7" text-anchor="middle">Air Div</text>
+<rect x="435" y="100" width="55" height="22" rx="3" fill="#121930" stroke="#7A869A" stroke-width="0.8"/><text x="462" y="114" fill="#7A869A" font-family="Outfit,sans-serif" font-size="7" text-anchor="middle">Ocean Div</text>
+<rect x="500" y="100" width="55" height="22" rx="3" fill="#121930" stroke="#7A869A" stroke-width="0.8"/><text x="528" y="114" fill="#7A869A" font-family="Outfit,sans-serif" font-size="7" text-anchor="middle">Road Div</text>
+<rect x="395" y="135" width="110" height="20" rx="3" fill="rgba(244,114,182,0.08)" stroke="#F472B6" stroke-width="0.8"/><text x="450" y="149" fill="#F472B6" font-family="Outfit,sans-serif" font-size="8" font-weight="600" text-anchor="middle">RLS: tenant_c · Isolated</text>
+
+<!-- Central Backbone Hub -->
+<ellipse cx="450" cy="370" rx="170" ry="70" fill="rgba(240,196,48,0.04)" stroke="#F0C430" stroke-width="2"/>
+<text x="450" y="355" fill="#F0C430" font-family="Outfit,sans-serif" font-size="16" font-weight="800" text-anchor="middle">mcxOS Backbone</text>
+<text x="450" y="375" fill="#7A869A" font-family="Outfit,sans-serif" font-size="10" text-anchor="middle">API Gateway · Message Bus · DataSync · Workflow Orchestration</text>
+<text x="450" y="392" fill="#0DD4A0" font-family="Outfit,sans-serif" font-size="9" font-weight="600" text-anchor="middle">SVOT — Single Version of Truth</text>
+
+<!-- Connection Lines -->
+<line x1="170" y1="248" x2="350" y2="330" stroke="#4A90E2" stroke-width="1.5" stroke-dasharray="4,2" opacity="0.6"/>
+<line x1="730" y1="248" x2="550" y2="330" stroke="#0DD4A0" stroke-width="1.5" stroke-dasharray="4,2" opacity="0.6"/>
+<line x1="450" y1="170" x2="450" y2="300" stroke="#F472B6" stroke-width="1.5" stroke-dasharray="4,2" opacity="0.6"/>
+
+<!-- Connection dots -->
+<circle cx="350" cy="330" r="4" fill="#4A90E2"/><circle cx="550" cy="330" r="4" fill="#0DD4A0"/><circle cx="450" cy="300" r="4" fill="#F472B6"/>
+
+<!-- Bottom labels -->
+<rect x="100" y="470" width="200" height="35" rx="6" fill="rgba(74,144,226,0.06)" stroke="#4A90E2" stroke-width="0.8"/>
+<text x="200" y="490" fill="#4A90E2" font-family="Outfit,sans-serif" font-size="9" font-weight="600" text-anchor="middle">Real-time Sync · Offline-first</text>
+<rect x="350" y="470" width="200" height="35" rx="6" fill="rgba(240,196,48,0.06)" stroke="#F0C430" stroke-width="0.8"/>
+<text x="450" y="490" fill="#F0C430" font-family="Outfit,sans-serif" font-size="9" font-weight="600" text-anchor="middle">Shared Master Data · Conflict Resolution</text>
+<rect x="600" y="470" width="200" height="35" rx="6" fill="rgba(13,212,160,0.06)" stroke="#0DD4A0" stroke-width="0.8"/>
+<text x="700" y="490" fill="#0DD4A0" font-family="Outfit,sans-serif" font-size="9" font-weight="600" text-anchor="middle">Network Effects · Unlimited Partners</text>
+</svg>
+
+<div class="g g3"><div class="c tl"><h3>🌐 Federated Architecture</h3><ul><li>Each tenant operates independently</li><li>Own org hierarchy, data, workflows</li><li>Connected via mcxOS Backbone</li><li>Zero cross-tenant data leakage (RLS)</li></ul></div><div class="c bl"><h3>📡 Connectivity</h3><ul><li>Real-time sync when online</li><li>Offline-first capability</li><li>Automatic resync on reconnect</li><li>Built-in conflict resolution</li></ul></div><div class="c pk"><h3>🚀 Network Effects</h3><ul><li>Value scales with participants</li><li>Collective intelligence shared</li><li>Standardized data formats</li><li>Unlimited trading partners</li></ul></div></div></section><div class="dv"></div>
+
+<!-- ==================== ENHANCED (2): SECURITY with RBAC + RLS SVG DIAGRAMS ==================== -->
+<section class="rv" id="sec"><h2>Enterprise-Grade Security</h2>
+<p class="si">Complete multi-layer security model: N-Tier organization hierarchy controls who can access what, RBAC enforces role-based permissions at every layer, and Row-Level Security (RLS) policies guarantee data isolation at the database itself.</p>
+
+<!-- RBAC + N-Tier SVG Diagram -->
+<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;margin:16px auto;display:block">
+<!-- Title -->
+<text x="450" y="25" fill="#F0C430" font-family="Outfit,sans-serif" font-size="14" font-weight="800" text-anchor="middle">N-Tier Organization with RBAC Inheritance</text>
+
+<!-- Level 0: Customer (Parent) -->
+<rect x="325" y="45" width="250" height="40" rx="8" fill="rgba(240,196,48,0.08)" stroke="#F0C430" stroke-width="2"/>
+<text x="450" y="69" fill="#F0C430" font-family="Outfit,sans-serif" font-size="12" font-weight="700" text-anchor="middle">🏢 CUSTOMER (Parent Holding)</text>
+<text x="680" y="69" fill="#7A869A" font-family="Outfit,sans-serif" font-size="9" text-anchor="start">RBAC: SuperAdmin, Finance Director, Compliance</text>
+
+<!-- Arrows down -->
+<line x1="370" y1="85" x2="200" y2="115" stroke="#F0C430" stroke-width="1" opacity="0.4"/><line x1="450" y1="85" x2="450" y2="115" stroke="#F0C430" stroke-width="1" opacity="0.4"/><line x1="530" y1="85" x2="700" y2="115" stroke="#F0C430" stroke-width="1" opacity="0.4"/>
+
+<!-- Level 1: Subsidiaries -->
+<rect x="100" y="115" width="200" height="36" rx="6" fill="rgba(74,144,226,0.06)" stroke="#4A90E2" stroke-width="1.5"/>
+<text x="200" y="137" fill="#4A90E2" font-family="Outfit,sans-serif" font-size="11" font-weight="700" text-anchor="middle">Subsidiary — EU Operations</text>
+<rect x="350" y="115" width="200" height="36" rx="6" fill="rgba(74,144,226,0.06)" stroke="#4A90E2" stroke-width="1.5"/>
+<text x="450" y="137" fill="#4A90E2" font-family="Outfit,sans-serif" font-size="11" font-weight="700" text-anchor="middle">Subsidiary — APAC Ops</text>
+<rect x="600" y="115" width="200" height="36" rx="6" fill="rgba(74,144,226,0.06)" stroke="#4A90E2" stroke-width="1.5"/>
+<text x="700" y="137" fill="#4A90E2" font-family="Outfit,sans-serif" font-size="11" font-weight="700" text-anchor="middle">Subsidiary — Americas</text>
+
+<!-- RBAC inheritance arrows -->
+<text x="30" y="140" fill="#F0C430" font-family="Outfit,sans-serif" font-size="9" font-weight="600">RBAC ↓</text>
+<text x="30" y="154" fill="#7A869A" font-family="Outfit,sans-serif" font-size="8">Inherits down</text>
+
+<!-- Arrows to entities -->
+<line x1="150" y1="151" x2="120" y2="180" stroke="#4A90E2" stroke-width="0.8" opacity="0.4"/><line x1="200" y1="151" x2="200" y2="180" stroke="#4A90E2" stroke-width="0.8" opacity="0.4"/><line x1="250" y1="151" x2="280" y2="180" stroke="#4A90E2" stroke-width="0.8" opacity="0.4"/>
+
+<!-- Level 2: Entities under EU Sub -->
+<rect x="65" y="180" width="75" height="30" rx="5" fill="#121930" stroke="#F0C430" stroke-width="1"/>
+<text x="102" y="198" fill="#F0C430" font-family="Outfit,sans-serif" font-size="9" font-weight="600" text-anchor="middle">Vendor A</text>
+<rect x="150" y="180" width="75" height="30" rx="5" fill="#121930" stroke="#F0C430" stroke-width="1"/>
+<text x="188" y="198" fill="#F0C430" font-family="Outfit,sans-serif" font-size="9" font-weight="600" text-anchor="middle">Buyer B</text>
+<rect x="235" y="180" width="75" height="30" rx="5" fill="#121930" stroke="#F0C430" stroke-width="1"/>
+<text x="272" y="198" fill="#F0C430" font-family="Outfit,sans-serif" font-size="9" font-weight="600" text-anchor="middle">3PL Carrier</text>
+
+<!-- Role tags -->
+<rect x="65" y="215" width="75" height="18" rx="3" fill="rgba(34,197,94,0.08)" stroke="#34D399" stroke-width="0.6"/>
+<text x="102" y="227" fill="#34D399" font-family="Outfit,sans-serif" font-size="7" text-anchor="middle">Orders + Invoices</text>
+<rect x="150" y="215" width="75" height="18" rx="3" fill="rgba(34,197,94,0.08)" stroke="#34D399" stroke-width="0.6"/>
+<text x="188" y="227" fill="#34D399" font-family="Outfit,sans-serif" font-size="7" text-anchor="middle">Sales + Returns</text>
+<rect x="235" y="215" width="75" height="18" rx="3" fill="rgba(34,197,94,0.08)" stroke="#34D399" stroke-width="0.6"/>
+<text x="272" y="227" fill="#34D399" font-family="Outfit,sans-serif" font-size="7" text-anchor="middle">Shipments Only</text>
+
+<!-- RLS SECTION -->
+<text x="450" y="270" fill="#F0C430" font-family="Outfit,sans-serif" font-size="14" font-weight="800" text-anchor="middle">Row-Level Security (RLS) — Database Enforcement</text>
+<text x="450" y="288" fill="#7A869A" font-family="Outfit,sans-serif" font-size="10" text-anchor="middle">Every single row in the database is tagged with composite keys. No application bypass possible.</text>
+
+<!-- RLS 4-tier flow -->
+<rect x="60" y="310" width="170" height="55" rx="8" fill="rgba(46,125,50,0.12)" stroke="#2E7D32" stroke-width="1.5"/>
+<text x="145" y="335" fill="#66BB6A" font-family="Outfit,sans-serif" font-size="12" font-weight="700" text-anchor="middle">TIER 1: Tenant</text>
+<text x="145" y="352" fill="#7A869A" font-family="Outfit,sans-serif" font-size="9" text-anchor="middle">tenant_id (e.g. ACME Corp)</text>
+<line x1="230" y1="337" x2="265" y2="337" stroke="#F0C430" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="265" y="310" width="170" height="55" rx="8" fill="rgba(21,101,192,0.1)" stroke="#1565C0" stroke-width="1.5"/>
+<text x="350" y="335" fill="#42A5F5" font-family="Outfit,sans-serif" font-size="12" font-weight="700" text-anchor="middle">TIER 2: Organization</text>
+<text x="350" y="352" fill="#7A869A" font-family="Outfit,sans-serif" font-size="9" text-anchor="middle">tenant_id, org_id</text>
+<line x1="435" y1="337" x2="470" y2="337" stroke="#F0C430" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="470" y="310" width="170" height="55" rx="8" fill="rgba(230,81,0,0.08)" stroke="#E65100" stroke-width="1.5"/>
+<text x="555" y="335" fill="#FF9800" font-family="Outfit,sans-serif" font-size="12" font-weight="700" text-anchor="middle">TIER 3: Entity</text>
+<text x="555" y="352" fill="#7A869A" font-family="Outfit,sans-serif" font-size="9" text-anchor="middle">tenant_id, org_id, entity_id</text>
+<line x1="640" y1="337" x2="675" y2="337" stroke="#F0C430" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="675" y="310" width="170" height="55" rx="8" fill="rgba(211,47,47,0.06)" stroke="#D32F2F" stroke-width="1.5"/>
+<text x="760" y="335" fill="#EF5350" font-family="Outfit,sans-serif" font-size="12" font-weight="700" text-anchor="middle">TIER 4: Records</text>
+<text x="760" y="352" fill="#7A869A" font-family="Outfit,sans-serif" font-size="9" text-anchor="middle">Orders / Invoices / Docs</text>
+
+<!-- Arrow marker -->
+<defs><marker id="arrow" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#F0C430"/></marker></defs>
+
+<!-- RLS Policy box -->
+<rect x="120" y="385" width="660" height="80" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1"/>
+<text x="450" y="405" fill="#EF5350" font-family="Outfit,sans-serif" font-size="11" font-weight="700" text-anchor="middle">RLS Policies Enforced at PostgreSQL Layer</text>
+<text x="450" y="424" fill="#7A869A" font-family="Outfit,sans-serif" font-size="9" text-anchor="middle">✓ Every row tagged with composite key (tenant_id, organization_id, entity_id)</text>
+<text x="450" y="440" fill="#7A869A" font-family="Outfit,sans-serif" font-size="9" text-anchor="middle">✓ Database-level enforcement — no application bypass possible, even for admins</text>
+<text x="450" y="456" fill="#7A869A" font-family="Outfit,sans-serif" font-size="9" text-anchor="middle">✓ Complete audit trail — all access logged by tenant, organization, user, and timestamp</text>
+</svg>
+
+<div class="g g2">
+<div class="c"><h3>🔐 RBAC Permissibility Layer</h3><p>Unified layer enforcing role-based access. Permissions inherit down the hierarchy: Customer → Subsidiary → Entity. Each role sees different data, workflows, and features.</p>
+<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"><span style="background:rgba(34,197,94,0.07);border:1px solid var(--green);border-radius:5px;padding:4px 10px;font-size:0.7rem;color:var(--green)">HQ — Full Access</span><span style="background:rgba(34,197,94,0.07);border:1px solid var(--green);border-radius:5px;padding:4px 10px;font-size:0.7rem;color:var(--green)">Vendor — Orders &amp; Invoices</span><span style="background:rgba(34,197,94,0.07);border:1px solid var(--green);border-radius:5px;padding:4px 10px;font-size:0.7rem;color:var(--green)">Warehouse — Inventory</span><span style="background:rgba(34,197,94,0.07);border:1px solid var(--green);border-radius:5px;padding:4px 10px;font-size:0.7rem;color:var(--green)">Transport — Shipments</span><span style="background:rgba(34,197,94,0.07);border:1px solid var(--green);border-radius:5px;padding:4px 10px;font-size:0.7rem;color:var(--green)">Finance — AP/AR/GL</span></div></div>
+<div class="c bl"><h3 style="color:var(--blue)">🛡️ N-Tier Data Isolation</h3><p>Complete isolation at the database layer. Every single record carries a composite key. Even platform admins cannot bypass RLS policies — security is enforced by PostgreSQL, not the application.</p>
+<ul><li>Tier 1: Tenant isolation (e.g. ACME Corp)</li><li>Tier 2: Organization isolation (Parent / Subsidiary)</li><li>Tier 3: Entity isolation (Vendor / Buyer / 3PL)</li><li>Tier 4: Record-level (Orders, Invoices, Docs)</li></ul></div></div>
+<div class="bn"><p>🔐 Database-Level Isolation · OAuth2/OIDC SSO · RBAC Inheritance · Complete Audit Trail</p></div></section><div class="dv"></div>
+
+<!-- ==================== ENHANCED (3): ONE SLIDE PER MODULE WITH WORKFLOWS ==================== -->
+<section class="rv" id="mods"><h2>Platform Modules</h2><p class="si">16 deeply integrated modules. Each publishes events to the real-time Event Bus for cross-module orchestration.</p></section><div class="dv"></div>
+
+<!-- M1: Entities -->
+<section class="rv"><div class="mh"><span class="mn">M1</span><h2 style="margin:0;font-size:1.5rem">Entities &amp; Organization</h2><span class="ms">18 features · 6 internal elements · Integrates with ALL modules</span></div>
+<p class="si">The foundation of the platform. Every document, order, shipment, and financial record traces back to an entity in this module.</p>
+<div class="g g3"><div class="c"><h3>Entity Types</h3><ul><li>Customer (parent holding)</li><li>Subsidiary with parent linkage</li><li>Vendor, Buyer, ImpSvc, ExpSvc</li><li>Multi-address, multi-contact per entity</li></ul></div><div class="c bl"><h3>Identity &amp; Auth</h3><ul><li>Account lineage (CUST-ACME-250209-0001)</li><li>OAuth2/OIDC SSO</li><li>RBAC inheritance down hierarchy</li><li>Entity deduplication &amp; merge</li></ul></div><div class="c tl"><h3>Financial</h3><ul><li>Bank accounts (SWIFT/IBAN per entity)</li><li>Payment routing to Finance module</li><li>Address → Transport origin/destination</li><li>Multi-tenant RLS composite keys</li></ul></div></div>
+<div class="wf"><div class="s">Create Customer</div><div class="ar">→</div><div class="s">Add Subsidiaries</div><div class="ar">→</div><div class="s hi">Register Vendors/Buyers</div><div class="ar">→</div><div class="s">Assign Banks &amp; Addresses</div><div class="ar">→</div><div class="s">Set RBAC Roles</div><div class="ar">→</div><div class="s gr">Entity Active</div></div></section><div class="dv"></div>
+
+<!-- M2: Products -->
+<section class="rv"><div class="mh"><span class="mn">M2</span><h2 style="margin:0;font-size:1.5rem">Products &amp; Catalog</h2><span class="ms">24 features · 10 industry verticals · 12 unit categories</span></div>
+<p class="si">Define products once, use everywhere. A single source of truth for product data across contracts, orders, warehouse, and customs.</p>
+<div class="g g3"><div class="c"><h3>Product Master</h3><ul><li>SKU, dimensions, weight, packing</li><li>Trade compliance (HS codes, origin)</li><li>DGR classification (IATA/IMDG/ADR)</li><li>12 unit categories with conversion</li></ul></div><div class="c tl"><h3>10 Industry Verticals</h3><ul><li>Automotive (OEM, PPAP, material grade)</li><li>Aerospace (ITAR, flight cert, MRO)</li><li>Pharma (API grade, cold chain)</li><li>+ Electronics, Fashion, Healthcare, O&amp;G, Consumer, Industrial, High-Tech</li></ul></div><div class="c pk"><h3>BOM &amp; CAD</h3><ul><li>EBOM (R&amp;D), MBOM (manufacturing)</li><li>SCBOM (procurement)</li><li>CAD upload with AI analysis</li><li>Spec versioning &amp; lifecycle</li></ul></div></div>
+<div class="wf"><div class="s">Create Product</div><div class="ar">→</div><div class="s">Define Tech Specs</div><div class="ar">→</div><div class="s">Set DGR Class</div><div class="ar">→</div><div class="s hi">Pricing Tiers</div><div class="ar">→</div><div class="s">Attach to Contracts</div><div class="ar">→</div><div class="s gr">Reference in Orders &amp; BOMs</div></div></section><div class="dv"></div>
+
+<!-- M3: Pricing -->
+<section class="rv"><div class="mh"><span class="mn">M3</span><h2 style="margin:0;font-size:1.5rem">Pricing Engine</h2><span class="ms">16 features · 6 freight modes · Performance KPIs</span></div>
+<p class="si">Sophisticated multi-tier pricing with automatic tier transitions, surcharge formulas, and performance-linked pricing across 6 transport modes.</p>
+<div class="g g2"><div class="c or"><h3>Commercial Pricing</h3><ul><li>Base price, discount tiers, volume tiers</li><li>Auto tier transition on threshold breach</li><li>Surcharges: fuel, CAF, peak, custom formula</li><li>Performance targets (OTD%, quality, fill rate)</li><li>Multi-currency with FX handling</li></ul></div><div class="c"><h3>Transport Pricing (6 Modes)</h3><ul><li>Airfreight: per-kg, weight breaks, ULD rates</li><li>Ocean FCL: per-container (20GP/40GP/40HC/45HC)</li><li>Ocean LCL: per-CBM with minimums</li><li>Road FTL/LTL with NMFC classes</li><li>Rail: full wagon vs partial rates</li><li>Origin/destination/accessorial per mode</li></ul></div></div>
+<div class="wf"><div class="s">Define Base Price</div><div class="ar">→</div><div class="s">Set Volume Tiers</div><div class="ar">→</div><div class="s hi">Configure Surcharges</div><div class="ar">→</div><div class="s">Link KPI Targets</div><div class="ar">→</div><div class="s">Embed in Contract</div><div class="ar">→</div><div class="s gr">Auto-Apply on Orders</div></div></section><div class="dv"></div>
+
+<!-- M4: Operations -->
+<section class="rv"><div class="mh"><span class="mn">M4</span><h2 style="margin:0;font-size:1.5rem">Operations &amp; MRP</h2><span class="ms">32 features · 12 internal elements · 10 module integrations</span></div>
+<p class="si">The operational engine. From demand signal through MRP to three-way matched payment — fully automated with tiered approvals.</p>
+<div class="g g3"><div class="c"><h3>BOM Management</h3><ul><li>EBOM → MBOM → SCBOM pipeline</li><li>Explosion/implosion, version compare</li><li>Make-vs-buy, alternate suppliers</li><li>Engineering change orders</li></ul></div><div class="c bl"><h3>Procurement</h3><ul><li>VPR with tiered approval engine</li><li>Auto VPR → VPO conversion</li><li>Order collaboration (vendor portal)</li><li>Promise tracking &amp; fulfilment</li></ul></div><div class="c tl"><h3>MRP Engine</h3><ul><li>Gross/net requirements calculation</li><li>Planned order generation</li><li>Shortage detection &amp; alerting</li><li>Lot sizing (EOQ, lot-for-lot)</li></ul></div></div>
+<div class="wf"><div class="s">Demand Signal</div><div class="ar">→</div><div class="s">MRP Run</div><div class="ar">→</div><div class="s">Requisition (VPR)</div><div class="ar">→</div><div class="s hi">Tiered Approval</div><div class="ar">→</div><div class="s">Purchase Order (VPO)</div><div class="ar">→</div><div class="s">Vendor Promise</div><div class="ar">→</div><div class="s tl">GRN Received</div><div class="ar">→</div><div class="s">Three-Way Match</div><div class="ar">→</div><div class="s gr">Payment</div></div></section><div class="dv"></div>
+
+<!-- M5: Contracts -->
+<section class="rv"><div class="mh"><span class="mn">M5</span><h2 style="margin:0;font-size:1.5rem">Contracts</h2><span class="ms">22 features · 4 contract types · AI-assisted drafting</span></div>
+<p class="si">Contracts aren't PDFs — they're executable data objects that govern operational behavior, enforcing pricing and terms automatically during order creation.</p>
+<div class="g g2"><div class="c"><h3>4 Contract Types</h3><ul><li>VPC (Vendor Procurement) — pricing, volumes, penalties</li><li>BSC (Buyer Sales) — selling, warranty, revenue rules</li><li>IFC (Import Freight) — 6 mode pricing tabs</li><li>EFC (Export Freight) — mirror of IFC for export</li><li>Lifecycle: Draft → Active → Amended → Expired</li></ul></div><div class="c gn"><h3>Intelligence &amp; Compliance</h3><ul><li>Measurable conditions (OTD%, quality, fill rate)</li><li>Automated threshold checking with RAG dashboard</li><li>AI-assisted drafting, clause suggestion, risk ID</li><li>Performance trends, breach notification</li><li>Amendment workflow with version diff</li></ul></div></div>
+<div class="wf"><div class="s">Negotiate Terms</div><div class="ar">→</div><div class="s">Create Contract</div><div class="ar">→</div><div class="s hi">Define Pricing Conditions</div><div class="ar">→</div><div class="s">Link Products</div><div class="ar">→</div><div class="s">Track Performance</div><div class="ar">→</div><div class="s gr">Renew / Amend</div></div></section><div class="dv"></div>
+
+<!-- M6: Transport -->
+<section class="rv"><div class="mh"><span class="mn">M6</span><h2 style="margin:0;font-size:1.5rem">Transport &amp; Logistics</h2><span class="ms">38 features · 6 freight modes · 8,000+ port codes</span></div>
+<p class="si">Complete multi-modal TMS — from spot quote through carrier booking, real-time tracking, and freight settlement.</p>
+<div class="g g3"><div class="c"><h3>🌐 6 Freight Modes</h3><ul><li>Airfreight (ULD 3D bin-packing)</li><li>Ocean FCL/LCL</li><li>Road FTL/LTL</li><li>Rail freight</li><li>8,000+ UN/LOCODE port codes</li><li>DGR compliance per mode</li></ul></div><div class="c bl"><h3>🚛 RFQ &amp; Bidding</h3><ul><li>Multi-carrier Freight RFQ</li><li>Spot quote engine</li><li>Vendor bid portal (signup, invite)</li><li>Bid comparison matrix</li><li>Carrier scoring &amp; preferred designation</li></ul></div><div class="c pk"><h3>📦 TMS Planning</h3><ul><li>Route plans (multi-leg, multi-mode)</li><li>Load plans (utilization optimization)</li><li>Carrier allocation by scorecard</li><li>Booking lifecycle</li><li>Real-time tracking with milestones</li><li>AWB/BOL document generation</li></ul></div></div>
+<div class="wf"><div class="s">Create Shipment</div><div class="ar">→</div><div class="s">Select Mode</div><div class="ar">→</div><div class="s hi">Get Quotes (Spot/RFQ)</div><div class="ar">→</div><div class="s">Award Carrier</div><div class="ar">→</div><div class="s tl">Book</div><div class="ar">→</div><div class="s tl">Track</div><div class="ar">→</div><div class="s gr">Deliver</div><div class="ar">→</div><div class="s gr">Settle Charges</div></div></section><div class="dv"></div>
+
+<!-- M7: Warehouse -->
+<section class="rv"><div class="mh"><span class="mn">M7</span><h2 style="margin:0;font-size:1.5rem">Warehouse</h2><span class="ms">28 features · 4-level hierarchy · 5 storage types</span></div>
+<p class="si">Full WMS — from dock appointment through goods receipt, directed put-away, pick wave execution, and dispatch.</p>
+<div class="g g3"><div class="c"><h3>Setup &amp; Storage</h3><ul><li>4-level: Zone / Aisle / Rack / Bin</li><li>5 types: Ambient, Cold Chain, Hazmat, Bonded, High-Value</li><li>Capacity config with utilization alerts</li></ul></div><div class="c bl"><h3>Inbound</h3><ul><li>VGRN/BGRN receiving wizards</li><li>Staging inspections (pass/fail/conditional)</li><li>GRN discrepancy resolution</li><li>Directed put-away (FIFO/FEFO)</li></ul></div><div class="c pk"><h3>Outbound</h3><ul><li>Pick wave generation (zone/priority)</li><li>Pick task path optimization</li><li>GS1 pallet tracking (SSCC)</li><li>Dock appointments, cross-dock</li></ul></div></div>
+<p style="color:var(--gold);font-size:0.82rem;font-weight:600;margin:8px 0">Inbound &amp; Outbound Flow:</p>
+<div class="wf"><div class="s">Receive</div><div class="ar">→</div><div class="s">Inspect</div><div class="ar">→</div><div class="s">Put Away</div><div class="ar">→</div><div class="s hi">Pick</div><div class="ar">→</div><div class="s">Pack</div><div class="ar">→</div><div class="s gr">Ship</div></div>
+<p style="color:var(--gold);font-size:0.82rem;font-weight:600;margin:8px 0">Inventory Maintenance:</p>
+<div class="wf"><div class="s">Cycle Count</div><div class="ar">→</div><div class="s">Adjust</div><div class="ar">→</div><div class="s gr">Replenish</div></div></section><div class="dv"></div>
+
+<!-- M8: Inventory -->
+<section class="rv"><div class="mh"><span class="mn">M8</span><h2 style="margin:0;font-size:1.5rem">Inventory</h2><span class="ms">22 features · 10 internal elements · Full audit trail</span></div>
+<p class="si">Real-time inventory visibility with lot/batch tracking, serial number lifecycle, and quality inspection at every stage.</p>
+<div class="g g3"><div class="c"><h3>Stock Management</h3><ul><li>On-hand, available, reserved tracking</li><li>Reorder point &amp; reorder quantity</li><li>Soft/hard reservations with expiry</li><li>Inter-warehouse transfers</li></ul></div><div class="c bl"><h3>Traceability</h3><ul><li>Lot/batch tracking with expiry</li><li>Serial number lifecycle</li><li>Stock movements with full audit</li><li>Inventory snapshots (period-end)</li></ul></div><div class="c tl"><h3>Quality</h3><ul><li>ABC-based cycle count planning</li><li>Blind count, variance tolerance</li><li>Quality inspections (incoming/in-process/final)</li><li>Assembly orders with yield tracking</li></ul></div></div>
+<div class="wf"><div class="s">GRN Receipt</div><div class="ar">→</div><div class="s">Create Inventory Record</div><div class="ar">→</div><div class="s hi">Reserve for Order</div><div class="ar">→</div><div class="s">Issue / Pick</div><div class="ar">→</div><div class="s">Transfer / Adjust</div><div class="ar">→</div><div class="s gr">Audit Trail Logged</div></div></section><div class="dv"></div>
+
+<!-- M9: Planning -->
+<section class="rv"><div class="mh"><span class="mn">M9</span><h2 style="margin:0;font-size:1.5rem">Planning &amp; Forecasting</h2><span class="ms">20 features · ML-driven · Closed-loop system</span></div>
+<p class="si">Demand sensing feeds forecasts, forecasts drive MRP, actual results feed back to improve models — a true closed loop.</p>
+<div class="g g2"><div class="c cy"><h3 style="color:var(--cyan)">Demand Sensing &amp; Forecasting</h3><ul><li>ML-driven: POS, market, weather, promotions</li><li>4 methods: moving avg, exp smoothing, regression, AI (Claude)</li><li>Forecast versioning with consensus creation</li><li>Seasonal detection, promotional impact</li><li>MAPE/MAD/bias accuracy metrics</li></ul></div><div class="c"><h3>Budget &amp; Procurement Planning</h3><ul><li>Hierarchical budget allocation</li><li>Budget reservation on VPR approval</li><li>Consumption tracking on VPO creation</li><li>Variance analysis (budget vs actual)</li><li>Configurable threshold alerts (80%/90%/100%)</li></ul></div></div>
+<div class="wf"><div class="s">Forecast Demand</div><div class="ar">→</div><div class="s">Set Budgets</div><div class="ar">→</div><div class="s hi">Run MRP</div><div class="ar">→</div><div class="s gr">Generate Supply Plan</div><div class="ar">→</div><div class="s">Execute</div><div class="ar">→</div><div class="s">Measure Variance</div><div class="ar">→</div><div class="s hi">Adjust ↺</div></div></section><div class="dv"></div>
+
+<!-- M10: Finance -->
+<section class="rv"><div class="mh"><span class="mn">M10</span><h2 style="margin:0;font-size:1.5rem">Finance &amp; Accounting</h2><span class="ms">30 features · 14 internal elements · Integrates with ALL modules</span></div>
+<p class="si">Complete financial management from journal entry through bank reconciliation, with intercompany support and multi-subsidiary charts of accounts.</p>
+<div class="g g3"><div class="c"><h3>📊 Core Accounting</h3><ul><li>Hierarchical Chart of Accounts</li><li>Multi-line journal entries</li><li>Fiscal year/period management</li><li>Cost center &amp; project accounting</li><li>Intercompany journals with elimination</li></ul></div><div class="c bl"><h3>💳 AP / AR / Payments</h3><ul><li>AR invoices with aging</li><li>AP bills with three-way match</li><li>Multi-method payments (wire, ACH, check, card)</li><li>Payment split, credit notes, loans</li><li>Expense claims with approval</li></ul></div><div class="c pk"><h3>📈 Reports &amp; Banking</h3><ul><li>Trial Balance, P&amp;L, Balance Sheet</li><li>Cash Flow (direct &amp; indirect)</li><li>Bank reconciliation with auto-match</li><li>Allocation rules (subsidiary, %)</li></ul></div></div>
+<div class="wf"><div class="s">Invoice Created</div><div class="ar">→</div><div class="s hi">Approve</div><div class="ar">→</div><div class="s">Schedule Payment</div><div class="ar">→</div><div class="s">Bank Reconciliation</div><div class="ar">→</div><div class="s">Period Close</div><div class="ar">→</div><div class="s gr">Financial Reports</div></div></section><div class="dv"></div>
+
+<!-- M11: Trade Finance -->
+<section class="rv"><div class="mh"><span class="mn">M11</span><h2 style="margin:0;font-size:1.5rem">Trade Finance</h2><span class="ms">18 features · UCP 600 compliant · 9-stage LC lifecycle</span></div>
+<p class="si">Integrated Letter of Credit management — from auto-detection of international procurement through bank payment and liability reversal.</p>
+<div class="g g2"><div class="c"><h3>LC Lifecycle (UCP 600)</h3><ul><li>DRAFT → APPLIED → ISSUED → ADVISED → CONFIRMED → DOCS PRESENTED → ACCEPTED → PAID → CLOSED</li><li>Types: sight, usance, deferred, revolving</li><li>Polymorphic applicant/beneficiary from entity model</li><li>Agreement templates with clause library</li></ul></div><div class="c gn"><h3>Automation &amp; Intelligence</h3><ul><li>VPO → auto-detects ImpSvc → LC suggestion</li><li>Pre-populated: applicant, beneficiary, amount, contract refs</li><li>AI-powered LC compliance vs shipment docs</li><li>Fee tracking (issuance, advising, confirmation, discrepancy)</li><li>All fees posted to Finance GL automatically</li></ul></div></div>
+<div class="wf"><div class="s">Open LC</div><div class="ar">→</div><div class="s">Issue to Bank</div><div class="ar">→</div><div class="s gr">Ship Goods</div><div class="ar">→</div><div class="s">Present Documents</div><div class="ar">→</div><div class="s">Bank Examines</div><div class="ar">→</div><div class="s hi">AI Discrepancy Check</div><div class="ar">→</div><div class="s gr">Payment Release</div></div></section><div class="dv"></div>
+
+<!-- M12: Documents -->
+<section class="rv"><div class="mh"><span class="mn">M12</span><h2 style="margin:0;font-size:1.5rem">Documents</h2><span class="ms">26 document types · 4 document chains · E-signatures</span></div>
+<p class="si">Every operational and financial action produces structured documents that cascade through the system with full lineage.</p>
+<div class="g g2"><div class="c"><h3>4 Document Chains (26 Types)</h3><ul><li><strong>Procurement:</strong> VPR → VPO → VPL → VGRN → VINV</li><li><strong>Sales:</strong> BSO → BSR → BPL → BGRN → BINV</li><li><strong>Import Freight:</strong> IRO → IAWB/IBOL → IBOENT → IDA → IFR → IFINV</li><li><strong>Export Freight:</strong> ERO → EAWB/EBOL → EBOEXT → EDA → EFR → EFINV</li></ul></div><div class="c bl"><h3>Document Features</h3><ul><li>Auto-generated numbers, status lifecycle</li><li>Line items cascade (VPO → VPL → VGRN → VINV)</li><li>E-signature with multi-party sequencing</li><li>Configurable templates with branding</li><li>Full-text search across all documents</li></ul></div></div>
+<div class="wf"><div class="s">Create Document</div><div class="ar">→</div><div class="s">Populate from Data</div><div class="ar">→</div><div class="s hi">Review &amp; E-Sign</div><div class="ar">→</div><div class="s">Cascade to Next Doc</div><div class="ar">→</div><div class="s tl">Trigger Audit</div><div class="ar">→</div><div class="s gr">Post to GL</div></div></section><div class="dv"></div>
+
+<!-- M13: Document Audit -->
+<section class="rv"><div class="mh"><span class="mn">M13</span><h2 style="margin:0;font-size:1.5rem">Document Audit (AI)</h2><span class="ms">22 features · Claude-powered · 4 audit canvases</span></div>
+<p class="si">AI validates every invoice before it touches the general ledger. Four specialized canvases for different audit types, with configurable tolerance gates.</p>
+<div class="g g2"><div class="c tl"><h3>4 AI Audit Canvases</h3><ul><li><strong>Three-Way Match:</strong> VPO ↔ VGRN ↔ VINV</li><li><strong>Contract Audit:</strong> Invoice vs contract terms</li><li><strong>Freight Audit:</strong> Freight invoice vs IFC/EFC rates</li><li><strong>LC Compliance:</strong> UCP 600 document checklist</li></ul></div><div class="c or"><h3>Automation &amp; Control</h3><ul><li>Decision Banner: risk-scored approve/reject/escalate</li><li>Posting Gate: compliance middleware for GL</li><li>Configurable tolerance (qty ±2%, price ±1%)</li><li>Supplier profiles with historical pass/fail</li><li>Analytics dashboard with savings tracking</li></ul></div></div>
+<div class="wf"><div class="s">Upload Document</div><div class="ar">→</div><div class="s hi">AI Extracts Data</div><div class="ar">→</div><div class="s">Compare vs Contract/PO</div><div class="ar">→</div><div class="s rd">Flag Discrepancies</div><div class="ar">→</div><div class="s">Human Review</div><div class="ar">→</div><div class="s">Approve / Reject</div><div class="ar">→</div><div class="s gr">Post to GL</div></div></section><div class="dv"></div>
+
+<!-- M14: Tender -->
+<section class="rv"><div class="mh"><span class="mn">M14</span><h2 style="margin:0;font-size:1.5rem">Tender Management</h2><span class="ms">14 features · AI-driven bid analysis · Award → Contract</span></div>
+<p class="si">Structured procurement sourcing with AI-powered bid scoring that generates natural language justifications and auto-converts awards to contracts.</p>
+<div class="g g2"><div class="c"><h3>Sourcing Capabilities</h3><ul><li>Multi-criteria weighted evaluation</li><li>Vendor invitation &amp; tracking</li><li>Structured bid submission with revisions</li><li>Award with configurable approval gates</li><li>Industry-specific tender templates</li></ul></div><div class="c or"><h3>AI-Powered Analysis</h3><ul><li>Automated scoring (ERP Scoring Service)</li><li>Technical compliance + commercial ranking</li><li>Risk factor identification</li><li>Natural language justification narrative</li><li>Award → auto-generates VPC contract draft</li></ul></div></div>
+<div class="wf"><div class="s">Define Requirements</div><div class="ar">→</div><div class="s">Create Tender</div><div class="ar">→</div><div class="s">Invite Vendors</div><div class="ar">→</div><div class="s">Collect Bids</div><div class="ar">→</div><div class="s hi">AI Score</div><div class="ar">→</div><div class="s">Evaluate</div><div class="ar">→</div><div class="s tl">Award</div><div class="ar">→</div><div class="s gr">Convert to Contract</div></div></section><div class="dv"></div>
+
+<!-- M15: Enterprise Parity Engine -->
+<section class="rv" id="orch"><div class="mh"><span class="mn">M15</span><h2 style="margin:0;font-size:1.5rem">Enterprise Parity Engine</h2><span class="ms">24 features · Orchestration backbone</span></div>
+<p class="si">The nervous system of the platform. Every module publishes events → Enterprise Parity consumes, processes, and orchestrates cross-module workflows.</p>
+<div class="g g3"><div class="c"><h3>🔗 Domain Event Bus</h3><ul><li>Kafka-backed, 50+ event types</li><li>Retry (exponential backoff, max 5)</li><li>Dead-letter queue, event replay</li><li>Schema versioning</li><li>Configurable multi-step workflows</li></ul></div><div class="c bl"><h3>⚙️ Cross-Module Logic</h3><ul><li>Inventory costing (FIFO/LIFO/WAvg)</li><li>ATP/CTP promise calculation</li><li>Safety stock optimization</li><li>Landed cost (purchase + freight + duty + fees)</li><li>Production order management</li></ul></div><div class="c pk"><h3>🏛️ Governance</h3><ul><li>Supplier scorecards (5 dimensions)</li><li>Intercompany + transfer pricing</li><li>OFAC/EU/UN sanctions screening</li><li>EAR/ITAR/Wassenaar export control</li><li>Forecast feedback loop</li></ul></div></div>
+<div class="bn"><p>End-to-End Orchestration — 10-Step Autonomous Flow</p></div>
+<div class="e2e">
+<div class="e2e-s"><div class="e2e-n">1</div><div class="e2e-c"><strong>OBSERVE</strong><p>Demand sensing detects increased signal → Planning publishes FORECAST_DEVIATION → AI OODA observes</p></div></div>
+<div class="e2e-s"><div class="e2e-n">2</div><div class="e2e-c"><strong>ORIENT</strong><p>AI checks inventory, in-transit orders, contract commitments, supplier capacity → builds situational awareness</p></div></div>
+<div class="e2e-s"><div class="e2e-n">3</div><div class="e2e-c"><strong>DECIDE</strong><p>Evaluate: increase safety stock, expedite orders, source from alternate → select optimal action</p></div></div>
+<div class="e2e-s"><div class="e2e-n">4</div><div class="e2e-c"><strong>ACT</strong><p>Safety stock recalculated → MRP runs → shortage detected → VPR generated → approved → VPO created</p></div></div>
+<div class="e2e-s"><div class="e2e-n">5</div><div class="e2e-c"><strong>INTERNATIONAL PROCUREMENT</strong><p>VPO Event Handler detects ImpSvc → creates LC suggestion → compliance screens beneficiary → LC issued</p></div></div>
+<div class="e2e-s"><div class="e2e-n">6</div><div class="e2e-c"><strong>TRANSPORT</strong><p>Freight booking against IFC rates → carrier allocated by scorecard → route optimized → tracking initiated</p></div></div>
+<div class="e2e-s"><div class="e2e-n">7</div><div class="e2e-c"><strong>WAREHOUSE</strong><p>Dock appointment → VGRN receiving → staging inspection → directed put-away → ATP updated</p></div></div>
+<div class="e2e-s"><div class="e2e-n">8</div><div class="e2e-c"><strong>FINANCIAL SETTLEMENT</strong><p>Three-way match validates VPO ↔ VGRN ↔ VINV → AI audits → posting gate → AP bill → payment</p></div></div>
+<div class="e2e-s"><div class="e2e-n">9</div><div class="e2e-c"><strong>TRADE FINANCE CLOSURE</strong><p>LC documents presented → AI validates → bank accepts → LC paid → liability reversed → landed cost finalized</p></div></div>
+<div class="e2e-s"><div class="e2e-n">10</div><div class="e2e-c"><strong>FEEDBACK &amp; LEARNING</strong><p>Forecast feedback → AI tracks outcomes → models updated → supplier scorecard updated → OODA continues</p></div></div>
+</div></section><div class="dv"></div>
+
+<!-- M16: Agentic AI -->
+<section class="rv" id="ai"><div class="mh"><span class="mn">M16</span><h2 style="margin:0;font-size:1.5rem">Agentic AI &amp; Orchestration</h2><span class="ms">28 features · Intelligence layer</span></div>
+<p class="si">Autonomous decision-making, conversational interfaces, and machine-driven execution across the entire platform via the OODA loop and MCP Server.</p>
+<div class="ooda">
+<div class="ooda-s"><div class="on">O</div><h3>OBSERVE</h3><p>Real-time event streams, external signals (market, weather, ports), anomaly detection, multi-source fusion</p></div>
+<div class="ooda-s"><div class="on">O</div><h3>ORIENT</h3><p>Situational awareness, impact assessment, historical pattern matching, dependency graph, risk scoring</p></div>
+<div class="ooda-s"><div class="on">D</div><h3>DECIDE</h3><p>Scenario simulation, cost-benefit per action, confidence scoring, human-in-the-loop escalation</p></div>
+<div class="ooda-s"><div class="on">A</div><h3>ACT</h3><p>Direct execution, multi-step orchestration, rollback on failure, full audit trail, feedback → Observe</p></div>
+</div>
+<div class="g g3">
+<div class="c tl"><h3 style="color:var(--teal)">🤖 7 Domain Agents</h3><ul><li>Procurement (VPR, vendor selection)</li><li>Sales (BSO, delivery promising)</li><li>Logistics (carrier, route, tracking)</li><li>Finance (invoices, payments, recon)</li><li>Planning (forecast, MRP, budget)</li><li>Warehouse (put-away, pick waves)</li><li>Compliance (sanctions, export)</li><li>+ Contract &amp; Tender agents</li></ul></div>
+<div class="c bl"><h3>💬 Conversational AI</h3><ul><li>AI Chat Panel on every page (context-aware)</li><li>Natural language queries across all modules</li><li>Conversational data entry (create via chat)</li><li>Document upload → AI extracts &amp; validates</li><li>Action execution from conversation</li><li>Streaming responses, multi-turn context</li></ul></div>
+<div class="c or"><h3 style="color:var(--orange)">🔌 MCP Server</h3><ul><li>Platform capabilities as MCP tools</li><li><strong>Read:</strong> inventory, orders, pricing, forecasts</li><li><strong>Write:</strong> create VPR, adjust stock, book freight</li><li><strong>Compute:</strong> calculate rates, run MRP, optimize</li><li><strong>Analyze:</strong> audit docs, score vendors, benchmark</li><li>Custom tool builder &amp; marketplace</li></ul></div>
+</div>
+<div class="g g2"><div class="c pk"><h3 style="color:var(--pink)">🔮 Predictive &amp; Prescriptive</h3><ul><li>Demand, lead time, price forecasting</li><li>Stockout probability, carrier performance prediction</li><li>Optimal reorder points, route optimization</li><li>Intelligent alert suppression (fatigue management)</li></ul></div><div class="c gn"><h3>🧠 Continuous Learning</h3><ul><li>Action outcome tracking (did it work?)</li><li>Model performance monitoring &amp; auto-tuning</li><li>Platform-wide knowledge graph</li><li>Best practice library &amp; industry benchmarks</li></ul></div></div></section><div class="dv"></div>
+
+<!-- COMPETITIVE -->
+<section class="rv" id="cmp"><h2>Competitive Edge vs. Legacy</h2>
+<table class="cmp"><thead><tr><th>Feature</th><th>MetaCommerz</th><th>SAP / Oracle</th><th>o9 / Kinaxis</th><th>Coupa / GEP</th></tr></thead><tbody>
+<tr><td>Core</td><td>End-to-End Unified SC</td><td>Finance &amp; Back-Office</td><td>SC Planning</td><td>Procurement</td></tr>
+<tr><td>Architecture</td><td>Cloud-Native, N-Tier</td><td class="ng">Legacy On-Prem</td><td>Cloud Overlay</td><td>Cloud SaaS</td></tr>
+<tr><td>Products</td><td>Master + 10 verticals + BOMs</td><td class="ng">Rigid Material Master</td><td>Summarized</td><td>Catalog-based</td></tr>
+<tr><td>Orchestration</td><td>Event Bus (50+ events)</td><td class="ng">Batch, fragmented</td><td>Planning only</td><td>Procurement only</td></tr>
+<tr><td>AI/ML</td><td>OODA + 7 Agents + MCP</td><td class="ng">Add-on (high cost)</td><td>ML forecast</td><td>Spend AI</td></tr>
+<tr><td>Logistics</td><td>Integrated TMS + WMS</td><td class="ng">Separate TM/EWM</td><td>Planning only</td><td>External</td></tr>
+<tr><td>Trade Finance</td><td>LC Lifecycle (UCP 600)</td><td class="ng">Separate / manual</td><td>Not core</td><td>AP only</td></tr>
+<tr><td>Contracts</td><td>Operational (4 types)</td><td class="ng">Legal repos</td><td>Constraints</td><td>Sourcing</td></tr>
+<tr><td>Deploy</td><td>Months</td><td class="ng">Years</td><td>6-12+ mo</td><td>3-9 mo</td></tr>
+<tr><td>TCO</td><td>Low, predictable</td><td class="ng">Very High</td><td>High</td><td>Medium</td></tr>
+</tbody></table>
+<div class="bn"><p>Fully integrated orchestration, operation &amp; execution — product to financial settlement.</p></div></section><div class="dv"></div>
+
+<!-- SUMMARY -->
+<section class="rv" style="text-align:center"><h2 style="font-size:1.7rem">Unified Neural Network Platform. Complete Control.</h2>
+<div style="max-width:600px;margin:28px auto;display:flex;flex-direction:column;gap:10px">
+<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem">🌍 <strong style="color:var(--gold)">Multi-Tenant N-Tier</strong> organization hierarchy</div>
+<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem">🔄 <strong style="color:var(--gold)">End-to-End Workflows</strong> demand to payment</div>
+<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem">🤖 <strong style="color:var(--gold)">Agentic AI</strong> OODA + 7 agents + MCP Server</div>
+<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem">🔗 <strong style="color:var(--gold)">Event Bus</strong> 50+ events across 16 modules</div>
+<div style="padding:8px 0;font-size:0.9rem">🏭 <strong style="color:var(--gold)">10 Industry Verticals</strong> rapid deployment</div></div>
+<div class="bn"><p>Stop stitching together tools. Start orchestrating your business.</p></div></section><div class="dv"></div>
+
+<!-- THANK YOU -->
+<section id="contact" style="min-height:40vh;display:flex;flex-direction:column;justify-content:center;max-width:1140px;margin:0 auto;padding:80px 40px">
+<h1 style="font-size:2.8rem">Thank you</h1><p class="sub">Ready to transform your supply chain</p>
+<div style="margin-top:28px"><p style="color:var(--grey);font-size:0.88rem">Leo David · Founder, CEO</p><p style="color:var(--blue);font-size:0.88rem;margin-top:5px">ldavid@metacommerz.io</p><p style="color:var(--grey);font-size:0.78rem;margin-top:3px">metacommerz.io</p></div></section>
+
+<script>const o=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('vis')})},{threshold:0.06});document.querySelectorAll('.rv').forEach(el=>o.observe(el));</script>
+</body>
+</html>
