@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgenticVaults SBOM: Cryptographic Software Supply Chain Security</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #e2e8f0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            page-break-after: always;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #10b981;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-sub {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .industry-badges {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .industry-badge {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero .highlight {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: 20px;
+            color: #94a3b8;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .hero .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #10b981;
+            display: block;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .section-title .icon {
+            color: #10b981;
+            margin-right: 10px;
+        }
+
+        .thucydides-trap {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 40px 0 50px 0;
+            text-align: center;
+        }
+
+        .thucydides-trap h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fca5a5;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .thucydides-trap p {
+            font-size: 16px;
+            color: #cbd5e1;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .thucydides-trap .question {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin-top: 15px;
+            font-style: normal;
+        }
+
+        .narrative-box {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-left: 4px solid #10b981;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .narrative-box h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 12px;
+        }
+
+        .narrative-box p {
+            font-size: 14px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .narrative-box strong {
+            color: white;
+        }
+
+        .value-pillars {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .pillar-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            padding: 25px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            border-color: #10b981;
+        }
+
+        .pillar-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .pillar-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .pillar-card p {
+            font-size: 13px;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .problem-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-left: 4px solid #ef4444;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .problem-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fca5a5;
+            margin-bottom: 10px;
+        }
+
+        .problem-card p {
+            font-size: 14px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .problem-card .metric {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ef4444;
+            margin-top: 10px;
+            display: block;
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+        }
+
+        .use-case {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-left: 4px solid #10b981;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .use-case-tag {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .use-case h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+
+        .use-case-example {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 15px;
+            font-style: italic;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+            border-left: 3px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .use-case-benefit {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            font-size: 13px;
+            color: #e2e8f0;
+            font-weight: 500;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .benefit-icon {
+            color: #10b981;
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .benefit-item {
+            background: rgba(16, 185, 129, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .benefit-item h5 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 8px;
+        }
+
+        .benefit-item p {
+            font-size: 12px;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        .sbom-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            padding: 25px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(16, 185, 129, 0.5);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2);
+        }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .feature-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .feature-card li {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .feature-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: 700;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+        }
+
+        .cta-section h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .cta-section p {
+            font-size: 16px;
+            margin-bottom: 25px;
+            opacity: 0.95;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            background: white;
+            color: #065f46;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .contact-info {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+
+        .contact-info strong {
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid rgba(16, 185, 129, 0.3);
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .mandate-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .mandate-box h5 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 8px;
+        }
+
+        .mandate-box p {
+            font-size: 13px;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        @media print {
+            .page {
+                box-shadow: none;
+                padding: 40px;
+            }
+            body {
+                background: white;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .problem-grid,
+            .value-pillars,
+            .sbom-features,
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero .stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .industry-badges {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1: HERO & VALUE PROPOSITION -->
+    <div class="page">
+        <div class="header">
+            <div>
+                <div class="logo">AgenticVaults SBOM</div>
+                <div class="logo-sub">Cryptographic Software Supply Chain Security</div>
+            </div>
+            <div class="industry-badges">
+                <div class="industry-badge">Government</div>
+                <div class="industry-badge">Healthcare</div>
+                <div class="industry-badge">Financial</div>
+                <div class="industry-badge">Aerospace</div>
+                <div class="industry-badge">Automotive</div>
+                <div class="industry-badge">Software Vendors</div>
+            </div>
+        </div>
+
+        <div class="hero">
+            <h1>Turn SBOM Compliance<br/>Into <span class="highlight">Competitive Advantage</span></h1>
+            <div class="subtitle">Cryptographic proof of integrity for every software component—from open source to firmware</div>
+
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-value">Tier 1-5</span>
+                    <span class="stat-label">Full Supply Chain Visibility</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">Real-Time</span>
+                    <span class="stat-label">CVE Detection</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">1-2 μs</span>
+                    <span class="stat-label">Cryptographic Signing</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">100%</span>
+                    <span class="stat-label">Automated</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="thucydides-trap">
+            <h3>Most cybersecurity companies are playing defense — protecting their legacy business models.</h3>
+            <p>The old empire treats SBOMs as compliance checkboxes. Spreadsheets generated once a year, forgotten until the next audit.</p>
+            <p class="question">The question is: will you bet on static documents or living cryptographic proof?</p>
+        </div>
+
+        <div class="narrative-box">
+            <h4>Why SBOM is No Longer Optional—It's Table Stakes</h4>
+            <p><strong>Regulatory mandates are here:</strong> U.S. Executive Order 14028 requires SBOMs for all federal software procurement. FDA pre-market submissions for medical devices demand component-level transparency. EU NIS2 Directive mandates supply chain security measures. Financial regulators (SEC, FINRA) are scrutinizing third-party open-source risks after major breaches.</p>
+            <p style="margin-top: 12px;"><strong>The software supply chain is the weakest link:</strong> 73% of breaches originate from Tier 2-5 suppliers. Log4Shell (2021) exposed how one vulnerable open-source library cascaded across 35,000+ applications. SolarWinds (2020) proved that firmware tampering = nation-state attack vector. You can't secure what you can't see.</p>
+            <p style="margin-top: 12px;"><strong>AgenticVaults makes SBOM your competitive moat:</strong> Not just compliance—cryptographic proof of integrity. Every component signed with ICRYPT hardware acceleration (1-2 μs). Real-time CVE monitoring with agentic AI. Counterfeit detection for Tier 3-5 hardware suppliers. Turn "we have an SBOM" into "we can prove provenance down to the silicon layer."</p>
+        </div>
+
+        <h2 class="section-title"><span class="icon">🏗️</span>Core Value Pillars: SBOM as Command & Control</h2>
+
+        <div class="value-pillars">
+            <div class="pillar-card">
+                <div class="pillar-number">1</div>
+                <h3>Automated SBOM Generation</h3>
+                <p>Syft integration generates SBOMs for containers, binaries, filesystems, and archives. Supports all major formats (SPDX, CycloneDX, Syft JSON). CI/CD pipeline integration—every build = fresh SBOM with zero manual effort.</p>
+            </div>
+
+            <div class="pillar-card">
+                <div class="pillar-number">2</div>
+                <h3>Real-Time Vulnerability Scanning</h3>
+                <p>Grype continuously monitors for CVEs across 100+ data sources (NVD, OSV, GitHub, security advisories). Alerts within 30 minutes of disclosure. Prioritizes exploitable vulnerabilities (EPSS scoring) to cut noise.</p>
+            </div>
+
+            <div class="pillar-card">
+                <div class="pillar-number">3</div>
+                <h3>Cryptographic Proof of Integrity (ICRYPT)</h3>
+                <p>Every SBOM signed with hardware-accelerated AES-256-GCM (1-2 μs per operation). Tamper-proof provenance from source code → container image → production deployment. Sigstore integration for public verifiability.</p>
+            </div>
+
+            <div class="pillar-card">
+                <div class="pillar-number">4</div>
+                <h3>N-Tier Supply Chain Visibility</h3>
+                <p>Map dependencies from Tier 1 vendors → Tier 5 chip manufacturers. AI agents discover transitive dependencies (your vendor's vendor's open-source libraries). 9-domain cryptographic isolation ensures breach in one supplier ≠ access to all.</p>
+            </div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">⚠️</span>Industry-Specific SBOM Challenges</h2>
+
+        <div class="problem-grid">
+            <div class="problem-card">
+                <h3>🏛️ Government: Federal Mandate Compliance</h3>
+                <p>Executive Order 14028 requires SBOMs for all software sold to federal agencies. OMB mandates machine-readable formats (SPDX/CycloneDX). Static PDFs = contract rejection. Agencies demand real-time CVE updates, not annual reports.</p>
+                <span class="metric">$650B federal IT budget at risk</span>
+            </div>
+
+            <div class="problem-card">
+                <h3>🏥 Healthcare: Medical Device Safety</h3>
+                <p>FDA pre-market submissions (510(k), PMA) require SBOM for software-defined devices. One vulnerable library in infusion pump firmware = 50,000 unit recall. Counterfeit chips in Tier 3 suppliers compromise patient safety. You need component-level provenance—not just software.</p>
+                <span class="metric">$4.2M avg. recall cost</span>
+            </div>
+
+            <div class="problem-card">
+                <h3>🏦 Financial: Zero-Tolerance Risk</h3>
+                <p>SEC scrutiny after breaches traced to open-source libraries. FINRA regulations mandate third-party risk assessments. One vulnerable dependency in trading platform = systemic risk. Traditional SBOM tools can't prove that compromised NPM package didn't infiltrate production.</p>
+                <span class="metric">$5.9B in fines (2025)</span>
+            </div>
+
+            <div class="problem-card">
+                <h3>✈️ Aerospace: Nation-State Threats</h3>
+                <p>Defense contractors face CMMC 2.0 Level 3 requirements for supply chain security. Firmware tampering in avionics = catastrophic safety risk. You need cryptographic proof that Tier 4 chip supplier didn't insert backdoor. Static SBOMs can't detect runtime tampering.</p>
+                <span class="metric">$12M avg. defense breach</span>
+            </div>
+
+            <div class="problem-card">
+                <h3>🚗 Automotive: Millions of Lines of Code</h3>
+                <p>Modern vehicles = 100M+ lines of code across 150+ ECUs. ISO 21434 (cybersecurity engineering) requires component transparency. One vulnerable open-source library in ADAS = remote vehicle hijacking. OTA updates need tamper-proof SBOM verification before deployment.</p>
+                <span class="metric">$1.4B avg. recall</span>
+            </div>
+
+            <div class="problem-card">
+                <h3>💼 Software Vendors: Deal-Closing Requirement</h3>
+                <p>Enterprise customers won't sign contracts without SBOM. "Can you provide a software bill of materials?" used to be rare—now it's in 68% of RFPs. Procurement teams use SBOM to assess vendor risk. No SBOM = no deal. Manual generation = 40 hours per release.</p>
+                <span class="metric">68% of enterprise RFPs</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            AgenticVaults, Inc. | Confidential & Proprietary | May 2026 | SBOM Solution Brief
+        </div>
+    </div>
+
+    <!-- PAGE 2: INDUSTRY USE CASES -->
+    <div class="page">
+        <div class="header">
+            <div>
+                <div class="logo">AgenticVaults SBOM</div>
+                <div class="logo-sub">Industry-Specific Solutions</div>
+            </div>
+            <div class="industry-badges">
+                <div class="industry-badge">Use Cases & Benefits</div>
+            </div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">🎯</span>Government & Public Sector</h2>
+
+        <div class="mandate-box">
+            <h5>📋 Regulatory Driver: Executive Order 14028 (May 2021)</h5>
+            <p>"The Federal Government must... require that software developers... provide a Software Bill of Materials (SBOM) for each product... in a machine-readable format that allows automated analysis."</p>
+        </div>
+
+        <div class="use-case">
+            <span class="use-case-tag">Government</span>
+            <h4>Federal Software Procurement Compliance</h4>
+            <p class="use-case-example">"We're bidding on a $50M Defense Information Systems Agency (DISA) contract for secure communications software. The RFP explicitly requires SPDX-format SBOMs updated quarterly, with real-time CVE notifications. Our current process: manually inventory dependencies using spreadsheets—takes 80 hours per release and is obsolete the day after submission."</p>
+            <div class="use-case-benefit">
+                <span class="benefit-icon">✓</span>
+                <span><strong>Solution:</strong> AgenticVaults automates SBOM generation with Syft—analyzes Docker containers, binaries, and source code in 30 seconds. Outputs machine-readable SPDX 2.3 format compliant with NTIA minimum elements. Grype continuously monitors for new CVEs (30-min alert SLA). Cryptographic signing with ICRYPT ensures SBOM integrity. AI agent detects when dependency versions diverge from approved baselines—alerts before security review. Result: Contract compliance without manual toil, competitive advantage in federal bids.</span>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <h5>Contract Wins</h5>
+                    <p>Meet federal SBOM mandates that competitors can't—68% of vendors lack automated SBOM generation</p>
+                </div>
+                <div class="benefit-item">
+                    <h5>Audit Readiness</h5>
+                    <p>Inspector General audits demand proof of supply chain security—automated evidence collection vs. 200-hour manual effort</p>
+                </div>
+                <div class="benefit-item">
+                    <h5>Zero-Day Response</h5>
+                    <p>When Log4Shell hits, identify affected systems in minutes (not weeks)—critical for incident response mandates</p>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">🏥</span>Healthcare & Medical Devices</h2>
+
+        <div class="mandate-box">
+            <h5>📋 Regulatory Driver: FDA Cybersecurity Guidance (2023)</h5>
+            <p>"Pre-market submissions should include a Software Bill of Materials (SBOM) for device software... to enable transparency and enable identification of vulnerabilities."</p>
+        </div>
+
+        <div class="use-case">
+            <span class="use-case-tag">Healthcare</span>
+            <h4>Medical Device Pre-Market Submission (510(k) / PMA)</h4>
+            <p class="use-case-example">"We manufacture insulin pumps with embedded Linux and 40+ open-source libraries. FDA pre-market review now requires SBOM showing every component—from kernel version to cryptographic libraries. Reviewers flag vulnerable dependencies (OpenSSL 1.1.0 with known CVEs) and demand remediation before approval. Manual SBOM generation = 120 hours per submission. One missed vulnerability = 18-month approval delay."</p>
+            <div class="use-case-benefit">
+                <span class="benefit-icon">✓</span>
+                <span><strong>Solution:</strong> Syft scans firmware images and extracts complete dependency tree (Linux kernel, glibc, OpenSSL, proprietary libraries). Grype cross-references against FDA-MDS (Manufacturer Disclosure Statement) vulnerability database. ICRYPT cryptographically signs SBOM—FDA reviewers verify provenance with Sigstore. AI agent flags components with known medical device vulnerabilities before submission. Physical Supply Chain module tracks PCB fabrication—detects counterfeit voltage regulators from Tier 3 suppliers. Result: 510(k) clearance in 90 days (vs. industry avg. 150 days).</span>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <h5>Faster FDA Approval</h5>
+                    <p>Comprehensive SBOM accelerates pre-market review—avoid 6-month delays from incomplete submissions</p>
+                </div>
+                <div class="benefit-item">
+                    <h5>Recall Prevention</h5>
+                    <p>Real-time CVE monitoring = patch vulnerable libraries before field deployment (vs. $4.2M recall cost)</p>
+                </div>
+                <div class="benefit-item">
+                    <h5>Counterfeit Detection</h5>
+                    <p>Hardware SBOM with cryptographic provenance—verify chip authenticity down to Tier 5 semiconductor fab</p>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">🏦</span>Financial Services</h2>
+
+        <div class="mandate-box">
+            <h5>📋 Regulatory Driver: SEC Risk Alert on Third-Party Service Providers (2023)</h5>
+            <p>"Firms should understand the software supply chain risks... including open-source libraries and dependencies that may contain vulnerabilities."</p>
+        </div>
+
+        <div class="use-case">
+            <span class="use-case-tag">Financial</span>
+            <h4>Trading Platform Open-Source Risk Management</h4>
+            <p class="use-case-example">"Our FX trading platform uses 2,400 NPM packages and 800 Python dependencies. After the event-stream Bitcoin wallet theft (2018), auditors demand proof that malicious packages can't infiltrate production. We need real-time monitoring—not annual dependency audits. Traditional SBOM tools generate static JSON files that are obsolete within hours of new CVE disclosures."</p>
+            <div class="use-case-benefit">
+                <span class="benefit-icon">✓</span>
+                <span><strong>Solution:</strong> AgenticVaults continuously monitors NPM/PyPI for malicious package indicators (typosquatting, install scripts, obfuscated code). Grype detects CVEs within 30 minutes of NVD publication. ICRYPT signs every container image—runtime verification ensures production matches approved SBOM (detects package substitution attacks). AI agent analyzes transitive dependencies—flags when your vendor's NPM package pulls in suspicious library. 9-domain isolation: trading platform dependencies cryptographically isolated from back-office systems. Result: SEC audit shows zero high-severity vulnerabilities in production (vs. industry avg. 18).</span>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <h5>Systemic Risk Reduction</h5>
+                    <p>One vulnerable library ≠ entire platform compromise—9-domain isolation contains blast radius</p>
+                </div>
+                <div class="benefit-item">
+                    <h5>Regulatory Confidence</h5>
+                    <p>Demonstrate to SEC/FINRA that third-party OSS risks are continuously managed—not just annually assessed</p>
+                </div>
+                <div class="benefit-item">
+                    <h5>Incident Response</h5>
+                    <p>When zero-day disclosed, identify affected trading desks in 5 minutes (vs. 72-hour manual search)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            AgenticVaults, Inc. | Confidential & Proprietary | May 2026 | SBOM Solution Brief
+        </div>
+    </div>
+
+    <!-- PAGE 3: AEROSPACE, AUTOMOTIVE, SOFTWARE VENDORS -->
+    <div class="page">
+        <div class="header">
+            <div>
+                <div class="logo">AgenticVaults SBOM</div>
+                <div class="logo-sub">Industry Solutions Continued</div>
+            </div>
+            <div class="industry-badges">
+                <div class="industry-badge">Advanced Use Cases</div>
+            </div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">✈️</span>Aerospace & Defense</h2>
+
+        <div class="mandate-box">
+            <h5>📋 Regulatory Driver: CMMC 2.0 Level 3 (Supply Chain Security)</h5>
+            <p>"Defense contractors must demonstrate supply chain risk management... including software component transparency and provenance verification."</p>
+        </div>
+
+        <div class="use-case">
+            <span class="use-case-tag">Aerospace</span>
+            <h4>Avionics Firmware Supply Chain Verification</h4>
+            <p class="use-case-example">"We manufacture flight control systems for commercial aircraft. Firmware runs on custom hardware with Tier 3 chip suppliers in Taiwan, Malaysia, and Mexico. Nation-state adversaries target our supply chain—SolarWinds proved that firmware tampering = undetectable backdoor. FAA mandates component-level traceability for airworthiness certification. How do we cryptographically prove that production firmware matches design intent across 5 supply chain tiers?"</p>
+            <div class="use-case-benefit">
+                <span class="benefit-icon">✓</span>
+                <span><strong>Solution:</strong> Hardware + Software SBOM integration. Syft generates firmware SBOM (RTOS, device drivers, safety-critical libraries). Physical Supply Chain module tracks chip procurement—cryptographic fingerprints from Tier 5 semiconductor fab → Tier 1 assembly. ICRYPT signs every build artifact with hardware acceleration (1-2 μs)—runtime verification detects if production device loads unauthorized firmware. AI agent compares chip lot numbers against blockchain provenance (Hyperledger integration)—flags counterfeit voltage regulators before board assembly. Result: CMMC Level 3 audit shows zero supply chain gaps (vs. 60% of defense contractors failing initial assessment).</span>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <h5>Nation-State Defense</h5>
+                    <p>Firmware tampering detection at Tier 3-5 suppliers—prevent SolarWinds-style attacks before hardware ships</p>
+                </div>
+                <div class="benefit-item">
+                    <h5>CMMC Compliance</h5>
+                    <p>Meet Level 3 supply chain security requirements—required for DoD contracts > $7.5M (97% of defense business)</p>
+                </div>
+                <div class="benefit-item">
+                    <h5>Airworthiness Certification</h5>
+                    <p>FAA/EASA audits demand component traceability—automated evidence vs. 300-hour manual documentation</p>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">🚗</span>Automotive & Industrial Manufacturing</h2>
+
+        <div class="mandate-box">
+            <h5>📋 Regulatory Driver: ISO 21434 (Road Vehicles — Cybersecurity Engineering)</h5>
+            <p>"Suppliers shall provide... a software bill of materials including open-source components... to enable cybersecurity risk assessment."</p>
+        </div>
+
+        <div class="use-case">
+            <span class="use-case-tag">Automotive</span>
+            <h4>Over-the-Air (OTA) Update Verification for ADAS</h4>
+            <p class="use-case-example">"Our autonomous driving stack pushes OTA firmware updates to 500,000 vehicles monthly. Each update contains 100M+ lines of code across 150 ECUs (Electronic Control Units). One vulnerable open-source library in perception module = remote vehicle hijacking risk. NHTSA mandates cybersecurity transparency for autonomous features. How do we prove to regulators that OTA updates don't introduce new vulnerabilities—and verify authenticity before vehicle installation?"</p>
+            <div class="use-case-benefit">
+                <span class="benefit-icon">✓</span>
+                <span><strong>Solution:</strong> Pre-deployment SBOM verification pipeline. Every OTA package signed with ICRYPT (1-2 μs hardware acceleration)—vehicles verify signature before installation. Grype scans update SBOM for CVEs before release—blocks deployment if critical vulnerabilities detected. AI agent compares new SBOM against previous version—flags unexpected dependency additions (potential supply chain attack). ISKDE 9-domain isolation: ADAS firmware cryptographically isolated from infotainment ECU (breach in Spotify app ≠ access to steering control). Result: NHTSA audit shows 100% OTA update integrity verification (vs. 42% of OEMs lacking cryptographic signing).</span>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <h5>Recall Prevention</h5>
+                    <p>Detect vulnerable libraries before OTA deployment—avoid $1.4B recall (vs. post-deployment discovery)</p>
+                </div>
+                <div class="benefit-item">
+                    <h5>ISO 21434 Compliance</h5>
+                    <p>Meet cybersecurity engineering requirements for EU/US sales—mandatory for Level 3+ autonomous vehicles</p>
+                </div>
+                <div class="benefit-item">
+                    <h5>Supply Chain Trust</h5>
+                    <p>Tier 2 ECU suppliers provide cryptographically signed SBOMs—verify component authenticity before integration</p>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">💼</span>Technology & Software Vendors (B2B/ISV)</h2>
+
+        <div class="mandate-box">
+            <h5>📋 Market Driver: Enterprise Procurement Requirements</h5>
+            <p>"68% of enterprise RFPs now include mandatory SBOM requirements. No SBOM = automatic vendor disqualification from Fortune 500 opportunities."</p>
+        </div>
+
+        <div class="use-case">
+            <span class="use-case-tag">Software Vendor</span>
+            <h4>Enterprise Sales Acceleration & Deal-Closing Velocity</h4>
+            <p class="use-case-example">"We're a SaaS analytics platform selling to Fortune 500 customers. Procurement teams now ask: 'Can you provide an SBOM showing all open-source dependencies?' in initial discovery calls. If we can't produce machine-readable SBOM + vulnerability report within 48 hours, we lose to competitors who can. Manual generation with 'npm audit' and spreadsheets = 40 hours per customer request. We're leaving $12M in ARR on the table because we can't respond fast enough."</p>
+            <div class="use-case-benefit">
+                <span class="benefit-icon">✓</span>
+                <span><strong>Solution:</strong> Self-service SBOM portal for customers. AgenticVaults generates SPDX/CycloneDX SBOM for every release—auto-published to customer portal within 5 minutes of production deployment. Grype vulnerability report attached (prioritized by EPSS exploitability score). ICRYPT cryptographic signing = customers verify SBOM authenticity. AI agent generates executive summary: "342 components, 2 medium-severity CVEs (patches scheduled Q2 2026), zero critical vulnerabilities." Sales team sends link during discovery call—instant competitive advantage. Result: 3x faster deal velocity, 24% higher win rate on enterprise accounts requiring SBOM.</span>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <h5>Revenue Acceleration</h5>
+                    <p>Close Fortune 500 deals that require SBOM—competitors without automation lose to "we can't provide that"</p>
+                </div>
+                <div class="benefit-item">
+                    <h5>Customer Trust</h5>
+                    <p>Proactive transparency = differentiation. Customers see you take supply chain security seriously vs. treating it as checkbox</p>
+                </div>
+                <div class="benefit-item">
+                    <h5>Renewal Protection</h5>
+                    <p>Annual security reviews demand updated SBOM—automated delivery prevents churn from "vendor didn't respond to questionnaire"</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            AgenticVaults, Inc. | Confidential & Proprietary | May 2026 | SBOM Solution Brief
+        </div>
+    </div>
+
+    <!-- PAGE 4: TECHNICAL FEATURES & CTA -->
+    <div class="page">
+        <div class="header">
+            <div>
+                <div class="logo">AgenticVaults SBOM</div>
+                <div class="logo-sub">Technical Architecture & Capabilities</div>
+            </div>
+            <div class="industry-badges">
+                <div class="industry-badge">Platform Overview</div>
+            </div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">🔧</span>SBOM Platform Capabilities</h2>
+
+        <div class="sbom-features">
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="feature-icon">📦</div>
+                    <h3>Automated Generation (Syft)</h3>
+                </div>
+                <ul>
+                    <li>Docker containers, VM images, filesystems, archives</li>
+                    <li>Multi-language support (Python, JavaScript, Java, Go, Rust, C/C++)</li>
+                    <li>SPDX 2.3, CycloneDX 1.5, Syft JSON output formats</li>
+                    <li>NTIA minimum elements compliance (name, version, supplier, dependencies)</li>
+                    <li>Nested dependency resolution (transitive dependencies to depth 10)</li>
+                    <li>CI/CD integration (GitHub Actions, GitLab CI, Jenkins)</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Vulnerability Scanning (Grype)</h3>
+                </div>
+                <ul>
+                    <li>100+ CVE data sources (NVD, OSV, GitHub Security Advisories)</li>
+                    <li>EPSS exploitability scoring (prioritize patchable vulnerabilities)</li>
+                    <li>Real-time alerts (30-min SLA from CVE disclosure)</li>
+                    <li>False positive reduction via CPE matching + version heuristics</li>
+                    <li>Custom vulnerability policies (block deployment if critical CVE)</li>
+                    <li>Historical trending (track vulnerability debt over time)</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="feature-icon">🔐</div>
+                    <h3>Cryptographic Signing (ICRYPT)</h3>
+                </div>
+                <ul>
+                    <li>Hardware-accelerated AES-256-GCM (1-2 μs signing time)</li>
+                    <li>Sigstore integration (Rekor transparency log + Fulcio PKI)</li>
+                    <li>Tamper-proof provenance chain (source → build → container → runtime)</li>
+                    <li>9-domain isolation via ISKDE (component SBOM per security domain)</li>
+                    <li>Runtime verification (detect package substitution attacks)</li>
+                    <li>Notarization for macOS/iOS apps (Apple Developer signing)</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="feature-icon">📜</div>
+                    <h3>License Compliance Tracking</h3>
+                </div>
+                <ul>
+                    <li>SPDX license identifier detection (GPL, MIT, Apache, proprietary)</li>
+                    <li>Copyleft risk scoring (GPL viral clauses flagged for legal review)</li>
+                    <li>Commercial license validation (ensure paid licenses for proprietary deps)</li>
+                    <li>Policy enforcement (block AGPL in commercial products)</li>
+                    <li>Audit trail for open-source usage (M&A due diligence ready)</li>
+                    <li>Attribution report generation (LICENSE file auto-generation)</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Agentic AI Monitoring</h3>
+                </div>
+                <ul>
+                    <li>Software Supply Chain Agent (detects suspicious dependency changes)</li>
+                    <li>Automated vendor outreach (requests SBOMs from Tier 2-5 suppliers)</li>
+                    <li>Counterfeit detection (compares chip lot numbers vs. manufacturer data)</li>
+                    <li>Anomaly detection (flags when new package appears in dependency tree)</li>
+                    <li>Risk scoring (ML prediction of component breach likelihood)</li>
+                    <li>Remediation suggestions (AI recommends patched versions or alternatives)</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="feature-icon">🌐</div>
+                    <h3>N-Tier Supply Chain Visibility</h3>
+                </div>
+                <ul>
+                    <li>Tier 1-5 dependency mapping (your vendor's vendor's open-source libs)</li>
+                    <li>Automated SBOM collection from suppliers via API or portal</li>
+                    <li>Transitive vulnerability propagation (CVE in Tier 3 = alert at Tier 1)</li>
+                    <li>Supplier risk dashboard (which vendors pose highest SBOM risk?)</li>
+                    <li>Blockchain provenance integration (Hyperledger for hardware components)</li>
+                    <li>Third-party SBOM verification (validate supplier-provided SBOMs)</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">💡</span>Why AgenticVaults vs. Traditional SBOM Tools</h2>
+
+        <div class="narrative-box">
+            <h4>The Competitive Advantage: Living Cryptographic Proof vs. Static Documents</h4>
+            <p><strong>Traditional SBOM tools generate static files:</strong> You run "syft scan" once, get a JSON/SPDX file, and it's immediately obsolete. New CVEs disclosed daily—your SBOM doesn't reflect current risk. Suppliers send you PDFs—you can't verify authenticity or automate analysis. Compliance becomes checkbox exercise: "Yes, we have an SBOM" but it was generated 6 months ago.</p>
+            <p style="margin-top: 12px;"><strong>AgenticVaults makes SBOM a living system:</strong> Continuous monitoring with agentic AI. Every commit → fresh SBOM + CVE scan. Cryptographic signing with ICRYPT hardware acceleration ensures provenance. N-tier supply chain visibility means you see Tier 5 vulnerabilities, not just your code. 9-domain isolation = breach in one component ≠ compromise of entire system. Regulators see real-time compliance—not annual snapshots.</p>
+            <p style="margin-top: 12px;"><strong>Turn SBOM from cost center to revenue driver:</strong> Enterprise customers require SBOM for procurement—automated generation = faster deal velocity. Government contracts mandate machine-readable SBOMs—compliance = access to $650B federal IT budget. Recalls prevented via real-time CVE alerts = $4M+ savings vs. post-deployment discovery. Your competitors are still using spreadsheets—you have cryptographic proof of integrity.</p>
+        </div>
+
+        <div class="cta-section">
+            <h3>See Your Software Supply Chain in Cryptographic Detail</h3>
+            <p>Schedule a live demo: We'll scan your production containers, generate SPDX SBOM, identify vulnerabilities with Grype, and show you cryptographic signing with ICRYPT hardware acceleration—all in 30 minutes.</p>
+
+            <div class="cta-buttons">
+                <a href="https://cal.com/agenticvaults" target="_blank" class="cta-button">📅 Book SBOM Demo</a>
+                <a href="mailto:ldavid@agenticvaults.ai?subject=SBOM%20Solution%20Inquiry" class="cta-button secondary">✉️ Email Leo David</a>
+            </div>
+
+            <div class="contact-info">
+                <strong>Direct Contact:</strong> Leo David, Founder & CEO<br/>
+                <strong>Email:</strong> ldavid@agenticvaults.ai<br/>
+                <strong>Calendar:</strong> <a href="https://cal.com/agenticvaults" style="color: white; text-decoration: underline;">cal.com/agenticvaults</a><br/>
+                <br/>
+                <strong>Proof of Concept Offer:</strong> We'll deploy AgenticVaults SBOM platform in your CI/CD pipeline—scan your production containers, generate compliant SBOMs (SPDX/CycloneDX), identify vulnerabilities with Grype, and cryptographically sign every artifact with ICRYPT. See the difference between static documents and living cryptographic proof. Zero commitment. 2-week pilot.
+            </div>
+        </div>
+
+        <div class="footer">
+            <strong>Website:</strong> <a href="https://agenticvaults.ai" style="color: #10b981;">agenticvaults.ai</a> | <strong>SBOM Platform:</strong> Phase 1.5 ICRYPT deployed May 2026<br/>
+            AgenticVaults™, ICRYPT™, and ISKDE™ are trademarks of AgenticVaults, Inc. | Patent-pending indigenous cryptography<br/>
+            <br/>
+            <em>Confidential & Proprietary | SBOM Solution Brief for Regulated Industries | May 15, 2026</em>
+        </div>
+    </div>
+</body>
+</html>
