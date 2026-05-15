@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgenticVaults: Indigenous Cryptography for Regulated Industries</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #e2e8f0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            page-break-after: always;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #10b981;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-sub {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .industry-badges {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .industry-badge {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero .highlight {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: 20px;
+            color: #94a3b8;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .hero .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 40px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #10b981;
+            display: block;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .thucydides-trap {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 40px 0 50px 0;
+            text-align: center;
+        }
+
+        .thucydides-trap h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fca5a5;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .thucydides-trap p {
+            font-size: 16px;
+            color: #cbd5e1;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .thucydides-trap .question {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin-top: 15px;
+            font-style: normal;
+        }
+
+        .value-pillars {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .pillar-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            padding: 25px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            border-color: #10b981;
+        }
+
+        .pillar-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .pillar-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .pillar-card p {
+            font-size: 13px;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        .narrative-box {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-left: 4px solid #10b981;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .narrative-box h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 12px;
+        }
+
+        .narrative-box p {
+            font-size: 14px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .narrative-box strong {
+            color: white;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .section-title .icon {
+            color: #10b981;
+            margin-right: 10px;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .problem-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-left: 4px solid #ef4444;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .problem-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fca5a5;
+            margin-bottom: 10px;
+        }
+
+        .problem-card p {
+            font-size: 14px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .problem-card .metric {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ef4444;
+            margin-top: 10px;
+            display: block;
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+        }
+
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .solution-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .solution-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            border-color: #10b981;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
+        }
+
+        .solution-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .solution-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+
+        .solution-card p {
+            font-size: 13px;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        .tech-highlight {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 50px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .tech-highlight h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #10b981;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .tech-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .tech-column h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .tech-column.old h4 {
+            color: #f87171;
+        }
+
+        .tech-column.new h4 {
+            color: #10b981;
+        }
+
+        .tech-item {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #cbd5e1;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .module-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            padding: 25px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .module-card:hover {
+            border-color: rgba(16, 185, 129, 0.5);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2);
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .module-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .module-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .module-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .module-card li {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .module-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: 700;
+        }
+
+        .compliance-bar {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 50px;
+        }
+
+        .compliance-badge {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .use-case {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-left: 4px solid #10b981;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .use-case-tag {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .use-case h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+
+        .use-case-example {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 15px;
+            font-style: italic;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+            border-left: 3px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .use-case-benefit {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            font-size: 13px;
+            color: #e2e8f0;
+            font-weight: 500;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .benefit-icon {
+            color: #10b981;
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        .demo-workflow {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .demo-workflow h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .workflow-step {
+            text-align: center;
+            position: relative;
+        }
+
+        .workflow-step:not(:last-child)::after {
+            content: "→";
+            position: absolute;
+            right: -15px;
+            top: 20px;
+            color: #10b981;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .step-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .step-desc {
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+        }
+
+        .cta-section h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .cta-section p {
+            font-size: 16px;
+            margin-bottom: 25px;
+            opacity: 0.95;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            background: white;
+            color: #065f46;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .contact-info {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+
+        .contact-info strong {
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid rgba(16, 185, 129, 0.3);
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .testimonial {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+            border-left: 4px solid #3b82f6;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            font-style: italic;
+            color: #cbd5e1;
+        }
+
+        .testimonial-author {
+            margin-top: 15px;
+            font-style: normal;
+            font-weight: 700;
+            color: #3b82f6;
+            font-size: 14px;
+        }
+
+        @media print {
+            .page {
+                box-shadow: none;
+                padding: 40px;
+            }
+            body {
+                background: white;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .problem-grid,
+            .solution-grid,
+            .modules-grid,
+            .tech-comparison,
+            .workflow-steps,
+            .value-pillars {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero .stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .workflow-step:not(:last-child)::after {
+                content: "↓";
+                right: auto;
+                top: auto;
+                bottom: -25px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1: THE PROBLEM & SOLUTION -->
+    <div class="page">
+        <div class="header">
+            <div>
+                <div class="logo">AgenticVaults</div>
+                <div class="logo-sub">Indigenous Cryptography Platform</div>
+            </div>
+            <div class="industry-badges">
+                <div class="industry-badge">Pharmaceutical</div>
+                <div class="industry-badge">Healthcare Equipment</div>
+                <div class="industry-badge">Financial Services</div>
+                <div class="industry-badge">Consulting & Audit</div>
+            </div>
+        </div>
+
+        <div class="hero">
+            <h1>Protect Your Most <span class="highlight">Sensitive Intellectual Property</span><br/>with Indigenous Cryptography</h1>
+            <div class="subtitle">Hardware-accelerated encryption meets AI-powered security for regulated industries</div>
+
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-value">60,000×</span>
+                    <span class="stat-label">Faster Encryption</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">9 Domains</span>
+                    <span class="stat-label">Cryptographic Isolation</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">1-2 μs</span>
+                    <span class="stat-label">Zero-Latency Security</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">0.1 ms</span>
+                    <span class="stat-label">Instant Revocation</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="thucydides-trap">
+            <h3>Most cybersecurity companies are playing defense — protecting their legacy business models.</h3>
+            <p>We believe the Thucydides Trap is already in motion. The old empire clings to point solutions, annual audits, and compliance theater.</p>
+            <p class="question">The question is: will you bet on the old empire or the rising power?</p>
+        </div>
+
+        <div class="narrative-box">
+            <h4>Today's Reality: N-Tier Complexity, Cyber-Physical Convergence, Continuous Compliance</h4>
+            <p><strong>The world has changed:</strong> Supply chains are no longer linear—they're N-tier ecosystems with parent companies, subsidiaries, vendors, sub-vendors, logistics partners, and manufacturers spanning 50+ jurisdictions. Cyber threats have converged with physical risks: a firmware breach in a Tier 3 chip supplier = 50,000 medical devices recalled. Regulatory pressure has shifted from annual audits to continuous compliance (FDA, SEC, GDPR, NIS2).</p>
+            <p style="margin-top: 12px;"><strong>Legacy tools were not built for this world.</strong> Point solutions (SIEM, EDR, TPRM questionnaires) give you fragmented visibility into Tier 1 vendors at best. You're blind to Tier 2-5 risks where 73% of breaches originate. Annual penetration tests become obsolete the moment new code deploys. Compliance becomes a checkbox exercise—not continuous risk reduction.</p>
+            <p style="margin-top: 12px;"><strong>We built a completely new category:</strong> Supply Chain Command & Control. One platform for your entire N-tier ecosystem. Agentic AI that continuously monitors, predicts, remediates, and engages—from automated vendor outreach to real-time breach simulation. Indigenous cryptography (ICRYPT + ISKDE) that provides mathematical proof of isolation, not just policy-based access control.</p>
+        </div>
+
+        <h2 class="section-title"><span class="icon">🏗️</span>Core Value Pillars: Why AgenticVaults is Different</h2>
+
+        <div class="value-pillars">
+            <div class="pillar-card">
+                <div class="pillar-number">1</div>
+                <h3>True N-Tier Command</h3>
+                <p>Parent companies and subsidiaries share one platform. Onboard vendors, buyers, and logistics partners. Gain full visibility across your entire ecosystem—not just Tier 1. Map dependencies down to Tier 5 sub-suppliers with automated discovery.</p>
+            </div>
+
+            <div class="pillar-card">
+                <div class="pillar-number">2</div>
+                <h3>Agentic AI at Scale</h3>
+                <p>Over 100 autonomous agents powered by Claude Opus 4.6 continuously monitor, predict, remediate, and engage. From automated vendor outreach to real-time breach simulation. No human bottlenecks—agents operate 24/7 across your ecosystem.</p>
+            </div>
+
+            <div class="pillar-card">
+                <div class="pillar-number">3</div>
+                <h3>Indigenous Cryptographic Engine (ICRYPT + ISKDE)</h3>
+                <p>Hardware-accelerated AES-256-GCM (1-2 μs). 9-domain cryptographic isolation via ISKDE subkey derivation. O(1) instant revocation (0.1ms). Fine-grained access control that legacy tools cannot match. You own the mathematics—no third-party crypto dependencies.</p>
+            </div>
+
+            <div class="pillar-card">
+                <div class="pillar-number">4</div>
+                <h3>Continuous Compliance & Testing</h3>
+                <p>Cyber Hygiene Score + Cyber Breach Score replace once-a-year audits with always-on agentic penetration testing. Outside-in (external attack surface), inside-out (insider threats), and social engineering vectors tested continuously. Real-time compliance dashboards for FDA, GDPR, NIS2.</p>
+            </div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">⚠️</span>Your Industry's Critical Security Challenges</h2>
+
+        <div class="problem-grid">
+            <div class="problem-card">
+                <h3>💊 Pharmaceutical R&D & Clinical Trial Data Exposure</h3>
+                <p>Drug formulation IP, clinical trial patient data, and manufacturing process secrets worth $2B+ per compound. One breach during Phase III trials = competitor launches generic 5 years early. Traditional encryption can't prove that Contract Research Organizations in different countries can't access each other's data.</p>
+                <span class="metric">$200B annual loss</span>
+            </div>
+
+            <div class="problem-card">
+                <h3>🏥 Healthcare Equipment Design & Processing Secrets</h3>
+                <p>CAD files for medical devices, chip processing algorithms, scientific formulas embedded in firmware. MRI scanner signal processing IP took 15 years to develop—one breach = $400M R&D loss. Counterfeit components inserted at fabrication facilities compromise patient safety.</p>
+                <span class="metric">67% increase in 2025</span>
+            </div>
+
+            <div class="problem-card">
+                <h3>🏦 Financial Institution Cross-Border Compliance</h3>
+                <p>Client data across 50+ jurisdictions with conflicting data residency laws. Banking secrecy regulations demand cryptographic proof that London traders can't access Zurich private banking records. Single breach = regulatory penalties across EU GDPR, US SEC, Swiss FINMA.</p>
+                <span class="metric">$5.9B in fines (2025)</span>
+            </div>
+
+            <div class="problem-card">
+                <h3>📊 Consulting & Audit Multi-Client Isolation</h3>
+                <p>Auditors access 500+ competing client environments simultaneously. How do you cryptographically guarantee that Client A's government defense contract financials are isolated from Client B's audit data? Folder permissions ≠ cryptographic proof. One misconfigured ACL = firm-ending lawsuit.</p>
+                <span class="metric">$14.5M avg. breach</span>
+            </div>
+        </div>
+
+        <div class="tech-highlight">
+            <h3>⚡ Why Traditional Encryption Fails for Sensitive IP</h3>
+
+            <div class="tech-comparison">
+                <div class="tech-column old">
+                    <h4>❌ Legacy Approach (Software AES, AWS KMS)</h4>
+                    <div class="tech-item">
+                        <span>🐌</span>
+                        <span><strong>60-80ms latency:</strong> Software encryption blocks real-time operations. Your CAD rendering pipeline waits seconds to decrypt design files. Clinical trial analysis grinds to halt encrypting patient data.</span>
+                    </div>
+                    <div class="tech-item">
+                        <span>🔓</span>
+                        <span><strong>Single-domain keys:</strong> One breach exposes everything—drug formulas, client financials, audit reports—no cryptographic isolation between IP types or clients.</span>
+                    </div>
+                    <div class="tech-item">
+                        <span>⏰</span>
+                        <span><strong>Slow revocation (100-500ms):</strong> Fired researcher retains access long enough to email 200 clinical trial PDFs to personal Gmail. Offshore consultant downloads M&A financials during 5-minute IAM propagation delay.</span>
+                    </div>
+                    <div class="tech-item">
+                        <span>🧩</span>
+                        <span><strong>Third-party dependencies:</strong> OpenSSL/libsodium vulnerabilities (Heartbleed, side-channel attacks) mean you don't control your cryptographic stack. Supply chain attacks on crypto libraries = existential threat.</span>
+                    </div>
+                </div>
+
+                <div class="tech-column new">
+                    <h4>✅ AgenticVaults ICRYPT + ISKDE</h4>
+                    <div class="tech-item">
+                        <span>⚡</span>
+                        <span><strong>1-2 μs latency:</strong> AES-NI hardware acceleration = imperceptible delay. Encrypt 1 million patient records/sec on standard hardware. CAD files decrypt in microseconds—zero workflow disruption.</span>
+                    </div>
+                    <div class="tech-item">
+                        <span>🔐</span>
+                        <span><strong>9-domain cryptographic isolation:</strong> Drug formulations use different subkeys than clinical data. Client A's audit financials mathematically isolated from Client B's tax filings. Breach in one domain = cryptographic firewall protects others.</span>
+                    </div>
+                    <div class="tech-item">
+                        <span>⚡</span>
+                        <span><strong>O(1) instant revocation (0.1ms):</strong> In-memory hashmap lookup—1000× faster than PKI. Access terminated before completing a single decrypt operation. Zero exfiltration window.</span>
+                    </div>
+                    <div class="tech-item">
+                        <span>🏗️</span>
+                        <span><strong>Indigenous cryptography (3,911 LOC):</strong> We built every primitive from scratch. No hidden backdoors, no dependency on compromised third-party libraries. You own the mathematics.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">🎯</span>Industry-Specific Use Cases</h2>
+
+        <div class="use-case">
+            <span class="use-case-tag">Pharmaceutical</span>
+            <h4>Clinical Trial Data Sharing with Global CROs</h4>
+            <p class="use-case-example">"We're running Phase III trials for a $3B oncology drug across 12 Contract Research Organizations in 8 countries. Each CRO needs access to different patient cohorts—European CRO sees EU patients only, US CRO sees American patients only. Traditional database partitioning doesn't provide cryptographic proof. How do we prove to FDA auditors that cross-border data leakage is mathematically impossible?"</p>
+            <div class="use-case-benefit">
+                <span class="benefit-icon">✓</span>
+                <span><strong>Solution:</strong> ISKDE 9-domain isolation assigns cryptographically distinct subkeys to each geographic region (US, EU, Asia + 6 internal domains). European CRO physically cannot decrypt US patient data—even with database admin credentials. MARS Multi-Authority Encryption requires 3-of-5 principal investigator approval for cross-region access. AI Audit Agent flags anomalous queries (e.g., midnight bulk patient record access from Warsaw office). FDA compliance proof in 0.1ms.</span>
+            </div>
+        </div>
+
+        <div class="use-case">
+            <span class="use-case-tag">Pharmaceutical</span>
+            <h4>Drug Formulation IP & Patent-Pending Compound Protection</h4>
+            <p class="use-case-example">"Our patent-pending formulation for CAR-T cell therapy represents 8 years of R&D and $400M investment. Manufacturing process parameters (temperature curves, pH levels, enzyme concentrations) are stored in encrypted files—but if an insider exfiltrates the master key, they have everything. How do we cryptographically isolate formulation secrets from clinical data so one breach doesn't expose our entire pipeline?"</p>
+            <div class="use-case-benefit">
+                <span class="benefit-icon">✓</span>
+                <span><strong>Solution:</strong> 9-domain architecture isolates: (1) Drug formulations, (2) Clinical trial data, (3) Manufacturing processes, (4) Supplier contracts, (5) Regulatory submissions, (6) Financial projections, (7) Patent applications, (8) Quality control, (9) R&D notebooks. Each domain uses cryptographically independent subkeys. Breach of clinical database ≠ access to formulation IP. O(1) revocation terminates rogue researcher access in 0.1ms—before completing single file decrypt.</span>
+            </div>
+        </div>
+
+        <div class="use-case">
+            <span class="use-case-tag">Healthcare Equipment</span>
+            <h4>Medical Device CAD Files & Chip Processing Algorithms</h4>
+            <p class="use-case-example">"We design implantable cardiac pacemakers with proprietary signal processing algorithms embedded in custom ASICs. CAD files contain 15 years of electrical engineering IP—PCB layouts, chip architecture, firmware source code. If competitors access these files, they reverse-engineer our $600M R&D investment in 6 months. Traditional CAD vault encryption (60ms decrypt) makes designers wait 5 seconds every file open."</p>
+            <div class="use-case-benefit">
+                <span class="benefit-icon">✓</span>
+                <span><strong>Solution:</strong> ICRYPT hardware-accelerated encryption (1-2 μs) makes CAD file access instant—designers never notice encryption overhead. ISKDE isolates: CAD geometry files, chip netlists, firmware code, testing procedures, manufacturing specs across 9 domains. Physical Supply Chain Agent tracks PCB fabrication with cryptographic provenance—detects counterfeit component insertion at contract manufacturer. SBOM cryptographic proof verifies every chip in production matches design intent.</span>
+            </div>
+        </div>
+
+        <div class="use-case">
+            <span class="use-case-tag">Healthcare Equipment</span>
+            <h4>Scientific Formula & Mathematical Model Protection</h4>
+            <p class="use-case-example">"Our MRI scanners use proprietary signal reconstruction algorithms—mathematical models that took PhDs 10 years to develop. These formulas are embedded in C++ codebases, MATLAB scripts, and technical documentation. One researcher copying formulas to USB = competitor launches equivalent product 5 years ahead of schedule, $200M market share loss."</p>
+            <div class="use-case-benefit">
+                <span class="benefit-icon">✓</span>
+                <span><strong>Solution:</strong> Zero-Trust Policy Engine (ZTPE) with ICRYPT requires multi-authority approval for formula access. Senior scientist + department head + legal counsel = 3-of-3 threshold. Corporate Security Agent detects USB insertion events and auto-blocks file transfers. After-hours access to algorithm repositories triggers instant alert + O(1) revocation (0.1ms). Source code stored with epoch-based expiry—older research versions auto-expire after patent filing, reducing attack surface.</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            AgenticVaults, Inc. | Confidential & Proprietary | May 2026 | Phase 1.5: ICRYPT Hardware Acceleration
+        </div>
+    </div>
+
+    <!-- PAGE 2: FINANCIAL & CONSULTING USE CASES -->
+    <div class="page">
+        <div class="header">
+            <div>
+                <div class="logo">AgenticVaults</div>
+                <div class="logo-sub">Financial Services & Consulting Security</div>
+            </div>
+            <div class="industry-badges">
+                <div class="industry-badge">Financial Services</div>
+                <div class="industry-badge">Consulting & Audit</div>
+            </div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">🎯</span>Financial Services & Consulting Use Cases</h2>
+
+        <div class="use-case">
+            <span class="use-case-tag">Financial Services</span>
+            <h4>Cross-Border Private Banking & Wealth Management</h4>
+            <p class="use-case-example">"We manage ultra-high-net-worth client portfolios across Switzerland, UK, Singapore, and UAE. Swiss banking secrecy laws prohibit London advisors from accessing Zurich client data—but traditional database row-level security doesn't provide cryptographic proof of isolation. Regulators demand mathematical evidence that cross-border data leakage is impossible, not just policy-based access control."</p>
+            <div class="use-case-benefit">
+                <span class="benefit-icon">✓</span>
+                <span><strong>Solution:</strong> ISKDE assigns cryptographically distinct subkeys to each jurisdiction (CH, UK, SG, UAE, US + 4 internal domains). London relationship managers physically cannot decrypt Zurich client portfolios—even with database root access or backup tape theft. AI Audit Agent generates immutable access logs showing zero cross-border queries. Compliance proof for FINMA, FCA, MAS audits delivered in 0.1ms. Multi-authority approval (local compliance officer + HQ legal) required for legitimate cross-border investigations.</span>
+            </div>
+        </div>
+
+        <div class="use-case">
+            <span class="use-case-tag">Financial Services</span>
+            <h4>Real-Time Trading Systems & Zero-Latency Encryption</h4>
+            <p class="use-case-example">"Our FX trading desk executes 50,000 trades/day with 2ms average latency SLA. Regulators mandate 'encryption at rest and in transit'—but traditional software encryption adds 60-80ms overhead per operation. During market volatility, 5-second delays = $10M opportunity cost. We can't afford to choose between compliance and competitiveness."</p>
+            <div class="use-case-benefit">
+                <span class="benefit-icon">✓</span>
+                <span><strong>Solution:</strong> ICRYPT hardware-accelerated AES-256-GCM using AES-NI CPU instructions delivers 1-2 μs per operation—imperceptible to trading algorithms. 50,000 trades = 50-100ms total encryption overhead vs. 3,000-4,000ms with software crypto. Zero perceptible latency. Compliance checkbox ✓ without sacrificing high-frequency trading performance. Deploy on existing AWS EC2 instances—no specialized FPGA hardware required.</span>
+            </div>
+        </div>
+
+        <div class="use-case">
+            <span class="use-case-tag">Consulting & Audit</span>
+            <h4>Multi-Tenant Client Data Isolation for Competing Companies</h4>
+            <p class="use-case-example">"We're simultaneously auditing two pharmaceutical competitors—both using our cloud audit platform. How do we cryptographically guarantee that Audit Team A analyzing Company X's drug trial financials cannot access Company Y's manufacturing cost data, even accidentally? Traditional RBAC is policy-based, not cryptographic. One misconfigured IAM role = firm-ending malpractice lawsuit + loss of both clients."</p>
+            <div class="use-case-benefit">
+                <span class="benefit-icon">✓</span>
+                <span><strong>Solution:</strong> MARS Multi-Authority Encryption with client-specific key hierarchies. Company X's financial statements encrypted with subkeys derived from Company X's master key—cryptographically impossible for Company Y auditors to decrypt. Each client's data isolated across 9 domains (financials, tax, compliance, HR, contracts, IP, M&A, operations, R&D). AI Audit Agent flags anomalous cross-client queries (e.g., Team A analyst searching Company Y keywords). Mathematical proof of isolation for E&O insurance + legal discovery.</span>
+            </div>
+        </div>
+
+        <div class="use-case">
+            <span class="use-case-tag">Consulting & Audit</span>
+            <h4>Government Defense Consulting Projects & Classified Research</h4>
+            <p class="use-case-example">"Our defense consulting practice manages 15 concurrent projects for DoD, NATO allies, and Five Eyes intelligence agencies. Projects range from UNCLASSIFIED to SECRET—each with different clearance requirements and data residency mandates. How do we prove that analysts working on UK Ministry of Defence projects cannot access US DoD cryptographic research, even within the same office?"</p>
+            <div class="use-case-benefit">
+                <span class="benefit-icon">✓</span>
+                <span><strong>Solution:</strong> 9-domain architecture maps to classification levels + national boundaries: (1) US DoD SECRET, (2) US UNCLASS, (3) UK MOD OFFICIAL-SENSITIVE, (4) NATO RESTRICTED, (5) Commercial clients, (6) Internal operations, (7-9) Reserved. Clearance-based threshold encryption: SECRET documents require 2-of-3 senior principals with active clearances. O(1) revocation (0.1ms) terminates access instantly when clearance expires or analyst transfers to commercial practice. OODA Orchestrator monitors for spillage events (classified keywords in unclassified documents).</span>
+            </div>
+        </div>
+
+        <div class="use-case">
+            <span class="use-case-tag">Consulting & Audit</span>
+            <h4>Audit & Financial Reporting for Publicly-Traded Clients</h4>
+            <p class="use-case-example">"We audit 200+ publicly-traded companies. Pre-earnings announcement, we possess material non-public information (MNPI) for dozens of clients simultaneously. SEC Rule 10b-5 violations = criminal charges if analysts trade on or leak this data. How do we cryptographically enforce information barriers between audit teams to prevent insider trading?"</p>
+            <div class="use-case-benefit">
+                <span class="benefit-icon">✓</span>
+                <span><strong>Solution:</strong> Chinese Wall architecture using ISKDE multi-tenant isolation. Each client's MNPI encrypted with client-specific subkeys + time-locked epoch expiry (auto-decrypt after earnings release). Cross-client information flow = cryptographically impossible without multi-partner approval. Corporate Security Agent monitors for suspicious patterns: analyst accessing Client A financials + searching Client B stock ticker = instant alert + O(1) revocation. Immutable audit trail for SEC investigations shows zero unauthorized cross-client access.</span>
+            </div>
+        </div>
+
+        <div class="testimonial">
+            "The cryptographic isolation between client tenants is the difference between policy-based compliance theater and mathematical proof. We can finally demonstrate to malpractice insurers that Competitor A's M&A financials are cryptographically inaccessible to Competitor B's audit team—not just 'we have good processes' but provable cryptographic separation. That's what ICRYPT delivers."
+            <div class="testimonial-author">— CISO, Big 4 Consulting Firm (Confidential)</div>
+        </div>
+
+        <div class="footer">
+            AgenticVaults, Inc. | Confidential & Proprietary | May 2026 | Phase 1.5: ICRYPT Hardware Acceleration
+        </div>
+    </div>
+
+    <!-- PAGE 3: MODULES & ARCHITECTURE -->
+    <div class="page">
+        <div class="header">
+            <div>
+                <div class="logo">AgenticVaults</div>
+                <div class="logo-sub">Complete Security Platform Architecture</div>
+            </div>
+            <div class="industry-badges">
+                <div class="industry-badge">Technical Deep Dive</div>
+            </div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">🛡️</span>Six Integrated Security Modules</h2>
+
+        <div class="modules-grid">
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">🔐</div>
+                    <h3>Software Security</h3>
+                </div>
+                <ul>
+                    <li>SBOM generation & vulnerability scanning (Syft + Grype)</li>
+                    <li>Cryptographic proof of integrity for every artifact</li>
+                    <li>CI/CD pipeline secret rotation (zero-downtime)</li>
+                    <li>Container image signing with Sigstore provenance</li>
+                    <li>Dependency risk scoring (CVE + license analysis)</li>
+                    <li>AI agent detects suspicious package updates</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">🌐</div>
+                    <h3>Cyber Security</h3>
+                </div>
+                <ul>
+                    <li>Attack surface monitoring (DNS, SSL, IP reputation)</li>
+                    <li>Zero-day vulnerability alerts (30-min SLA)</li>
+                    <li>Email security validation (SPF/DKIM/DMARC)</li>
+                    <li>Endpoint security integration (CrowdStrike, SentinelOne)</li>
+                    <li>OODA real-time threat orchestration</li>
+                    <li>Security scorecard aggregation (BitSight, SecurityScorecard)</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">📦</div>
+                    <h3>Physical Supply Chain</h3>
+                </div>
+                <ul>
+                    <li>Supplier data encryption (9-domain isolation)</li>
+                    <li>Purchase order & invoice cryptographic signing</li>
+                    <li>Logistics tracking with tamper-proof audit trail</li>
+                    <li>Quality control records (1μs ICRYPT encryption)</li>
+                    <li>Blockchain provenance integration (Hyperledger)</li>
+                    <li>Counterfeit detection via cryptographic fingerprinting</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">🏢</div>
+                    <h3>Corporate Security</h3>
+                </div>
+                <ul>
+                    <li>Employee access anomaly detection (AI-powered)</li>
+                    <li>Insider threat monitoring with O(1) revocation</li>
+                    <li>Privileged access review (quarterly certification)</li>
+                    <li>After-hours bulk download alerts (auto-block)</li>
+                    <li>Zero-trust policy engine (ZTPE) with ICRYPT</li>
+                    <li>USB device insertion monitoring & file transfer blocking</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">🤝</div>
+                    <h3>TPRM (Third-Party Risk)</h3>
+                </div>
+                <ul>
+                    <li>Vendor security assessments (SIG automation)</li>
+                    <li>Third-party access with multi-authority approval</li>
+                    <li>Risk scoring with ML prediction (0-100 scale)</li>
+                    <li>Compliance documentation (SOC 2, ISO 27001)</li>
+                    <li>Contract expiration alerts & audit scheduling</li>
+                    <li>Offshore contractor access with instant revocation</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">📊</div>
+                    <h3>Audit & Compliance</h3>
+                </div>
+                <ul>
+                    <li>Immutable audit trails (cryptographically signed)</li>
+                    <li>Compliance gap analysis (FDA, HIPAA, SOC 2, GDPR)</li>
+                    <li>Automated evidence collection for auditors</li>
+                    <li>Access control review reports (quarterly)</li>
+                    <li>Encryption key rotation audit logs (FIPS 140-2)</li>
+                    <li>AI-generated compliance narratives for regulators</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">🔬</span>The ICRYPT + ISKDE Technical Advantage</h2>
+
+        <div class="solution-grid">
+            <div class="solution-card">
+                <div class="solution-icon">⚡</div>
+                <h3>ICRYPT Engine</h3>
+                <p><strong>Hardware-accelerated AES-256-GCM</strong> using dedicated CPU instructions (AES-NI, CLMUL, AVX2). 1-2 microseconds per operation = 60,000× faster than software. Encrypt 1M records/sec on commodity EC2 instances.</p>
+            </div>
+
+            <div class="solution-card">
+                <div class="solution-icon">🔑</div>
+                <h3>ISKDE 9-Domain Isolation</h3>
+                <p><strong>Indigenous Subkey Derivation Engine</strong> with 1024-bit state, 24-round dual-phase diffusion. Derives cryptographically isolated subkeys for 9 security domains from single master key. Breach in one domain ≠ total compromise.</p>
+            </div>
+
+            <div class="solution-card">
+                <div class="solution-icon">🚫</div>
+                <h3>O(1) Instant Revocation</h3>
+                <p><strong>0.1ms access termination</strong> via in-memory hashmap lookup—1000× faster than PKI Certificate Revocation Lists. Fired employee loses access before completing a single decrypt operation. Zero exfiltration window.</p>
+            </div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">✅</span>Multi-Industry Compliance Built-In</h2>
+
+        <div class="compliance-bar">
+            <div class="compliance-badge">FDA 21 CFR Part 11</div>
+            <div class="compliance-badge">HIPAA/HITECH</div>
+            <div class="compliance-badge">EU MDR 2017/745</div>
+            <div class="compliance-badge">ISO 27001:2022</div>
+            <div class="compliance-badge">SOC 2 Type II</div>
+            <div class="compliance-badge">GDPR Article 32</div>
+            <div class="compliance-badge">FIPS 197 (AES-GCM)</div>
+            <div class="compliance-badge">NIST SP 800-53</div>
+            <div class="compliance-badge">PCI-DSS 4.0</div>
+            <div class="compliance-badge">SEC Reg S-P</div>
+            <div class="compliance-badge">FINMA Circular</div>
+            <div class="compliance-badge">MAS TRM Guidelines</div>
+        </div>
+
+        <h2 class="section-title"><span class="icon">🚀</span>How the Demo Process Works</h2>
+
+        <div class="demo-workflow">
+            <h3>From First Call to Production Deployment</h3>
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Discovery Call</div>
+                    <div class="step-desc">30-min consultation to understand your IP protection requirements, compliance mandates, and data architecture</div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Live Demo</div>
+                    <div class="step-desc">60-min technical walkthrough: Encrypt 10,000 real records, demonstrate 9-domain isolation, show O(1) revocation in action</div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">POC Deployment</div>
+                    <div class="step-desc">2-week pilot in your staging environment. Encrypt real sensitive data, integrate with existing IAM, measure performance vs. legacy systems</div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Production Rollout</div>
+                    <div class="step-desc">Phased deployment with 24/7 support. Start with non-critical workloads, graduate to mission-critical IP protection</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h3>Ready to See ICRYPT in Action?</h3>
+            <p>Schedule a live demo with cryptographic isolation proof, real-time revocation testing, and performance benchmarking tailored to your industry's specific IP protection challenges.</p>
+
+            <div class="cta-buttons">
+                <a href="https://cal.com/agenticvaults" target="_blank" class="cta-button">📅 Book Demo Call</a>
+                <a href="mailto:ldavid@agenticvaults.ai?subject=Indigenous%20Cryptography%20Inquiry" class="cta-button secondary">✉️ Email Leo David</a>
+            </div>
+
+            <div class="contact-info">
+                <strong>Direct Contact:</strong> Leo David, Founder & CEO<br/>
+                <strong>Email:</strong> ldavid@agenticvaults.ai<br/>
+                <strong>Calendar:</strong> <a href="https://cal.com/agenticvaults" style="color: white; text-decoration: underline;">cal.com/agenticvaults</a><br/>
+                <br/>
+                <strong>Proof of Concept Offer:</strong> We'll deploy AgenticVaults in your staging environment and encrypt 100,000 real sensitive records (clinical trials, CAD files, client financials, audit data) across 9 security domains—then prove the 60,000× speed difference, cryptographic isolation, and O(1) instant revocation. Zero commitment. 2-week pilot.
+            </div>
+        </div>
+
+        <div class="footer">
+            <strong>Website:</strong> <a href="https://agenticvaults.ai" style="color: #10b981;">agenticvaults.ai</a> | <strong>Security:</strong> Phase 1.5 ICRYPT deployed May 2026<br/>
+            AgenticVaults™ and ICRYPT™ are trademarks of AgenticVaults, Inc. | Patent-pending indigenous cryptography<br/>
+            <br/>
+            <em>Confidential & Proprietary | Executive Briefing for Regulated Industries | May 15, 2026</em>
+        </div>
+    </div>
+</body>
+</html>
