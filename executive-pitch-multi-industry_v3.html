@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> — Indigenous Cryptographic Security for Regulated Industries</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0B1120;
+  --bg2: #0F172A;
+  --bg3: #1E293B;
+  --bg4: #334155;
+  --border: rgba(99,115,148,0.2);
+  --border2: rgba(99,115,148,0.3);
+  --t1: #E2E8F0;
+  --t2: #94A3B8;
+  --t3: #64748B;
+  --teal: #10B981;
+  --teal-d: rgba(16,185,129,0.12);
+  --purple: #A78BFA;
+  --purple-d: rgba(167,139,250,0.12);
+  --blue: #60A5FA;
+  --blue-d: rgba(96,165,250,0.12);
+  --coral: #FB923C;
+  --coral-d: rgba(251,146,60,0.12);
+  --amber: #FBBF24;
+  --amber-d: rgba(251,191,36,0.12);
+  --pink: #F472B6;
+  --pink-d: rgba(244,114,182,0.12);
+  --red: #F87171;
+  --green: #34D399;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(135deg,#0B1120 0%,#0F172A 50%,#1E293B 100%);color:var(--t1);font-family:'DM Sans',sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;min-height:100vh}
+.wrap{max-width:1080px;margin:0 auto;padding:0 2rem}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(11,17,32,0.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(99,115,148,0.15);padding:0.8rem 0}
+nav .wrap{display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-weight:700;font-size:1.1rem;letter-spacing:-0.02em}
+.nav-logo span{color:var(--teal)}
+.nav-pills{display:flex;gap:0.25rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nav-pill{padding:0.4rem 0.8rem;border-radius:100px;font-size:0.72rem;font-weight:500;color:var(--t3);border:1px solid transparent;cursor:pointer;white-space:nowrap;transition:all 0.2s}
+.nav-pill:hover,.nav-pill.active{color:var(--t1);border-color:var(--border2);background:var(--bg3)}
+
+/* HERO */
+.hero{padding:6rem 0 4rem;text-align:center;border-bottom:1px solid var(--border)}
+.hero-eyebrow{font-size:0.78rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:1rem}
+.hero h1{font-size:clamp(2.2rem,5vw,3.4rem);font-weight:800;letter-spacing:-0.035em;line-height:1.1;margin-bottom:1.25rem}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--teal),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.05rem;color:var(--t2);max-width:640px;margin:0 auto 2rem;font-weight:300}
+.hero-stats{display:flex;justify-content:center;gap:2.5rem;flex-wrap:wrap}
+.hero-stat-val{font-family:'IBM Plex Mono',monospace;font-size:1.6rem;font-weight:700;color:var(--teal);text-shadow:0 0 20px rgba(16,185,129,0.4)}
+.hero-stat-lbl{font-size:0.7rem;color:var(--t3);text-transform:uppercase;letter-spacing:0.06em;margin-top:0.15rem}
+
+/* PROBLEM */
+.problem{padding:4rem 0;border-bottom:1px solid var(--border)}
+.problem h2{font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.75rem}
+.problem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-top:1.5rem}
+.problem-card{background:linear-gradient(135deg,#1E293B 0%,#334155 100%);border:1px solid rgba(99,115,148,0.2);border-radius:12px;padding:1.5rem;position:relative;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.problem-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.problem-card.red::before{background:var(--red)}
+.problem-card .pc-icon{font-size:1.6rem;margin-bottom:0.75rem}
+.problem-card h4{font-size:0.95rem;font-weight:600;margin-bottom:0.5rem}
+.problem-card p{font-size:0.82rem;color:var(--t3);line-height:1.55}
+.problem-card .pc-stat{font-family:'IBM Plex Mono',monospace;font-size:0.85rem;color:var(--red);margin-top:0.75rem;font-weight:500;text-shadow:0 0 15px rgba(248,113,113,0.4)}
+
+/* SOLUTION GRID */
+.solutions{padding:4rem 0;border-bottom:1px solid var(--border)}
+.solutions h2{font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem}
+.solutions .sub{color:var(--t2);font-size:0.9rem;margin-bottom:2rem;max-width:600px}
+.sol-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+.sol-card{background:linear-gradient(135deg,rgba(16,185,129,0.08) 0%,rgba(16,185,129,0.03) 100%);border:1px solid rgba(16,185,129,0.25);border-radius:12px;padding:1.5rem;transition:all 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
+.sol-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(16,185,129,0.2);border-color:rgba(16,185,129,0.5)}
+.sol-card .sol-num{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;font-weight:600;color:var(--teal);margin-bottom:0.5rem}
+.sol-card h4{font-size:0.95rem;font-weight:600;margin-bottom:0.5rem}
+.sol-card p{font-size:0.8rem;color:var(--t3);line-height:1.55}
+.sol-card .mono{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--teal);margin-top:0.75rem;display:block}
+
+/* VERTICAL SECTIONS */
+.vertical{padding:4rem 0;border-bottom:1px solid var(--border)}
+.vert-header{display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem}
+.vert-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.vert-icon.defense{background:var(--coral-d);border:1px solid rgba(232,114,74,0.2)}
+.vert-icon.pharma{background:var(--purple-d);border:1px solid rgba(139,127,232,0.2)}
+.vert-icon.health{background:var(--blue-d);border:1px solid rgba(90,159,230,0.2)}
+.vert-icon.aero{background:var(--amber-d);border:1px solid rgba(230,184,74,0.2)}
+.vert-icon.bank{background:var(--teal-d);border:1px solid rgba(15,189,160,0.2)}
+.vert-icon.investor{background:var(--pink-d);border:1px solid rgba(214,93,140,0.2)}
+.vert-icon.consulting{background:rgba(90,200,230,0.1);border:1px solid rgba(90,200,230,0.2)}
+.vert-header h2{font-size:1.5rem;font-weight:700;letter-spacing:-0.02em}
+.vert-sub{color:var(--t2);font-size:0.9rem;margin-bottom:1.5rem;max-width:640px}
+.vert-buyers{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.buyer-tag{font-size:0.7rem;font-weight:500;padding:0.25rem 0.6rem;border-radius:100px;border:1px solid var(--border2);color:var(--t2)}
+
+/* Use case cards */
+.uc-card{background:linear-gradient(135deg,#1E293B 0%,#334155 100%);border:1px solid rgba(99,115,148,0.2);border-radius:12px;padding:1.75rem;margin-bottom:1rem;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.uc-card .uc-label{font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem}
+.uc-card .uc-label.defense-l{color:var(--coral)}
+.uc-card .uc-label.pharma-l{color:var(--purple)}
+.uc-card .uc-label.health-l{color:var(--blue)}
+.uc-card .uc-label.aero-l{color:var(--amber)}
+.uc-card .uc-label.bank-l{color:var(--teal)}
+.uc-card .uc-label.investor-l{color:var(--pink)}
+.uc-card .uc-label.consulting-l{color:#5AC8E6}
+.uc-card h4{font-size:1.05rem;font-weight:600;margin-bottom:0.5rem;letter-spacing:-0.01em}
+.uc-card .scenario{font-size:0.85rem;color:var(--t2);line-height:1.6;margin-bottom:1rem;border-left:2px solid var(--border2);padding-left:1rem;font-style:italic}
+.uc-card .solution-text{font-size:0.85rem;color:var(--t2);line-height:1.6;margin-bottom:1rem}
+.uc-card .solution-text strong{color:var(--t1);font-weight:500}
+
+/* Value metrics */
+.value-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.75rem;margin-top:1rem}
+.val-metric{background:linear-gradient(135deg,#0F172A,#1E293B);border:1px solid rgba(99,115,148,0.15);border-radius:8px;padding:0.85rem;text-align:center}
+.val-metric .vm-val{font-family:'IBM Plex Mono',monospace;font-size:1.1rem;font-weight:700}
+.val-metric .vm-val.teal{color:var(--teal)}.val-metric .vm-val.purple{color:var(--purple)}.val-metric .vm-val.coral{color:var(--coral)}.val-metric .vm-val.amber{color:var(--amber)}.val-metric .vm-val.blue{color:var(--blue)}.val-metric .vm-val.pink{color:var(--pink)}.val-metric .vm-val.cyan{color:#5AC8E6}
+.val-metric .vm-lbl{font-size:0.7rem;color:var(--t3);margin-top:0.2rem}
+
+/* CTA */
+.cta{padding:4rem 0;text-align:center}
+.cta h2{font-size:1.8rem;font-weight:700;margin-bottom:0.75rem;letter-spacing:-0.02em}
+.cta p{color:var(--t2);font-size:0.95rem;max-width:560px;margin:0 auto 2rem}
+.cta-btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2rem;background:linear-gradient(135deg,#10b981,#059669);color:white;font-weight:600;font-size:0.95rem;border-radius:8px;text-decoration:none;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 4px 12px rgba(16,185,129,0.3)}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(16,185,129,0.4)}
+
+.footer{padding:2rem 0;text-align:center;color:var(--t3);font-size:0.75rem;border-top:1px solid var(--border)}
+.footer a{color:var(--teal);text-decoration:none}
+
+@media(max-width:640px){.hero-stats{gap:1.5rem}.nav-pills{display:none}.wrap{padding:0 1.25rem}}
+
+/* Additional sections */
+.trap-box{background:linear-gradient(135deg,rgba(248,113,113,0.08),rgba(248,113,113,0.03));border:1px solid rgba(248,113,113,0.25);border-radius:12px;padding:2rem;text-align:center;margin-bottom:1.5rem;box-shadow:0 4px 16px rgba(0,0,0,0.2)}
+.trap-box h3{font-size:1.15rem;font-weight:600;color:#F09595;margin-bottom:0.5rem;line-height:1.5}
+.trap-box p{font-size:0.88rem;color:var(--t2);font-style:italic}
+.trap-box .q{font-size:1rem;font-weight:600;color:var(--t1);font-style:normal;margin-top:0.75rem}
+
+.narrative{background:linear-gradient(135deg,#1E293B,#334155);border-left:3px solid var(--teal);padding:1.5rem;border-radius:0 10px 10px 0;margin-bottom:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.narrative h4{font-size:1rem;font-weight:600;color:var(--teal);margin-bottom:0.5rem}
+.narrative p{font-size:0.85rem;color:var(--t2);line-height:1.6;margin-bottom:0.5rem}
+.narrative strong{color:var(--t1)}
+
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0 0}
+.pillar{background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(16,185,129,0.03));border:1px solid rgba(16,185,129,0.25);border-radius:10px;padding:1.25rem;transition:all 0.3s}
+.pillar:hover{border-color:rgba(16,185,129,0.5);box-shadow:0 6px 20px rgba(16,185,129,0.2);transform:translateY(-3px)}
+.pillar-n{width:32px;height:32px;background:linear-gradient(135deg,#10b981,#059669);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:800;color:white;margin-bottom:0.75rem;box-shadow:0 4px 12px rgba(16,185,129,0.4)}
+.pillar h4{font-size:0.9rem;font-weight:600;margin-bottom:0.4rem}
+.pillar p{font-size:0.78rem;color:var(--t3);line-height:1.5}
+
+.compare{background:linear-gradient(135deg,#1E293B 0%,#334155 100%);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:2rem;margin:1.5rem 0;box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+.compare h3{font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;text-align:center}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.compare-col h4{font-size:0.85rem;font-weight:600;padding-bottom:0.5rem;margin-bottom:0.75rem;border-bottom:1px solid var(--border)}
+.compare-col.old h4{color:var(--red)}
+.compare-col.new h4{color:var(--teal)}
+.compare-item{display:flex;gap:0.5rem;margin-bottom:0.75rem;font-size:0.8rem;color:var(--t2);line-height:1.5}
+.compare-item strong{color:var(--t1);font-weight:500}
+
+.modules{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin:1.5rem 0}
+.mod-card{background:linear-gradient(135deg,#1E293B,#334155);border:1px solid rgba(16,185,129,0.15);border-radius:10px;padding:1.25rem;transition:all 0.3s}
+.mod-card:hover{border-color:rgba(16,185,129,0.4);box-shadow:0 6px 20px rgba(16,185,129,0.15)}
+.mod-card .mod-hdr{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.75rem}
+.mod-card .mod-icon{width:36px;height:36px;background:linear-gradient(135deg,#10b981,#059669);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;box-shadow:0 4px 12px rgba(16,185,129,0.3)}
+.mod-card h4{font-size:0.9rem;font-weight:600}
+.mod-card ul{list-style:none;padding:0}
+.mod-card li{font-size:0.78rem;color:var(--t2);padding:0.2rem 0 0.2rem 1.2rem;position:relative}
+.mod-card li::before{content:'✓';position:absolute;left:0;color:var(--teal);font-weight:700;font-size:0.72rem}
+
+.compliance-bar{display:flex;gap:0.4rem;flex-wrap:wrap;margin:1.5rem 0}
+.comp-badge{background:var(--teal-d);border:1px solid rgba(15,189,160,0.2);padding:0.3rem 0.65rem;border-radius:6px;font-size:0.7rem;font-weight:600;color:var(--teal)}
+
+.demo-flow{background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(16,185,129,0.03));border:1px solid rgba(16,185,129,0.25);border-radius:12px;padding:2rem;margin:1.5rem 0;box-shadow:0 4px 16px rgba(0,0,0,0.2)}
+.demo-flow h3{font-size:1.1rem;font-weight:700;text-align:center;margin-bottom:1.25rem;color:var(--teal)}
+.flow-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.flow-step{text-align:center;position:relative}
+.flow-step:not(:last-child)::after{content:'→';position:absolute;right:-10px;top:16px;color:var(--teal);font-size:1.2rem;font-weight:700}
+.flow-num{width:36px;height:36px;background:linear-gradient(135deg,#10b981,#059669);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 0.5rem;font-size:0.9rem;font-weight:800;color:white;box-shadow:0 4px 12px rgba(16,185,129,0.4)}
+.flow-step h5{font-size:0.8rem;font-weight:600;margin-bottom:0.25rem}
+.flow-step p{font-size:0.7rem;color:var(--t3);line-height:1.4}
+
+.testimonial{background:linear-gradient(135deg,rgba(96,165,250,0.08),rgba(96,165,250,0.03));border-left:3px solid var(--blue);padding:1.5rem;border-radius:0 10px 10px 0;margin:1.5rem 0;font-style:italic;font-size:0.88rem;color:var(--t2);line-height:1.6;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
+.testimonial .t-author{font-style:normal;font-weight:600;color:var(--blue);font-size:0.8rem;margin-top:0.75rem}
+
+.contact-box{background:linear-gradient(135deg,#1E293B,#334155);border:1px solid rgba(99,115,148,0.2);border-radius:10px;padding:1.25rem;margin-top:1.25rem;font-size:0.82rem;color:var(--t2);line-height:1.8;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.contact-box strong{color:var(--t1)}
+.contact-box a{color:var(--teal);text-decoration:none}
+
+@media(max-width:640px){.compare-grid,.flow-steps{grid-template-columns:1fr}.flow-step:not(:last-child)::after{display:none}}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <div class="nav-logo">agentic<span>vaults</span></div>
+  <div class="nav-pills">
+    <div class="nav-pill active" onclick="document.getElementById('defense').scrollIntoView({behavior:'smooth'})">Defense</div>
+    <div class="nav-pill" onclick="document.getElementById('pharma').scrollIntoView({behavior:'smooth'})">Pharmaceutical</div>
+    <div class="nav-pill" onclick="document.getElementById('health').scrollIntoView({behavior:'smooth'})">Healthcare</div>
+    <div class="nav-pill" onclick="document.getElementById('aero').scrollIntoView({behavior:'smooth'})">Aerospace</div>
+    <div class="nav-pill" onclick="document.getElementById('bank').scrollIntoView({behavior:'smooth'})">Financial</div>
+    <div class="nav-pill" onclick="document.getElementById('investor').scrollIntoView({behavior:'smooth'})">Investors</div>
+    <div class="nav-pill" onclick="document.getElementById('consulting').scrollIntoView({behavior:'smooth'})">Consulting</div>
+  </div>
+</div></nav>
+
+<div class="wrap">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Indigenous Cryptographic Security Platform</div>
+  <h1>Sovereign AI Security<br>for <em>Regulated Industries</em></h1>
+  <p class="hero-sub">Post-quantum, hardware-accelerated encryption with OODA-native autonomous agents. Built from scratch in Rust. Zero third-party crypto dependencies. Zero plaintext exposure during AI inference.</p>
+  <div class="hero-stats">
+    <div><div class="hero-stat-val">3.9 GB/s</div><div class="hero-stat-lbl">Encrypt throughput</div></div>
+    <div><div class="hero-stat-val">0.21 μs</div><div class="hero-stat-lbl">Key derivation</div></div>
+    <div><div class="hero-stat-val">123 μs</div><div class="hero-stat-lbl">PQ key exchange</div></div>
+    <div><div class="hero-stat-val">0.1 ms</div><div class="hero-stat-lbl">Instant revocation</div></div>
+    <div><div class="hero-stat-val">17 × 9</div><div class="hero-stat-lbl">Authorities × domains</div></div>
+  </div>
+</div>
+
+<!-- THUCYDIDES -->
+<div class="problem" style="padding-bottom:2rem">
+  <div class="trap-box">
+    <h3>Most cybersecurity companies are playing defense — protecting their legacy business models.</h3>
+    <p>The old empire clings to point solutions, annual audits, and compliance theater.</p>
+    <p class="q">The question is: will you bet on the old empire or the rising power?</p>
+  </div>
+  <div class="narrative">
+    <h4>Today's Reality: N-Tier Complexity, Cyber-Physical Convergence, Continuous Compliance</h4>
+    <p><strong>The world has changed:</strong> Supply chains are N-tier ecosystems — parent companies, subsidiaries, vendors, sub-vendors, logistics partners, and manufacturers spanning 50+ jurisdictions. A firmware breach in a Tier 3 chip supplier = 50,000 medical devices recalled. Regulatory pressure has shifted from annual audits to continuous compliance (FDA, SEC, GDPR, NIS2, DORA).</p>
+    <p><strong>Legacy tools were not built for this world.</strong> Point solutions give you fragmented visibility into Tier 1 at best. You're blind to Tier 2-5 risks where 73% of breaches originate. Annual penetration tests are obsolete the moment new code deploys.</p>
+    <p><strong>We built a completely new category:</strong> Supply Chain Command & Control. One platform for your entire N-tier ecosystem. Agentic AI that continuously monitors, predicts, and remediates. Indigenous cryptography (ICRYPT + ISKDE) that provides mathematical proof of isolation — not just policy-based access control.</p>
+  </div>
+  <div class="pillars">
+    <div class="pillar"><div class="pillar-n">1</div><h4>True N-Tier Command</h4><p>Parent companies and subsidiaries share one platform. Map dependencies down to Tier 5 sub-suppliers with automated discovery. Full visibility across your entire ecosystem.</p></div>
+    <div class="pillar"><div class="pillar-n">2</div><h4>Agentic AI at Scale</h4><p>100+ autonomous agents powered by Claude Opus continuously monitor, predict, remediate, and engage. From automated vendor outreach to real-time breach simulation. 24/7 across your ecosystem.</p></div>
+    <div class="pillar"><div class="pillar-n">3</div><h4>ICRYPT + ISKDE Engine</h4><p>Hardware-accelerated AES-256-GCM (3.9 GB/s). 9-domain cryptographic isolation. O(1) instant revocation (0.1ms). Post-quantum ML-KEM key exchange. You own the mathematics.</p></div>
+    <div class="pillar"><div class="pillar-n">4</div><h4>Continuous Compliance</h4><p>Cyber Hygiene Score + Breach Score replace annual audits with always-on testing. Outside-in, inside-out, and social engineering vectors tested continuously. Real-time dashboards for FDA, GDPR, NIS2, DORA.</p></div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<div class="problem">
+  <h2>The Problem: Every AI System Assumes Plaintext</h2>
+  <p style="color:var(--t2);font-size:0.9rem;max-width:640px">Current AI and security architectures expose sensitive data at 10 points during inference. No mathematical guarantee of confidentiality exists. Regulatory mandates are accelerating faster than legacy tools can adapt.</p>
+  <div class="problem-grid">
+    <div class="problem-card red">
+      <div class="pc-icon">🔓</div>
+      <h4>Plaintext Inference Exposure</h4>
+      <p>Every LLM, every agent framework assumes unencrypted access to data. GPU memory contains full plaintext during inference — readable by any process with hardware access.</p>
+      <div class="pc-stat">10 data objects exposed per forward pass</div>
+    </div>
+    <div class="problem-card red">
+      <div class="pc-icon">⏱️</div>
+      <h4>No Quantum Resistance</h4>
+      <p>EU mandates PQC migration start by 2026, critical systems by 2030. ECDH, RSA, ECDSA all break under Shor's algorithm. No frontier AI lab has integrated post-quantum crypto.</p>
+      <div class="pc-stat">EU PQC mandate: 2026–2035 timeline</div>
+    </div>
+    <div class="problem-card red">
+      <div class="pc-icon">🏛️</div>
+      <h4>Regulatory Tsunami</h4>
+      <p>EU AI Act (Aug 2026 enforcement), NIS2 (160,000 entities), DORA (all EU financial entities), CLOUD Act jurisdiction conflict. Compliance theater won't survive.</p>
+      <div class="pc-stat">$5.9B in regulatory fines (2025)</div>
+    </div>
+  </div>
+</div>
+
+<!-- SOLUTION -->
+<div class="solutions">
+  <h2>The Solution: Indigenous SENTINEL</h2>
+  <p class="sub">Post-quantum, threshold-based, domain-isolated cryptographic infrastructure — built entirely from scratch in native Rust.</p>
+  <div class="sol-grid">
+    <div class="sol-card">
+      <div class="sol-num">ICRYPT</div>
+      <h4>Indigenous Crypto Runtime</h4>
+      <p>Hand-built AES-256-GCM with 8-wide ARM pipeline. Hardware-accelerated GHASH via PMULL. Zero external dependencies.</p>
+      <span class="mono">3.9 GB/s on Apple M1</span>
+    </div>
+    <div class="sol-card">
+      <div class="sol-num">ISKDE</div>
+      <h4>Subkey Derivation Engine</h4>
+      <p>1024-bit ARX state, dual-phase diffusion (24 rounds), domain separation across 9 security verticals from a single master key.</p>
+      <span class="mono">4.7M derivations/sec</span>
+    </div>
+    <div class="sol-card">
+      <div class="sol-num">ML-KEM</div>
+      <h4>Post-Quantum Key Exchange</h4>
+      <p>NIST FIPS 203 compliant. Hand-built Keccak, NTT, Fujisaki-Okamoto. Quantum-resistant from day one — no migration needed.</p>
+      <span class="mono">ML-KEM-768: 123 μs</span>
+    </div>
+    <div class="sol-card">
+      <div class="sol-num">SENTINEL</div>
+      <h4>Threshold Access Control</h4>
+      <p>Shamir SSS over GF(2⁶¹-1). k-of-n threshold from 17 independent authorities. Information-theoretic security — k-1 shares reveal nothing.</p>
+      <span class="mono">O(1) revoke + epoch expiry</span>
+    </div>
+  </div>
+</div>
+
+<!-- TECH COMPARISON -->
+<div class="solutions" style="padding-top:2rem">
+  <div class="compare">
+    <h3>⚡ Why Traditional Encryption Fails for Sensitive IP</h3>
+    <div class="compare-grid">
+      <div class="compare-col old">
+        <h4>❌ Legacy Approach (Software AES, AWS KMS)</h4>
+        <div class="compare-item"><span>🐌</span><span><strong>60-80ms latency:</strong> Software encryption blocks real-time operations. CAD rendering waits seconds to decrypt. Clinical trial analysis grinds to a halt.</span></div>
+        <div class="compare-item"><span>🔓</span><span><strong>Single-domain keys:</strong> One breach exposes everything — drug formulas, client financials, audit reports. No cryptographic isolation between IP types or clients.</span></div>
+        <div class="compare-item"><span>⏰</span><span><strong>Slow revocation (100-500ms):</strong> Fired researcher retains access long enough to email 200 clinical trial PDFs. 5-minute IAM propagation = exfiltration window.</span></div>
+        <div class="compare-item"><span>🧩</span><span><strong>Third-party dependencies:</strong> OpenSSL/libsodium vulnerabilities (Heartbleed, side-channels). You don't control your crypto stack. Supply chain attack on crypto library = existential threat.</span></div>
+        <div class="compare-item"><span>☢️</span><span><strong>No quantum resistance:</strong> ECDH, RSA broken by Shor's algorithm. EU mandates PQC migration start 2026, critical systems by 2030. Harvest-now-decrypt-later attacks happening today.</span></div>
+      </div>
+      <div class="compare-col new">
+        <h4>✅ agenticvaults ICRYPT + ISKDE + ML-KEM</h4>
+        <div class="compare-item"><span>⚡</span><span><strong>0.21 μs per operation:</strong> Hardware-accelerated AES-256-GCM at 3.9 GB/s. Encrypt 1M records/sec. CAD files decrypt in microseconds — zero workflow disruption.</span></div>
+        <div class="compare-item"><span>🔐</span><span><strong>9-domain cryptographic isolation:</strong> Drug formulations use different subkeys than clinical data. Client A mathematically isolated from Client B. Breach in one domain = firewall protects all others.</span></div>
+        <div class="compare-item"><span>⚡</span><span><strong>O(1) instant revocation (0.1ms):</strong> In-memory hashmap — 1000× faster than PKI. Access terminated before completing a single decrypt. Zero exfiltration window.</span></div>
+        <div class="compare-item"><span>🏗️</span><span><strong>Indigenous cryptography (~8,000 LOC Rust):</strong> Every primitive built from scratch. No hidden backdoors, no compromised third-party libraries. Hand-built Keccak, NTT, SHA3. You own the mathematics.</span></div>
+        <div class="compare-item"><span>🛡️</span><span><strong>Post-quantum from day one:</strong> ML-KEM-768 (NIST FIPS 203). 123μs key exchange. No migration needed — architecture is quantum-resistant by construction, not by patch.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ DEFENSE ═══════ -->
+<div class="vertical" id="defense">
+  <div class="vert-header"><div class="vert-icon defense">🛡️</div><h2>Defense & National Security</h2></div>
+  <p class="vert-sub">Classified supply chain integrity, ITAR-controlled technical data, cross-coalition information sharing with cryptographic compartmentalization.</p>
+  <div class="vert-buyers">
+    <span class="buyer-tag">CISO / CSO</span><span class="buyer-tag">Program Manager</span><span class="buyer-tag">Contracting Officer</span><span class="buyer-tag">ISSM / ISSO</span>
+  </div>
+  <div class="uc-card">
+    <div class="uc-label defense-l">Use Case — Classified Supply Chain Provenance</div>
+    <h4>Proving Component Authenticity from Foundry to Fielded System</h4>
+    <div class="scenario">"We source FPGAs from a Tier 3 foundry in an allied nation. How do we cryptographically prove that no backdoor was inserted during fabrication — and that the firmware running in our deployed system matches the design specification reviewed by our engineers?"</div>
+    <div class="solution-text"><strong>SENTINEL Solution:</strong> ISKDE generates domain-isolated subkeys for each supply chain tier. Every component receives a cryptographic identity at fabrication, signed by the foundry authority. SBOM provenance tracking verifies the chain from silicon to fielded system. ML-KEM secures cross-tier communication — even if Tier 3 is compromised, Tier 1 design IP remains cryptographically isolated. 17-authority threshold ensures no single insider can forge provenance records.</div>
+    <div class="value-row">
+      <div class="val-metric"><div class="vm-val coral">$12M</div><div class="vm-lbl">Avg. defense breach cost avoided</div></div>
+      <div class="val-metric"><div class="vm-val coral">100%</div><div class="vm-lbl">CMMC 2.0 Level 3 alignment</div></div>
+      <div class="val-metric"><div class="vm-val coral">0.1 ms</div><div class="vm-lbl">Compromised vendor isolation</div></div>
+    </div>
+  </div>
+  <div class="uc-card">
+    <div class="uc-label defense-l">Use Case — Cross-Coalition Information Sharing</div>
+    <h4>NATO-Compatible Quantum-Resistant Data Exchange</h4>
+    <div class="scenario">"We need to share intelligence with coalition partners at different classification levels. Five Eyes gets full access, broader NATO gets sanitized versions, and the encryption must resist quantum interception by adversary signals intelligence — today, not in 2035."</div>
+    <div class="solution-text"><strong>SENTINEL Solution:</strong> 9-domain ISKDE isolation maps directly to classification compartments. ML-KEM-768 provides quantum-resistant key exchange between coalition partners — no classical crypto in the path. Policy-gated access ensures Five Eyes partners decrypt full intelligence while broader NATO decrypts only their authorized subset. All key exchange is FIPS 203 compliant, aligned with NSA CNSA 2.0 requirements for national security systems.</div>
+    <div class="value-row">
+      <div class="val-metric"><div class="vm-val coral">CNSA 2.0</div><div class="vm-lbl">NSA compliance aligned</div></div>
+      <div class="val-metric"><div class="vm-val coral">123 μs</div><div class="vm-lbl">PQ key exchange latency</div></div>
+      <div class="val-metric"><div class="vm-val coral">9</div><div class="vm-lbl">Classification compartments</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PHARMACEUTICAL ═══════ -->
+<div class="vertical" id="pharma">
+  <div class="vert-header"><div class="vert-icon pharma">💊</div><h2>Pharmaceutical & Life Sciences</h2></div>
+  <p class="vert-sub">Drug formulation IP, clinical trial patient data, GxP compliance, cross-CRO data sharing with cryptographic isolation per geography and study phase.</p>
+  <div class="vert-buyers">
+    <span class="buyer-tag">CISO</span><span class="buyer-tag">VP R&D</span><span class="buyer-tag">Chief Medical Officer</span><span class="buyer-tag">Head of Regulatory Affairs</span>
+  </div>
+  <div class="uc-card">
+    <div class="uc-label pharma-l">Use Case — Phase III Clinical Trial Data Sovereignty</div>
+    <h4>Multi-Country CRO Data Sharing Without Cross-Border Leakage</h4>
+    <div class="scenario">"We're running Phase III trials for a $3B oncology compound across 12 CROs in 8 countries. Each CRO must access only their geographic patient cohort. FDA auditors want cryptographic proof that EU CRO staff cannot access US patient data — not just database row-level security."</div>
+    <div class="solution-text"><strong>SENTINEL Solution:</strong> ISKDE assigns cryptographically distinct subkeys per geographic region (US, EU, APAC) and study phase. European CRO physically cannot decrypt US patient data — even with database admin credentials. Shamir threshold requires 3-of-5 principal investigator approval for cross-region access. OODA agents continuously monitor for anomalous query patterns. FDA compliance proof generated in real-time.</div>
+    <div class="value-row">
+      <div class="val-metric"><div class="vm-val purple">$200B</div><div class="vm-lbl">Annual pharma IP loss prevented</div></div>
+      <div class="val-metric"><div class="vm-val purple">18 mo</div><div class="vm-lbl">Approval delay avoided per breach</div></div>
+      <div class="val-metric"><div class="vm-val purple">3-of-5</div><div class="vm-lbl">Threshold for cross-region access</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ HEALTHCARE EQUIPMENT ═══════ -->
+<div class="vertical" id="health">
+  <div class="vert-header"><div class="vert-icon health">🏥</div><h2>Healthcare Equipment & Medical Devices</h2></div>
+  <p class="vert-sub">CAD files, chip processing algorithms, firmware IP, FDA pre-market submissions, counterfeit component detection in medical device supply chains.</p>
+  <div class="vert-buyers">
+    <span class="buyer-tag">VP Engineering</span><span class="buyer-tag">CISO</span><span class="buyer-tag">Regulatory Affairs Director</span><span class="buyer-tag">Quality Assurance VP</span>
+  </div>
+  <div class="uc-card">
+    <div class="uc-label health-l">Use Case — Medical Device IP & Firmware Protection</div>
+    <h4>15 Years of R&D Protected at Hardware Speed</h4>
+    <div class="scenario">"Our implantable cardiac pacemakers use proprietary signal processing embedded in custom ASICs. CAD files + chip architecture + firmware source = $600M R&D investment. Legacy CAD vault encryption adds 60ms per file open — engineers disable it. We need encryption they don't notice."</div>
+    <div class="solution-text"><strong>SENTINEL Solution:</strong> ICRYPT hardware-accelerated encryption at 3.9 GB/s makes CAD file access imperceptible — engineers never notice the encryption overhead. ISKDE isolates CAD geometry, chip netlists, firmware code, and manufacturing specs across separate cryptographic domains. Physical Supply Chain agents track PCB fabrication with cryptographic provenance. SBOM verification ensures every chip in production matches the reviewed design.</div>
+    <div class="value-row">
+      <div class="val-metric"><div class="vm-val blue">3.9 GB/s</div><div class="vm-lbl">Encryption — zero workflow impact</div></div>
+      <div class="val-metric"><div class="vm-val blue">$4.2M</div><div class="vm-lbl">Avg. device recall cost avoided</div></div>
+      <div class="val-metric"><div class="vm-val blue">510(k)</div><div class="vm-lbl">FDA SBOM compliance ready</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ AEROSPACE ═══════ -->
+<div class="vertical" id="aero">
+  <div class="vert-header"><div class="vert-icon aero">✈️</div><h2>Aerospace & Aviation</h2></div>
+  <p class="vert-sub">Avionics firmware integrity, DO-326A cybersecurity compliance, multi-tier supplier provenance, ITAR/EAR export control with cryptographic enforcement.</p>
+  <div class="vert-buyers">
+    <span class="buyer-tag">Chief Engineer</span><span class="buyer-tag">CISO</span><span class="buyer-tag">VP Supply Chain</span><span class="buyer-tag">Program Director</span>
+  </div>
+  <div class="uc-card">
+    <div class="uc-label aero-l">Use Case — Avionics Firmware Supply Chain Integrity</div>
+    <h4>Cryptographic Proof from Silicon to Certification</h4>
+    <div class="scenario">"Our fly-by-wire system has 40M lines of code across 200+ LRUs sourced from 50 suppliers in 12 countries. DO-326A requires us to demonstrate that no unauthorized modification occurred between design authority and certified configuration. A single compromised LRU = catastrophic safety risk."</div>
+    <div class="solution-text"><strong>SENTINEL Solution:</strong> Every software component receives a cryptographic identity signed by the design authority via ISKDE domain-isolated keys. ML-KEM secures supplier-to-OEM communication channels — quantum-resistant against nation-state signals intelligence. 17-authority threshold ensures configuration changes require multi-party approval (engineering + quality + safety). SBOM provenance tracks every binary from source repo to certified aircraft.</div>
+    <div class="value-row">
+      <div class="val-metric"><div class="vm-val amber">DO-326A</div><div class="vm-lbl">Airborne cybersecurity aligned</div></div>
+      <div class="val-metric"><div class="vm-val amber">$1.4B</div><div class="vm-lbl">Avg. aerospace recall avoided</div></div>
+      <div class="val-metric"><div class="vm-val amber">200+</div><div class="vm-lbl">LRUs tracked cryptographically</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ FINANCIAL ═══════ -->
+<div class="vertical" id="bank">
+  <div class="vert-header"><div class="vert-icon bank">🏦</div><h2>Financial Institutions</h2></div>
+  <p class="vert-sub">Cross-border data residency, trading system zero-latency encryption, DORA operational resilience, Swiss banking secrecy with cryptographic proof.</p>
+  <div class="vert-buyers">
+    <span class="buyer-tag">CTO / CIO</span><span class="buyer-tag">CISO</span><span class="buyer-tag">Head of Compliance</span><span class="buyer-tag">Chief Risk Officer</span>
+  </div>
+  <div class="uc-card">
+    <div class="uc-label bank-l">Use Case — Cross-Border Private Banking Isolation</div>
+    <h4>Mathematical Proof That London Cannot Access Zurich</h4>
+    <div class="scenario">"We manage UHNW client portfolios across Switzerland, UK, Singapore, and UAE. Swiss banking secrecy prohibits London advisors from accessing Zurich client data. Regulators demand cryptographic proof — not just database ACLs that an admin could misconfigure."</div>
+    <div class="solution-text"><strong>SENTINEL Solution:</strong> ISKDE assigns cryptographically distinct subkeys per jurisdiction (CH, UK, SG, UAE). London relationship managers physically cannot decrypt Zurich client portfolios — even with database root access or backup tape theft. Shamir threshold requires local compliance officer + HQ legal for legitimate cross-border investigations. Immutable audit logs prove zero cross-border queries to FINMA, FCA, and MAS auditors.</div>
+    <div class="value-row">
+      <div class="val-metric"><div class="vm-val teal">DORA</div><div class="vm-lbl">Full operational resilience</div></div>
+      <div class="val-metric"><div class="vm-val teal">$5.9B</div><div class="vm-lbl">Regulatory fines avoided (2025)</div></div>
+      <div class="val-metric"><div class="vm-val teal">0.21 μs</div><div class="vm-lbl">Per-trade encryption overhead</div></div>
+    </div>
+  </div>
+  <div class="uc-card">
+    <div class="uc-label bank-l">Use Case — Real-Time Trading with Zero-Latency Encryption</div>
+    <h4>50,000 Trades/Day Without Encryption Bottleneck</h4>
+    <div class="scenario">"Our FX desk has a 2ms latency SLA. Regulators mandate encryption at rest and in transit. Legacy software encryption adds 60-80ms — during volatility that's $10M in lost opportunity per hour."</div>
+    <div class="solution-text"><strong>SENTINEL Solution:</strong> ICRYPT hardware-accelerated encryption at 0.21μs per operation — 300,000× faster than the 60-80ms legacy baseline. Encryption becomes invisible to the trading pipeline. AES-256-GCM authenticated encryption prevents data tampering. Post-quantum ML-KEM protects long-dated positions against harvest-now-decrypt-later attacks on 30-year bond portfolios.</div>
+    <div class="value-row">
+      <div class="val-metric"><div class="vm-val teal">0.21 μs</div><div class="vm-lbl">Per-trade encrypt (vs 60-80ms)</div></div>
+      <div class="val-metric"><div class="vm-val teal">300,000×</div><div class="vm-lbl">Faster than legacy software</div></div>
+      <div class="val-metric"><div class="vm-val teal">$10M/hr</div><div class="vm-lbl">Latency cost eliminated</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ INVESTORS ═══════ -->
+<div class="vertical" id="investor">
+  <div class="vert-header"><div class="vert-icon investor">📈</div><h2>Venture Capital, Institutional Investors & Family Offices</h2></div>
+  <p class="vert-sub">Portfolio company deal flow protection, multi-client cryptographic isolation, GP/LP data segregation, and quantum-resistant document vaults for long-duration assets.</p>
+  <div class="vert-buyers">
+    <span class="buyer-tag">Managing Partner</span><span class="buyer-tag">CTO / COO</span><span class="buyer-tag">Head of Portfolio Operations</span><span class="buyer-tag">Family Office Principal</span>
+  </div>
+  <div class="uc-card">
+    <div class="uc-label investor-l">Use Case — Deal Flow & Portfolio Company IP Protection</div>
+    <h4>Cryptographic Walls Between Competing Investments</h4>
+    <div class="scenario">"We have portfolio companies that directly compete. Our deal team sees confidential financials from both sides during due diligence. One misconfigured share link = antitrust violation, LP lawsuit, and fund-ending reputational damage. Traditional data rooms use permission-based access — one admin error away from catastrophe."</div>
+    <div class="solution-text"><strong>SENTINEL Solution:</strong> Each portfolio company exists in a cryptographically isolated ISKDE domain. Deal team members receive Shamir shares only for companies they're cleared to access — 3-of-5 partner approval required. Even a compromised admin account cannot decrypt data across domain boundaries. ML-KEM quantum resistance protects 10-year fund lifecycle documents against future decryption. Complete audit trail for LP reporting.</div>
+    <div class="value-row">
+      <div class="val-metric"><div class="vm-val pink">9 domains</div><div class="vm-lbl">Portfolio company isolation</div></div>
+      <div class="val-metric"><div class="vm-val pink">3-of-5</div><div class="vm-lbl">Partner threshold for access</div></div>
+      <div class="val-metric"><div class="vm-val pink">10+ yr</div><div class="vm-lbl">Quantum-safe fund lifecycle</div></div>
+    </div>
+  </div>
+  <div class="uc-card">
+    <div class="uc-label investor-l">Use Case — Family Office Generational Wealth Protection</div>
+    <h4>Quantum-Resistant Vaults for Multi-Generational Assets</h4>
+    <div class="scenario">"Our family office manages $2B+ across real estate, private equity, and art collections. Estate planning documents, trust structures, and beneficiary information must remain confidential for 50+ years. Today's encryption may be broken by quantum computers within that timeframe."</div>
+    <div class="solution-text"><strong>SENTINEL Solution:</strong> ML-KEM FIPS 203 provides quantum-resistant encryption designed for multi-generational confidentiality. ISKDE domain separation isolates asset classes (real estate deeds, trust documents, art provenance, tax structures). Shamir threshold ensures no single advisor or trustee can access all family information — requires multi-party authorization across legal, financial, and family representatives.</div>
+    <div class="value-row">
+      <div class="val-metric"><div class="vm-val pink">FIPS 203</div><div class="vm-lbl">50+ year quantum resistance</div></div>
+      <div class="val-metric"><div class="vm-val pink">$14.5M</div><div class="vm-lbl">Avg. wealth mgmt breach cost</div></div>
+      <div class="val-metric"><div class="vm-val pink">17</div><div class="vm-lbl">Independent authority trustees</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ CONSULTING ═══════ -->
+<div class="vertical" id="consulting">
+  <div class="vert-header"><div class="vert-icon consulting">📊</div><h2>Management Consulting & Audit / Tax Advisory</h2></div>
+  <p class="vert-sub">Big 5 firms managing 500+ competing client environments simultaneously. Cryptographic proof of multi-client isolation, cross-engagement data walls, and continuous compliance evidence for regulators and clients alike.</p>
+  <div class="vert-buyers">
+    <span class="buyer-tag">Managing Partner</span><span class="buyer-tag">CISO / CTO</span><span class="buyer-tag">Chief Risk Officer</span><span class="buyer-tag">Head of Independence & Compliance</span><span class="buyer-tag">National Managing Director</span>
+  </div>
+
+  <div class="uc-card">
+    <div class="uc-label consulting-l">Management Consulting — Multi-Client Engagement Isolation</div>
+    <h4>Cryptographic Chinese Walls Between Competing Clients</h4>
+    <div class="scenario">"Our strategy practice advises 3 competing telecom operators simultaneously across different engagement teams. Each team accesses confidential pricing strategies, M&A plans, and network investment roadmaps. One misconfigured SharePoint permission = antitrust violation, $500M lawsuit, and permanent loss of all three clients. We need mathematical proof of isolation — not folder permissions that an IT admin can override."</div>
+    <div class="solution-text"><strong>SENTINEL Solution:</strong> Each client engagement exists in a cryptographically isolated ISKDE domain. Consultant access is governed by Shamir threshold — 3-of-5 partner approval required to grant any team member access to a client domain. Even a compromised global admin account cannot decrypt Client A's strategy documents from Client B's engagement workspace. Domain subkeys are cryptographically independent — breach of one client's domain reveals zero information about any other. O(1) revocation means off-boarded consultants lose access in 0.1ms, not during the next IAM sync cycle.</div>
+    <div class="value-row">
+      <div class="val-metric"><div class="vm-val cyan">$14.5M</div><div class="vm-lbl">Avg. consulting firm breach cost</div></div>
+      <div class="val-metric"><div class="vm-val cyan">9 domains</div><div class="vm-lbl">Concurrent client isolation</div></div>
+      <div class="val-metric"><div class="vm-val cyan">0.1 ms</div><div class="vm-lbl">Off-boarding revocation time</div></div>
+    </div>
+  </div>
+
+  <div class="uc-card">
+    <div class="uc-label consulting-l">Management Consulting — Cross-Border Due Diligence Data Rooms</div>
+    <h4>M&A Advisory with Jurisdictional Cryptographic Isolation</h4>
+    <div class="scenario">"We're running buy-side due diligence for a $4B cross-border acquisition. Target company data includes EU employee PII (GDPR), US financial records (SEC), and Middle East joint venture contracts (local data residency). Our deal team spans London, New York, and Dubai. Regulators in each jurisdiction want proof their data never left their boundary during analysis."</div>
+    <div class="solution-text"><strong>SENTINEL Solution:</strong> ISKDE generates jurisdiction-specific subkeys (EU, US, ME) from a single master key. London team decrypts EU data only. New York team decrypts US financials only. Dubai team accesses ME contracts only. Cross-jurisdiction synthesis requires Shamir threshold approval from compliance officers in each region. ML-KEM quantum resistance ensures deal data remains protected for the 7-year regulatory lookback period — even against future quantum attacks on archived communications.</div>
+    <div class="value-row">
+      <div class="val-metric"><div class="vm-val cyan">GDPR + SEC</div><div class="vm-lbl">Multi-jurisdictional compliance</div></div>
+      <div class="val-metric"><div class="vm-val cyan">3-of-3</div><div class="vm-lbl">Regional compliance threshold</div></div>
+      <div class="val-metric"><div class="vm-val cyan">7 yr</div><div class="vm-lbl">Quantum-safe regulatory lookback</div></div>
+    </div>
+  </div>
+
+  <div class="uc-card">
+    <div class="uc-label consulting-l">Audit & Tax — Multi-Client Audit Independence</div>
+    <h4>Cryptographic Proof for PCAOB / IESBA Independence Requirements</h4>
+    <div class="scenario">"Our audit practice examines 200+ public company financial statements annually. PCAOB and IESBA independence standards require that audit team members cannot access non-audit client data that could create independence threats. Traditional access controls rely on HR systems and manual attestations — one stale AD group membership = independence violation, regulatory sanction, and potential audit opinion withdrawal."</div>
+    <div class="solution-text"><strong>SENTINEL Solution:</strong> Each audit engagement is a cryptographically sealed ISKDE domain. Audit team members receive time-bound Shamir shares that automatically expire at engagement conclusion — no manual deprovisioning needed. Epoch-based expiry eliminates stale access. Independence monitoring agent continuously verifies that no team member holds shares across conflicting engagements. Immutable cryptographic audit trail provides PCAOB inspectors with mathematical proof of isolation — not just policy attestations.</div>
+    <div class="value-row">
+      <div class="val-metric"><div class="vm-val cyan">PCAOB</div><div class="vm-lbl">Independence compliance proof</div></div>
+      <div class="val-metric"><div class="vm-val cyan">200+</div><div class="vm-lbl">Concurrent audit engagements</div></div>
+      <div class="val-metric"><div class="vm-val cyan">Auto-expire</div><div class="vm-lbl">Epoch-based share termination</div></div>
+    </div>
+  </div>
+
+  <div class="uc-card">
+    <div class="uc-label consulting-l">Tax Advisory — Cross-Border Tax Structure Confidentiality</div>
+    <h4>Protecting Multi-National Tax Strategies Across 50+ Jurisdictions</h4>
+    <div class="scenario">"We design tax optimization structures for Fortune 500 multinationals across 50+ jurisdictions. Each structure is a competitive weapon — if leaked, competitors replicate it in weeks, and regulators may challenge it preemptively. Our tax partners in different countries need to collaborate on the global structure while each seeing only their jurisdiction's components."</div>
+    <div class="solution-text"><strong>SENTINEL Solution:</strong> ISKDE domain separation gives each jurisdiction its own cryptographic boundary. Swiss tax partner sees Swiss entity structure only. US partner sees US components only. Global synthesis requires Shamir threshold — senior partner + legal + risk = 3-of-3 approval for cross-jurisdiction view. ML-KEM protects tax structures against harvest-now-decrypt-later attacks — critical since OECD Pillar 2 reporting creates long-term regulatory interest in historical structures.</div>
+    <div class="value-row">
+      <div class="val-metric"><div class="vm-val cyan">50+</div><div class="vm-lbl">Jurisdictions isolated</div></div>
+      <div class="val-metric"><div class="vm-val cyan">3-of-3</div><div class="vm-lbl">Cross-jurisdiction threshold</div></div>
+      <div class="val-metric"><div class="vm-val cyan">OECD P2</div><div class="vm-lbl">Pillar 2 reporting protected</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SIX MODULES -->
+<div class="solutions">
+  <h2>Six Integrated Security Modules</h2>
+  <p class="sub">One platform covering your entire attack surface — from software supply chain to physical provenance to insider threats.</p>
+  <div class="modules">
+    <div class="mod-card"><div class="mod-hdr"><div class="mod-icon">🔐</div><h4>Software Security</h4></div>
+      <ul><li>SBOM generation & vulnerability scanning (Syft + Grype)</li><li>Cryptographic proof of integrity for every artifact</li><li>CI/CD pipeline secret rotation (zero-downtime)</li><li>Container image signing with Sigstore provenance</li><li>AI agent detects suspicious package updates</li></ul>
+    </div>
+    <div class="mod-card"><div class="mod-hdr"><div class="mod-icon">🌐</div><h4>Cyber Security</h4></div>
+      <ul><li>Attack surface monitoring (DNS, SSL, IP reputation)</li><li>Zero-day vulnerability alerts (30-min SLA)</li><li>Email security validation (SPF/DKIM/DMARC)</li><li>OODA real-time threat orchestration</li><li>Security scorecard aggregation</li></ul>
+    </div>
+    <div class="mod-card"><div class="mod-hdr"><div class="mod-icon">📦</div><h4>Physical Supply Chain</h4></div>
+      <ul><li>Supplier data encryption (9-domain isolation)</li><li>Purchase order & invoice cryptographic signing</li><li>Logistics tracking with tamper-proof audit trail</li><li>Counterfeit detection via cryptographic fingerprinting</li><li>Blockchain provenance integration</li></ul>
+    </div>
+    <div class="mod-card"><div class="mod-hdr"><div class="mod-icon">🏢</div><h4>Corporate Security</h4></div>
+      <ul><li>Employee access anomaly detection (AI-powered)</li><li>Insider threat monitoring with O(1) revocation</li><li>Privileged access review (quarterly certification)</li><li>Zero-trust policy engine (ZTPE) with ICRYPT</li><li>USB device monitoring & file transfer blocking</li></ul>
+    </div>
+    <div class="mod-card"><div class="mod-hdr"><div class="mod-icon">🤝</div><h4>Third-Party Risk (TPRM)</h4></div>
+      <ul><li>Vendor security assessments (SIG automation)</li><li>Third-party access with multi-authority approval</li><li>Risk scoring with ML prediction (0-100 scale)</li><li>Compliance documentation (SOC 2, ISO 27001)</li><li>Offshore contractor access with instant revocation</li></ul>
+    </div>
+    <div class="mod-card"><div class="mod-hdr"><div class="mod-icon">📊</div><h4>Audit & Compliance</h4></div>
+      <ul><li>Immutable audit trails (cryptographically signed)</li><li>Compliance gap analysis (FDA, HIPAA, SOC 2, GDPR)</li><li>Automated evidence collection for auditors</li><li>Encryption key rotation audit logs</li><li>AI-generated compliance narratives for regulators</li></ul>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLIANCE -->
+<div class="solutions" style="padding-top:0">
+  <h2>Multi-Industry Compliance Built-In</h2>
+  <div class="compliance-bar">
+    <span class="comp-badge">FDA 21 CFR Part 11</span><span class="comp-badge">HIPAA/HITECH</span><span class="comp-badge">EU MDR 2017/745</span><span class="comp-badge">ISO 27001:2022</span><span class="comp-badge">SOC 2 Type II</span><span class="comp-badge">GDPR Article 32</span><span class="comp-badge">NIST FIPS 203</span><span class="comp-badge">NIST SP 800-53</span><span class="comp-badge">PCI-DSS 4.0</span><span class="comp-badge">SEC Reg S-P</span><span class="comp-badge">FINMA Circular</span><span class="comp-badge">NIS2 Directive</span><span class="comp-badge">DORA</span><span class="comp-badge">CMMC 2.0</span><span class="comp-badge">DO-326A</span><span class="comp-badge">PCAOB Standards</span><span class="comp-badge">IESBA Code of Ethics</span>
+  </div>
+</div>
+
+<!-- TESTIMONIAL -->
+<div class="solutions" style="padding-top:0">
+  <div class="testimonial">
+    "The cryptographic isolation between client tenants is the difference between policy-based compliance theater and mathematical proof. We can finally demonstrate to malpractice insurers that Competitor A's M&A financials are cryptographically inaccessible to Competitor B's audit team — not just 'we have good processes' but provable cryptographic separation. That's what ICRYPT delivers."
+    <div class="t-author">— CISO, Big 5 Consulting Firm (Confidential)</div>
+  </div>
+</div>
+
+<!-- DEMO WORKFLOW -->
+<div class="solutions">
+  <div class="demo-flow">
+    <h3>From First Call to Production Deployment</h3>
+    <div class="flow-steps">
+      <div class="flow-step"><div class="flow-num">1</div><h5>Discovery Call</h5><p>30-min consultation to understand your IP protection requirements, compliance mandates, and data architecture</p></div>
+      <div class="flow-step"><div class="flow-num">2</div><h5>Live Demo</h5><p>60-min walkthrough: encrypt 10,000 records, demonstrate 9-domain isolation, show O(1) revocation in action</p></div>
+      <div class="flow-step"><div class="flow-num">3</div><h5>POC Deployment</h5><p>2-week pilot in your staging environment. Encrypt real sensitive data, integrate with existing IAM, measure performance</p></div>
+      <div class="flow-step"><div class="flow-num">4</div><h5>Production Rollout</h5><p>Phased deployment with 24/7 support. Start non-critical, graduate to mission-critical IP protection</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta" style="padding-bottom:2rem">
+  <h2>Ready to See ICRYPT in Action?</h2>
+  <p>Schedule a live demo with cryptographic isolation proof, real-time revocation testing, and performance benchmarking tailored to your industry.</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+    <a href="https://cal.com/agenticvaults" class="cta-btn">📅 Book Demo Call →</a>
+    <a href="mailto:ldavid@agenticvaults.ai?subject=Indigenous%20Cryptography%20Inquiry" class="cta-btn" style="background:var(--bg4);color:var(--t1);border:1px solid var(--border2)">✉️ Email </a>
+  </div>
+  <div class="contact-box" style="max-width:560px;margin:1.5rem auto 0;text-align:left">
+    <strong>Direct Contact:</strong> Leo David, Founder & CEO<br>
+    <strong>Email:</strong> <a href="mailto:ldavid@agenticvaults.ai">ldavid@agenticvaults.ai</a><br>
+    <strong>Calendar:</strong> <a href="https://cal.com/agenticvaults">cal.com/agenticvaults</a><br>
+    <strong>Platform:</strong> <a href="https://agenticvaults.ai">agenticvaults.ai</a><br><br>
+    <strong>Proof of Concept Offer:</strong> We'll deploy agenticvaults in your staging environment and encrypt 100,000 real sensitive records across 9 security domains — then prove the cryptographic isolation, O(1) instant revocation, and post-quantum ML-KEM key exchange. Zero commitment. 2-week pilot.
+  </div>
+</div>
+
+<div class="footer">
+  <p>metacommerz, Inc. — Confidential & Proprietary — May 2026</p>
+  <p style="margin-top:0.25rem">Indigenous SENTINEL • ICRYPT • ISKDE • <a href="https://agenticvaults.ai">agenticvaults.ai</a></p>
+  <p style="margin-top:0.5rem;font-size:0.7rem">agenticvaults™, ICRYPT™, and ISKDE™ are trademarks of metacommerz, Inc. | Patent- sentinel-cryptography</p>
+</div>
+
+</div>
+</body>
+</html>
