@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>agenticvaults TPRM — Management Consulting & Audit Third-Party Risk Management</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#0B1120,#0F172A,#1E293B);color:#E2E8F0;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1100px;margin:0 auto;padding:0 2rem}
+a{color:#10B981;text-decoration:none}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(11,17,32,0.95);backdrop-filter:blur(20px);border-bottom:2px solid rgba(16,185,129,0.25);padding:0.9rem 2rem}
+.nav-container{display:flex;align-items:center;max-width:1400px;margin:0 auto}
+.nav-logo-img{height:45px;margin-right:2rem;flex-shrink:0}
+.nav-brand{font-size:1.2rem;font-weight:700;color:#10B981}
+
+.hero{padding:5rem 0 3.5rem;text-align:center;border-bottom:1px solid rgba(99,115,148,0.15)}
+.hero-eyebrow{font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#10B981;margin-bottom:0.75rem}
+.hero h1{font-size:clamp(2rem,4.5vw,3rem);font-weight:800;letter-spacing:-0.035em;line-height:1.15;margin-bottom:1rem}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,#10B981,#60A5FA);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1rem;color:#94A3B8;max-width:640px;margin:0 auto 2rem;font-weight:300}
+.hero-stats{display:flex;justify-content:center;gap:2.5rem;flex-wrap:wrap}
+.hs-val{font-family:'IBM Plex Mono',monospace;font-size:1.4rem;font-weight:700;color:#10B981;text-shadow:0 0 20px rgba(16,185,129,0.4)}
+.hs-lbl{font-size:0.68rem;color:#64748B;text-transform:uppercase;letter-spacing:0.06em;margin-top:0.1rem}
+
+.section{padding:3.5rem 0;border-bottom:1px solid rgba(99,115,148,0.15)}
+.section h2{font-size:1.5rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem}
+.section .sub{color:#94A3B8;font-size:0.88rem;margin-bottom:1.5rem;max-width:640px}
+
+.grid-7{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.75rem}
+.grid-cat{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0.75rem}
+
+.cat{background:linear-gradient(135deg,#1E293B,#334155);border-left:3px solid #3B82F6;border-radius:0 8px 8px 0;padding:1rem;transition:all 0.2s}
+.cat:hover{transform:translateX(3px);border-left-color:#10B981}
+.cat-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem}
+.cat-name{font-size:0.82rem;font-weight:600;color:#E2E8F0}
+.cat-wt{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;font-weight:700;color:#0B1120;background:#3B82F6;padding:0.15rem 0.5rem;border-radius:100px}
+.cat ul{list-style:none;padding:0}
+.cat li{font-size:0.72rem;color:#94A3B8;padding:0.15rem 0 0.15rem 1rem;position:relative}
+.cat li::before{content:'→';position:absolute;left:0;color:#3B82F6;font-size:0.65rem}
+.cat.hse{background:linear-gradient(135deg,#7F1D1D,#991B1B);border-left-color:#EF4444}
+.cat.hse .cat-wt{background:#EF4444}
+.cat.hse li{color:#FECACA}
+
+.dim{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(139,92,246,0.04));border:1px solid rgba(139,92,246,0.25);border-radius:10px;padding:1rem;text-align:center;transition:all 0.3s}
+.dim:hover{transform:scale(1.03);border-color:rgba(139,92,246,0.5)}
+.dim-wt{font-family:'IBM Plex Mono',monospace;font-size:1.5rem;font-weight:800;color:#8B5CF6}
+.dim-title{font-size:0.8rem;font-weight:600;margin:0.3rem 0 0.15rem}
+.dim-sub{font-size:0.65rem;color:#94A3B8}
+
+.composite{background:linear-gradient(135deg,#1E3A8A,#7E22CE);border-radius:16px;padding:2rem;text-align:center;margin-top:1.5rem;box-shadow:0 8px 30px rgba(30,58,138,0.4)}
+.comp-grade{font-size:3.5rem;font-weight:900;color:#10B981}
+.comp-score{font-size:2rem;font-weight:700;color:#FFF}
+.score-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0.5rem;margin-top:1rem}
+.score-item{background:rgba(0,0,0,0.25);border-radius:8px;padding:0.6rem 0.3rem;text-align:center}
+.score-item .sl{font-size:0.65rem;color:#CBD5E1}
+.score-item .sv{font-family:'IBM Plex Mono',monospace;font-size:1.1rem;font-weight:700;color:#10B981}
+
+.vert{padding:3rem 0;border-bottom:1px solid rgba(99,115,148,0.15)}
+.vert-hdr{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.4rem}
+.vert-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-center;font-size:1.2rem;flex-shrink:0;background:rgba(90,200,230,0.12);border:1px solid rgba(90,200,230,0.2)}
+.vert-hdr h2{font-size:1.4rem;font-weight:700}
+.vert .sub{color:#94A3B8;font-size:0.85rem;margin-bottom:1rem;max-width:640px}
+.buyer-tags{display:flex;gap:0.3rem;flex-wrap:wrap;margin-bottom:1rem}
+.bt{font-size:0.65rem;font-weight:500;padding:0.2rem 0.5rem;border-radius:100px;border:1px solid rgba(99,115,148,0.3);color:#94A3B8}
+
+.uc{background:linear-gradient(135deg,#1E293B,#334155);border:1px solid rgba(99,115,148,0.2);border-radius:12px;padding:1.5rem;margin-bottom:1rem;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.uc-label{font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;color:#5AC8E6}
+.uc h4{font-size:1rem;font-weight:600;margin-bottom:0.4rem}
+.uc .scenario{font-size:0.82rem;color:#94A3B8;line-height:1.6;border-left:2px solid rgba(99,115,148,0.3);padding-left:0.75rem;font-style:italic;margin-bottom:0.75rem}
+.uc .sol{font-size:0.82rem;color:#94A3B8;line-height:1.6;margin-bottom:0.75rem}
+.uc .sol strong{color:#E2E8F0;font-weight:500}
+.val-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.5rem}
+.vm{background:linear-gradient(135deg,#0F172A,#1E293B);border:1px solid rgba(99,115,148,0.15);border-radius:8px;padding:0.6rem;text-align:center}
+.vm .v{font-family:'IBM Plex Mono',monospace;font-size:1rem;font-weight:700;color:#5AC8E6}
+.vm .l{font-size:0.65rem;color:#64748B;margin-top:0.1rem}
+
+.cta{padding:3rem 0;text-align:center}
+.cta h2{font-size:1.6rem;font-weight:700;margin-bottom:0.5rem}
+.cta p{color:#94A3B8;font-size:0.9rem;max-width:560px;margin:0 auto 1.5rem}
+.cta-btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.75rem 1.75rem;background:linear-gradient(135deg,#10B981,#059669);color:#FFF;font-weight:600;font-size:0.9rem;border-radius:8px;transition:all 0.2s;box-shadow:0 4px 12px rgba(16,185,129,0.3)}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(16,185,129,0.4)}
+.cta-sec{background:#334155;color:#E2E8F0;border:1px solid rgba(99,115,148,0.3)}
+.contact-box{background:linear-gradient(135deg,#1E293B,#334155);border:1px solid rgba(99,115,148,0.2);border-radius:10px;padding:1rem;margin-top:1rem;font-size:0.8rem;color:#94A3B8;line-height:1.8;max-width:500px;margin-left:auto;margin-right:auto;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.contact-box strong{color:#E2E8F0}
+
+.footer{padding:1.5rem 0;text-align:center;color:#64748B;font-size:0.72rem;border-top:1px solid rgba(99,115,148,0.15)}
+
+.badges{display:flex;gap:0.3rem;flex-wrap:wrap;margin:1rem 0}
+.badge{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);padding:0.2rem 0.5rem;border-radius:5px;font-size:0.65rem;font-weight:600;color:#10B981}
+
+@media(max-width:640px){.hero-stats{gap:1rem}.wrap{padding:0 1.25rem}.score-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-container">
+    <img src="/Applications/ransomguard/frontend/src/assets/logo-full.png" alt="agenticvaults" class="nav-logo-img">
+    <span class="nav-brand">TPRM for Consulting</span>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<div class="hero">
+  <div class="hero-eyebrow">Management Consulting & Audit TPRM</div>
+  <h1>PCAOB Asks: Can You Prove<br><em>All 13 Subcontractor Risk Dimensions?</em></h1>
+  <p class="hero-sub">Traditional consulting firm TPRM validates cyber security for outsourcing providers. PCAOB inspectors ask about data privacy, financial stability, insurance coverage, and ethics compliance. We score 13 categories across 7 risk dimensions — with PCAOB inspection-ready evidence, cryptographic client data isolation, and post-quantum encryption.</p>
+  <div class="hero-stats">
+    <div><div class="hs-val">13</div><div class="hs-lbl">Assessment categories</div></div>
+    <div><div class="hs-val">7</div><div class="hs-lbl">Risk dimensions</div></div>
+    <div><div class="hs-val">48 hrs</div><div class="hs-lbl">Full assessment (vs 6 weeks)</div></div>
+    <div><div class="hs-val">$14.5M</div><div class="hs-lbl">Avg consulting firm breach</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>13 Assessment Categories</h2>
+  <p class="sub">Deep-dive assessments across every dimension of subcontractor and outsourcing provider risk, weighted by client data exposure.</p>
+  <div class="grid-cat">
+    <div class="cat hse"><div class="cat-hdr"><span class="cat-name">🛡️ HSE Performance</span><span class="cat-wt">20%</span></div><ul><li>LTIFR & TRIR with industry benchmarks</li><li>ISO 45001 & ISO 14001 certification</li><li>Fatality and near-miss reporting</li><li>Safety training hours per employee</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">🔒 Cyber Security</span><span class="cat-wt">25%</span></div><ul><li>SecurityScorecard integration</li><li>Shodan attack surface monitoring</li><li>CVE & KEV tracking</li><li>Security posture assessment</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">💰 Financial Health</span><span class="cat-wt">15%</span></div><ul><li>Revenue & profit analysis</li><li>Debt-to-equity ratio monitoring</li><li>Credit rating & audited financials</li><li>Liquidity stress testing</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">📋 Compliance & Legal</span><span class="cat-wt">10%</span></div><ul><li>ISO 27001, SOC2 certification</li><li>DORA & NIS2 alignment</li><li>Active litigation tracking</li><li>Regulatory status monitoring</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">⚙️ Quality Operations</span><span class="cat-wt">10%</span></div><ul><li>ISO 9001 certification</li><li>Defect rate tracking</li><li>QMS maturity assessment</li><li>Continuous improvement programs</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">🌱 ESG Metrics</span><span class="cat-wt">10%</span></div><ul><li>Environmental score & targets</li><li>Social responsibility metrics</li><li>Governance structure analysis</li><li>Net-zero commitment tracking</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">🔄 Resilience</span><span class="cat-wt">10%</span></div><ul><li>Business Continuity Plans</li><li>DR capabilities & RTO/RPO</li><li>Crisis management procedures</li><li>Alternative supplier mapping</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">🛡️ Insurance Coverage</span><span class="cat-wt">5%</span></div><ul><li>Public liability coverage</li><li>Product liability insurance</li><li>Professional indemnity</li><li>Cyber insurance validation</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">⚖️ Ethics & Integrity</span><span class="cat-wt">5%</span></div><ul><li>Code of conduct verification</li><li>Anti-bribery policies</li><li>Sanctions screening (OFAC/EU)</li><li>Whistleblower mechanisms</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">🔐 Data Privacy</span><span class="cat-wt">5%</span></div><ul><li>GDPR compliance validation</li><li>Data Protection Officer (DPO)</li><li>Data transfer mechanisms</li><li>Privacy impact assessments</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">📦 Delivery Performance</span><span class="cat-wt">5%</span></div><ul><li>On-time delivery rate</li><li>Lead time consistency</li><li>Order fulfillment accuracy</li><li>Backorder management</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">🔗 Supply Chain Risk</span><span class="cat-wt">5%</span></div><ul><li>Single-source dependency</li><li>Supplier diversification score</li><li>Inventory buffer assessment</li><li>Sub-tier visibility mapping</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">♻️ Sustainability</span><span class="cat-wt">5%</span></div><ul><li>Local content requirements</li><li>Circular economy initiatives</li><li>Social value contribution</li><li>Carbon footprint tracking</li></ul></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>7-Dimension Composite Scoring</h2>
+  <p class="sub">Unified risk score combining all critical factors into a single A–F grade.</p>
+  <div class="grid-7">
+    <div class="dim"><div class="dim-wt">25%</div><div class="dim-title">Cyber</div><div class="dim-sub">SecurityScorecard • CVEs • KEV</div></div>
+    <div class="dim"><div class="dim-wt">20%</div><div class="dim-title">HSE</div><div class="dim-sub">LTIFR • TRIR • ISO 45001</div></div>
+    <div class="dim"><div class="dim-wt">15%</div><div class="dim-title">Financial</div><div class="dim-sub">D/E • Credit • Insurance</div></div>
+    <div class="dim"><div class="dim-wt">10%</div><div class="dim-title">Compliance</div><div class="dim-sub">Regulatory • GDPR • NIS2</div></div>
+    <div class="dim"><div class="dim-wt">10%</div><div class="dim-title">Quality</div><div class="dim-sub">ISO 9001 • Defect rate</div></div>
+    <div class="dim"><div class="dim-wt">10%</div><div class="dim-title">ESG</div><div class="dim-sub">Environmental • Social • Gov</div></div>
+    <div class="dim"><div class="dim-wt">10%</div><div class="dim-title">Resilience</div><div class="dim-sub">BCP • DR • RTO/RPO</div></div>
+  </div>
+  <div class="composite">
+    <div style="color:#CBD5E1;font-size:0.8rem;margin-bottom:0.5rem">Composite Risk Score</div>
+    <div class="comp-grade">A</div>
+    <div class="comp-score">87 <span style="font-size:0.9rem;color:#10B981">+5 this quarter</span></div>
+    <div class="score-grid">
+      <div class="score-item"><div class="sl">Cyber</div><div class="sv">92</div></div>
+      <div class="score-item"><div class="sl">HSE</div><div class="sv">85</div></div>
+      <div class="score-item"><div class="sl">Financial</div><div class="sv">88</div></div>
+      <div class="score-item"><div class="sl">Compliance</div><div class="sv">90</div></div>
+      <div class="score-item"><div class="sl">Quality</div><div class="sv">82</div></div>
+      <div class="score-item"><div class="sl">ESG</div><div class="sv">78</div></div>
+      <div class="score-item"><div class="sl">Resilience</div><div class="sv">86</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="vert">
+  <div class="vert-hdr"><div class="vert-icon">📊</div><h2>Management Consulting & Audit</h2></div>
+  <p class="sub">Multi-client subcontractor assessment, PCAOB independence compliance, engagement-level risk scoring, and cryptographic isolation between competing client TPRM data.</p>
+  <div class="buyer-tags"><span class="bt">Managing Partner</span><span class="bt">Head of Independence</span><span class="bt">CRO</span><span class="bt">CISO</span></div>
+  <div class="uc">
+    <div class="uc-label">TPRM for Big 5 — Subcontractor & Outsourcing Provider Risk</div>
+    <h4>Score Every Subcontractor Across All 13 Categories Before They Touch Client Data</h4>
+    <div class="scenario">"We outsource IT development to 15 subcontractors across India, Eastern Europe, and Philippines. Each subcontractor accesses client data for different engagements. PCAOB inspectors ask: 'Can you prove that subcontractor X's cyber posture, financial stability, data privacy practices, and insurance coverage meet your standards?' We can prove cyber. We cannot prove the other 12 dimensions."</div>
+    <div class="sol"><strong>TPRM Solution:</strong> All 13 categories assessed per subcontractor. Data Privacy (5%) verifies GDPR cross-border transfer mechanisms. Insurance Coverage (5%) confirms professional indemnity limits. Financial Health (15%) flags subcontractors with deteriorating D/E ratios before they miss payroll. Ethics & Integrity (5%) validates sanctions screening. OODA agents monitor continuously — when a Philippines-based subcontractor's cyber score drops, the system alerts AND auto-revokes access to affected client environments. All data cryptographically isolated per client via Indigenous SENTINEL.</div>
+    <div class="val-row">
+      <div class="vm"><div class="v">$14.5M</div><div class="l">Avg consulting firm breach</div></div>
+      <div class="vm"><div class="v">PCAOB</div><div class="l">Inspection-ready evidence</div></div>
+      <div class="vm"><div class="v">13</div><div class="l">Dimensions per subcontractor</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Consulting Compliance Built-In</h2>
+  <div class="badges">
+    <span class="badge">PCAOB</span><span class="badge">ISO 27001</span><span class="badge">SOC 2 Type II</span><span class="badge">GDPR Art. 32</span><span class="badge">ISO 9001</span><span class="badge">SEC Reg S-P</span><span class="badge">PCI-DSS 4.0</span>
+  </div>
+</div>
+
+<div class="cta">
+  <h2>Score Subcontractors on All 13 Dimensions</h2>
+  <p>PCAOB checks cyber. We prove cyber + privacy + financial + insurance + ethics + quality + resilience — with cryptographic client data isolation.</p>
+  <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap">
+    <a href="https://cal.com/agenticvaults" class="cta-btn">📅 Book Consulting TPRM Demo →</a>
+    <a href="mailto:ldavid@agenticvaults.ai?subject=Consulting%20TPRM%20Inquiry" class="cta-btn cta-sec">✉️ Email</a>
+  </div>
+  <div class="contact-box">
+    <strong>Platform:</strong> <a href="https://agenticvaults.ai">agenticvaults.ai</a><br><br>
+    <strong>Free Assessment Offer:</strong> We'll score your top 10 critical subcontractors across all 13 categories and 7 dimensions. 2-week pilot. Zero commitment.
+  </div>
+</div>
+
+<div class="footer">
+  metacommerz, Inc. — Confidential & Proprietary — May 2026<br>
+  Indigenous SENTINEL • ICRYPT • ISKDE • <a href="https://agenticvaults.ai">agenticvaults.ai</a>
+</div>
+
+</div>
+
+</body>
+</html>
