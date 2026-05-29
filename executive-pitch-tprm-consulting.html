@@ -94,7 +94,56 @@ nav{position:sticky;top:0;z-index:100;background:rgba(11,17,32,0.95);backdrop-fi
 .badges{display:flex;gap:0.3rem;flex-wrap:wrap;margin:1rem 0}
 .badge{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);padding:0.2rem 0.5rem;border-radius:5px;font-size:0.65rem;font-weight:600;color:#10B981}
 
-@media(max-width:640px){.hero-stats{gap:1rem}.wrap{padding:0 1.25rem}.score-grid{grid-template-columns:1fr}.nav-tabs{overflow-x:auto}}
+.transform{padding:3.5rem 0;border-bottom:1px solid rgba(99,115,148,0.15)}
+.transform h2{font-size:1.5rem;font-weight:700;margin-bottom:0.4rem}
+.transform .sub{color:#94A3B8;font-size:0.88rem;margin-bottom:1.5rem;max-width:640px}
+.pillar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.pillar{border-radius:12px;padding:1.5rem;transition:all 0.3s;box-shadow:0 4px 16px rgba(0,0,0,0.3)}
+.pillar:hover{transform:translateY(-3px)}
+.pillar.ooda{background:linear-gradient(135deg,rgba(251,146,60,0.1),rgba(251,146,60,0.04));border:1px solid rgba(251,146,60,0.25)}
+.pillar.ai{background:linear-gradient(135deg,rgba(96,165,250,0.1),rgba(96,165,250,0.04));border:1px solid rgba(96,165,250,0.25)}
+.pillar.sentinel{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(139,92,246,0.04));border:1px solid rgba(139,92,246,0.25)}
+.pillar .p-icon{font-size:1.8rem;margin-bottom:0.5rem}
+.pillar h3{font-size:1rem;font-weight:700;margin-bottom:0.3rem}
+.pillar .p-tag{font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem}
+.pillar .p-tag.ooda-t{color:#FB923C}.pillar .p-tag.ai-t{color:#60A5FA}.pillar .p-tag.sentinel-t{color:#A78BFA}
+.pillar p{font-size:0.8rem;color:#94A3B8;line-height:1.5;margin-bottom:0.5rem}
+.pillar ul{list-style:none;padding:0;margin-top:0.5rem}
+.pillar li{font-size:0.75rem;color:#CBD5E1;padding:0.2rem 0 0.2rem 1rem;position:relative}
+.pillar li::before{content:'→';position:absolute;left:0;font-size:0.65rem}
+.pillar.ooda li::before{color:#FB923C}.pillar.ai li::before{color:#60A5FA}.pillar.sentinel li::before{color:#A78BFA}
+
+.ooda-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;margin:1.5rem 0}
+.ooda-phase{border-radius:10px;padding:1rem;text-align:center;position:relative;box-shadow:0 4px 12px rgba(0,0,0,0.25)}
+.ooda-phase:not(:last-child)::after{content:'→';position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:#FB923C;font-weight:700;font-size:1rem;z-index:2}
+.ooda-phase.observe{background:linear-gradient(135deg,#1E3A8A,#1E40AF);border:1px solid rgba(96,165,250,0.3)}
+.ooda-phase.orient{background:linear-gradient(135deg,#7E22CE,#6D28D9);border:1px solid rgba(167,139,250,0.3)}
+.ooda-phase.decide{background:linear-gradient(135deg,#B45309,#D97706);border:1px solid rgba(251,191,36,0.3)}
+.ooda-phase.act{background:linear-gradient(135deg,#065F46,#047857);border:1px solid rgba(16,185,129,0.3)}
+.ooda-phase .op-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;opacity:0.7;margin-bottom:0.3rem}
+.ooda-phase .op-icon{font-size:1.3rem;margin-bottom:0.3rem}
+.ooda-phase h4{font-size:0.8rem;font-weight:600;margin-bottom:0.2rem}
+.ooda-phase p{font-size:0.68rem;color:rgba(255,255,255,0.7);line-height:1.4}
+.ooda-phase .op-metric{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;font-weight:700;margin-top:0.4rem;color:#FFF}
+
+.ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem}
+.ba-col{border-radius:12px;padding:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.ba-col.before{background:linear-gradient(135deg,#1E293B,#334155);border:1px solid rgba(248,113,113,0.2)}
+.ba-col.after{background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(16,185,129,0.03));border:1px solid rgba(16,185,129,0.25)}
+.ba-col h3{font-size:0.9rem;font-weight:700;margin-bottom:0.75rem}
+.ba-col.before h3{color:#F87171}.ba-col.after h3{color:#10B981}
+.ba-item{display:flex;gap:0.4rem;margin-bottom:0.5rem;font-size:0.78rem;line-height:1.5}
+.ba-item.bad{color:#FDA4AF}.ba-item.good{color:#A7F3D0}
+.ba-item strong{color:#E2E8F0;font-weight:500}
+
+.outreach-box{background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(16,185,129,0.03));border:1px solid rgba(16,185,129,0.25);border-radius:12px;padding:1.5rem;margin-top:1.5rem}
+.outreach-box h3{color:#10B981;font-size:1.1rem;margin-bottom:0.75rem}
+.outreach-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0}
+.om-item{text-align:center;padding:1rem;background:rgba(0,0,0,0.2);border-radius:8px}
+.om-val{font-family:'IBM Plex Mono',monospace;font-size:1.5rem;font-weight:700;color:#10B981}
+.om-lbl{font-size:0.7rem;color:#94A3B8;margin-top:0.3rem}
+
+@media(max-width:640px){.hero-stats{gap:1rem}.wrap{padding:0 1.25rem}.score-grid{grid-template-columns:1fr}.nav-tabs{overflow-x:auto}.pillar-grid,.ooda-flow,.ba-grid{grid-template-columns:1fr}.ooda-phase:not(:last-child)::after{display:none}}
 html{scroll-behavior:smooth}
 </style>
 </head>
@@ -125,9 +174,130 @@ html{scroll-behavior:smooth}
   </div>
 </div>
 
-<div id="ooda" class="vert">
-  <div class="vert-hdr"><div class="vert-icon">📊</div><h2>Management Consulting & Audit</h2></div>
-  <p class="sub">Score 40+ outsourced providers across IT/Software, KPO, BPO, and AI/Digital services. Multi-client data isolation, PCAOB independence compliance, engagement-level risk scoring, and cryptographic separation between competing client TPRM data.</p>
+<div id="ooda" class="transform">
+  <h2>Three Pillars That Transform Consulting Firm TPRM</h2>
+  <p class="sub">Traditional consulting TPRM is periodic, siloed, human-bottlenecked, and permission-based. We replace every one of those limitations with a fundamentally different architecture built for multi-client subcontractor oversight.</p>
+
+  <div class="pillar-grid">
+    <div class="pillar ooda">
+      <div class="p-icon">🔄</div>
+      <div class="p-tag ooda-t">Decision Architecture</div>
+      <h3>OODA Loop</h3>
+      <p>Replaces periodic subcontractor questionnaires with a continuous, autonomous decision cycle. The same military decision architecture used by fighter pilots — now applied to IT/KPO/BPO provider risk at machine speed.</p>
+      <ul>
+        <li>Continuous 24/7 monitoring (not annual assessments)</li>
+        <li>Real-time correlation across 13 categories simultaneously</li>
+        <li>Autonomous escalation when composite score drops</li>
+        <li>Re-observation after every action — learns and adapts</li>
+        <li>44ms avg cycle time (your dashboard shows it live)</li>
+      </ul>
+    </div>
+
+    <div class="pillar ai">
+      <div class="p-icon">🤖</div>
+      <div class="p-tag ai-t">Autonomous Intelligence</div>
+      <h3>100+ Agentic AI</h3>
+      <p>Replaces human bottlenecks with autonomous agents that assess, monitor, correlate, and remediate — around the clock. Powered by Claude Opus for deep reasoning across financial, cyber, privacy, and ethics dimensions.</p>
+      <ul>
+        <li>Assessment agents: auto-score 13 categories in 48 hours</li>
+        <li>Monitoring agents: scan financial feeds, sanctions lists, data breach databases continuously</li>
+        <li>Correlation agents: detect multi-dimensional patterns (financial distress + delivery delays = engagement risk)</li>
+        <li>Outreach agents: automated subcontractor engagement (62% response rate)</li>
+        <li>Remediation agents: generate PCAOB-ready evidence packages</li>
+      </ul>
+    </div>
+
+    <div class="pillar sentinel">
+      <div class="p-icon">🔐</div>
+      <div class="p-tag sentinel-t">Cryptographic Foundation</div>
+      <h3>Indigenous SENTINEL</h3>
+      <p>Replaces permission-based access control with mathematical proof of isolation. Client A's subcontractor assessment data is cryptographically separated from Client B's — not just folder-permissioned.</p>
+      <ul>
+        <li>ISKDE: 9-domain cryptographic isolation per client engagement</li>
+        <li>Shamir SSS: k-of-n threshold for sensitive subcontractor financials</li>
+        <li>ML-KEM: post-quantum protection for 10+ year regulatory lookback</li>
+        <li>O(1) revocation: terminated subcontractor loses access in 0.1ms</li>
+        <li>Zero-FFI: subcontractor data keys never touch Python</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 style="font-size:1.2rem;margin-bottom:0.3rem">How OODA Transforms Subcontractor Risk Assessment</h2>
+  <p class="sub">Every subcontractor risk signal passes through a continuous 4-phase decision loop — not a quarterly spreadsheet review.</p>
+
+  <div class="ooda-flow">
+    <div class="ooda-phase observe">
+      <div class="op-label">Phase 1</div>
+      <div class="op-icon">👁️</div>
+      <h4>Observe</h4>
+      <p>9 threat sources scanned 24/7: SecurityScorecard, financial feeds, OFAC/EU sanctions lists, data breach databases, credit rating agencies, GDPR enforcement actions, regulatory filings, news</p>
+      <div class="op-metric">9 sources • 13 categories</div>
+    </div>
+    <div class="ooda-phase orient">
+      <div class="op-label">Phase 2</div>
+      <div class="op-icon">🧭</div>
+      <h4>Orient</h4>
+      <p>AI correlates signals across all 7 dimensions. Detects patterns: offshore provider's financial distress + delivery delays + developer attrition = client engagement continuity risk. Single signals invisible alone become visible together.</p>
+      <div class="op-metric">98.8% accuracy • &lt;5 min MTTR</div>
+    </div>
+    <div class="ooda-phase decide">
+      <div class="op-label">Phase 3</div>
+      <div class="op-icon">🎯</div>
+      <h4>Decide</h4>
+      <p>Composite scoring with threshold-based escalation. Auto-escalate when financial + delivery + privacy scores drop below configurable thresholds. Policy-gated: SENTINEL attributes determine who sees what across client engagements.</p>
+      <div class="op-metric">A-F grading • 7 dimensions</div>
+    </div>
+    <div class="ooda-phase act">
+      <div class="op-label">Phase 4</div>
+      <div class="op-icon">⚡</div>
+      <h4>Act</h4>
+      <p>Auto-generate remediation plans. Trigger subcontractor outreach (45 sent → 28 responded). Revoke access for critical failures. Generate PCAOB evidence packages. Then re-observe — the loop never stops.</p>
+      <div class="op-metric">48hr assessment • 100+ agents</div>
+    </div>
+  </div>
+
+  <div class="outreach-box">
+    <h3>📬 Entity Outreach: The Missing Subcontractor Engagement Automation</h3>
+    <p style="color:#94A3B8;font-size:0.85rem;line-height:1.6;margin-bottom:1rem">Traditional subcontractor management fails at engagement: manual email chains for updated SOC2 reports, follow-up reminders in spreadsheets, 30% response rates, 3-week delays per round. <strong style="color:#E2E8F0">Entity Outreach</strong> automates the entire subcontractor communication lifecycle with AI-drafted personalized messages, bulk campaign management, and automated escalation workflows.</p>
+
+    <div class="outreach-metrics">
+      <div class="om-item">
+        <div class="om-val">62%</div>
+        <div class="om-lbl">Response rate (vs 30% manual)</div>
+      </div>
+      <div class="om-item">
+        <div class="om-val">45 → 28</div>
+        <div class="om-lbl">Sent → Responded (live tracking)</div>
+      </div>
+      <div class="om-item">
+        <div class="om-val">3 days</div>
+        <div class="om-lbl">Avg response time (vs 3 weeks)</div>
+      </div>
+    </div>
+
+    <p style="color:#94A3B8;font-size:0.8rem;line-height:1.6"><strong style="color:#E2E8F0">How it works for Consulting TPRM:</strong> When OODA detects an offshore IT provider's financial score drops below threshold (Phase 3: Decide), Entity Outreach auto-generates a personalized email requesting updated audited financials + liquidity statement. AI drafts the message using the provider's historical relationship data. Provider receives the request, uploads documents via secure portal (SENTINEL-encrypted per client engagement). System auto-validates financials, updates the Financial Health dimension score, and closes the loop. Your dashboard shows: "Provider X: financial score improved 68→82 after audit validation (2 days)." <strong style="color:#10B981">Zero human intervention.</strong></p>
+  </div>
+
+  <div class="ba-grid">
+    <div class="ba-col before">
+      <h3>❌ Traditional Consulting TPRM (What You Have Today)</h3>
+      <div class="ba-item bad">🐌 <span><strong>6 weeks</strong> per subcontractor assessment — manual questionnaires, attestation letters, annual reviews</span></div>
+      <div class="ba-item bad">📊 <span><strong>1-2 dimensions</strong> only — cyber posture and maybe compliance. Blind to financial distress, data privacy gaps, insurance coverage, delivery performance</span></div>
+      <div class="ba-item bad">📅 <span><strong>Annual reviews</strong> — your offshore provider's financial position can collapse between assessments and you won't know until engagement delivery stops</span></div>
+      <div class="ba-item bad">🔓 <span><strong>Permission-based isolation</strong> — one misconfigured ACL and Client A's subcontractor risk data leaks to Client B's engagement team</span></div>
+      <div class="ba-item bad">👤 <span><strong>Human bottlenecks</strong> — every PCAOB evidence request, every sanctions check, every insurance verification requires analyst time</span></div>
+      <div class="ba-item bad">📬 <span><strong>Manual subcontractor outreach</strong> — email chains for updated SOC2, follow-up reminders, response tracking in spreadsheets</span></div>
+    </div>
+    <div class="ba-col after">
+      <h3>✅ AgenticVaults Consulting TPRM (What You Get)</h3>
+      <div class="ba-item good">⚡ <span><strong>48 hours</strong> full 13-category assessment — AI agents auto-score cyber, financial, privacy, insurance, ethics, delivery across all providers</span></div>
+      <div class="ba-item good">📊 <span><strong>13 categories × 7 dimensions</strong> — unified composite score. Financial health, data privacy, insurance coverage, ethics screening, delivery performance all weighted and scored</span></div>
+      <div class="ba-item good">🔄 <span><strong>Continuous OODA monitoring</strong> — 44ms cycle time, 9 threat sources, 24/7. Detect financial distress, privacy violations, sanctions exposure in real-time</span></div>
+      <div class="ba-item good">🔐 <span><strong>Cryptographic client isolation</strong> — ISKDE domain separation per engagement. Mathematical proof Client A's data never leaks to Client B, not folder permissions</span></div>
+      <div class="ba-item good">🤖 <span><strong>100+ autonomous agents</strong> — assessment, monitoring, correlation, remediation, outreach. Humans review and approve, not manually execute</span></div>
+      <div class="ba-item good">📬 <span><strong>Automated outreach + PCAOB evidence</strong> — 62% response rate. Agents send, track, follow up, generate inspection-ready packages. Your dashboard shows it live</span></div>
+    </div>
+  </div>
 </div>
 
 <div id="categories" class="section">
