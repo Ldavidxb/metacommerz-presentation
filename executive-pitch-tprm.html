@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgenticVaults TPRM — 360° Third-Party Risk Intelligence for Regulated Industries</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#0B1120,#0F172A,#1E293B);color:#E2E8F0;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1100px;margin:0 auto;padding:0 2rem}
+a{color:#10B981;text-decoration:none}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(11,17,32,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(99,115,148,0.15);padding:0.75rem 0}
+nav .wrap{display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-weight:700;font-size:1.1rem}.nav-logo span{color:#10B981}
+.nav-pills{display:flex;gap:0.2rem;overflow-x:auto}
+.nav-pill{padding:0.35rem 0.7rem;border-radius:100px;font-size:0.7rem;font-weight:500;color:#64748B;cursor:pointer;white-space:nowrap;transition:all 0.2s;border:1px solid transparent}
+.nav-pill:hover,.nav-pill.active{color:#E2E8F0;border-color:rgba(99,115,148,0.3);background:#1E293B}
+
+.hero{padding:5rem 0 3.5rem;text-align:center;border-bottom:1px solid rgba(99,115,148,0.15)}
+.hero-eyebrow{font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#10B981;margin-bottom:0.75rem}
+.hero h1{font-size:clamp(2rem,4.5vw,3rem);font-weight:800;letter-spacing:-0.035em;line-height:1.15;margin-bottom:1rem}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,#10B981,#60A5FA);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1rem;color:#94A3B8;max-width:640px;margin:0 auto 2rem;font-weight:300}
+.hero-stats{display:flex;justify-content:center;gap:2.5rem;flex-wrap:wrap}
+.hs-val{font-family:'IBM Plex Mono',monospace;font-size:1.4rem;font-weight:700;color:#10B981;text-shadow:0 0 20px rgba(16,185,129,0.4)}
+.hs-lbl{font-size:0.68rem;color:#64748B;text-transform:uppercase;letter-spacing:0.06em;margin-top:0.1rem}
+
+.section{padding:3.5rem 0;border-bottom:1px solid rgba(99,115,148,0.15)}
+.section h2{font-size:1.5rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem}
+.section .sub{color:#94A3B8;font-size:0.88rem;margin-bottom:1.5rem;max-width:640px}
+
+.card{background:linear-gradient(135deg,#1E293B,#334155);border:1px solid rgba(99,115,148,0.2);border-radius:12px;padding:1.5rem;transition:all 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.card:hover{border-color:rgba(99,115,148,0.4);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+.card h4{font-size:0.95rem;font-weight:600;margin-bottom:0.4rem}
+.card p{font-size:0.8rem;color:#94A3B8;line-height:1.5}
+.card .mono{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#10B981;margin-top:0.5rem;display:block}
+
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+.grid-7{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.75rem}
+.grid-cat{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0.75rem}
+
+/* Category cards */
+.cat{background:linear-gradient(135deg,#1E293B,#334155);border-left:3px solid #3B82F6;border-radius:0 8px 8px 0;padding:1rem;transition:all 0.2s}
+.cat:hover{transform:translateX(3px);border-left-color:#10B981}
+.cat-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem}
+.cat-name{font-size:0.82rem;font-weight:600;color:#E2E8F0}
+.cat-wt{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;font-weight:700;color:#0B1120;background:#3B82F6;padding:0.15rem 0.5rem;border-radius:100px}
+.cat ul{list-style:none;padding:0}
+.cat li{font-size:0.72rem;color:#94A3B8;padding:0.15rem 0 0.15rem 1rem;position:relative}
+.cat li::before{content:'→';position:absolute;left:0;color:#3B82F6;font-size:0.65rem}
+.cat.hse{background:linear-gradient(135deg,#7F1D1D,#991B1B);border-left-color:#EF4444}
+.cat.hse .cat-wt{background:#EF4444}
+.cat.hse li{color:#FECACA}
+
+/* Dimension cards */
+.dim{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(139,92,246,0.04));border:1px solid rgba(139,92,246,0.25);border-radius:10px;padding:1rem;text-align:center;transition:all 0.3s}
+.dim:hover{transform:scale(1.03);border-color:rgba(139,92,246,0.5)}
+.dim-wt{font-family:'IBM Plex Mono',monospace;font-size:1.5rem;font-weight:800;color:#8B5CF6}
+.dim-title{font-size:0.8rem;font-weight:600;margin:0.3rem 0 0.15rem}
+.dim-sub{font-size:0.65rem;color:#94A3B8}
+
+/* Composite score */
+.composite{background:linear-gradient(135deg,#1E3A8A,#7E22CE);border-radius:16px;padding:2rem;text-align:center;margin-top:1.5rem;box-shadow:0 8px 30px rgba(30,58,138,0.4)}
+.comp-grade{font-size:3.5rem;font-weight:900;color:#10B981}
+.comp-score{font-size:2rem;font-weight:700;color:#FFF}
+.score-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0.5rem;margin-top:1rem}
+.score-item{background:rgba(0,0,0,0.25);border-radius:8px;padding:0.6rem 0.3rem;text-align:center}
+.score-item .sl{font-size:0.65rem;color:#CBD5E1}
+.score-item .sv{font-family:'IBM Plex Mono',monospace;font-size:1.1rem;font-weight:700;color:#10B981}
+
+/* Vertical sections */
+.vert{padding:3rem 0;border-bottom:1px solid rgba(99,115,148,0.15)}
+.vert-hdr{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.4rem}
+.vert-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.vi-def{background:rgba(251,146,60,0.12);border:1px solid rgba(251,146,60,0.2)}
+.vi-pharma{background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.2)}
+.vi-health{background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.2)}
+.vi-aero{background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.2)}
+.vi-bank{background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2)}
+.vi-consult{background:rgba(90,200,230,0.12);border:1px solid rgba(90,200,230,0.2)}
+.vi-oilgas{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.2)}
+.uc-label.oilgas{color:#EF4444}
+.vi-invest{background:rgba(244,114,182,0.12);border:1px solid rgba(244,114,182,0.2)}
+.vert-hdr h2{font-size:1.4rem;font-weight:700}
+.vert .sub{color:#94A3B8;font-size:0.85rem;margin-bottom:1rem;max-width:640px}
+.buyer-tags{display:flex;gap:0.3rem;flex-wrap:wrap;margin-bottom:1rem}
+.bt{font-size:0.65rem;font-weight:500;padding:0.2rem 0.5rem;border-radius:100px;border:1px solid rgba(99,115,148,0.3);color:#94A3B8}
+
+/* Use case cards */
+.uc{background:linear-gradient(135deg,#1E293B,#334155);border:1px solid rgba(99,115,148,0.2);border-radius:12px;padding:1.5rem;margin-bottom:1rem;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.uc-label{font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem}
+.uc-label.def{color:#FB923C}.uc-label.pharma{color:#A78BFA}.uc-label.health{color:#60A5FA}.uc-label.aero{color:#FBBF24}.uc-label.bank{color:#10B981}.uc-label.consult{color:#5AC8E6}.uc-label.invest{color:#F472B6}
+.uc h4{font-size:1rem;font-weight:600;margin-bottom:0.4rem}
+.uc .scenario{font-size:0.82rem;color:#94A3B8;line-height:1.6;border-left:2px solid rgba(99,115,148,0.3);padding-left:0.75rem;font-style:italic;margin-bottom:0.75rem}
+.uc .sol{font-size:0.82rem;color:#94A3B8;line-height:1.6;margin-bottom:0.75rem}
+.uc .sol strong{color:#E2E8F0;font-weight:500}
+.val-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.5rem}
+.vm{background:linear-gradient(135deg,#0F172A,#1E293B);border:1px solid rgba(99,115,148,0.15);border-radius:8px;padding:0.6rem;text-align:center}
+.vm .v{font-family:'IBM Plex Mono',monospace;font-size:1rem;font-weight:700}
+.vm .l{font-size:0.65rem;color:#64748B;margin-top:0.1rem}
+.v-teal{color:#10B981}.v-purple{color:#A78BFA}.v-blue{color:#60A5FA}.v-amber{color:#FBBF24}.v-coral{color:#FB923C}.v-pink{color:#F472B6}.v-cyan{color:#5AC8E6}
+
+/* CTA */
+.cta{padding:3rem 0;text-align:center}
+.cta h2{font-size:1.6rem;font-weight:700;margin-bottom:0.5rem}
+.cta p{color:#94A3B8;font-size:0.9rem;max-width:560px;margin:0 auto 1.5rem}
+.cta-btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.75rem 1.75rem;background:linear-gradient(135deg,#10B981,#059669);color:#FFF;font-weight:600;font-size:0.9rem;border-radius:8px;transition:all 0.2s;box-shadow:0 4px 12px rgba(16,185,129,0.3)}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(16,185,129,0.4)}
+.cta-sec{background:#334155;color:#E2E8F0;border:1px solid rgba(99,115,148,0.3)}
+.contact-box{background:linear-gradient(135deg,#1E293B,#334155);border:1px solid rgba(99,115,148,0.2);border-radius:10px;padding:1rem;margin-top:1rem;font-size:0.8rem;color:#94A3B8;line-height:1.8;max-width:500px;margin-left:auto;margin-right:auto;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.contact-box strong{color:#E2E8F0}
+
+.footer{padding:1.5rem 0;text-align:center;color:#64748B;font-size:0.72rem;border-top:1px solid rgba(99,115,148,0.15)}
+
+/* Compliance badges */
+.badges{display:flex;gap:0.3rem;flex-wrap:wrap;margin:1rem 0}
+.badge{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);padding:0.2rem 0.5rem;border-radius:5px;font-size:0.65rem;font-weight:600;color:#10B981}
+
+/* Transformation section */
+.transform{padding:3.5rem 0;border-bottom:1px solid rgba(99,115,148,0.15)}
+.transform h2{font-size:1.5rem;font-weight:700;margin-bottom:0.4rem}
+.transform .sub{color:#94A3B8;font-size:0.88rem;margin-bottom:1.5rem;max-width:640px}
+.pillar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.pillar{border-radius:12px;padding:1.5rem;transition:all 0.3s;box-shadow:0 4px 16px rgba(0,0,0,0.3)}
+.pillar:hover{transform:translateY(-3px)}
+.pillar.ooda{background:linear-gradient(135deg,rgba(251,146,60,0.1),rgba(251,146,60,0.04));border:1px solid rgba(251,146,60,0.25)}
+.pillar.ai{background:linear-gradient(135deg,rgba(96,165,250,0.1),rgba(96,165,250,0.04));border:1px solid rgba(96,165,250,0.25)}
+.pillar.sentinel{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(139,92,246,0.04));border:1px solid rgba(139,92,246,0.25)}
+.pillar .p-icon{font-size:1.8rem;margin-bottom:0.5rem}
+.pillar h3{font-size:1rem;font-weight:700;margin-bottom:0.3rem}
+.pillar .p-tag{font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem}
+.pillar .p-tag.ooda-t{color:#FB923C}.pillar .p-tag.ai-t{color:#60A5FA}.pillar .p-tag.sentinel-t{color:#A78BFA}
+.pillar p{font-size:0.8rem;color:#94A3B8;line-height:1.5;margin-bottom:0.5rem}
+.pillar ul{list-style:none;padding:0;margin-top:0.5rem}
+.pillar li{font-size:0.75rem;color:#CBD5E1;padding:0.2rem 0 0.2rem 1rem;position:relative}
+.pillar li::before{content:'→';position:absolute;left:0;font-size:0.65rem}
+.pillar.ooda li::before{color:#FB923C}.pillar.ai li::before{color:#60A5FA}.pillar.sentinel li::before{color:#A78BFA}
+
+/* OODA loop detail */
+.ooda-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;margin:1.5rem 0}
+.ooda-phase{border-radius:10px;padding:1rem;text-align:center;position:relative;box-shadow:0 4px 12px rgba(0,0,0,0.25)}
+.ooda-phase:not(:last-child)::after{content:'→';position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:#FB923C;font-weight:700;font-size:1rem;z-index:2}
+.ooda-phase.observe{background:linear-gradient(135deg,#1E3A8A,#1E40AF);border:1px solid rgba(96,165,250,0.3)}
+.ooda-phase.orient{background:linear-gradient(135deg,#7E22CE,#6D28D9);border:1px solid rgba(167,139,250,0.3)}
+.ooda-phase.decide{background:linear-gradient(135deg,#B45309,#D97706);border:1px solid rgba(251,191,36,0.3)}
+.ooda-phase.act{background:linear-gradient(135deg,#065F46,#047857);border:1px solid rgba(16,185,129,0.3)}
+.ooda-phase .op-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;opacity:0.7;margin-bottom:0.3rem}
+.ooda-phase .op-icon{font-size:1.3rem;margin-bottom:0.3rem}
+.ooda-phase h4{font-size:0.8rem;font-weight:600;margin-bottom:0.2rem}
+.ooda-phase p{font-size:0.68rem;color:rgba(255,255,255,0.7);line-height:1.4}
+.ooda-phase .op-metric{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;font-weight:700;margin-top:0.4rem;color:#FFF}
+
+/* Before/After comparison */
+.ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem}
+.ba-col{border-radius:12px;padding:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.ba-col.before{background:linear-gradient(135deg,#1E293B,#334155);border:1px solid rgba(248,113,113,0.2)}
+.ba-col.after{background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(16,185,129,0.03));border:1px solid rgba(16,185,129,0.25)}
+.ba-col h3{font-size:0.9rem;font-weight:700;margin-bottom:0.75rem}
+.ba-col.before h3{color:#F87171}.ba-col.after h3{color:#10B981}
+.ba-item{display:flex;gap:0.4rem;margin-bottom:0.5rem;font-size:0.78rem;line-height:1.5}
+.ba-item.bad{color:#FDA4AF}.ba-item.good{color:#A7F3D0}
+.ba-item strong{color:#E2E8F0;font-weight:500}
+
+@media(max-width:640px){.hero-stats{gap:1rem}.nav-pills{display:none}.wrap{padding:0 1.25rem}.grid-2,.score-grid,.pillar-grid,.ooda-flow,.ba-grid{grid-template-columns:1fr}.ooda-phase:not(:last-child)::after{display:none}}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <div class="nav-logo">Agentic<span>Vaults</span> TPRM</div>
+  <div class="nav-pills">
+    <div class="nav-pill active" onclick="document.getElementById('transform').scrollIntoView({behavior:'smooth'})">OODA + AI + SENTINEL</div>
+    <div class="nav-pill" onclick="document.getElementById('cats').scrollIntoView({behavior:'smooth'})">13 Categories</div>
+    <div class="nav-pill" onclick="document.getElementById('dims').scrollIntoView({behavior:'smooth'})">7 Dimensions</div>
+    <div class="nav-pill" onclick="document.getElementById('defense').scrollIntoView({behavior:'smooth'})">Defense</div>
+    <div class="nav-pill" onclick="document.getElementById('oilgas').scrollIntoView({behavior:'smooth'})">Oil & Gas</div>
+    <div class="nav-pill" onclick="document.getElementById('pharma').scrollIntoView({behavior:'smooth'})">Pharma</div>
+    <div class="nav-pill" onclick="document.getElementById('health').scrollIntoView({behavior:'smooth'})">Healthcare</div>
+    <div class="nav-pill" onclick="document.getElementById('aero').scrollIntoView({behavior:'smooth'})">Aerospace</div>
+    <div class="nav-pill" onclick="document.getElementById('bank').scrollIntoView({behavior:'smooth'})">Financial</div>
+    <div class="nav-pill" onclick="document.getElementById('consult').scrollIntoView({behavior:'smooth'})">Consulting</div>
+  </div>
+</div></nav>
+
+<div class="wrap">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">360° Third-Party Risk Intelligence</div>
+  <h1>Your TPRM Assessments Are<br>Answering the <em>Wrong Questions</em></h1>
+  <p class="hero-sub">Traditional TPRM only measures cyber and compliance. It ignores the 11 other dimensions that actually cause supply chain failures. We score 13 categories across 7 risk dimensions — with post-quantum encryption, threshold governance, and autonomous OODA agents.</p>
+  <div class="hero-stats">
+    <div><div class="hs-val">13</div><div class="hs-lbl">Assessment categories</div></div>
+    <div><div class="hs-val">7</div><div class="hs-lbl">Risk dimensions</div></div>
+    <div><div class="hs-val">48 hrs</div><div class="hs-lbl">Full assessment (vs 6 weeks)</div></div>
+    <div><div class="hs-val">100+</div><div class="hs-lbl">AI agents</div></div>
+    <div><div class="hs-val">$4.2M</div><div class="hs-lbl">Avg disruption prevented/qtr</div></div>
+  </div>
+</div>
+
+<!-- THREE PILLARS OF TRANSFORMATION -->
+<div class="transform" id="transform">
+  <h2>Three Pillars That Transform TPRM</h2>
+  <p class="sub">Traditional TPRM is periodic, siloed, human-bottlenecked, and permission-based. We replace every one of those limitations with a fundamentally different architecture.</p>
+
+  <div class="pillar-grid">
+    <div class="pillar ooda">
+      <div class="p-icon">🔄</div>
+      <div class="p-tag ooda-t">Decision Architecture</div>
+      <h3>OODA Loop</h3>
+      <p>Replaces periodic questionnaires with a continuous, autonomous decision cycle. The same military decision architecture used by fighter pilots — now applied to vendor risk at machine speed.</p>
+      <ul>
+        <li>Continuous 24/7 monitoring (not annual assessments)</li>
+        <li>Real-time correlation across 13 categories simultaneously</li>
+        <li>Autonomous escalation when composite score drops</li>
+        <li>Re-observation after every action — learns and adapts</li>
+        <li>44ms avg cycle time (your dashboard shows it live)</li>
+      </ul>
+    </div>
+
+    <div class="pillar ai">
+      <div class="p-icon">🤖</div>
+      <div class="p-tag ai-t">Autonomous Intelligence</div>
+      <h3>100+ Agentic AI</h3>
+      <p>Replaces human bottlenecks with autonomous agents that assess, monitor, correlate, and remediate — around the clock. Powered by Claude Opus for deep reasoning across all 13 categories.</p>
+      <ul>
+        <li>Assessment agents: auto-score 13 categories in 48 hours</li>
+        <li>Monitoring agents: scan 9 threat sources continuously</li>
+        <li>Correlation agents: detect multi-dimensional patterns humans miss</li>
+        <li>Outreach agents: automated vendor engagement (62% response rate)</li>
+        <li>Remediation agents: generate action plans with priority ranking</li>
+      </ul>
+    </div>
+
+    <div class="pillar sentinel">
+      <div class="p-icon">🔐</div>
+      <div class="p-tag sentinel-t">Cryptographic Foundation</div>
+      <h3>Indigenous SENTINEL</h3>
+      <p>Replaces permission-based access control with mathematical proof of isolation. Vendor assessment data is cryptographically separated — not just folder-permissioned.</p>
+      <ul>
+        <li>ISKDE: 9-domain cryptographic isolation per vendor/client</li>
+        <li>Shamir SSS: k-of-n threshold for sensitive vendor financials</li>
+        <li>ML-KEM: post-quantum protection for 10+ year regulatory lookback</li>
+        <li>O(1) revocation: terminated vendor loses access in 0.1ms</li>
+        <li>Zero-FFI: vendor data keys never touch Python</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- OODA APPLIED TO TPRM -->
+  <h2 style="font-size:1.2rem;margin-bottom:0.3rem">How OODA Transforms Vendor Risk Assessment</h2>
+  <p class="sub">Every vendor risk signal passes through a continuous 4-phase decision loop — not a quarterly spreadsheet review.</p>
+
+  <div class="ooda-flow">
+    <div class="ooda-phase observe">
+      <div class="op-label">Phase 1</div>
+      <div class="op-icon">👁️</div>
+      <h4>Observe</h4>
+      <p>9 threat sources scanned 24/7: SecurityScorecard, Shodan, CISA KEV, financial feeds, HSE incident databases, sanctions lists, dark web, regulatory filings, news</p>
+      <div class="op-metric">9 sources • 13 categories</div>
+    </div>
+    <div class="ooda-phase orient">
+      <div class="op-label">Phase 2</div>
+      <div class="op-icon">🧭</div>
+      <h4>Orient</h4>
+      <p>AI correlates signals across all 7 dimensions. Detects patterns: financial distress + HSE incident + cyber score drop = imminent supplier failure. Single-vendor risks invisible alone become visible together.</p>
+      <div class="op-metric">98.8% accuracy • &lt;5 min MTTR</div>
+    </div>
+    <div class="ooda-phase decide">
+      <div class="op-label">Phase 3</div>
+      <div class="op-icon">🎯</div>
+      <h4>Decide</h4>
+      <p>Composite scoring with threshold-based escalation. Auto-escalate when score drops below configurable threshold. Policy-gated: SENTINEL attributes determine who sees what and who can act.</p>
+      <div class="op-metric">A-F grading • 7 dimensions</div>
+    </div>
+    <div class="ooda-phase act">
+      <div class="op-label">Phase 4</div>
+      <div class="op-icon">⚡</div>
+      <h4>Act</h4>
+      <p>Auto-generate remediation plans. Trigger vendor outreach (45 sent → 28 responded). Revoke access for critical failures. Alert stakeholders. Then re-observe — the loop never stops.</p>
+      <div class="op-metric">48hr assessment • 100+ agents</div>
+    </div>
+  </div>
+
+  <!-- BEFORE / AFTER -->
+  <div class="ba-grid">
+    <div class="ba-col before">
+      <h3>❌ Traditional TPRM (What You Have Today)</h3>
+      <div class="ba-item bad">🐌 <span><strong>6 weeks</strong> per vendor assessment — human-driven questionnaires and spreadsheets</span></div>
+      <div class="ba-item bad">📊 <span><strong>1-2 dimensions</strong> only — cyber posture and maybe compliance. Blind to HSE, financial, quality, ESG, resilience, insurance, ethics, delivery, supply chain, sustainability, data privacy</span></div>
+      <div class="ba-item bad">📅 <span><strong>Annual reviews</strong> — your Tier 3 supplier can collapse between assessments and you won't know until production stops</span></div>
+      <div class="ba-item bad">🔓 <span><strong>Permission-based isolation</strong> — one misconfigured ACL and Competitor A's audit data leaks to Competitor B's team</span></div>
+      <div class="ba-item bad">👤 <span><strong>Human bottlenecks</strong> — every assessment, every follow-up, every remediation plan requires analyst time</span></div>
+      <div class="ba-item bad">📬 <span><strong>Manual vendor outreach</strong> — email chains, follow-up reminders, response tracking in spreadsheets</span></div>
+    </div>
+    <div class="ba-col after">
+      <h3>✅ AgenticVaults TPRM (What You Get)</h3>
+      <div class="ba-item good">⚡ <span><strong>48 hours</strong> full 13-category assessment — AI agents auto-score, auto-compare, auto-benchmark</span></div>
+      <div class="ba-item good">📊 <span><strong>13 categories × 7 dimensions</strong> — unified composite score. HSE, financial, quality, ESG, resilience, insurance, ethics all weighted and scored</span></div>
+      <div class="ba-item good">🔄 <span><strong>Continuous OODA monitoring</strong> — 44ms cycle time, 9 threat sources, 24/7. Detect deterioration in real-time, not next quarter</span></div>
+      <div class="ba-item good">🔐 <span><strong>Cryptographic isolation</strong> — ISKDE domain separation + Shamir threshold. Mathematical proof of vendor data isolation, not folder permissions</span></div>
+      <div class="ba-item good">🤖 <span><strong>100+ autonomous agents</strong> — assessment, monitoring, correlation, remediation, outreach. Humans review and approve, not manually execute</span></div>
+      <div class="ba-item good">📬 <span><strong>Automated outreach</strong> — 62% response rate. Agents send, track, follow up, and escalate. Your dashboard shows it live (45 sent → 28 responded)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 13 CATEGORIES -->
+<div class="section" id="cats">
+  <h2>13 Assessment Categories</h2>
+  <p class="sub">Deep-dive assessments across every dimension of third-party risk, weighted by business impact. HSE at 20% weight — because a Tier 2 supplier passing SOC2 audit then shutting down 6 OEMs with a safety incident costs $340M.</p>
+  <div class="grid-cat">
+    <div class="cat hse"><div class="cat-hdr"><span class="cat-name">🛡️ HSE Performance</span><span class="cat-wt">20%</span></div><ul><li>LTIFR & TRIR with industry benchmarks</li><li>ISO 45001 & ISO 14001 certification</li><li>Fatality and near-miss reporting</li><li>Safety training hours per employee</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">🔒 Cyber Security</span><span class="cat-wt">25%</span></div><ul><li>SecurityScorecard integration</li><li>Shodan attack surface monitoring</li><li>CVE & KEV tracking</li><li>Security posture assessment</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">💰 Financial Health</span><span class="cat-wt">15%</span></div><ul><li>Revenue & profit analysis</li><li>Debt-to-equity ratio monitoring</li><li>Credit rating & audited financials</li><li>Liquidity stress testing</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">📋 Compliance & Legal</span><span class="cat-wt">10%</span></div><ul><li>ISO 27001, SOC2 certification</li><li>DORA & NIS2 alignment</li><li>Active litigation tracking</li><li>Regulatory status monitoring</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">⚙️ Quality Operations</span><span class="cat-wt">10%</span></div><ul><li>ISO 9001 certification</li><li>Defect rate tracking</li><li>QMS maturity assessment</li><li>Continuous improvement programs</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">🌱 ESG Metrics</span><span class="cat-wt">10%</span></div><ul><li>Environmental score & targets</li><li>Social responsibility metrics</li><li>Governance structure analysis</li><li>Net-zero commitment tracking</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">🔄 Resilience</span><span class="cat-wt">10%</span></div><ul><li>Business Continuity Plans</li><li>DR capabilities & RTO/RPO</li><li>Crisis management procedures</li><li>Alternative supplier mapping</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">🛡️ Insurance Coverage</span><span class="cat-wt">5%</span></div><ul><li>Public liability coverage</li><li>Product liability insurance</li><li>Professional indemnity</li><li>Cyber insurance validation</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">⚖️ Ethics & Integrity</span><span class="cat-wt">5%</span></div><ul><li>Code of conduct verification</li><li>Anti-bribery policies</li><li>Sanctions screening (OFAC/EU)</li><li>Whistleblower mechanisms</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">🔐 Data Privacy</span><span class="cat-wt">5%</span></div><ul><li>GDPR compliance validation</li><li>Data Protection Officer (DPO)</li><li>Data transfer mechanisms</li><li>Privacy impact assessments</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">📦 Delivery Performance</span><span class="cat-wt">5%</span></div><ul><li>On-time delivery rate</li><li>Lead time consistency</li><li>Order fulfillment accuracy</li><li>Backorder management</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">🔗 Supply Chain Risk</span><span class="cat-wt">5%</span></div><ul><li>Single-source dependency</li><li>Supplier diversification score</li><li>Inventory buffer assessment</li><li>Sub-tier visibility mapping</li></ul></div>
+    <div class="cat"><div class="cat-hdr"><span class="cat-name">♻️ Sustainability</span><span class="cat-wt">5%</span></div><ul><li>Local content requirements</li><li>Circular economy initiatives</li><li>Social value contribution</li><li>Carbon footprint tracking</li></ul></div>
+  </div>
+</div>
+
+<!-- 7 DIMENSIONS + COMPOSITE -->
+<div class="section" id="dims">
+  <h2>7-Dimension Composite Scoring</h2>
+  <p class="sub">Unified risk score combining all critical factors into a single A–F grade with numeric score (0–100). No more spreadsheet chaos — one number, one grade, one action plan.</p>
+  <div class="grid-7">
+    <div class="dim"><div class="dim-wt">25%</div><div class="dim-title">Cyber</div><div class="dim-sub">SecurityScorecard • CVEs • KEV</div></div>
+    <div class="dim"><div class="dim-wt">20%</div><div class="dim-title">HSE</div><div class="dim-sub">LTIFR • TRIR • ISO 45001</div></div>
+    <div class="dim"><div class="dim-wt">15%</div><div class="dim-title">Financial</div><div class="dim-sub">D/E • Credit • Insurance</div></div>
+    <div class="dim"><div class="dim-wt">10%</div><div class="dim-title">Compliance</div><div class="dim-sub">Regulatory • GDPR • NIS2</div></div>
+    <div class="dim"><div class="dim-wt">10%</div><div class="dim-title">Quality</div><div class="dim-sub">ISO 9001 • Defect rate</div></div>
+    <div class="dim"><div class="dim-wt">10%</div><div class="dim-title">ESG</div><div class="dim-sub">Environmental • Social • Gov</div></div>
+    <div class="dim"><div class="dim-wt">10%</div><div class="dim-title">Resilience</div><div class="dim-sub">BCP • DR • RTO/RPO</div></div>
+  </div>
+  <div class="composite">
+    <div style="color:#CBD5E1;font-size:0.8rem;margin-bottom:0.5rem">Composite Risk Score</div>
+    <div class="comp-grade">A</div>
+    <div class="comp-score">87 <span style="font-size:0.9rem;color:#10B981">+5 this quarter</span></div>
+    <div class="score-grid">
+      <div class="score-item"><div class="sl">Cyber</div><div class="sv">92</div></div>
+      <div class="score-item"><div class="sl">HSE</div><div class="sv">85</div></div>
+      <div class="score-item"><div class="sl">Financial</div><div class="sv">88</div></div>
+      <div class="score-item"><div class="sl">Compliance</div><div class="sv">90</div></div>
+      <div class="score-item"><div class="sl">Quality</div><div class="sv">82</div></div>
+      <div class="score-item"><div class="sl">ESG</div><div class="sv">78</div></div>
+      <div class="score-item"><div class="sl">Resilience</div><div class="sv">86</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- INDUSTRY VERTICALS -->
+
+<!-- DEFENSE -->
+<div class="vert" id="defense">
+  <div class="vert-hdr"><div class="vert-icon vi-def">🛡️</div><h2>Defense & National Security</h2></div>
+  <p class="sub">CMMC 2.0, NIST 800-171, ITAR/EAR compliance across DIB supply chains down to component-site level. HSE + financial health + cyber unified for contractor performance assessment.</p>
+  <div class="buyer-tags"><span class="bt">Program Manager</span><span class="bt">Contracting Officer</span><span class="bt">ISSM / ISSO</span><span class="bt">CISO</span></div>
+  <div class="uc">
+    <div class="uc-label def">TPRM for Defense — DIB Supply Chain Integrity</div>
+    <h4>13-Category Assessment for Every Tier of the Defense Industrial Base</h4>
+    <div class="scenario">"Our prime contract flows through 200+ subcontractors across 4 tiers. CMMC requires us to verify cybersecurity, but a Tier 3 supplier's financial collapse or HSE incident is equally catastrophic. How do we score ALL risk dimensions for every supplier in under 48 hours — not 6 weeks?"</div>
+    <div class="sol"><strong>TPRM Solution:</strong> All 13 categories scored per supplier with defense-specific weighting. Cyber (25%) + HSE (20%) + Financial Health (15%) = 60% of composite score. Contractor Performance Assessment (CPARS) data feeds directly into quality and delivery scoring. OODA agents continuously monitor Tier 2-5 for financial distress signals (D/E spike), safety incidents (LTIFR jump), or cyber exposure (new CVEs in KEV). One unified risk score per contractor — not 11 separate spreadsheets.</div>
+    <div class="val-row">
+      <div class="vm"><div class="v v-coral">$12M</div><div class="l">Avg breach cost prevented</div></div>
+      <div class="vm"><div class="v v-coral">CMMC 2.0</div><div class="l">Level 3 alignment</div></div>
+      <div class="vm"><div class="v v-coral">48 hrs</div><div class="l">Full assessment (vs 6 weeks)</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHARMA -->
+
+<!-- OIL & GAS -->
+<div class="vert" id="oilgas">
+  <div class="vert-hdr"><div class="vert-icon vi-oilgas">🛢️</div><h2>Oil & Gas — Upstream, Midstream, Downstream</h2></div>
+  <p class="sub">HSE-gated contractor pre-qualification, IOGP-benchmarked safety scoring, process safety event tracking (PSER Tier 1 & 2), multi-tier supply chain monitoring, and cryptographic isolation for joint venture contractor data.</p>
+  <div class="buyer-tags"><span class="bt">Chief Procurement Officer</span><span class="bt">VP Supply Chain</span><span class="bt">HSE Director</span><span class="bt">VP Contracts</span><span class="bt">CISO</span></div>
+
+  <div class="uc">
+    <div class="uc-label oilgas">TPRM for Oil & Gas — HSE-Gated Contractor Pre-Qualification</div>
+    <h4>In Oil & Gas, HSE Isn't a Score — It's the Gate</h4>
+    <div class="scenario">"We evaluate 300+ contractors annually for offshore and onshore operations. A drilling contractor with a perfect SecurityScorecard rating but an LTIFR of 4.2 should never set foot on our production platform — but our current TPRM doesn't enforce this architecturally. HSE is just another column in the spreadsheet, not a hard gate. Last year, a welding subcontractor with deteriorating safety performance (3 near-misses in 2 months) wasn't flagged until after a Lost Time Injury shut down our turnaround for 11 days. Cost: $28M."</div>
+    <div class="sol"><strong>TPRM Solution:</strong> Before any other dimension is scored, contractors must pass an <strong>HSE gateway</strong> calibrated to IOGP benchmarks. Fail the gate, don't progress — regardless of commercial terms or technical capability. Gateway metrics include: LTIFR and TRIR benchmarked against IOGP safety performance indicators (not generic industry averages), Process Safety Event Rate (PSER Tier 1 & 2) distinguishing process safety from personal safety, fatality and High-Potential Incident (HiPo) reporting with trend analysis, ISO 45001/14001 certification with expiry tracking, NEBOSH/IOSH qualified staff ratios, safety training hours vs. IOGP recommended minimums, Permit to Work (PTW) system maturity, and emergency response capability scoring (offshore, onshore, subsea). When you see an LTIFR of 0.8, the system tells you whether that's good for a drilling contractor (it is) or mediocre for a logistics provider (it is).</div>
+    <div class="val-row">
+      <div class="vm"><div class="v" style="color:#EF4444">HSE Gate</div><div class="l">Hard threshold, not checkbox</div></div>
+      <div class="vm"><div class="v" style="color:#EF4444">IOGP</div><div class="l">Benchmarked, not generic</div></div>
+      <div class="vm"><div class="v" style="color:#EF4444">PSER 1&2</div><div class="l">Process safety separated</div></div>
+    </div>
+  </div>
+
+  <div class="uc">
+    <div class="uc-label oilgas">TPRM for Oil & Gas — 13-Category Scoring with O&G Weighting</div>
+    <h4>One Composite Score per Contractor — Procurement, HSE, and Supply Chain See the Same Data</h4>
+    <div class="scenario">"Our procurement team evaluates contractors on commercial terms. Our HSE team runs separate safety assessments. Our finance team checks credit ratings independently. Our supply chain team tracks delivery performance in another system. Nobody sees the full picture. When a critical-path contractor's financial health deteriorated while their safety record worsened — three departments had partial data, none connected the dots. The contractor went insolvent mid-turnaround."</div>
+    <div class="sol"><strong>TPRM Solution:</strong> Every contractor scored across 13 categories with Oil & Gas-specific weighting: <strong>HSE (25%)</strong> elevated from standard 20% for O&G operations. <strong>Cyber (15%)</strong> reduced — less critical than HSE for field contractors but essential for OT/SCADA environments. <strong>Financial Health (15%)</strong> — contractor insolvency during a turnaround is catastrophic. <strong>Quality Operations (10%)</strong> tracks ISO 9001 plus API Q1/Q2 for equipment suppliers. <strong>Compliance (10%)</strong> — sanctions screening critical for West Africa, Middle East, CIS operations. <strong>Resilience (10%)</strong> — can they mobilize backup crews? <strong>Insurance (5%)</strong> — energy-specific coverage validation. <strong>ESG (5%)</strong> — Scope 3 emissions from contractor operations. <strong>Ethics (5%)</strong> — anti-bribery for high-risk jurisdictions. ONE composite grade (A–F) and ONE score (0–100) per contractor. Procurement sees it in tender evaluation. Supply chain sees it in performance dashboards. HSE sees the safety-specific breakdown. Same data, different views, zero duplication.</div>
+    <div class="val-row">
+      <div class="vm"><div class="v" style="color:#EF4444">25%</div><div class="l">HSE weight (elevated for O&G)</div></div>
+      <div class="vm"><div class="v" style="color:#EF4444">48 hrs</div><div class="l">Full assessment (vs 6 weeks)</div></div>
+      <div class="vm"><div class="v" style="color:#EF4444">1 score</div><div class="l">All departments see same data</div></div>
+    </div>
+  </div>
+
+  <div class="uc">
+    <div class="uc-label oilgas">TPRM for Oil & Gas — Procurement & Tender Integration</div>
+    <h4>TPRM Scores Feed Directly Into Tender Evaluation — No Manual Re-Entry</h4>
+    <div class="scenario">"We're evaluating 5 drilling contractors for a deepwater campaign. Currently our procurement team spends 6 weeks collecting questionnaires, our HSE team does separate safety audits, and the tender committee tries to reconcile incompatible data from 4 different systems. By the time we have a complete picture, the commercial window has shifted."</div>
+    <div class="sol"><strong>TPRM Solution:</strong> TPRM scores auto-populate tender evaluation. HSE gateway scoring: contractors below threshold automatically flagged in tender comparison — procurement sees the red flag before commercial discussions begin. Side-by-side vendor comparison across all 13 dimensions. Weighted scoring aligned with your tender evaluation criteria. Gap analysis before RFP submission shows exactly where each bidder falls short. Auto-generated vendor qualification reports for tender committees — with AI-written narratives explaining each score. For 5 drilling contractors: instead of 6 weeks, your procurement team gets a full 13-dimension comparison in 48 hours.</div>
+    <div class="val-row">
+      <div class="vm"><div class="v" style="color:#EF4444">Auto-populate</div><div class="l">TPRM → tender evaluation</div></div>
+      <div class="vm"><div class="v" style="color:#EF4444">Gap analysis</div><div class="l">Per bidder, before RFP</div></div>
+      <div class="vm"><div class="v" style="color:#EF4444">AI narratives</div><div class="l">Auto-generated per contractor</div></div>
+    </div>
+  </div>
+
+  <div class="uc">
+    <div class="uc-label oilgas">TPRM for Oil & Gas — Continuous Supply Chain Monitoring</div>
+    <h4>After Contract Award, the Assessment Doesn't Stop</h4>
+    <div class="scenario">"We awarded a 3-year services contract to a maintenance contractor. Six months in, their LTIFR trended from 0.8 to 2.1 over three months, their key project manager resigned, and their debt-to-equity ratio exceeded 2.5. Our annual review wasn't scheduled for another 6 months. By the time we noticed, they'd already had a Tier 1 process safety event on our facility."</div>
+    <div class="sol"><strong>TPRM Solution:</strong> OODA decision loop monitors all 13 categories 24/7 across your entire contractor base. When a contractor's HSE performance deteriorates (LTIFR trend upward over 3 months), the system alerts before an incident occurs — not at the next annual review. Financial health monitoring catches distress signals (D/E spike, credit downgrade, payment delays to sub-contractors) before insolvency disrupts your operations. Cascading impact modeling: when a critical-path contractor shows risk across multiple dimensions simultaneously (HSE + financial + delivery), the system calculates production exposure in under 5 minutes and generates a remediation plan. Entity Outreach agents auto-contact the contractor requesting corrective action documentation, track response, and escalate if overdue.</div>
+    <div class="val-row">
+      <div class="vm"><div class="v" style="color:#EF4444">24/7</div><div class="l">OODA continuous monitoring</div></div>
+      <div class="vm"><div class="v" style="color:#EF4444">&lt; 5 min</div><div class="l">Cascading impact assessment</div></div>
+      <div class="vm"><div class="v" style="color:#EF4444">Auto-outreach</div><div class="l">AI-driven corrective actions</div></div>
+    </div>
+  </div>
+
+  <div class="uc">
+    <div class="uc-label oilgas">TPRM for Oil & Gas — Joint Venture Contractor Data Isolation</div>
+    <h4>When 3 Operators Share a Contractor Base, Each Operator's Evaluations Must Be Invisible to the Others</h4>
+    <div class="scenario">"We operate 4 joint ventures with different partner operators. All JVs use some of the same contractors, but each operator has proprietary contractor evaluations, commercial terms, and HSE assessments. On shared infrastructure, how do we ensure that Operator B cannot access our proprietary evaluation of Contractor X — even if both operators assessed the same contractor?"</div>
+    <div class="sol"><strong>TPRM Solution:</strong> Indigenous SENTINEL provides cryptographic isolation — not folder permissions. Each JV's contractor assessment data exists in a cryptographically isolated ISKDE domain. Operator A's proprietary evaluations are mathematically inaccessible to Operator B, even on shared infrastructure, even with database admin access. Sensitive financial data (contractor margins, payment terms, insurance limits) requires multi-authority threshold approval via Shamir SSS: procurement + HSE + legal = 3-of-3. Post-quantum encryption (ML-KEM FIPS 203) protects assessment data for 10+ year regulatory lookback periods. O(1) instant revocation: when a JV partner exits, their access to shared contractor data is terminated in 0.1ms.</div>
+    <div class="val-row">
+      <div class="vm"><div class="v" style="color:#EF4444">ISKDE</div><div class="l">Cryptographic JV isolation</div></div>
+      <div class="vm"><div class="v" style="color:#EF4444">3-of-3</div><div class="l">Threshold for sensitive data</div></div>
+      <div class="vm"><div class="v" style="color:#EF4444">FIPS 203</div><div class="l">Post-quantum for lookback</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHARMA -->
+<div class="vert" id="pharma">
+  <div class="vert-hdr"><div class="vert-icon vi-pharma">💊</div><h2>Pharmaceutical & Life Sciences</h2></div>
+  <p class="sub">CRO/CMO compliance across 40+ risk dimensions. Drug formulation IP, clinical trial data sovereignty, GxP compliance, API supplier monitoring with financial and quality tracking.</p>
+  <div class="buyer-tags"><span class="bt">VP R&D</span><span class="bt">Chief Medical Officer</span><span class="bt">Head of Regulatory</span><span class="bt">CISO</span></div>
+  <div class="uc">
+    <div class="uc-label pharma">TPRM for Pharma — CRO/CMO Risk Across 12 Countries</div>
+    <h4>Every Contract Research Organization Scored on All 13 Dimensions</h4>
+    <div class="scenario">"We run Phase III trials across 12 CROs in 8 countries. Each CRO handles patient data (privacy risk), manufacturing (quality risk), and hazardous materials (HSE risk). A single CRO compliance failure = 18-month FDA approval delay. We need to see financial stability + quality + HSE + cyber + compliance in ONE score per CRO — and be alerted the moment any dimension deteriorates."</div>
+    <div class="sol"><strong>TPRM Solution:</strong> 13-category assessment per CRO with pharma-specific weighting. HSE (20%) captures lab safety compliance. Quality Operations (10%) tracks GMP/GLP adherence. Data Privacy (5%) verifies GDPR cross-border data transfer mechanisms. Financial Health (15%) provides early warning if CMO's D/E ratio exceeds 2.0 (manufacturing continuity risk). AI agents auto-generate remediation plans when any dimension drops below threshold. Full FDA 21 CFR Part 11 audit trail.</div>
+    <div class="val-row">
+      <div class="vm"><div class="v v-purple">$200B</div><div class="l">Annual pharma IP at risk</div></div>
+      <div class="vm"><div class="v v-purple">18 mo</div><div class="l">Approval delay per CRO failure</div></div>
+      <div class="vm"><div class="v v-purple">40+</div><div class="l">Risk dimensions per CRO</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- HEALTHCARE EQUIPMENT -->
+<div class="vert" id="health">
+  <div class="vert-hdr"><div class="vert-icon vi-health">🏥</div><h2>Healthcare Equipment & Medical Devices</h2></div>
+  <p class="sub">SBOM + TPRM unified. Component supplier quality, counterfeit detection, FDA pre-market cybersecurity requirements, and CAD IP protection across the device supply chain.</p>
+  <div class="buyer-tags"><span class="bt">VP Engineering</span><span class="bt">Quality Assurance VP</span><span class="bt">Regulatory Affairs</span><span class="bt">CISO</span></div>
+  <div class="uc">
+    <div class="uc-label health">TPRM for MedTech — Component Supplier Risk Across 13 Dimensions</div>
+    <h4>$600M R&D Protected by Supplier-Level Risk Intelligence</h4>
+    <div class="scenario">"Our cardiac pacemakers contain 340 components from 50 suppliers. FDA's pre-market cybersecurity guidance requires us to verify every supplier's security posture. But we also need quality (defect rate), financial stability (can they survive next quarter?), and HSE (are their factory workers safe?). One counterfeit component = device recall costing $4.2M."</div>
+    <div class="sol"><strong>TPRM Solution:</strong> Every component supplier scored across all 13 categories. Supply Chain Risk (5%) maps single-source dependencies for critical ICs. Quality Operations (10%) tracks ISO 13485 + defect rates. Cyber (25%) monitors attack surface for vulnerabilities in supplier firmware. Delivery Performance (5%) alerts when lead times spike — early warning of production issues. Cryptographic SBOM provenance (Indigenous SENTINEL) verifies component authenticity from foundry to assembly.</div>
+    <div class="val-row">
+      <div class="vm"><div class="v v-blue">$4.2M</div><div class="l">Avg device recall cost</div></div>
+      <div class="vm"><div class="v v-blue">510(k)</div><div class="l">FDA cybersecurity aligned</div></div>
+      <div class="vm"><div class="v v-blue">340</div><div class="l">Components tracked per device</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- AEROSPACE -->
+<div class="vert" id="aero">
+  <div class="vert-hdr"><div class="vert-icon vi-aero">✈️</div><h2>Aerospace & Aviation</h2></div>
+  <p class="sub">DO-326A compliance, avionics firmware integrity, multi-tier supplier HSE tracking, and cascading impact modeling when a Tier 3 supplier fails and affects 14 production lines.</p>
+  <div class="buyer-tags"><span class="bt">Chief Engineer</span><span class="bt">VP Supply Chain</span><span class="bt">Program Director</span><span class="bt">CISO</span></div>
+  <div class="uc">
+    <div class="uc-label aero">TPRM for Aerospace — 200+ LRU Suppliers Scored in 48 Hours</div>
+    <h4>When a Tier 3 Supplier Fails, Know the Cascading Impact in 5 Minutes</h4>
+    <div class="scenario">"Our fly-by-wire system sources LRUs from 200+ suppliers in 12 countries. When a Tier 3 automotive supplier in Mexico had a safety incident (LTIFR spiked to 4.2), it cascaded across 14 production lines for 6 OEMs. Cost: $340M in delays. Our current TPRM saw zero warning — they only monitored cyber posture."</div>
+    <div class="sol"><strong>TPRM Solution:</strong> HSE Performance (20% weight) is a first-class scoring dimension — not an afterthought. LTIFR and TRIR tracked with aerospace industry benchmarks. AI agents correlate: when a supplier's safety score drops AND their financial health weakens AND their on-time delivery slips — the composite score triggers an alert BEFORE the incident cascades. Impact modeling calculates $-exposure across affected production lines in under 5 minutes.</div>
+    <div class="val-row">
+      <div class="vm"><div class="v v-amber">$340M</div><div class="l">Production delay prevented</div></div>
+      <div class="vm"><div class="v v-amber">DO-326A</div><div class="l">Airborne cybersecurity</div></div>
+      <div class="vm"><div class="v v-amber">&lt; 5 min</div><div class="l">Cascading impact assessment</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FINANCIAL -->
+<div class="vert" id="bank">
+  <div class="vert-hdr"><div class="vert-icon vi-bank">🏦</div><h2>Financial Institutions</h2></div>
+  <p class="sub">DORA operational resilience, cross-border vendor assessment, ICT third-party provider oversight, and real-time monitoring of critical outsourced services across all 7 risk dimensions.</p>
+  <div class="buyer-tags"><span class="bt">CRO / Chief Risk Officer</span><span class="bt">Head of Compliance</span><span class="bt">CISO</span><span class="bt">VP Procurement</span></div>
+  <div class="uc">
+    <div class="uc-label bank">TPRM for Financial — DORA-Compliant ICT Provider Assessment</div>
+    <h4>Every Critical Third-Party ICT Provider Scored Across 13 Categories</h4>
+    <div class="scenario">"DORA classifies our cloud provider, payment processor, and core banking vendor as 'critical ICT third-party service providers' subject to direct EU oversight. We need to demonstrate ongoing risk assessment across cyber, financial health, resilience, AND compliance — not just annual questionnaires. Our regulator wants continuous monitoring evidence."</div>
+    <div class="sol"><strong>TPRM Solution:</strong> 13-category scoring runs continuously, not annually. Resilience (10%) specifically tracks RTO/RPO and DR capabilities — mandatory under DORA. Financial Health (15%) monitors credit ratings and liquidity in real-time. Cyber (25%) provides continuous SecurityScorecard monitoring. AI agents auto-generate DORA compliance evidence packages for supervisory authorities. Composite score trends show improvement trajectory — regulators see proactive risk management, not reactive compliance.</div>
+    <div class="val-row">
+      <div class="vm"><div class="v v-teal">DORA</div><div class="l">Full compliance evidence</div></div>
+      <div class="vm"><div class="v v-teal">$5.9B</div><div class="l">Regulatory fines at stake</div></div>
+      <div class="vm"><div class="v v-teal">24/7</div><div class="l">Continuous monitoring (not annual)</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONSULTING -->
+<div class="vert" id="consult">
+  <div class="vert-hdr"><div class="vert-icon vi-consult">📊</div><h2>Management Consulting & Audit</h2></div>
+  <p class="sub">Multi-client subcontractor assessment, PCAOB independence compliance, engagement-level risk scoring, and cryptographic isolation between competing client TPRM data.</p>
+  <div class="buyer-tags"><span class="bt">Managing Partner</span><span class="bt">Head of Independence</span><span class="bt">CRO</span><span class="bt">CISO</span></div>
+  <div class="uc">
+    <div class="uc-label consult">TPRM for Big 5 — Subcontractor & Outsourcing Provider Risk</div>
+    <h4>Score Every Subcontractor Across All 13 Categories Before They Touch Client Data</h4>
+    <div class="scenario">"We outsource IT development to 15 subcontractors across India, Eastern Europe, and Philippines. Each subcontractor accesses client data for different engagements. PCAOB inspectors ask: 'Can you prove that subcontractor X's cyber posture, financial stability, data privacy practices, and insurance coverage meet your standards?' We can prove cyber. We cannot prove the other 12 dimensions."</div>
+    <div class="sol"><strong>TPRM Solution:</strong> All 13 categories assessed per subcontractor. Data Privacy (5%) verifies GDPR cross-border transfer mechanisms. Insurance Coverage (5%) confirms professional indemnity limits. Financial Health (15%) flags subcontractors with deteriorating D/E ratios before they miss payroll. Ethics & Integrity (5%) validates sanctions screening. OODA agents monitor continuously — when a Philippines-based subcontractor's cyber score drops, the system alerts AND auto-revokes access to affected client environments. All data cryptographically isolated per client via Indigenous SENTINEL.</div>
+    <div class="val-row">
+      <div class="vm"><div class="v v-cyan">$14.5M</div><div class="l">Avg consulting firm breach</div></div>
+      <div class="vm"><div class="v v-cyan">PCAOB</div><div class="l">Inspection-ready evidence</div></div>
+      <div class="vm"><div class="v v-cyan">13</div><div class="l">Dimensions per subcontractor</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLIANCE BADGES -->
+<div class="section">
+  <h2>Multi-Industry Compliance Built-In</h2>
+  <div class="badges">
+    <span class="badge">FDA 21 CFR Part 11</span><span class="badge">HIPAA/HITECH</span><span class="badge">EU MDR</span><span class="badge">ISO 27001</span><span class="badge">SOC 2 Type II</span><span class="badge">ISO 9001</span><span class="badge">ISO 45001</span><span class="badge">ISO 14001</span><span class="badge">GDPR Art. 32</span><span class="badge">NIST FIPS 203</span><span class="badge">PCI-DSS 4.0</span><span class="badge">SEC Reg S-P</span><span class="badge">FINMA</span><span class="badge">NIS2</span><span class="badge">DORA</span><span class="badge">CMMC 2.0</span><span class="badge">DO-326A</span><span class="badge">PCAOB</span><span class="badge">IATF 16949</span><span class="badge">ISO 13485</span>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta">
+  <h2>Stop Scoring Vendors on Cyber Alone</h2>
+  <p>Your competitors monitor 1 dimension. We score 13 categories across 7 dimensions — continuously, autonomously, with post-quantum encryption. See why regulated enterprises choose AgenticVaults TPRM.</p>
+  <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap">
+    <a href="https://cal.com/agenticvaults" class="cta-btn">📅 Book TPRM Demo →</a>
+    <a href="mailto:ldavid@agenticvaults.ai?subject=TPRM%20Assessment%20Inquiry" class="cta-btn cta-sec">✉️ ldavid@agenticvaults.ai</a>
+  </div>
+  <div class="contact-box">
+    <strong>Direct Contact:</strong> Leo David, Founder & CEO<br>
+    <strong>Email:</strong> <a href="mailto:ldavid@agenticvaults.ai">ldavid@agenticvaults.ai</a><br>
+    <strong>Calendar:</strong> <a href="https://cal.com/agenticvaults">cal.com/agenticvaults</a><br>
+    <strong>Platform:</strong> <a href="https://agenticvaults.ai">agenticvaults.ai</a><br><br>
+    <strong>Free Assessment Offer:</strong> We'll score your top 10 critical vendors across all 13 categories and 7 dimensions — then show you the blind spots your current TPRM misses. 2-week pilot. Zero commitment.
+  </div>
+</div>
+
+<div class="footer">
+  AgenticVaults, Inc. — Confidential & Proprietary — May 2026<br>
+  Indigenous SENTINEL • ICRYPT • ISKDE • <a href="https://agenticvaults.ai">agenticvaults.ai</a>
+</div>
+
+</div>
+</body>
+</html>
