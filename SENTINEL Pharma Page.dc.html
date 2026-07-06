@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --c-bg: #06060B;
+      --c-surface: #0E0E16;
+      --c-surface2: #16161F;
+      --c-surface3: #1E1E2A;
+      --c-border: #252535;
+      --c-gold: #D4A853;
+      --c-gold-dim: #A07D3A;
+      --c-emerald: #34D399;
+      --c-cyan: #22D3EE;
+      --c-blue: #3B82F6;
+      --c-purple: #A78BFA;
+      --c-red: #F87171;
+      --c-amber: #FBBF24;
+      --c-white: #F0EDE6;
+      --c-muted: #8E8EA3;
+      --c-dim: #55556A;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    body { margin: 0; background: var(--c-bg); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+  </style>
+</helmet>
+
+<div style="min-height: 100vh; background: var(--c-bg); color: var(--c-white); font-family: var(--font-body); overflow-x: hidden;">
+
+  <!-- ═══ NAVIGATION ═══ -->
+  <nav style="position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 20px 48px; display: flex; justify-content: space-between; align-items: center; background: rgba(6,6,11,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(37,37,53,0.5);">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div style="width: 34px; height: 34px; border: 2px solid var(--c-gold); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+        <div style="width: 12px; height: 12px; background: var(--c-gold); border-radius: 3px;"></div>
+      </div>
+      <span style="font-size: 16px; font-weight: 600; color: var(--c-gold); letter-spacing: 0.06em; font-family: var(--font-display);">agenticvaults</span>
+      <span style="font-size: 12px; color: var(--c-dim); font-weight: 500; margin-left: 8px; padding-left: 8px; border-left: 1px solid var(--c-border);">SENTINEL</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 32px;">
+      <a href="https://cal.com/agenticvaults" target="_blank" style="font-size: 14px; color: var(--c-muted); text-decoration: none; font-weight: 500; transition: color 0.2s;" style-hover="color: var(--c-white)">Platform</a>
+      <a href="#vaulting" style="font-size: 14px; color: var(--c-muted); text-decoration: none; font-weight: 500; transition: color 0.2s;" style-hover="color: var(--c-white)">Vaulting</a>
+      <a href="#gaas" style="font-size: 14px; color: var(--c-muted); text-decoration: none; font-weight: 500; transition: color 0.2s;" style-hover="color: var(--c-white)">Governance</a>
+      <a href="#cleanroom" style="font-size: 14px; color: var(--c-muted); text-decoration: none; font-weight: 500; transition: color 0.2s;" style-hover="color: var(--c-white)">Clean Room</a>
+      <a href="#stakeholders" style="font-size: 14px; color: var(--c-muted); text-decoration: none; font-weight: 500; transition: color 0.2s;" style-hover="color: var(--c-white)">Stakeholders</a>
+      <a href="#compliance" style="font-size: 14px; color: var(--c-muted); text-decoration: none; font-weight: 500; transition: color 0.2s;" style-hover="color: var(--c-white)">Compliance</a>
+    </div>
+    <div style="display: flex; gap: 12px;">
+      <a href="https://cal.com/agenticvaults" target="_blank" style="padding: 10px 22px; background: var(--c-gold); color: var(--c-bg); font-size: 14px; font-weight: 600; border-radius: 8px; text-decoration: none; font-family: var(--font-display); transition: background 0.2s;" style-hover="background: #E0B863">Schedule Demo</a>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <section style="position: relative; min-height: 100vh; display: flex; align-items: center; padding: 140px 48px 100px; max-width: 1400px; margin: 0 auto; overflow: hidden;">
+    <div style="position: absolute; top: -200px; right: -200px; width: 800px; height: 800px; background: radial-gradient(circle, rgba(212,168,83,0.07) 0%, transparent 65%); border-radius: 50%; pointer-events: none;"></div>
+    <div style="position: absolute; bottom: -300px; left: -200px; width: 700px; height: 700px; background: radial-gradient(circle, rgba(52,211,153,0.04) 0%, transparent 65%); border-radius: 50%; pointer-events: none;"></div>
+    <div style="max-width: 900px; animation: fadeUp 0.8s ease-out;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 36px;">
+        <div style="height: 1px; width: 48px; background: var(--c-gold);"></div>
+        <span style="font-size: 14px; color: var(--c-gold); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; font-family: var(--font-display);">Sovereign Digital Custody for Pharmaceutical</span>
+      </div>
+      <h1 style="font-size: 68px; font-weight: 700; color: var(--c-white); line-height: 1.06; margin: 0 0 28px; letter-spacing: -0.025em; font-family: var(--font-display);">Post-Quantum Security for Pharmaceutical Enterprises</h1>
+      <p style="font-size: 20px; color: var(--c-muted); line-height: 1.65; margin: 0 0 52px; max-width: 720px;">Cryptographic custody, algorithmic governance, and privacy-preserving analytics for the world's most sensitive intellectual property. Built on 11,700 lines of pure Rust with zero external dependencies.</p>
+      <div style="display: flex; gap: 16px; margin-bottom: 72px;">
+        <a href="https://cal.com/agenticvaults" target="_blank" style="padding: 16px 32px; background: var(--c-gold); color: var(--c-bg); font-size: 16px; font-weight: 600; border-radius: 10px; text-decoration: none; font-family: var(--font-display); transition: all 0.2s;" style-hover="background: #E0B863; transform: translateY(-1px)">Start Free Trial</a>
+        <a href="https://cal.com/agenticvaults" target="_blank" style="padding: 16px 32px; background: transparent; border: 1px solid var(--c-border); color: var(--c-white); font-size: 16px; font-weight: 600; border-radius: 10px; text-decoration: none; font-family: var(--font-display); transition: all 0.2s;" style-hover="border-color: var(--c-gold); background: rgba(212,168,83,0.06)">Schedule Demo</a>
+      </div>
+      <div style="display: flex; gap: 48px;">
+        <div>
+          <div style="font-size: 36px; font-weight: 700; color: var(--c-gold); font-family: var(--font-mono);">3.9 GB/s</div>
+          <div style="font-size: 13px; color: var(--c-dim); margin-top: 4px; letter-spacing: 0.04em;">Encryption Throughput</div>
+        </div>
+        <div style="width: 1px; background: var(--c-border);"></div>
+        <div>
+          <div style="font-size: 36px; font-weight: 700; color: var(--c-gold); font-family: var(--font-mono);">0.21 µs</div>
+          <div style="font-size: 13px; color: var(--c-dim); margin-top: 4px; letter-spacing: 0.04em;">Key Derivation</div>
+        </div>
+        <div style="width: 1px; background: var(--c-border);"></div>
+        <div>
+          <div style="font-size: 36px; font-weight: 700; color: var(--c-emerald); font-family: var(--font-mono);">100%</div>
+          <div style="font-size: 13px; color: var(--c-dim); margin-top: 4px; letter-spacing: 0.04em;">Quantum-Safe</div>
+        </div>
+        <div style="width: 1px; background: var(--c-border);"></div>
+        <div>
+          <div style="font-size: 36px; font-weight: 700; color: var(--c-cyan); font-family: var(--font-mono);">&lt;100ms</div>
+          <div style="font-size: 13px; color: var(--c-dim); margin-top: 4px; letter-spacing: 0.04em;">Revocation Time</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THREAT LANDSCAPE ═══ -->
+  <section style="padding: 120px 48px; border-top: 1px solid var(--c-border);">
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+        <div style="height: 1px; width: 36px; background: var(--c-red);"></div>
+        <span style="font-size: 13px; color: var(--c-red); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-display);">Threat Assessment</span>
+      </div>
+      <h2 style="font-size: 48px; font-weight: 700; color: var(--c-white); margin: 0 0 16px; letter-spacing: -0.02em; font-family: var(--font-display); line-height: 1.15; max-width: 900px;">The pharmaceutical industry faces an unprecedented convergence of threats</h2>
+      <p style="font-size: 18px; color: var(--c-muted); line-height: 1.6; margin: 0 0 56px; max-width: 780px;">Nation-state actors, quantum computing timelines, and regulatory fragmentation create a perfect storm for the world's most valuable intellectual property.</p>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 36px 28px;">
+          <div style="font-size: 64px; font-weight: 700; color: var(--c-red); line-height: 1; font-family: var(--font-mono);">68%</div>
+          <div style="font-size: 18px; color: var(--c-white); margin-top: 14px; font-weight: 600; font-family: var(--font-display);">of pharma breaches</div>
+          <div style="font-size: 14px; color: var(--c-dim); margin-top: 8px; line-height: 1.5;">involve privileged insider access or compromised credentials</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 36px 28px;">
+          <div style="font-size: 64px; font-weight: 700; color: var(--c-amber); line-height: 1; font-family: var(--font-mono);">$4.8B</div>
+          <div style="font-size: 18px; color: var(--c-white); margin-top: 14px; font-weight: 600; font-family: var(--font-display);">average cost per breach</div>
+          <div style="font-size: 14px; color: var(--c-dim); margin-top: 8px; line-height: 1.5;">including IP loss, regulatory fines, and pipeline disruption</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 36px 28px;">
+          <div style="font-size: 64px; font-weight: 700; color: var(--c-purple); line-height: 1; font-family: var(--font-mono);">2029</div>
+          <div style="font-size: 18px; color: var(--c-white); margin-top: 14px; font-weight: 600; font-family: var(--font-display);">quantum threat horizon</div>
+          <div style="font-size: 14px; color: var(--c-dim); margin-top: 8px; line-height: 1.5;">"harvest now, decrypt later" attacks already underway</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 36px 28px;">
+          <div style="font-size: 64px; font-weight: 700; color: var(--c-gold); line-height: 1; font-family: var(--font-mono);">20+yr</div>
+          <div style="font-size: 18px; color: var(--c-white); margin-top: 14px; font-weight: 600; font-family: var(--font-display);">patent lifecycle</div>
+          <div style="font-size: 14px; color: var(--c-dim); margin-top: 8px; line-height: 1.5;">formulation IP filed today must remain confidential past quantum era</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ EXPOSURE ANALYSIS ═══ -->
+  <section style="padding: 120px 48px; border-top: 1px solid var(--c-border);">
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+        <div style="height: 1px; width: 36px; background: var(--c-gold);"></div>
+        <span style="font-size: 13px; color: var(--c-gold); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-display);">Exposure Analysis</span>
+      </div>
+      <h2 style="font-size: 48px; font-weight: 700; color: var(--c-white); margin: 0 0 56px; letter-spacing: -0.02em; font-family: var(--font-display); line-height: 1.15;">$1.4 trillion in IP exposed to quantum, regulatory, and insider risk</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-left: 3px solid var(--c-red); border-radius: 12px; padding: 28px 32px;">
+          <div style="font-size: 18px; font-weight: 600; color: var(--c-white); margin-bottom: 8px; font-family: var(--font-display);">Drug Formulation IP</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.6;">Synthetic routes, analytical methods, and process parameters stored in IT systems vulnerable to privileged-access attacks and quantum decryption</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-left: 3px solid var(--c-cyan); border-radius: 12px; padding: 28px 32px;">
+          <div style="font-size: 18px; font-weight: 600; color: var(--c-white); margin-bottom: 8px; font-family: var(--font-display);">Patent Portfolios</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.6;">5,000+ active patents per company with 20-year protection requirements. Pre-filing disclosures can invalidate entire patent families</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-left: 3px solid var(--c-amber); border-radius: 12px; padding: 28px 32px;">
+          <div style="font-size: 18px; font-weight: 600; color: var(--c-white); margin-bottom: 8px; font-family: var(--font-display);">Clinical Trial Data</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.6;">Patient-level records, endpoint analyses, and interim efficacy data across 50+ active trials per major pharma — each a regulatory and competitive liability</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-left: 3px solid var(--c-emerald); border-radius: 12px; padding: 28px 32px;">
+          <div style="font-size: 18px; font-weight: 600; color: var(--c-white); margin-bottom: 8px; font-family: var(--font-display);">Pharmacovigilance Data</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.6;">Safety signal databases, ICSRs, and REMS program data requiring cross-border transmission under GDPR, HIPAA, and local data sovereignty laws</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-left: 3px solid var(--c-purple); border-radius: 12px; padding: 28px 32px;">
+          <div style="font-size: 18px; font-weight: 600; color: var(--c-white); margin-bottom: 8px; font-family: var(--font-display);">Manufacturing Batch Records</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.6;">GMP-critical records across 30+ CMO/CDMO facilities — data integrity failures trigger FDA 483s, consent decrees, and product recalls</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-left: 3px solid var(--c-blue); border-radius: 12px; padding: 28px 32px;">
+          <div style="font-size: 18px; font-weight: 600; color: var(--c-white); margin-bottom: 8px; font-family: var(--font-display);">Commercial &amp; Pricing Data</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.6;">Sunshine Act disclosures, government pricing agreements, and rebate structures — mishandling triggers FCPA violations and DOJ investigations</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THREE PILLARS ═══ -->
+  <section id="pillars" style="padding: 120px 48px; border-top: 1px solid var(--c-border); background: linear-gradient(180deg, var(--c-bg) 0%, var(--c-surface) 50%, var(--c-bg) 100%);">
+    <div style="max-width: 1400px; margin: 0 auto; text-align: center;">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 20px;">
+        <div style="height: 1px; width: 36px; background: var(--c-gold);"></div>
+        <span style="font-size: 13px; color: var(--c-gold); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-display);">Platform Architecture</span>
+        <div style="height: 1px; width: 36px; background: var(--c-gold);"></div>
+      </div>
+      <h2 style="font-size: 52px; font-weight: 700; color: var(--c-white); margin: 0 0 16px; letter-spacing: -0.025em; font-family: var(--font-display); line-height: 1.1;">Three Pillars of Sovereign Security</h2>
+      <p style="font-size: 18px; color: var(--c-muted); margin: 0 auto 60px; max-width: 700px; line-height: 1.6;">Each pillar addresses a distinct pharmaceutical need — custody for IP, governance for operations, and clean room for collaborative analytics.</p>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: left;">
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-top: 3px solid var(--c-gold); border-radius: 16px; padding: 44px 36px; transition: all 0.3s;" style-hover="border-color: rgba(212,168,83,0.3); transform: translateY(-4px)">
+          <div style="font-size: 40px; font-weight: 700; color: var(--c-gold); margin-bottom: 16px; font-family: var(--font-display);">SDC Vaulting</div>
+          <div style="font-size: 17px; color: var(--c-white); font-weight: 500; margin-bottom: 16px; font-family: var(--font-display);">Post-Quantum IP Custody</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.7;">Cryptographic custody for drug formulations, clinical trial data, patent portfolios, and manufacturing records. ML-KEM-1024 ensures stolen ciphertext remains permanently unbreakable.</div>
+          <div style="margin-top: 24px; padding: 14px 18px; background: rgba(212,168,83,0.06); border: 1px solid rgba(212,168,83,0.15); border-radius: 8px; font-size: 13px; color: var(--c-gold); font-family: var(--font-mono); font-weight: 500;">ML-KEM-1024 · AES-256-GCM · 3.9 GB/s</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-top: 3px solid var(--c-emerald); border-radius: 16px; padding: 44px 36px; transition: all 0.3s;" style-hover="border-color: rgba(52,211,153,0.3); transform: translateY(-4px)">
+          <div style="font-size: 40px; font-weight: 700; color: var(--c-emerald); margin-bottom: 16px; font-family: var(--font-display);">GaaS</div>
+          <div style="font-size: 17px; color: var(--c-white); font-weight: 500; margin-bottom: 16px; font-family: var(--font-display);">Governance-as-a-Service</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.7;">Cryptographically enforced policy orchestration across 9 authority domains. Shamir quorums replace fallible IT access rights. No single authority can override.</div>
+          <div style="margin-top: 24px; padding: 14px 18px; background: rgba(52,211,153,0.06); border: 1px solid rgba(52,211,153,0.15); border-radius: 8px; font-size: 13px; color: var(--c-emerald); font-family: var(--font-mono); font-weight: 500;">9 Domains · &lt;300ms · Shamir SSS</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-top: 3px solid var(--c-cyan); border-radius: 16px; padding: 44px 36px; transition: all 0.3s;" style-hover="border-color: rgba(34,211,238,0.3); transform: translateY(-4px)">
+          <div style="font-size: 40px; font-weight: 700; color: var(--c-cyan); margin-bottom: 16px; font-family: var(--font-display);">Clean Room</div>
+          <div style="font-size: 17px; color: var(--c-white); font-weight: 500; margin-bottom: 16px; font-family: var(--font-display);">Zero-Knowledge Analytics</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.7;">Privacy-preserving computation for multi-sponsor clinical trials, consortium drug interaction studies, and real-world evidence — without exposing raw patient records.</div>
+          <div style="margin-top: 24px; padding: 14px 18px; background: rgba(34,211,238,0.06); border: 1px solid rgba(34,211,238,0.15); border-radius: 8px; font-size: 13px; color: var(--c-cyan); font-family: var(--font-mono); font-weight: 500;">ZK Proofs · &lt;5s · 1024-bit ARX</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ OODA DECISION ARCHITECTURE ═══ -->
+  <section style="padding: 120px 48px; border-top: 1px solid var(--c-border);">
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+        <div style="height: 1px; width: 36px; background: var(--c-cyan);"></div>
+        <span style="font-size: 13px; color: var(--c-cyan); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-display);">Decision Architecture</span>
+      </div>
+      <h2 style="font-size: 48px; font-weight: 700; color: var(--c-white); margin: 0 0 16px; letter-spacing: -0.02em; font-family: var(--font-display); line-height: 1.15; max-width: 900px;">Continuous OODA decision cycles replace annual vendor qualification</h2>
+      <p style="font-size: 18px; color: var(--c-muted); line-height: 1.6; margin: 0 0 56px; max-width: 780px;">Every CRO, CMO, API supplier, and clinical site monitored in real-time — not during annual qualification cycles.</p>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px;">
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 32px 28px; text-align: center;">
+          <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(34,211,238,0.1); border: 1px solid rgba(34,211,238,0.25); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-size: 22px; font-weight: 700; color: var(--c-cyan); font-family: var(--font-mono);">O</div>
+          <div style="font-size: 18px; font-weight: 700; color: var(--c-white); margin-bottom: 10px; font-family: var(--font-display);">Observe</div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">24/7 GxP compliance monitoring across all vendors, sites, and supply chain nodes</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 32px 28px; text-align: center;">
+          <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(34,211,238,0.1); border: 1px solid rgba(34,211,238,0.25); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-size: 22px; font-weight: 700; color: var(--c-cyan); font-family: var(--font-mono);">O</div>
+          <div style="font-size: 18px; font-weight: 700; color: var(--c-white); margin-bottom: 10px; font-family: var(--font-display);">Orient</div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">Cross-reference pharmacovigilance signals with quality deviations and regulatory intelligence</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 32px 28px; text-align: center;">
+          <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(34,211,238,0.1); border: 1px solid rgba(34,211,238,0.25); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-size: 22px; font-weight: 700; color: var(--c-cyan); font-family: var(--font-mono);">D</div>
+          <div style="font-size: 18px; font-weight: 700; color: var(--c-white); margin-bottom: 10px; font-family: var(--font-display);">Decide</div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">44ms decision cycle for supply disruptions, quality escalations, and regulatory alerts</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 32px 28px; text-align: center;">
+          <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(34,211,238,0.1); border: 1px solid rgba(34,211,238,0.25); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-size: 22px; font-weight: 700; color: var(--c-cyan); font-family: var(--font-mono);">A</div>
+          <div style="font-size: 18px; font-weight: 700; color: var(--c-white); margin-bottom: 10px; font-family: var(--font-display);">Act</div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">Autonomous escalation, FDA 483 tracking, and cryptographic access revocation in real-time</div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 32px; padding: 24px 32px; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px;">
+        <div style="display: flex; align-items: center; gap: 12px;"><span style="font-size: 24px; font-weight: 700; color: var(--c-cyan); font-family: var(--font-mono);">100+</span><span style="font-size: 14px; color: var(--c-muted);">Specialized AI agents trained on GxP frameworks</span></div>
+        <div style="width: 1px; background: var(--c-border);"></div>
+        <div style="display: flex; align-items: center; gap: 12px;"><span style="font-size: 24px; font-weight: 700; color: var(--c-cyan); font-family: var(--font-mono);">44ms</span><span style="font-size: 14px; color: var(--c-muted);">Decision cycle for supply chain disruptions</span></div>
+        <div style="width: 1px; background: var(--c-border);"></div>
+        <div style="display: flex; align-items: center; gap: 12px;"><span style="font-size: 24px; font-weight: 700; color: var(--c-cyan); font-family: var(--font-mono);">24/7</span><span style="font-size: 14px; color: var(--c-muted);">Continuous GxP compliance monitoring</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SDC VAULTING ═══ -->
+  <section id="vaulting" style="padding: 120px 48px; border-top: 1px solid var(--c-border); background: linear-gradient(180deg, var(--c-bg) 0%, #0D0C06 50%, var(--c-bg) 100%);">
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+        <div style="height: 1px; width: 36px; background: var(--c-gold);"></div>
+        <span style="font-size: 13px; color: var(--c-gold); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-display);">Pillar One</span>
+      </div>
+      <h2 style="font-size: 52px; font-weight: 700; color: var(--c-gold); margin: 0 0 8px; letter-spacing: -0.025em; font-family: var(--font-display); line-height: 1.1;">SDC Vaulting</h2>
+      <p style="font-size: 22px; color: var(--c-white); font-weight: 500; margin: 0 0 12px; font-family: var(--font-display);">Post-Quantum Cryptographic Custody</p>
+      <p style="font-size: 18px; color: var(--c-muted); line-height: 1.6; margin: 0 0 60px; max-width: 780px;">Store, govern, share, and monetize your most sensitive pharmaceutical assets with mathematical guarantees. Keys never leave Rust SENTINEL binaries.</p>
+
+      <!-- How Indigenous SENTINEL Transforms Pharmaceutical Operations -->
+      <h3 style="font-size: 28px; font-weight: 700; color: var(--c-white); margin: 0 0 32px; font-family: var(--font-display);">How Indigenous SENTINEL Transforms Pharmaceutical Operations</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 80px;">
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 14px; padding: 28px 32px;">
+          <div style="font-size: 14px; font-weight: 600; color: var(--c-gold); letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 12px;">ISKDE → Per-Molecule Domain Isolation</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.7;">Each drug compound, formulation, and clinical program exists in a cryptographically independent domain. A breach in oncology pipeline data is mathematically contained — cardiovascular program data remains inaccessible.</div>
+          <div style="margin-top: 14px; padding: 10px 14px; background: rgba(212,168,83,0.06); border-radius: 8px; font-size: 13px; color: var(--c-gold); font-family: var(--font-mono);">9 domains · per-compound isolation</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 14px; padding: 28px 32px;">
+          <div style="font-size: 14px; font-weight: 600; color: var(--c-gold); letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 12px;">ML-KEM → Patent Lifecycle Protection</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.7;">Drug formulation IP encrypted with post-quantum ML-KEM-768 (FIPS 203). Patent applications filed today must remain confidential for 20+ years. "Harvest now, decrypt later" attacks permanently neutralized.</div>
+          <div style="margin-top: 14px; padding: 10px 14px; background: rgba(212,168,83,0.06); border-radius: 8px; font-size: 13px; color: var(--c-gold); font-family: var(--font-mono);">20+ year patent protection</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 14px; padding: 28px 32px;">
+          <div style="font-size: 14px; font-weight: 600; color: var(--c-gold); letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 12px;">Shamir SSS → Multi-Authority Formulation Access</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.7;">Accessing drug formulation data requires k-of-n threshold approval: Head of R&amp;D + Chief Patent Officer + VP Quality = 3-of-3. No single executive can unilaterally access your most valuable IP.</div>
+          <div style="margin-top: 14px; padding: 10px 14px; background: rgba(212,168,83,0.06); border-radius: 8px; font-size: 13px; color: var(--c-gold); font-family: var(--font-mono);">3-of-3 threshold · zero single trust</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 14px; padding: 28px 32px;">
+          <div style="font-size: 14px; font-weight: 600; color: var(--c-gold); letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 12px;">AES-256-GCM → Manufacturing Data Encryption</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.7;">Batch records, analytical methods, and process parameters encrypted at 1.74 GB/s with hardware acceleration. Every MES transaction cryptographically signed for 21 CFR Part 11 compliance.</div>
+          <div style="margin-top: 14px; padding: 10px 14px; background: rgba(212,168,83,0.06); border-radius: 8px; font-size: 13px; color: var(--c-gold); font-family: var(--font-mono);">1.74 GB/s · 21 CFR Part 11</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 14px; padding: 28px 32px;">
+          <div style="font-size: 14px; font-weight: 600; color: var(--c-gold); letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 12px;">Zero-FFI Architecture → GxP Data Integrity</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.7;">Cryptographic operations execute in compiled Rust binaries. Key material never enters the Python/Java application layer. ALCOA+ data integrity principles enforced architecturally.</div>
+          <div style="margin-top: 14px; padding: 10px 14px; background: rgba(212,168,83,0.06); border-radius: 8px; font-size: 13px; color: var(--c-gold); font-family: var(--font-mono);">9 binaries · keys never in app memory</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 14px; padding: 28px 32px;">
+          <div style="font-size: 14px; font-weight: 600; color: var(--c-gold); letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 12px;">Authority Pipeline → Regulatory Domain Mapping</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.7;">17 independent authorities map to pharmaceutical roles: CMO, VP Quality, Head of Regulatory, DPO, CCO. Cross-domain delegation via ML-KEM encrypted channels. Authority revocation in O(1).</div>
+          <div style="margin-top: 14px; padding: 10px 14px; background: rgba(212,168,83,0.06); border-radius: 8px; font-size: 13px; color: var(--c-gold); font-family: var(--font-mono);">17 authorities · pharma role mapping</div>
+        </div>
+      </div>
+
+      <!-- Clinical Trial Data Coverage -->
+      <h3 style="font-size: 28px; font-weight: 700; color: var(--c-white); margin: 0 0 32px; font-family: var(--font-display);">Clinical Trial Data Protection — Phase I through Post-Marketing</h3>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 14px; padding: 32px 28px;">
+          <div style="font-size: 18px; font-weight: 700; color: var(--c-white); margin-bottom: 16px; font-family: var(--font-display);">Phase I–III Trial Data</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding-left: 14px; border-left: 2px solid var(--c-gold-dim);">Patient-level CRF data encrypted per-site with ISKDE domain isolation</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding-left: 14px; border-left: 2px solid var(--c-gold-dim);">Interim efficacy results require 3-of-5 DSMB member approval</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding-left: 14px; border-left: 2px solid var(--c-gold-dim);">Protocol amendments tracked with immutable audit trail</div>
+          </div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 14px; padding: 32px 28px;">
+          <div style="font-size: 18px; font-weight: 700; color: var(--c-white); margin-bottom: 16px; font-family: var(--font-display);">Regulatory Submissions</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding-left: 14px; border-left: 2px solid var(--c-emerald);">eCTD modules vaulted with temporal decay access for regulatory reviewers</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding-left: 14px; border-left: 2px solid var(--c-emerald);">Pre-approval inspection readiness with instant document retrieval</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding-left: 14px; border-left: 2px solid var(--c-emerald);">Cross-border data transfer compliance (GDPR Art. 28, HIPAA)</div>
+          </div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 14px; padding: 32px 28px;">
+          <div style="font-size: 18px; font-weight: 700; color: var(--c-white); margin-bottom: 16px; font-family: var(--font-display);">Post-Marketing Surveillance</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding-left: 14px; border-left: 2px solid var(--c-cyan);">REMS program data with multi-authority access governance</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding-left: 14px; border-left: 2px solid var(--c-cyan);">ICSR databases encrypted with pharmacovigilance-specific domains</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding-left: 14px; border-left: 2px solid var(--c-cyan);">Safety signal correlation across products with ZK proofs</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ GaaS ═══ -->
+  <section id="gaas" style="padding: 120px 48px; border-top: 1px solid var(--c-border); background: linear-gradient(180deg, var(--c-bg) 0%, #060D08 50%, var(--c-bg) 100%);">
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+        <div style="height: 1px; width: 36px; background: var(--c-emerald);"></div>
+        <span style="font-size: 13px; color: var(--c-emerald); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-display);">Pillar Two</span>
+      </div>
+      <h2 style="font-size: 52px; font-weight: 700; color: var(--c-emerald); margin: 0 0 8px; letter-spacing: -0.025em; font-family: var(--font-display); line-height: 1.1;">Governance-as-a-Service</h2>
+      <p style="font-size: 22px; color: var(--c-white); font-weight: 500; margin: 0 0 12px; font-family: var(--font-display);">Cryptographic Authority Orchestration</p>
+      <p style="font-size: 18px; color: var(--c-muted); line-height: 1.6; margin: 0 0 60px; max-width: 780px;">Replace fallible IT access rights with algorithmic k-of-n quorums. Shamir Secret Sharing ensures no single authority can execute critical pharmaceutical operations.</p>
+
+      <!-- 9 Authority Domains -->
+      <h3 style="font-size: 28px; font-weight: 700; color: var(--c-white); margin: 0 0 32px; font-family: var(--font-display);">9 Governance Domains with Independent Keys</h3>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 60px;">
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 24px 28px; transition: all 0.2s;" style-hover="border-color: rgba(52,211,153,0.3)">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+            <div style="width: 34px; height: 34px; border-radius: 8px; background: rgba(52,211,153,0.12); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--c-emerald); font-family: var(--font-mono);">QA</div>
+            <span style="font-size: 17px; font-weight: 600; color: var(--c-white); font-family: var(--font-display);">Quality</span>
+          </div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">GMP batch release, deviation management, CAPA closures, change control approvals</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 24px 28px; transition: all 0.2s;" style-hover="border-color: rgba(59,130,246,0.3)">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+            <div style="width: 34px; height: 34px; border-radius: 8px; background: rgba(59,130,246,0.12); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--c-blue); font-family: var(--font-mono);">RA</div>
+            <span style="font-size: 17px; font-weight: 600; color: var(--c-white); font-family: var(--font-display);">Regulatory Affairs</span>
+          </div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">eCTD submission sign-off, labeling changes, regulatory commitment tracking</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 24px 28px; transition: all 0.2s;" style-hover="border-color: rgba(167,139,250,0.3)">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+            <div style="width: 34px; height: 34px; border-radius: 8px; background: rgba(167,139,250,0.12); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--c-purple); font-family: var(--font-mono);">CL</div>
+            <span style="font-size: 17px; font-weight: 600; color: var(--c-white); font-family: var(--font-display);">Clinical Operations</span>
+          </div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">Trial data unblinding, DSMB recommendations, protocol amendments</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 24px 28px; transition: all 0.2s;" style-hover="border-color: rgba(34,211,238,0.3)">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+            <div style="width: 34px; height: 34px; border-radius: 8px; background: rgba(34,211,238,0.12); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--c-cyan); font-family: var(--font-mono);">PV</div>
+            <span style="font-size: 17px; font-weight: 600; color: var(--c-white); font-family: var(--font-display);">Pharmacovigilance</span>
+          </div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">Signal detection, ICSR processing, SUSAR reporting, benefit-risk assessment</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 24px 28px; transition: all 0.2s;" style-hover="border-color: rgba(248,113,113,0.3)">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+            <div style="width: 34px; height: 34px; border-radius: 8px; background: rgba(248,113,113,0.12); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--c-red); font-family: var(--font-mono);">MF</div>
+            <span style="font-size: 17px; font-weight: 600; color: var(--c-white); font-family: var(--font-display);">Manufacturing</span>
+          </div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">Production batch release, technology transfer, equipment qualification sign-offs</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 24px 28px; transition: all 0.2s;" style-hover="border-color: rgba(251,191,36,0.3)">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+            <div style="width: 34px; height: 34px; border-radius: 8px; background: rgba(251,191,36,0.12); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--c-amber); font-family: var(--font-mono);">SC</div>
+            <span style="font-size: 17px; font-weight: 600; color: var(--c-white); font-family: var(--font-display);">Supply Chain</span>
+          </div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">API supplier qualification, serialization compliance, cold chain validation</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 24px 28px; transition: all 0.2s;" style-hover="border-color: rgba(212,168,83,0.3)">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+            <div style="width: 34px; height: 34px; border-radius: 8px; background: rgba(212,168,83,0.12); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--c-gold); font-family: var(--font-mono);">CO</div>
+            <span style="font-size: 17px; font-weight: 600; color: var(--c-white); font-family: var(--font-display);">Compliance</span>
+          </div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">FCPA attestation, Sunshine Act disclosures, anti-bribery program governance</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 24px 28px; transition: all 0.2s;" style-hover="border-color: rgba(244,114,182,0.3)">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+            <div style="width: 34px; height: 34px; border-radius: 8px; background: rgba(244,114,182,0.12); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #F472B6; font-family: var(--font-mono);">RD</div>
+            <span style="font-size: 17px; font-weight: 600; color: var(--c-white); font-family: var(--font-display);">R&amp;D</span>
+          </div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">Formulation access, IP disclosures, research collaboration data sharing</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 24px 28px; transition: all 0.2s;" style-hover="border-color: rgba(148,163,184,0.3)">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+            <div style="width: 34px; height: 34px; border-radius: 8px; background: rgba(148,163,184,0.12); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--c-muted); font-family: var(--font-mono);">EX</div>
+            <span style="font-size: 17px; font-weight: 600; color: var(--c-white); font-family: var(--font-display);">Executive</span>
+          </div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">C-suite strategic decisions, M&amp;A due diligence, cross-functional escalations</div>
+        </div>
+      </div>
+
+      <!-- Governance Scenarios -->
+      <h3 style="font-size: 28px; font-weight: 700; color: var(--c-white); margin: 0 0 32px; font-family: var(--font-display);">Key Pharma Governance Scenarios</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div style="padding: 24px 28px; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--c-emerald); margin-bottom: 6px; font-family: var(--font-display);">GMP Batch Release</div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">Requires 3-of-3: QA Director + Production Head + Qualified Person</div>
+        </div>
+        <div style="padding: 24px 28px; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--c-emerald); margin-bottom: 6px; font-family: var(--font-display);">Drug Recall Decision</div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">Requires 3-of-4: Quality + Pharmacovigilance + Regulatory + Executive</div>
+        </div>
+        <div style="padding: 24px 28px; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--c-emerald); margin-bottom: 6px; font-family: var(--font-display);">Clinical Trial Unblinding</div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">Requires 2-of-3: DSMB Chair + Principal Investigator + Medical Monitor</div>
+        </div>
+        <div style="padding: 24px 28px; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--c-emerald); margin-bottom: 6px; font-family: var(--font-display);">Technology Transfer</div>
+          <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6;">Requires 3-of-4: Manufacturing + Quality + R&amp;D + Supply Chain</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CLEAN ROOM ═══ -->
+  <section id="cleanroom" style="padding: 120px 48px; border-top: 1px solid var(--c-border); background: linear-gradient(180deg, var(--c-bg) 0%, #060A10 50%, var(--c-bg) 100%);">
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+        <div style="height: 1px; width: 36px; background: var(--c-cyan);"></div>
+        <span style="font-size: 13px; color: var(--c-cyan); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-display);">Pillar Three</span>
+      </div>
+      <h2 style="font-size: 52px; font-weight: 700; color: var(--c-cyan); margin: 0 0 8px; letter-spacing: -0.025em; font-family: var(--font-display); line-height: 1.1;">Zero-Knowledge Clean Room</h2>
+      <p style="font-size: 22px; color: var(--c-white); font-weight: 500; margin: 0 0 12px; font-family: var(--font-display);">Privacy-Preserving Pharmaceutical Analytics</p>
+      <p style="font-size: 18px; color: var(--c-muted); line-height: 1.6; margin: 0 0 60px; max-width: 780px;">Process private clinical data without seeing it. Enable AI training, multi-sponsor trial analysis, and consortium safety signal detection — all without exposing raw patient records.</p>
+
+      <!-- Use Cases -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 60px;">
+        <div style="background: var(--c-surface); border: 1px solid rgba(34,211,238,0.2); border-radius: 14px; padding: 32px;">
+          <div style="font-size: 18px; font-weight: 600; color: var(--c-white); margin-bottom: 10px; font-family: var(--font-display);">Multi-Sponsor Clinical Trial Analysis</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.7;">Competing pharma companies analyze combined trial data without any company seeing another's raw data. ZK proofs verify statistical significance. ICH E6(R3) compliant.</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid rgba(34,211,238,0.2); border-radius: 14px; padding: 32px;">
+          <div style="font-size: 18px; font-weight: 600; color: var(--c-white); margin-bottom: 10px; font-family: var(--font-display);">Drug Interaction Studies</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.7;">Cross-company DDI analysis without revealing proprietary formulation details or patient-level exposure data.</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid rgba(34,211,238,0.2); border-radius: 14px; padding: 32px;">
+          <div style="font-size: 18px; font-weight: 600; color: var(--c-white); margin-bottom: 10px; font-family: var(--font-display);">Real-World Evidence Generation</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.7;">Generate post-marketing RWE from hospital networks without individual patient records ever leaving their source institution.</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid rgba(34,211,238,0.2); border-radius: 14px; padding: 32px;">
+          <div style="font-size: 18px; font-weight: 600; color: var(--c-white); margin-bottom: 10px; font-family: var(--font-display);">AI Model Training on PHI</div>
+          <div style="font-size: 15px; color: var(--c-muted); line-height: 1.7;">Train diagnostic AI models on combined patient data. Models contain zero identifiable patient information.</div>
+        </div>
+      </div>
+
+      <!-- ZK Proof Examples -->
+      <h3 style="font-size: 28px; font-weight: 700; color: var(--c-white); margin: 0 0 32px; font-family: var(--font-display);">Prove Compliance Without Revealing Data</h3>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 24px 28px;">
+          <div style="font-size: 12px; font-weight: 600; color: var(--c-cyan); font-family: var(--font-mono); margin-bottom: 10px; letter-spacing: 0.08em;">GMP COMPLIANCE</div>
+          <div style="font-size: 16px; color: var(--c-white); font-weight: 500; margin-bottom: 8px; font-style: italic; line-height: 1.4;">"All 47 manufacturing sites passed GMP audit in Q4"</div>
+          <div style="font-size: 13px; color: var(--c-dim); line-height: 1.5;">Verifies 100% compliance without revealing site names, scores, or observations</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 24px 28px;">
+          <div style="font-size: 12px; font-weight: 600; color: var(--c-cyan); font-family: var(--font-mono); margin-bottom: 10px; letter-spacing: 0.08em;">CLINICAL ENDPOINT</div>
+          <div style="font-size: 16px; color: var(--c-white); font-weight: 500; margin-bottom: 8px; font-style: italic; line-height: 1.4;">"Primary endpoint met with p &lt; 0.001"</div>
+          <div style="font-size: 13px; color: var(--c-dim); line-height: 1.5;">Statistical significance proven without exposing patient data or treatment arms</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 24px 28px;">
+          <div style="font-size: 12px; font-weight: 600; color: var(--c-cyan); font-family: var(--font-mono); margin-bottom: 10px; letter-spacing: 0.08em;">VENDOR QUALIFICATION</div>
+          <div style="font-size: 16px; color: var(--c-white); font-weight: 500; margin-bottom: 8px; font-style: italic; line-height: 1.4;">"All API suppliers meet ICH Q7 requirements"</div>
+          <div style="font-size: 13px; color: var(--c-dim); line-height: 1.5;">Regulators verify compliance without accessing supply chain details</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 24px 28px;">
+          <div style="font-size: 12px; font-weight: 600; color: var(--c-cyan); font-family: var(--font-mono); margin-bottom: 10px; letter-spacing: 0.08em;">PHARMACOVIGILANCE</div>
+          <div style="font-size: 16px; color: var(--c-white); font-weight: 500; margin-bottom: 8px; font-style: italic; line-height: 1.4;">"No new safety signals across 3 marketed products"</div>
+          <div style="font-size: 13px; color: var(--c-dim); line-height: 1.5;">Signal absence verified without exposing ICSR volumes or case narratives</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 24px 28px;">
+          <div style="font-size: 12px; font-weight: 600; color: var(--c-cyan); font-family: var(--font-mono); margin-bottom: 10px; letter-spacing: 0.08em;">SUNSHINE ACT</div>
+          <div style="font-size: 16px; color: var(--c-white); font-weight: 500; margin-bottom: 8px; font-style: italic; line-height: 1.4;">"All HCP payments below threshold disclosed"</div>
+          <div style="font-size: 13px; color: var(--c-dim); line-height: 1.5;">Threshold compliance proven without revealing payment amounts or identities</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 24px 28px;">
+          <div style="font-size: 12px; font-weight: 600; color: var(--c-cyan); font-family: var(--font-mono); margin-bottom: 10px; letter-spacing: 0.08em;">DATA INTEGRITY</div>
+          <div style="font-size: 16px; color: var(--c-white); font-weight: 500; margin-bottom: 8px; font-style: italic; line-height: 1.4;">"Zero data integrity findings in 12 months"</div>
+          <div style="font-size: 13px; color: var(--c-dim); line-height: 1.5;">ALCOA+ compliance proven without revealing audit scope or systems</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ STAKEHOLDER IMPACT ═══ -->
+  <section id="stakeholders" style="padding: 120px 48px; border-top: 1px solid var(--c-border);">
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 60px;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 20px;">
+          <div style="height: 1px; width: 36px; background: var(--c-gold);"></div>
+          <span style="font-size: 13px; color: var(--c-gold); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-display);">Executive Impact</span>
+          <div style="height: 1px; width: 36px; background: var(--c-gold);"></div>
+        </div>
+        <h2 style="font-size: 48px; font-weight: 700; color: var(--c-white); margin: 0 0 16px; letter-spacing: -0.02em; font-family: var(--font-display); line-height: 1.15;">Stakeholder Impact Matrix</h2>
+        <p style="font-size: 18px; color: var(--c-muted); margin: 0 auto; max-width: 700px; line-height: 1.6;">SENTINEL addresses the specific pain points of every key stakeholder in your pharmaceutical organization.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 36px; transition: all 0.2s;" style-hover="border-color: rgba(248,113,113,0.3)">
+          <div style="font-size: 28px; font-weight: 700; color: var(--c-white); margin-bottom: 4px; font-family: var(--font-display);">CISO</div>
+          <div style="font-size: 13px; color: var(--c-red); font-weight: 600; margin-bottom: 20px; letter-spacing: 0.04em;">SECURITY</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">Quantum-safe:</span> ML-KEM-1024 FIPS 203 compliant. No migration needed when quantum arrives.</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">Insider threat:</span> Zero-FFI — compromised app servers cannot extract keys.</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">Supply chain:</span> Zero external dependencies. 11,700 lines of auditable Rust.</div>
+          </div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 36px; transition: all 0.2s;" style-hover="border-color: rgba(52,211,153,0.3)">
+          <div style="font-size: 28px; font-weight: 700; color: var(--c-white); margin-bottom: 4px; font-family: var(--font-display);">Chief Quality Officer</div>
+          <div style="font-size: 13px; color: var(--c-emerald); font-weight: 600; margin-bottom: 20px; letter-spacing: 0.04em;">QUALITY</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">ALCOA+:</span> Data integrity enforced architecturally, not procedurally.</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">FDA 483 prevention:</span> Continuous deviation detection across CMO/CDMO sites.</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">Batch release:</span> Multi-authority Shamir governance for every disposition.</div>
+          </div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 36px; transition: all 0.2s;" style-hover="border-color: rgba(59,130,246,0.3)">
+          <div style="font-size: 28px; font-weight: 700; color: var(--c-white); margin-bottom: 4px; font-family: var(--font-display);">Head of Regulatory</div>
+          <div style="font-size: 13px; color: var(--c-blue); font-weight: 600; margin-bottom: 20px; letter-spacing: 0.04em;">REGULATORY AFFAIRS</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">Inspection readiness:</span> Instant document retrieval with complete provenance.</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">21 CFR Part 11:</span> Electronic signatures with cryptographic binding.</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">Cross-border:</span> Automated GDPR, HIPAA, local DPA compliance.</div>
+          </div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 36px; transition: all 0.2s;" style-hover="border-color: rgba(167,139,250,0.3)">
+          <div style="font-size: 28px; font-weight: 700; color: var(--c-white); margin-bottom: 4px; font-family: var(--font-display);">VP R&amp;D</div>
+          <div style="font-size: 13px; color: var(--c-purple); font-weight: 600; margin-bottom: 20px; letter-spacing: 0.04em;">RESEARCH &amp; DEVELOPMENT</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">Formulation secrecy:</span> Per-molecule cryptographic domains. Compromised IT cannot reach IP.</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">Patent protection:</span> ML-KEM 20+ year quantum-safe encryption.</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">Collaboration:</span> Temporal-decay tokens for CRO/academic data sharing.</div>
+          </div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 36px; transition: all 0.2s;" style-hover="border-color: rgba(251,191,36,0.3)">
+          <div style="font-size: 28px; font-weight: 700; color: var(--c-white); margin-bottom: 4px; font-family: var(--font-display);">VP Manufacturing</div>
+          <div style="font-size: 13px; color: var(--c-amber); font-weight: 600; margin-bottom: 20px; letter-spacing: 0.04em;">OPERATIONS</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">CMO oversight:</span> Continuous quality monitoring across 30+ manufacturing partners.</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">Tech transfer:</span> Temporal-decay access tokens for process parameters.</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">Equipment qual:</span> Multi-authority IQ/OQ/PQ governance.</div>
+          </div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 36px; transition: all 0.2s;" style-hover="border-color: rgba(212,168,83,0.3)">
+          <div style="font-size: 28px; font-weight: 700; color: var(--c-white); margin-bottom: 4px; font-family: var(--font-display);">Chief Compliance Officer</div>
+          <div style="font-size: 13px; color: var(--c-gold); font-weight: 600; margin-bottom: 20px; letter-spacing: 0.04em;">COMPLIANCE</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">FCPA / Bribery Act:</span> Shamir threshold for HCP payment authorization.</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">Sunshine Act:</span> ZK proofs for threshold compliance verification.</div>
+            <div style="font-size: 14px; color: var(--c-muted); line-height: 1.6; padding: 14px; background: var(--c-surface2); border-radius: 8px;"><span style="color: var(--c-white); font-weight: 600;">Cross-border:</span> Per-jurisdiction cryptographic data residency.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ COMPLIANCE COVERAGE ═══ -->
+  <section id="compliance" style="padding: 120px 48px; border-top: 1px solid var(--c-border);">
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+        <div style="height: 1px; width: 36px; background: var(--c-gold);"></div>
+        <span style="font-size: 13px; color: var(--c-gold); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-display);">Regulatory Coverage</span>
+      </div>
+      <h2 style="font-size: 48px; font-weight: 700; color: var(--c-white); margin: 0 0 56px; letter-spacing: -0.02em; font-family: var(--font-display); line-height: 1.15;">Pharmaceutical Compliance Coverage</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+        <span style="padding: 12px 20px; background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">FDA 21 CFR Part 11</span>
+        <span style="padding: 12px 20px; background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">EU GMP Annex 11</span>
+        <span style="padding: 12px 20px; background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">ICH Q10</span>
+        <span style="padding: 12px 20px; background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">ICH Q7 (API)</span>
+        <span style="padding: 12px 20px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">ICH E6(R3) GCP</span>
+        <span style="padding: 12px 20px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">EU CTR 536/2014</span>
+        <span style="padding: 12px 20px; background: rgba(52,211,153,0.06); border: 1px solid rgba(52,211,153,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">GDPR Art. 28</span>
+        <span style="padding: 12px 20px; background: rgba(52,211,153,0.06); border: 1px solid rgba(52,211,153,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">nDSG</span>
+        <span style="padding: 12px 20px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">HIPAA</span>
+        <span style="padding: 12px 20px; background: rgba(52,211,153,0.06); border: 1px solid rgba(52,211,153,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">DSCSA</span>
+        <span style="padding: 12px 20px; background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">FCPA</span>
+        <span style="padding: 12px 20px; background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">UK Bribery Act</span>
+        <span style="padding: 12px 20px; background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">Sunshine Act</span>
+        <span style="padding: 12px 20px; background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">Art. 102 TFEU</span>
+        <span style="padding: 12px 20px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">EU GDP</span>
+        <span style="padding: 12px 20px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">EU FMD</span>
+        <span style="padding: 12px 20px; background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">SwissMedic</span>
+        <span style="padding: 12px 20px; background: rgba(167,139,250,0.06); border: 1px solid rgba(167,139,250,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">ISO 27001</span>
+        <span style="padding: 12px 20px; background: rgba(167,139,250,0.06); border: 1px solid rgba(167,139,250,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">SOC 2</span>
+        <span style="padding: 12px 20px; background: rgba(167,139,250,0.06); border: 1px solid rgba(167,139,250,0.18); border-radius: 10px; font-size: 14px; color: var(--c-white); font-family: var(--font-mono); font-weight: 500;">NIST FIPS 203</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ARCHITECTURE ═══ -->
+  <section style="padding: 120px 48px; border-top: 1px solid var(--c-border);">
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+        <div style="height: 1px; width: 36px; background: var(--c-gold);"></div>
+        <span style="font-size: 13px; color: var(--c-gold); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-display);">Technical Architecture</span>
+      </div>
+      <h2 style="font-size: 48px; font-weight: 700; color: var(--c-white); margin: 0 0 56px; letter-spacing: -0.02em; font-family: var(--font-display); line-height: 1.15;">Zero-FFI Architecture: Keys Never Leave Rust</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 32px;">
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 36px; text-align: center;">
+          <div style="font-size: 56px; font-weight: 700; color: var(--c-gold); font-family: var(--font-mono); margin-bottom: 10px;">11,700</div>
+          <div style="font-size: 18px; font-weight: 600; color: var(--c-white); margin-bottom: 8px; font-family: var(--font-display);">Lines of Pure Rust</div>
+          <div style="font-size: 14px; color: var(--c-dim); line-height: 1.5;">Fully auditable. Zero external dependencies. A competitor paid $136M to acquire comparable technology.</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 36px; text-align: center;">
+          <div style="font-size: 56px; font-weight: 700; color: var(--c-gold); font-family: var(--font-mono); margin-bottom: 10px;">9</div>
+          <div style="font-size: 18px; font-weight: 600; color: var(--c-white); margin-bottom: 8px; font-family: var(--font-display);">Isolated Binaries</div>
+          <div style="font-size: 14px; color: var(--c-dim); line-height: 1.5;">Each binary handles a specific cryptographic function. Compromise of one cannot affect others.</div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; padding: 36px; text-align: center;">
+          <div style="font-size: 56px; font-weight: 700; color: var(--c-gold); font-family: var(--font-mono); margin-bottom: 10px;">0</div>
+          <div style="font-size: 18px; font-weight: 600; color: var(--c-white); margin-bottom: 8px; font-family: var(--font-display);">External Dependencies</div>
+          <div style="font-size: 14px; color: var(--c-dim); line-height: 1.5;">No OpenSSL, BoringSSL, or third-party crypto. Zero supply chain attack surface.</div>
+        </div>
+      </div>
+      <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 14px; padding: 32px;">
+        <div style="font-size: 18px; font-weight: 700; color: var(--c-white); margin-bottom: 24px; font-family: var(--font-display);">Performance Specifications</div>
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;">
+          <div style="text-align: center; padding: 20px; background: var(--c-surface2); border-radius: 10px;">
+            <div style="font-size: 24px; font-weight: 700; color: var(--c-cyan); font-family: var(--font-mono);">3.9 GB/s</div>
+            <div style="font-size: 13px; color: var(--c-dim); margin-top: 6px;">Encryption Throughput</div>
+          </div>
+          <div style="text-align: center; padding: 20px; background: var(--c-surface2); border-radius: 10px;">
+            <div style="font-size: 24px; font-weight: 700; color: var(--c-cyan); font-family: var(--font-mono);">0.21 µs</div>
+            <div style="font-size: 13px; color: var(--c-dim); margin-top: 6px;">Key Derivation</div>
+          </div>
+          <div style="text-align: center; padding: 20px; background: var(--c-surface2); border-radius: 10px;">
+            <div style="font-size: 24px; font-weight: 700; color: var(--c-cyan); font-family: var(--font-mono);">&lt;100ms</div>
+            <div style="font-size: 13px; color: var(--c-dim); margin-top: 6px;">Key Revocation</div>
+          </div>
+          <div style="text-align: center; padding: 20px; background: var(--c-surface2); border-radius: 10px;">
+            <div style="font-size: 24px; font-weight: 700; color: var(--c-cyan); font-family: var(--font-mono);">60,000×</div>
+            <div style="font-size: 13px; color: var(--c-dim); margin-top: 6px;">vs. Python crypto</div>
+          </div>
+          <div style="text-align: center; padding: 20px; background: var(--c-surface2); border-radius: 10px;">
+            <div style="font-size: 24px; font-weight: 700; color: var(--c-cyan); font-family: var(--font-mono);">&lt;300ms</div>
+            <div style="font-size: 13px; color: var(--c-dim); margin-top: 6px;">Policy Propagation</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ IMPLEMENTATION ═══ -->
+  <section style="padding: 120px 48px; border-top: 1px solid var(--c-border);">
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+        <div style="height: 1px; width: 36px; background: var(--c-gold);"></div>
+        <span style="font-size: 13px; color: var(--c-gold); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-display);">Implementation</span>
+      </div>
+      <h2 style="font-size: 48px; font-weight: 700; color: var(--c-white); margin: 0 0 56px; letter-spacing: -0.02em; font-family: var(--font-display); line-height: 1.15;">90 Days from Kickoff to Production</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-top: 3px solid var(--c-gold); border-radius: 14px; padding: 28px;">
+          <div style="font-size: 13px; font-weight: 600; color: var(--c-gold); font-family: var(--font-mono); margin-bottom: 4px;">PHASE 1</div>
+          <div style="font-size: 20px; font-weight: 700; color: var(--c-white); margin-bottom: 4px; font-family: var(--font-display);">Discovery</div>
+          <div style="font-size: 13px; color: var(--c-dim); margin-bottom: 16px;">Weeks 1–2</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--c-muted); line-height: 1.5;">
+            <div>• Map existing IT infrastructure</div>
+            <div>• Identify critical data domains</div>
+            <div>• Define authority structure</div>
+            <div>• Regulatory gap assessment</div>
+          </div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-top: 3px solid var(--c-emerald); border-radius: 14px; padding: 28px;">
+          <div style="font-size: 13px; font-weight: 600; color: var(--c-emerald); font-family: var(--font-mono); margin-bottom: 4px;">PHASE 2</div>
+          <div style="font-size: 20px; font-weight: 700; color: var(--c-white); margin-bottom: 4px; font-family: var(--font-display);">Integration</div>
+          <div style="font-size: 13px; color: var(--c-dim); margin-bottom: 16px;">Weeks 3–6</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--c-muted); line-height: 1.5;">
+            <div>• Deploy SENTINEL binaries</div>
+            <div>• Configure ISKDE domains</div>
+            <div>• MES/LIMS/EDC integration</div>
+            <div>• Authority pipeline setup</div>
+          </div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-top: 3px solid var(--c-cyan); border-radius: 14px; padding: 28px;">
+          <div style="font-size: 13px; font-weight: 600; color: var(--c-cyan); font-family: var(--font-mono); margin-bottom: 4px;">PHASE 3</div>
+          <div style="font-size: 20px; font-weight: 700; color: var(--c-white); margin-bottom: 4px; font-family: var(--font-display);">Validation</div>
+          <div style="font-size: 13px; color: var(--c-dim); margin-bottom: 16px;">Weeks 7–10</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--c-muted); line-height: 1.5;">
+            <div>• IQ/OQ/PQ protocols</div>
+            <div>• CSV documentation</div>
+            <div>• User acceptance testing</div>
+            <div>• Penetration testing</div>
+          </div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-top: 3px solid var(--c-purple); border-radius: 14px; padding: 28px;">
+          <div style="font-size: 13px; font-weight: 600; color: var(--c-purple); font-family: var(--font-mono); margin-bottom: 4px;">PHASE 4</div>
+          <div style="font-size: 20px; font-weight: 700; color: var(--c-white); margin-bottom: 4px; font-family: var(--font-display);">Go-Live</div>
+          <div style="font-size: 13px; color: var(--c-dim); margin-bottom: 16px;">Weeks 11–13</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--c-muted); line-height: 1.5;">
+            <div>• Production deployment</div>
+            <div>• Data migration</div>
+            <div>• Training &amp; enablement</div>
+            <div>• 24/7 support activation</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PRICING ═══ -->
+  <section style="padding: 120px 48px; border-top: 1px solid var(--c-border); background: linear-gradient(180deg, var(--c-bg) 0%, var(--c-surface) 50%, var(--c-bg) 100%);">
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 60px;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 20px;">
+          <div style="height: 1px; width: 36px; background: var(--c-gold);"></div>
+          <span style="font-size: 13px; color: var(--c-gold); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-display);">Investment</span>
+          <div style="height: 1px; width: 36px; background: var(--c-gold);"></div>
+        </div>
+        <h2 style="font-size: 48px; font-weight: 700; color: var(--c-white); margin: 0 0 16px; letter-spacing: -0.02em; font-family: var(--font-display); line-height: 1.15;">Investment Framework</h2>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-top: 3px solid var(--c-gold); border-radius: 16px; padding: 40px; text-align: center;">
+          <div style="font-size: 28px; font-weight: 700; color: var(--c-gold); margin-bottom: 4px; font-family: var(--font-display);">SDC Vaulting</div>
+          <div style="font-size: 14px; color: var(--c-dim); margin-bottom: 24px;">Post-Quantum IP Custody</div>
+          <div style="font-size: 40px; font-weight: 700; color: var(--c-white); margin-bottom: 8px; font-family: var(--font-mono);">Custom</div>
+          <div style="font-size: 14px; color: var(--c-dim); margin-bottom: 32px;">Based on data volume &amp; domains</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; text-align: left; font-size: 14px; color: var(--c-muted);">
+            <div>✓ ML-KEM-1024 encryption</div>
+            <div>✓ Per-molecule domain isolation</div>
+            <div>✓ Shamir multi-authority access</div>
+            <div>✓ Temporal decay tokens</div>
+            <div>✓ 7-year audit retention</div>
+          </div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid rgba(52,211,153,0.3); border-top: 3px solid var(--c-emerald); border-radius: 16px; padding: 40px; text-align: center; position: relative;">
+          <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); padding: 4px 16px; background: var(--c-emerald); border-radius: 20px; font-size: 12px; font-weight: 700; color: var(--c-bg); letter-spacing: 0.05em;">MOST POPULAR</div>
+          <div style="font-size: 28px; font-weight: 700; color: var(--c-emerald); margin-bottom: 4px; font-family: var(--font-display);">GaaS</div>
+          <div style="font-size: 14px; color: var(--c-dim); margin-bottom: 24px;">Governance-as-a-Service</div>
+          <div style="font-size: 40px; font-weight: 700; color: var(--c-white); margin-bottom: 4px; font-family: var(--font-mono);">$108K</div>
+          <div style="font-size: 14px; color: var(--c-dim); margin-bottom: 32px;">/year · 9 domains</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; text-align: left; font-size: 14px; color: var(--c-muted);">
+            <div>✓ 9 authority domains</div>
+            <div>✓ Shamir k-of-n thresholds</div>
+            <div>✓ Policy graph inheritance</div>
+            <div>✓ Real-time enforcement</div>
+            <div>✓ Temporal exceptions</div>
+          </div>
+        </div>
+        <div style="background: var(--c-surface); border: 1px solid var(--c-border); border-top: 3px solid var(--c-cyan); border-radius: 16px; padding: 40px; text-align: center;">
+          <div style="font-size: 28px; font-weight: 700; color: var(--c-cyan); margin-bottom: 4px; font-family: var(--font-display);">Clean Room</div>
+          <div style="font-size: 14px; color: var(--c-dim); margin-bottom: 24px;">Zero-Knowledge Analytics</div>
+          <div style="font-size: 40px; font-weight: 700; color: var(--c-white); margin-bottom: 4px; font-family: var(--font-mono);">2.5%</div>
+          <div style="font-size: 14px; color: var(--c-dim); margin-bottom: 32px;">per transaction</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; text-align: left; font-size: 14px; color: var(--c-muted);">
+            <div>✓ ZK proof generation</div>
+            <div>✓ Multi-party computation</div>
+            <div>✓ Auto-destruct sessions</div>
+            <div>✓ Query auditing</div>
+            <div>✓ SENTINEL encryption</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 24px; padding: 20px 28px; background: rgba(212,168,83,0.04); border: 1px solid rgba(212,168,83,0.15); border-radius: 12px; text-align: center;">
+        <div style="font-size: 15px; color: var(--c-gold); font-style: italic;">Volume discounts available for multi-subsidiary deployments and enterprise-wide licensing.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA / FOOTER ═══ -->
+  <section id="contact" style="padding: 120px 48px; border-top: 1px solid var(--c-border); position: relative; overflow: hidden;">
+    <div style="position: absolute; top: -200px; right: -200px; width: 700px; height: 700px; background: radial-gradient(circle, rgba(212,168,83,0.06) 0%, transparent 65%); border-radius: 50%; pointer-events: none;"></div>
+    <div style="max-width: 900px; margin: 0 auto;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 36px;">
+        <div style="height: 1px; width: 48px; background: var(--c-gold);"></div>
+        <span style="font-size: 13px; color: var(--c-gold); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; font-family: var(--font-display);">Next Steps</span>
+      </div>
+      <h2 style="font-size: 52px; font-weight: 700; color: var(--c-white); margin: 0 0 20px; letter-spacing: -0.025em; font-family: var(--font-display); line-height: 1.1;">Your intellectual property deserves mathematical certainty</h2>
+      <p style="font-size: 18px; color: var(--c-muted); line-height: 1.65; margin: 0 0 48px;">The quantum threat timeline is fixed. Your competitors are already harvesting encrypted data. The question isn't whether to adopt post-quantum security — it's whether you'll be ready when the threshold is crossed.</p>
+      <div style="display: flex; gap: 16px; margin-bottom: 64px;">
+        <a href="https://cal.com/agenticvaults" target="_blank" style="padding: 18px 36px; background: var(--c-gold); color: var(--c-bg); font-size: 17px; font-weight: 600; border-radius: 10px; text-decoration: none; font-family: var(--font-display); transition: all 0.2s;" style-hover="background: #E0B863; transform: translateY(-1px)">Schedule Executive Briefing</a>
+        <a href="https://cal.com/agenticvaults" target="_blank" style="padding: 18px 36px; background: transparent; border: 1px solid var(--c-border); color: var(--c-white); font-size: 17px; font-weight: 600; border-radius: 10px; text-decoration: none; font-family: var(--font-display); transition: all 0.2s;" style-hover="border-color: var(--c-gold)">Request Technical Deep-Dive</a>
+      </div>
+      <div style="display: flex; gap: 48px; padding-top: 40px; border-top: 1px solid var(--c-border);">
+        <div>
+          <div style="font-size: 13px; color: var(--c-dim); margin-bottom: 4px;">Website</div>
+          <a href="https://agenticvaults.ai" target="_blank" style="font-size: 16px; color: var(--c-white); font-weight: 500; text-decoration: none;" style-hover="color: var(--c-gold)">agenticvaults.ai</a>
+        </div>
+        <div>
+          <div style="font-size: 13px; color: var(--c-dim); margin-bottom: 4px;">Book a Call</div>
+          <a href="https://cal.com/agenticvaults" target="_blank" style="font-size: 16px; color: var(--c-white); font-weight: 500; text-decoration: none;" style-hover="color: var(--c-gold)">cal.com/agenticvaults</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="padding: 32px 48px; border-top: 1px solid var(--c-border); display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="width: 28px; height: 28px; border: 1.5px solid var(--c-gold-dim); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+        <div style="width: 10px; height: 10px; background: var(--c-gold-dim); border-radius: 2px;"></div>
+      </div>
+      <span style="font-size: 14px; color: var(--c-dim);">agenticvaults — SENTINEL — Sovereign Digital Custody</span>
+    </div>
+    <span style="font-size: 13px; color: var(--c-dim);">Confidential — Executive Briefing</span>
+  </footer>
+
+</div>
+
+</x-dc>
+</body>
+</html>
