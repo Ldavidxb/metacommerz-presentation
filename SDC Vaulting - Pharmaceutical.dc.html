@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #06060B; font-family: 'Inter', sans-serif; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-thumb { background: #252535; border-radius: 4px; }
+  </style>
+</helmet>
+
+<div style="display: flex; min-height: 100vh; background: #06060B; color: #d8dcd6;">
+
+  <!-- Sidebar -->
+  <div style="width: 248px; position: fixed; left: 0; top: 0; bottom: 0; background: linear-gradient(180deg, #0E0E16 0%, #06060B 100%); border-right: 1px solid rgba(212,168,83,0.08); z-index: 50; display: flex; flex-direction: column; overflow-y: auto;">
+    <div style="padding: 18px 20px 14px;">
+      <img src="agenticvaults-logo.png" alt="agenticvaults" style="height: 26px; display: block;">
+    </div>
+    <div style="flex: 1; padding: 8px 10px;">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="6">
+        <button onClick="{{ t.onClick }}" style="{{ t.style }}">
+          <span style="font-size: 14px; flex-shrink: 0;">{{ t.icon }}</span>{{ t.label }}
+        </button>
+      </sc-for>
+    </div>
+    <div style="padding: 14px 16px 18px;">
+      <a href="https://cal.com/agenticvaults" target="_blank" rel="noopener" style="display: block; text-align: center; padding: 11px 14px; background: linear-gradient(135deg, #D4A853, #A78BFA); color: #06060B; font-weight: 700; font-size: 12px; border-radius: 8px; text-decoration: none; font-family: 'Inter', sans-serif;">Schedule a Call</a>
+    </div>
+    <div style="padding: 0 20px 16px; border-top: 1px solid rgba(212,168,83,0.08); padding-top: 14px;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a4a56; line-height: 1.6;">agenticvaults.ai<br>Confidential · SDC Vaulting</div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div data-main-scroll="" style="margin-left: 248px; flex: 1; height: 100vh; overflow-y: auto; position: relative;">
+
+    <!-- Floating CTA -->
+    <a href="https://cal.com/agenticvaults" target="_blank" rel="noopener" style="position: fixed; top: 18px; right: 28px; z-index: 100; padding: 10px 20px; background: linear-gradient(135deg, #D4A853, #A78BFA); color: #06060B; font-weight: 700; font-size: 12.5px; border-radius: 8px; text-decoration: none; font-family: 'Inter', sans-serif; box-shadow: 0 4px 14px rgba(212,168,83,0.25);">Book a Meeting →</a>
+
+    <!-- Mobile Nav -->
+    <div style="position: sticky; top: 0; z-index: 99; background: rgba(6,9,16,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(212,168,83,0.1); display: none;">
+      <div style="display: flex; overflow-x: auto; gap: 0; padding: 0 8px;">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="6">
+          <button onClick="{{ t.onClick }}" style="{{ t.mobileStyle }}">{{ t.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <div style="padding: 44px 52px 36px; background: linear-gradient(180deg, #0E0E16, #06060B); position: relative; overflow: hidden; border-bottom: 1px solid rgba(212,168,83,0.06);">
+      <div style="position: absolute; top: -40%; right: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(212,168,83,0.05) 0%, transparent 70%); pointer-events: none;"></div>
+      <div style="position: relative; z-index: 1;">
+        <div style="display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 100px; background: rgba(212,168,83,0.08); border: 1px solid rgba(212,168,83,0.18); margin-bottom: 16px;">
+          <div style="width: 5px; height: 5px; border-radius: 50%; background: #D4A853;"></div>
+          <span style="font-size: 10px; font-weight: 600; color: #D4A853; letter-spacing: 0.1em; text-transform: uppercase;">{{ heroEyebrow }}</span>
+        </div>
+        <h1 style="font-size: clamp(24px, 4vw, 36px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; color: #f0efe9; max-width: 720px;">{{ heroH1 }} <span style="background: linear-gradient(135deg, #D4A853, #A78BFA); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ heroEm }}</span></h1>
+        <p style="font-size: clamp(13px, 1.5vw, 15px); color: #8a8a94; margin-top: 12px; max-width: 660px; line-height: 1.65; font-weight: 300;">{{ heroSub }}</p>
+        <div style="display: flex; gap: clamp(20px, 3vw, 40px); margin-top: 24px; flex-wrap: wrap;">
+          <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+            <div>
+              <div style="font-size: 22px; font-weight: 700; color: #D4A853; font-family: 'JetBrains Mono', monospace;">{{ s.value }}</div>
+              <div style="font-size: 11px; color: #6a6a74; margin-top: 2px;">{{ s.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div style="padding: 0 52px 60px; max-width: 1080px;">
+
+      <!-- OVERVIEW -->
+      <sc-if value="{{ showOverview }}" hint-placeholder-val="{{ true }}">
+        <div style="padding-top: 36px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 28px;">
+            <div>
+              <p style="font-size: 14px; color: #a8a8b0; line-height: 1.75; margin-bottom: 16px;"><span style="color: #f0efe9; font-weight: 600;">Sovereign Digital Custody (SDC) Vaulting</span> transforms Indigenous SENTINEL from an encryption layer into a standalone custody platform. Think of it as a <span style="color: #D4A853;">digital safe deposit box</span> with military-grade cryptography.</p>
+              <p style="font-size: 13px; color: #7a7a84; line-height: 1.7;">Unlike traditional encryption-at-rest, SDC Vaulting provides <span style="color: #d8dcd6;">active governance</span> — cryptographically enforced policies that determine who can access what, when, and under what conditions.</p>
+            </div>
+            <div style="padding: 20px; background: rgba(212,168,83,0.04); border: 1px solid rgba(212,168,83,0.15); border-radius: 10px;">
+              <div style="font-size: 12px; font-weight: 700; color: #D4A853; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">The Core Principle</div>
+              <div style="font-size: 12.5px; color: #8a8a94; line-height: 1.6;">Keys never leave Rust SENTINEL binaries. Even a fully compromised Python application server, database, or OS cannot extract vault encryption keys — the Zero-FFI architecture leaves no code path from Python to key material.</div>
+            </div>
+          </div>
+          <div style="font-size: 13px; font-weight: 700; color: #f0efe9; margin-bottom: 14px; letter-spacing: 0.02em;">How SDC Vaulting Works</div>
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
+            <div style="padding: 16px 14px; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;">
+              <div style="width: 22px; height: 22px; border-radius: 50%; background: rgba(212,168,83,0.12); color: #D4A853; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">1</div>
+              <div style="font-size: 12px; font-weight: 600; color: #f0efe9; margin-bottom: 4px;">Create Vault</div>
+              <div style="font-size: 11px; color: #6a6a74; line-height: 1.5;">Define policies, Shamir threshold (e.g. 3-of-5), temporal decay rules</div>
+            </div>
+            <div style="padding: 16px 14px; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;">
+              <div style="width: 22px; height: 22px; border-radius: 50%; background: rgba(212,168,83,0.12); color: #D4A853; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">2</div>
+              <div style="font-size: 12px; font-weight: 600; color: #f0efe9; margin-bottom: 4px;">Upload Assets</div>
+              <div style="font-size: 11px; color: #6a6a74; line-height: 1.5;">Each item encrypted via ML-KEM-1024 + AES-256-GCM</div>
+            </div>
+            <div style="padding: 16px 14px; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;">
+              <div style="width: 22px; height: 22px; border-radius: 50%; background: rgba(212,168,83,0.12); color: #D4A853; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">3</div>
+              <div style="font-size: 12px; font-weight: 600; color: #f0efe9; margin-bottom: 4px;">Grant Access</div>
+              <div style="font-size: 11px; color: #6a6a74; line-height: 1.5;">Time-limited tokens to users, roles, or external parties</div>
+            </div>
+            <div style="padding: 16px 14px; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;">
+              <div style="width: 22px; height: 22px; border-radius: 50%; background: rgba(212,168,83,0.12); color: #D4A853; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">4</div>
+              <div style="font-size: 12px; font-weight: 600; color: #f0efe9; margin-bottom: 4px;">Access Control</div>
+              <div style="font-size: 11px; color: #6a6a74; line-height: 1.5;">Every retrieval verified against policy and logged</div>
+            </div>
+            <div style="padding: 16px 14px; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;">
+              <div style="width: 22px; height: 22px; border-radius: 50%; background: rgba(212,168,83,0.12); color: #D4A853; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">5</div>
+              <div style="font-size: 12px; font-weight: 600; color: #f0efe9; margin-bottom: 4px;">Auto-Expire</div>
+              <div style="font-size: 11px; color: #6a6a74; line-height: 1.5;">Temporal decay revokes access — no manual step</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- WORKED EXAMPLE -->
+      <sc-if value="{{ showExample }}">
+        <div style="padding-top: 36px;">
+          <div style="font-size: 13px; font-weight: 700; color: #f0efe9; margin-bottom: 4px;">Worked Example: Pharmaceutical IP Transfer</div>
+          <div style="font-size: 12px; color: #6a6a74; margin-bottom: 20px; line-height: 1.6;">A pharma company shares proprietary drug synthesis data with a CRO partner for a 90-day clinical trial.</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; gap: 10px;"><div style="width: 20px; height: 20px; border-radius: 50%; background: rgba(212,168,83,0.12); color: #D4A853; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div><div style="font-size: 12px; color: #8a8a94; line-height: 1.5;"><span style="color: #D4A853; font-weight: 600;">R&D Director:</span> Creates "Compound X Synthesis" vault, 4-of-6 Shamir threshold, 90-day max access</div></div>
+              <div style="display: flex; gap: 10px;"><div style="width: 20px; height: 20px; border-radius: 50%; background: rgba(212,168,83,0.12); color: #D4A853; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div><div style="font-size: 12px; color: #8a8a94; line-height: 1.5;"><span style="color: #D4A853; font-weight: 600;">System:</span> Encrypts 847MB synthesis dataset with vault-derived ML-KEM-1024 key</div></div>
+              <div style="display: flex; gap: 10px;"><div style="width: 20px; height: 20px; border-radius: 50%; background: rgba(212,168,83,0.12); color: #D4A853; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</div><div style="font-size: 12px; color: #8a8a94; line-height: 1.5;"><span style="color: #D4A853; font-weight: 600;">CRO Legal:</span> Requests 90-day read-only token for 3 researchers</div></div>
+              <div style="display: flex; gap: 10px;"><div style="width: 20px; height: 20px; border-radius: 50%; background: rgba(212,168,83,0.12); color: #D4A853; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</div><div style="font-size: 12px; color: #8a8a94; line-height: 1.5;"><span style="color: #D4A853; font-weight: 600;">Threshold:</span> R&D, Regulatory, Legal, Quality approve. 4-of-6 met. Token activates.</div></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; gap: 10px;"><div style="width: 20px; height: 20px; border-radius: 50%; background: rgba(167,139,250,0.12); color: #A78BFA; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">5</div><div style="font-size: 12px; color: #8a8a94; line-height: 1.5;"><span style="color: #A78BFA; font-weight: 600;">Researchers:</span> Access via authenticated API. Every access logged with identity, IP, timestamp.</div></div>
+              <div style="display: flex; gap: 10px;"><div style="width: 20px; height: 20px; border-radius: 50%; background: rgba(167,139,250,0.12); color: #A78BFA; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">6</div><div style="font-size: 12px; color: #8a8a94; line-height: 1.5;"><span style="color: #A78BFA; font-weight: 600;">Day 91:</span> Temporal decay fires. Tokens cryptographically invalidated. Zero manual action.</div></div>
+              <div style="display: flex; gap: 10px;"><div style="width: 20px; height: 20px; border-radius: 50%; background: rgba(167,139,250,0.12); color: #A78BFA; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">7</div><div style="font-size: 12px; color: #8a8a94; line-height: 1.5;"><span style="color: #A78BFA; font-weight: 600;">Audit:</span> Complete immutable log. FDA 21 CFR Part 11 compliant, no extra tooling.</div></div>
+              <div style="display: flex; gap: 10px;"><div style="width: 20px; height: 20px; border-radius: 50%; background: rgba(167,139,250,0.12); color: #A78BFA; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">8</div><div style="font-size: 12px; color: #8a8a94; line-height: 1.5;"><span style="color: #A78BFA; font-weight: 600;">IP Protected:</span> Data never touched the CRO's file system. Cryptographic proof access ended day 91.</div></div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- FEATURES -->
+      <sc-if value="{{ showFeatures }}">
+        <div style="padding-top: 36px;">
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;">
+            <div style="padding: 18px; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;">
+              <div style="font-size: 20px; margin-bottom: 8px;">🔒</div>
+              <div style="font-size: 12.5px; font-weight: 700; color: #f0efe9; margin-bottom: 6px;">Post-Quantum Encryption</div>
+              <div style="font-size: 11px; color: #7a7a84; line-height: 1.55;">ML-KEM-1024 (FIPS 203) secures vault contents against future quantum computers.</div>
+            </div>
+            <div style="padding: 18px; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;">
+              <div style="font-size: 20px; margin-bottom: 8px;">⚡</div>
+              <div style="font-size: 12.5px; font-weight: 700; color: #f0efe9; margin-bottom: 6px;">Hardware-Accelerated</div>
+              <div style="font-size: 11px; color: #7a7a84; line-height: 1.55;">AES-NI, CLMUL, AVX-512 deliver 3.9 GB/s encryption throughput.</div>
+            </div>
+            <div style="padding: 18px; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;">
+              <div style="font-size: 20px; margin-bottom: 8px;">🛡️</div>
+              <div style="font-size: 12.5px; font-weight: 700; color: #f0efe9; margin-bottom: 6px;">Zero-FFI Rust Architecture</div>
+              <div style="font-size: 11px; color: #7a7a84; line-height: 1.55;">Keys never cross Rust→Python. Memory-safe by design.</div>
+            </div>
+            <div style="padding: 18px; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;">
+              <div style="font-size: 20px; margin-bottom: 8px;">👥</div>
+              <div style="font-size: 12.5px; font-weight: 700; color: #f0efe9; margin-bottom: 6px;">Shamir Threshold Governance</div>
+              <div style="font-size: 11px; color: #7a7a84; line-height: 1.55;">k-of-n authority requirements. No single person can access vault alone.</div>
+            </div>
+            <div style="padding: 18px; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;">
+              <div style="font-size: 20px; margin-bottom: 8px;">⏱️</div>
+              <div style="font-size: 12.5px; font-weight: 700; color: #f0efe9; margin-bottom: 6px;">Temporal Decay Access</div>
+              <div style="font-size: 11px; color: #7a7a84; line-height: 1.55;">Time-limited access auto-expires cryptographically. No manual revocation.</div>
+            </div>
+            <div style="padding: 18px; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;">
+              <div style="font-size: 20px; margin-bottom: 8px;">👁️</div>
+              <div style="font-size: 12.5px; font-weight: 700; color: #f0efe9; margin-bottom: 6px;">Immutable Audit Trail</div>
+              <div style="font-size: 11px; color: #7a7a84; line-height: 1.55;">Every access logged with cryptographic integrity. 7-year retention.</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- INDUSTRIES -->
+      <sc-if value="{{ showIndustries }}">
+        <div style="padding-top: 20px; margin-bottom: 24px; padding: 18px 20px; background: rgba(212,168,83,0.04); border: 1px solid rgba(212,168,83,0.15); border-radius: 10px;">
+          <div style="font-size: 11px; font-weight: 700; color: #D4A853; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">Why This Matters to Roche, Novartis, Sandoz, Pfizer &amp; CDMO/Specialty Partners</div>
+          <div style="font-size: 12px; color: #a8a8b0; line-height: 1.65;">Whether you are an innovator with a proprietary discovery pipeline, a biosimilar leader managing IP across dozens of molecules, or a CDMO holding trade secrets for every client you manufacture for — the same structural gap exists: <span style="color: #d8dcd6;">access control is enforced by IT policy, not mathematics.</span> A misconfigured permission, a departing scientist, or an over-broad CRO contract is all it takes to expose a molecule that took a decade and billions to develop. SDC Vaulting closes that gap architecturally, across every stage from discovery through commercial launch.</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <sc-for list="{{ industries }}" as="ind" hint-placeholder-count="10">
+            <div style="border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.012); overflow: hidden;">
+              <div style="padding: 16px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 17px;">{{ ind.icon }}</span>
+                  <span style="font-size: 13px; font-weight: 700; color: #f0efe9;">{{ ind.name }}</span>
+                </div>
+                <span style="font-size: 12px; font-weight: 700; color: {{ ind.color }};">{{ ind.value }}</span>
+              </div>
+              <div style="padding: 10px 16px; background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 9px; font-weight: 700; color: {{ ind.color }}; text-transform: uppercase; letter-spacing: 0.06em; flex-shrink: 0;">Champion</span>
+                <span style="font-size: 11px; color: #a8a8b0;">{{ ind.stakeholder }}</span>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0;">
+                <div style="padding: 14px 16px; border-right: 1px solid rgba(255,255,255,0.04);">
+                  <div style="font-size: 9.5px; font-weight: 700; color: #F87171; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;">Risk</div>
+                  <div style="font-size: 11px; color: #7a7a84; line-height: 1.55;">{{ ind.problem }}</div>
+                </div>
+                <div style="padding: 14px 16px; border-right: 1px solid rgba(255,255,255,0.04);">
+                  <div style="font-size: 9.5px; font-weight: 700; color: {{ ind.color }}; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;">How It Works</div>
+                  <div style="font-size: 11px; color: #8a8a94; line-height: 1.55;">{{ ind.howItWorks }}</div>
+                </div>
+                <div style="padding: 14px 16px;">
+                  <div style="font-size: 9.5px; font-weight: 700; color: #34D399; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;">Outcomes</div>
+                  <div style="font-size: 11px; color: #8a8a94; line-height: 1.55;">{{ ind.outcomes }}</div>
+                </div>
+              </div>
+              <div style="padding: 10px 16px; border-top: 1px solid rgba(255,255,255,0.04); display: flex; flex-wrap: wrap; gap: 6px;">
+                <sc-for list="{{ ind.compliance }}" as="cf" hint-placeholder-count="3">
+                  <span style="font-size: 9.5px; padding: 3px 8px; background: rgba(255,255,255,0.03); color: #8a8a94; border: 1px solid rgba(255,255,255,0.07); border-radius: 5px;">{{ cf }}</span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- SIGNATURES -->
+      <sc-if value="{{ showSig }}">
+        <div style="padding-top: 36px;">
+
+          <!-- 3 algorithms -->
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px;">
+            <div style="padding: 18px; background: rgba(96,165,250,0.05); border: 1px solid rgba(96,165,250,0.18); border-radius: 10px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 12.5px; font-weight: 700; color: #f0efe9;">EdDSA (Ed25519)</span>
+                <span style="font-size: 9px; padding: 2px 7px; background: rgba(96,165,250,0.15); color: #60A5FA; border-radius: 5px;">Classical</span>
+              </div>
+              <div style="font-size: 10.5px; color: #6a6a74; margin-bottom: 10px;">FIPS 186-5 · ~15,000 sig/sec · retention &lt;10 yrs</div>
+              <div style="font-size: 11px; color: #8a8a94; line-height: 1.55;">Fast signatures for SBOM signing, JWT auth, and audit-trail entries — Sigstore-compatible for software supply chain events.</div>
+            </div>
+            <div style="padding: 18px; background: rgba(52,211,153,0.05); border: 1px solid rgba(52,211,153,0.18); border-radius: 10px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 12.5px; font-weight: 700; color: #f0efe9;">ML-DSA-65 (Dilithium)</span>
+                <span style="font-size: 9px; padding: 2px 7px; background: rgba(52,211,153,0.15); color: #34D399; border-radius: 5px;">Post-Quantum</span>
+              </div>
+              <div style="font-size: 10.5px; color: #6a6a74; margin-bottom: 10px;">FIPS 204 · ~2,000 sig/sec · retention 15–75+ yrs</div>
+              <div style="font-size: 11px; color: #8a8a94; line-height: 1.55;">NIST Level 3, resistant to Shor's algorithm. Required for clinical trial data, defense specs, and any record that must remain verifiable decades from now.</div>
+            </div>
+            <div style="padding: 18px; background: rgba(167,139,250,0.05); border: 1px solid rgba(167,139,250,0.18); border-radius: 10px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 12.5px; font-weight: 700; color: #f0efe9;">Hybrid (Ed25519 + ML-DSA)</span>
+                <span style="font-size: 9px; padding: 2px 7px; background: rgba(167,139,250,0.15); color: #A78BFA; border-radius: 5px;">Crypto-Agile</span>
+              </div>
+              <div style="font-size: 10.5px; color: #6a6a74; margin-bottom: 10px;">Both must verify · ~1,800 sig/sec · any horizon</div>
+              <div style="font-size: 11px; color: #8a8a94; line-height: 1.55;">A classical attacker is stopped by Ed25519; a quantum attacker is stopped by ML-DSA. Used for key ceremonies and cross-authority approvals.</div>
+            </div>
+          </div>
+
+          <!-- vault action -> algorithm -->
+          <div style="font-size: 12px; font-weight: 700; color: #f0efe9; margin-bottom: 12px;">Signed at Every Vault Action</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 28px;">
+            <div style="padding: 12px 14px; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 12px; color: #d8dcd6;">Vault deposit</span><span style="font-size: 9px; padding: 2px 7px; background: rgba(96,165,250,0.15); color: #60A5FA; border-radius: 5px;">EdDSA</span>
+            </div>
+            <div style="padding: 12px 14px; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 12px; color: #d8dcd6;">Access grant (temporal decay)</span><span style="font-size: 9px; padding: 2px 7px; background: rgba(52,211,153,0.15); color: #34D399; border-radius: 5px;">ML-DSA</span>
+            </div>
+            <div style="padding: 12px 14px; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 12px; color: #d8dcd6;">k-of-n threshold approval</span><span style="font-size: 9px; padding: 2px 7px; background: rgba(167,139,250,0.15); color: #A78BFA; border-radius: 5px;">Hybrid</span>
+            </div>
+            <div style="padding: 12px 14px; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 12px; color: #d8dcd6;">Key ceremony ($15K)</span><span style="font-size: 9px; padding: 2px 7px; background: rgba(167,139,250,0.15); color: #A78BFA; border-radius: 5px;">Hybrid</span>
+            </div>
+          </div>
+
+          <!-- moats + zero-ffi -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            <div>
+              <div style="font-size: 12px; font-weight: 700; color: #f0efe9; margin-bottom: 12px;">What No Competitor Has</div>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="font-size: 11.5px; color: #8a8a94; line-height: 1.5;"><span style="color: #FBBF24; font-weight: 600;">Threshold signing (k-of-n):</span> no single authority signs unilaterally — Shamir shares reconstruct in an isolated subprocess.</div>
+                <div style="font-size: 11.5px; color: #8a8a94; line-height: 1.5;"><span style="color: #A78BFA; font-weight: 600;">Domain-bound keys:</span> a Cyber-domain signature cannot be replayed against a Financial-domain record.</div>
+                <div style="font-size: 11.5px; color: #8a8a94; line-height: 1.5;"><span style="color: #22D3EE; font-weight: 600;">Authority delegation chains:</span> root authority delegates via ML-KEM + ML-DSA attestation, independently auditable, revocable at any level.</div>
+                <div style="font-size: 11.5px; color: #8a8a94; line-height: 1.5;"><span style="color: #34D399; font-weight: 600;">Compliance auto-selection:</span> the platform reads your active frameworks and retention needs, then picks EdDSA, ML-DSA, or Hybrid automatically.</div>
+              </div>
+            </div>
+            <div style="padding: 20px; background: rgba(52,211,153,0.04); border: 1px solid rgba(52,211,153,0.15); border-radius: 10px;">
+              <div style="font-size: 12.5px; font-weight: 700; color: #f0efe9; margin-bottom: 10px;">Zero-FFI: Keys Never Leave Rust</div>
+              <div style="font-size: 11px; color: #7a7a84; font-family: 'JetBrains Mono', monospace; line-height: 1.7; margin-bottom: 10px;">Python → subprocess() → Rust binary</div>
+              <div style="font-size: 11.5px; color: #8a8a94; line-height: 1.6;">No FFI boundary to OpenSSL or BoringSSL. Keys exist only in isolated Rust memory and are zeroized immediately after signing — no third-party crypto library in the trust chain.</div>
+            </div>
+          </div>
+
+          <!-- Closing CTA -->
+          <div style="margin-top: 40px; padding: 32px; background: linear-gradient(135deg, rgba(212,168,83,0.08), rgba(167,139,250,0.06)); border: 1px solid rgba(212,168,83,0.2); border-radius: 14px; text-align: center;">
+            <div style="font-size: 16px; font-weight: 700; color: #f0efe9; margin-bottom: 8px;">Ready to discuss sovereign custody for your pipeline?</div>
+            <div style="font-size: 12.5px; color: #8a8a94; margin-bottom: 20px; max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.6;">A 30-minute conversation to map SDC Vaulting against your formulation IP, clinical data, and manufacturing custody requirements.</div>
+            <a href="https://cal.com/agenticvaults" target="_blank" rel="noopener" style="display: inline-block; padding: 13px 28px; background: linear-gradient(135deg, #D4A853, #A78BFA); color: #06060B; font-weight: 700; font-size: 13px; border-radius: 9px; text-decoration: none; font-family: 'Inter', sans-serif;">Book a Meeting →</a>
+          </div>
+
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { activeTab: 'overview' };
+
+  componentDidMount() {
+    const el = document.querySelector('[data-main-scroll]');
+    if (el) el.scrollTo({ top: 0 });
+  }
+
+  switchTo = (id) => {
+    this.setState({ activeTab: id });
+    const el = document.querySelector('[data-main-scroll]');
+    if (el) el.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  renderVals() {
+    const { activeTab } = this.state;
+
+    const tabDefs = [
+      { id: 'overview', label: 'Overview', icon: '🔐' },
+      { id: 'example', label: 'Worked Example', icon: '🧬' },
+      { id: 'features', label: 'Features', icon: '⚙️' },
+      { id: 'industries', label: 'Pharmaceutical', icon: '💊' },
+      { id: 'signatures', label: 'Digital Signatures', icon: '🔑' },
+    ];
+
+    const tabs = tabDefs.map(t => {
+      const a = activeTab === t.id;
+      return {
+        id: t.id,
+        icon: t.icon,
+        label: t.label,
+        onClick: () => this.switchTo(t.id),
+        style: `display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;border:none;border-radius:8px;background:${a ? 'rgba(212,168,83,0.08)' : 'transparent'};color:${a ? '#D4A853' : '#6a6a74'};cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;font-weight:${a ? '600' : '400'};text-align:left;transition:all .15s;border-left:${a ? '2px solid #D4A853' : '2px solid transparent'};margin-bottom:2px;`,
+        mobileStyle: `padding:12px 14px;border:none;border-bottom:${a ? '2px solid #D4A853' : '2px solid transparent'};background:${a ? 'rgba(212,168,83,0.08)' : 'transparent'};color:${a ? '#D4A853' : '#6a6a74'};cursor:pointer;white-space:nowrap;font-size:12px;font-weight:${a ? '600' : '400'};flex-shrink:0;`,
+      };
+    });
+
+    const heroes = {
+      overview: { eyebrow: 'SENTINEL Premium Service', h1: 'Sovereign Digital Custody. ', em: 'Post-Quantum by Default.', sub: 'Store, govern, and share trade secrets, formulations, IP, and regulated data with mathematical guarantees. Built on 11,700 lines of pure Rust with zero external dependencies.' },
+      example: { eyebrow: 'Step by Step', h1: 'How SDC Vaulting Works ', em: 'in Practice', sub: 'A complete walkthrough from onboarding to access — every step cryptographically enforced with no human intervention required.' },
+      features: { eyebrow: 'Capabilities', h1: 'Enterprise-Grade ', em: 'Cryptographic Infrastructure', sub: 'Every feature built from scratch in Rust with zero external dependencies.' },
+      industries: { eyebrow: 'Pharmaceutical & Life Sciences', h1: 'Sovereign Custody Across the ', em: 'Full Pharma Value Chain', sub: 'From discovery to commercial — formulation IP, clinical data, CDMO manufacturing records, regulatory submissions, and pharmacovigilance, each governed by cryptography instead of policy.' },
+      signatures: { eyebrow: 'Post-Quantum Digital Signatures', h1: 'Non-Repudiation for ', em: 'Every Vault Action', sub: 'Every vault deposit, access grant, and key ceremony is signed with EdDSA, ML-DSA-65 (FIPS 204), or Hybrid — auto-selected by retention horizon and compliance mandate.' },
+    };
+    const h = heroes[activeTab] || heroes.overview;
+
+    const statsData = {
+      overview: [{ value: '3.9 GB/s', label: 'Encryption Throughput' }, { value: '0.21 µs', label: 'Key Derivation' }, { value: '100%', label: 'Quantum-Safe' }, { value: '<100ms', label: 'Revocation Time' }],
+      example: [{ value: '847MB', label: 'Dataset Encrypted' }, { value: '4-of-6', label: 'Shamir Threshold' }, { value: '90 days', label: 'Max Access Window' }, { value: '<1ms', label: 'Post-Expiry Revocation' }],
+      features: [{ value: '9', label: 'Isolated Rust Binaries' }, { value: '0', label: 'External Dependencies' }, { value: '11,700', label: 'Lines of Pure Rust' }, { value: '$136M', label: 'Competitor Acquisition Price' }],
+      industries: [{ value: '9', label: 'Value-Chain Domains' }, { value: '$400K–$1.2M', label: 'Annual Value / Domain' }, { value: '15+', label: 'Pharma Compliance Frameworks' }, { value: '9', label: 'Governance Domains' }],
+      signatures: [{ value: '15,000', label: 'EdDSA sig/sec' }, { value: '2,000', label: 'ML-DSA sig/sec' }, { value: '44', label: 'Compliance Frameworks' }, { value: 'Zero-FFI', label: 'Keys Never Leave Rust' }],
+    };
+    const stats = statsData[activeTab] || statsData.overview;
+
+    const industries = [
+      { icon: '🧪', name: 'Drug Discovery & Formulation IP', color: '#34D399', value: '$800K–$2M/yr',
+        stakeholder: 'VP R&D and Chief Patent Officer co-champion; CISO signs off on architecture. A single synthesis route leak can invalidate an entire patent family.',
+        problem: 'A novel compound synthesis route or formulation, once it reaches a generic manufacturer, a discovery-stage licensing partner, or even a departing scientist, collapses a decade of R&D investment and the patent moat behind it. Early-stage discovery data routinely crosses academic collaborators, CROs, and external chemistry partners — each an exposure point that shared drives and NDAs cannot mathematically contain.',
+        howItWorks: 'A 5-of-7 Shamir threshold spanning R&D, Legal, Patent Counsel, Quality, and Manufacturing gates any read access to formulation and synthesis vaults. ML-KEM-1024 encrypts each compound file with a vault-specific key; temporal decay issues time-boxed tokens to external collaborators that self-destruct at the end of a research agreement — no manual IT revocation, no lingering access after a partnership ends.',
+        outcomes: 'Formulation IP survives due diligence data rooms during licensing negotiations and M&A without ever leaving custody. Patent filings are protected against harvest-now-decrypt-later attacks for the full 20-year lifecycle with post-quantum ML-KEM-1024.',
+        compliance: ['ICH Q7 API', 'ICH Q10', 'Patent / Trade Secret Law'] },
+      { icon: '🩺', name: 'Clinical Trials & CRO Data Sharing', color: '#60A5FA', value: '$600K–$1.5M/yr',
+        stakeholder: 'VP Clinical Operations and Head of Regulatory Affairs jointly champion; DSMB governance requirements force board-level visibility.',
+        problem: 'Multi-country trials mean the same patient-level and endpoint data crosses 5–15 CRO, site, and academic partner relationships. A single premature unblinding, a leaked interim efficacy result, or an over-broad site-level access grant can compromise trial integrity, trigger an FDA data-integrity finding, or hand a competitor early insight into a Phase III readout.',
+        howItWorks: 'Trial data lives in per-study vaults with a 2-of-3 DSMB/PI/Medical-Monitor threshold gating any unblinding request. Site-level access is scoped and time-boxed to the active enrollment period; CRO tokens auto-expire at database lock with zero manual revocation, and every access is logged with identity, timestamp, and byte-range for FDA 21 CFR Part 11 audit readiness.',
+        outcomes: 'Trial data moves across CRO and site networks without email attachments or file-transfer exposure. Interim efficacy results and unblinding events are protected by cryptographic multi-party approval, not a single statistician\'s judgment call.',
+        compliance: ['FDA 21 CFR Part 11', 'ICH E6(R3) GCP', 'EU CTR 536/2014'] },
+      { icon: '🏗️', name: 'CDMO & Contract Manufacturing', color: '#FBBF24', value: '$500K–$1.2M/yr',
+        stakeholder: 'VP Manufacturing / Head of Technical Operations champions; for CDMOs specifically (Lonza, Siegfried, Bachem), this is the core product — trade secrets belonging to dozens of clients live under one roof.',
+        problem: 'A CDMO manufacturing for a dozen innovator clients simultaneously holds a dozen sets of trade secrets under one roof — a process deviation report, a batch record, or an analytical method leaked from Client A\'s program to Client B\'s team (even accidentally, via a shared server or careless file naming) is a contract-ending, reputation-destroying event. Technology transfer between sites multiplies the exposure surface with every new manufacturing location.',
+        howItWorks: 'Each client program gets a cryptographically isolated vault — domain separation means a technician cleared for Client A\'s batch records has no cryptographic path to Client B\'s vault, even on the same manufacturing floor. Technology transfer between sites uses temporal-decay tokens scoped to the transfer window; a 3-of-4 threshold across Manufacturing, Quality, R&D, and Supply Chain governs any cross-site specification release.',
+        outcomes: 'Client program data never commingles at the storage layer — provable in an audit, not just promised in a contract. 21 CFR Part 11 electronic batch record signatures and 7-year tamper-evident retention are architectural, satisfying every client\'s quality agreement simultaneously.',
+        compliance: ['FDA 21 CFR Part 11', 'EU GMP Annex 11', 'ICH Q7 API'] },
+      { icon: '⚖️', name: 'Regulatory Submissions & Inspection Readiness', color: '#A78BFA', value: '$400K–$900K/yr',
+        stakeholder: 'Head of Regulatory Affairs champions; instant inspection readiness and submission integrity are board-reportable risks after any FDA 483 or EMA finding.',
+        problem: 'A pre-approval inspection can arrive with days of notice, and scrambling to assemble a complete, provably unaltered eCTD submission history across years of amendments is a routine source of 483 observations that have nothing to do with the underlying science. Cross-border submissions to FDA, EMA, Swissmedic, and PMDA each carry different data-residency and access requirements that are difficult to reconcile with a single document repository.',
+        howItWorks: 'eCTD modules are vaulted with jurisdiction-specific access policies and temporal-decay tokens issued to regulatory reviewers for the exact review window. Every submission, amendment, and labeling change is signed with ML-DSA-65 at the moment of filing, creating a tamper-evident chain of custody spanning the full product lifecycle.',
+        outcomes: 'Inspection readiness becomes instant retrieval with complete provenance instead of a multi-week document hunt. Cross-border submission compliance (GDPR Art. 28, Swiss nDSG, local data-residency rules) is enforced per-jurisdiction by the vault itself.',
+        compliance: ['FDA 21 CFR Part 11', 'EU GMP Annex 11', 'SwissMedic', 'GDPR Art. 28'] },
+      { icon: '🚚', name: 'Supply Chain, Serialization & Cold Chain', color: '#22D3EE', value: '$400K–$900K/yr',
+        stakeholder: 'VP Supply Chain / CSCO champions — the strongest pain point and largest budget line for companies running global multi-tier API and finished-goods networks.',
+        problem: 'Your Tier 1 API supplier passed every audit — but a Tier 3 raw-material source you have never directly assessed goes dark, and a temperature excursion on a biologic shipment is only discovered after the product has already shipped. Serialization data required under DSCSA and EU FMD spans dozens of contract packagers and distributors, each a potential point of counterfeit insertion.',
+        howItWorks: 'N-tier network mapping extends verified visibility past Tier 1 into Tier 2/3 API and excipient suppliers, each holding a scoped vault for only the specifications relevant to their tier. Cold chain temperature data triggers multi-authority governance workflows for disposition decisions the moment an excursion is logged, and serialization/track-and-trace records are encrypted per-product with temporal-decay access for regulator review.',
+        outcomes: 'Supply disruptions surface weeks earlier because sub-tier risk is monitored continuously instead of assessed annually. DSCSA and EU FMD serialization compliance is provable per-shipment, and cold chain disposition decisions carry a cryptographic multi-authority approval trail.',
+        compliance: ['DSCSA', 'EU FMD', 'EU GDP', 'ISO 28000'] },
+      { icon: '📡', name: 'Pharmacovigilance & Safety Signal Governance', color: '#F87171', value: '$400K–$800K/yr',
+        stakeholder: 'Head of Pharmacovigilance / Chief Medical Officer champions; expedited safety reporting deadlines (7/15-day SUSARs) make this a board-visible compliance clock.',
+        problem: 'Safety signal detection across a marketed portfolio requires correlating ICSRs, clinical trial safety databases, and post-marketing surveillance data — a slow or siloed process risks missing an expedited reporting deadline, and a benefit-risk reclassification made by a single reviewer without proper sign-off is a regulatory and patient-safety liability.',
+        howItWorks: 'ICSR databases and safety signal data sit in pharmacovigilance-specific vaults with automated cross-referencing against clinical trial safety records. SUSAR reporting requires multi-authority sign-off (PV + Medical + Regulatory) before submission, gated by a Shamir threshold, and benefit-risk reclassification changes are governed the same way — no single reviewer can act alone.',
+        outcomes: 'SUSAR reporting deadlines are met with a cryptographically verifiable, multi-party-approved chain rather than a single point of failure. Benefit-risk assessments carry provable multi-authority governance for regulatory defense.',
+        compliance: ['ICH E2A/E2B', 'FDA 21 CFR 314.80', 'EU GVP Module VI'] },
+      { icon: '🧬', name: 'Biologics, Cell & Gene Therapy Custody', color: '#818CF8', value: '$500K–$1.2M/yr',
+        stakeholder: 'VP Biologics / Head of CGT champions — chain-of-identity and chain-of-custody requirements for patient-specific therapies make this a uniquely acute pain point.',
+        problem: 'Cell and gene therapy manufacturing is patient-specific — a chain-of-identity or chain-of-custody break between apheresis, manufacturing, and infusion is a patient-safety incident, not just a data problem. Manufacturing process data for biologics is exceptionally sensitive given the difficulty of reverse-engineering a biosimilar competitor process.',
+        howItWorks: 'Each patient batch is tracked in an isolated vault binding donor identity, manufacturing steps, and release testing into a single cryptographically signed chain. Release-to-infusion sign-off requires a 3-of-4 threshold across Manufacturing, Quality, Clinical, and the treating site before a batch can be dispositioned for patient administration.',
+        outcomes: 'Chain-of-identity is cryptographically provable end-to-end, satisfying both quality and patient-safety requirements simultaneously. Manufacturing process IP for novel biologics/CGT platforms remains protected from process-analytics-based reverse engineering.',
+        compliance: ['FDA 21 CFR Part 1271', 'EU ATMP Regulation', 'ICH Q5A-Q5E'] },
+      { icon: '📜', name: 'Licensing, Partnering & M&A Data Rooms', color: '#F472B6', value: '$400K–$1M/yr',
+        stakeholder: 'Chief Business Officer / Head of Business Development champions — licensing deals and specialty-pharma acquisitions live or die on the credibility of the data room.',
+        problem: 'Out-licensing a molecule or running an acquisition due-diligence process means opening formulation, clinical, and manufacturing data to a counterparty who may walk away from the deal — and who, in the interim, has effectively seen your crown-jewel IP with no contractual mechanism stronger than an NDA to prevent misuse.',
+        howItWorks: 'Data room access is scoped per-counterparty in an isolated vault with temporal-decay tokens that expire the moment exclusivity ends or a deal falls through — access simply stops working, with no manual revocation required. Document-level watermarking and access logging identify exactly what a counterparty viewed and for how long.',
+        outcomes: 'A failed negotiation ends with cryptographically enforced access termination, not a hope that the counterparty deletes their copies. Successful deals hand over custody cleanly at signing, with a complete audit trail for the eventual acquirer\'s own due diligence.',
+        compliance: ['GDPR Art. 28', 'Trade Secret Law', 'SEC Reg FD (public counterparties)'] },
+      { icon: '🧴', name: 'Biosimilars, Generics & Specialty Formulation Defense', color: '#FB923C', value: '$400K–$900K/yr',
+        stakeholder: 'VP R&D / IP Counsel champions — for biosimilar and generics leaders (Sandoz) and specialty/dermatology innovators (Galderma, Alcon), formulation defense against both originators and competitors is the core IP battleground.',
+        problem: 'Biosimilar and generic manufacturers must simultaneously defend their own formulation and analytical comparability data from competitors while managing originator litigation risk — a formulation file shared too broadly internally, or with an external analytical lab, can undermine years of comparability study investment or expose strategy ahead of a patent challenge.',
+        howItWorks: 'Formulation and comparability study data sits in molecule-specific vaults with a 4-of-6 threshold across R&D, IP Legal, Regulatory, and Quality. External analytical labs and litigation counsel receive scoped, temporal-decay access limited to the specific study or matter, auto-expiring at study close or case resolution.',
+        outcomes: 'Comparability and formulation defense data stays protected through the full development-to-litigation lifecycle. External lab and counsel access never outlives its purpose, closing the most common insider-adjacent leak vector in generics/biosimilar development.',
+        compliance: ['FDA ANDA / 351(k)', 'EMA Biosimilar Guideline', 'Patent Law'] },
+    ];
+
+    return {
+      tabs,
+      heroEyebrow: h.eyebrow, heroH1: h.h1, heroEm: h.em, heroSub: h.sub,
+      stats,
+      showOverview: activeTab === 'overview',
+      showExample: activeTab === 'example',
+      showFeatures: activeTab === 'features',
+      showIndustries: activeTab === 'industries',
+      showSig: activeTab === 'signatures',
+      industries,
+    };
+  }
+}
+</script>
+</body>
+</html>
