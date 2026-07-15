@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Capri AG — Juni 2026 Finanzanalyse</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a1a;--bg2:#12122e;--card:rgba(255,255,255,0.04);--card2:rgba(255,255,255,0.03);--red:#E94560;--purple:#533483;--teal:#38ADA9;--blue:#4A69BD;--yellow:#F6B93B;--green:#78E08F;--orange:#FA983A;--white:#FFFFFF;--grey:#8899AA;--light:#CCCCCC;--border:rgba(255,255,255,0.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(160deg,#0a0a1a 0%,#12122e 50%,#0a0a1a 100%);color:var(--white);font-family:'DM Sans',sans-serif;line-height:1.65;padding:24px 20px;min-height:100vh}
+.mono{font-family:'Space Mono',monospace}
+h1{font-size:26px;font-weight:700;margin:0}
+h2{font-size:18px;font-weight:700;border-left:3px solid var(--red);padding-left:12px;margin-bottom:16px}
+h3{font-size:14px;font-weight:700;margin-bottom:8px}
+.header-tag{font-size:11px;color:var(--red);letter-spacing:3px;text-transform:uppercase;font-family:'Space Mono',monospace;margin-bottom:4px}
+.header-sub{font-size:12px;color:var(--grey);margin-top:4px}
+section{margin-bottom:32px}
+.kpi-grid{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;flex:1;min-width:140px}
+.kpi.alert{border-color:rgba(233,69,96,0.3)}.kpi.good{border-color:rgba(120,224,143,0.3)}
+.kpi-label{font-size:11px;color:var(--grey);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;font-family:'Space Mono',monospace}
+.kpi-value{font-size:22px;font-weight:700;font-family:'Space Mono',monospace}
+.kpi-value.red{color:var(--red)}.kpi-value.green{color:var(--green)}
+.kpi-sub{font-size:11px;color:var(--grey);margin-top:4px}.kpi-sub.red{color:var(--red)}
+.alert-box{border-radius:8px;padding:12px 16px;margin-bottom:10px}
+.alert-box.danger{background:rgba(233,69,96,0.08);border:1px solid rgba(233,69,96,0.25)}
+.alert-box.warning{background:rgba(246,185,59,0.08);border:1px solid rgba(246,185,59,0.25)}
+.alert-box.success{background:rgba(120,224,143,0.08);border:1px solid rgba(120,224,143,0.25)}
+.alert-title{font-weight:700;font-size:13px;margin-bottom:4px}
+.alert-title.danger{color:var(--red)}.alert-title.warning{color:var(--yellow)}.alert-title.success{color:var(--green)}
+.alert-body{font-size:12px;color:var(--light);line-height:1.5}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:16px 0}
+th{text-align:left;padding:6px 8px;color:var(--grey);font-size:10px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.1)}
+td{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.text-right{text-align:right}
+.fw-700{font-weight:700}
+.color-dot{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
+.bar-container{background:rgba(255,255,255,0.06);border-radius:4px;height:24px;position:relative;margin:4px 0;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:10px;font-weight:600;color:#fff;transition:width 0.5s}
+.rec-box{background:var(--card2);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:14px 16px;margin-bottom:10px}
+.rec-nr{background:var(--red);color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;font-family:'Space Mono',monospace;display:inline-block;margin-right:10px}
+.rec-title{font-weight:700;font-size:14px;display:inline}
+.rec-body{font-size:12px;color:var(--light);line-height:1.6;margin:8px 0}
+.rec-meta{display:flex;gap:16px;font-size:11px}
+.rec-meta .impact{color:var(--green)}.rec-meta .effort{color:var(--yellow)}
+.pnl-row{display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.pnl-row.bold{background:rgba(255,255,255,0.03);font-weight:700}
+.pnl-row.line{border-top:2px solid rgba(255,255,255,0.15)}
+.pnl-label{flex:1}.pnl-value{width:140px;text-align:right;font-family:'Space Mono',monospace;font-size:12px}.pnl-pct{width:70px;text-align:right;font-family:'Space Mono',monospace;font-size:11px;color:var(--grey)}
+.tabs{display:flex;gap:4px;margin-bottom:24px;flex-wrap:wrap}
+.tab{background:rgba(255,255,255,0.05);border:none;color:var(--grey);padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:400;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.tab.active{background:var(--red);color:#fff;font-weight:700}
+.tab:hover{background:rgba(233,69,96,0.3);color:#fff}
+.info-box{background:var(--card2);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:16px;margin-bottom:16px}
+.info-box h3{color:var(--white);font-size:14px;margin-bottom:10px}
+.info-box p{font-size:12px;color:var(--light);line-height:1.7;margin-bottom:6px}
+.supplier-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px}
+.supplier-row .name{color:var(--white)}.supplier-row .note{color:var(--grey);font-size:11px}
+.supplier-row .amount{font-family:'Space Mono',monospace;color:var(--yellow);font-size:11px}
+.priority-table td:first-child{font-weight:600;color:var(--white)}
+.footer{margin-top:32px;padding:12px 0;border-top:1px solid rgba(255,255,255,0.06);font-size:11px;color:#555;text-align:center}
+.hidden{display:none}
+@media(max-width:768px){.kpi-grid{flex-direction:column}.kpi{min-width:100%}}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div style="margin-bottom:24px">
+<div class="header-tag">CAPRI AG · MONATSANALYSE</div>
+<h1>Juni 2026 — Finanzanalyse</h1>
+<div class="header-sub">Umsatz, Warenkosten, P&L-Schätzung & Handlungsempfehlungen</div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+<button class="tab active" onclick="showTab('overview')">Übersicht</button>
+<button class="tab" onclick="showTab('revenue')">Umsatz</button>
+<button class="tab" onclick="showTab('cogs')">Warenkosten</button>
+<button class="tab" onclick="showTab('pnl')">P&L</button>
+<button class="tab" onclick="showTab('recs')">Massnahmen</button>
+</div>
+
+<!-- ═══════════ OVERVIEW TAB ═══════════ -->
+<div id="tab-overview">
+<section>
+<h2>Executive Summary</h2>
+<div class="alert-box danger"><div class="alert-title danger">⚠ Umsatz 30.4% unter Budget</div><div class="alert-body">Juni-Umsatz CHF 173'888 vs. Budget CHF 250'000. Tagesumsatz Ø CHF 5'796 statt geplanter CHF 8'333. Die grösste Abweichung liegt beim Weinumsatz (−48%) und der Küche (−28%).</div></div>
+<div class="alert-box warning"><div class="alert-title warning">△ Personalkosten-Quote kritisch</div><div class="alert-body">Bei einem geschätzten Personalaufwand von CHF 98'208 (Budgetwert) erreicht die Personalquote 56.5% statt der geplanten 35.6%. Die Fixkostenlast ist bei diesem Umsatzniveau nicht tragbar.</div></div>
+<div class="alert-box warning"><div class="alert-title warning">△ Bier-Segment praktisch inexistent</div><div class="alert-body">Mit nur 1.0% Umsatzanteil (CHF 1'680) und 207 verkauften Einheiten ist Bier eine verpasste Chance. Ø CHF 8.12 pro Bier bei hohen Warenkosten (31.1% vs. 18.4% Budget).</div></div>
+<div class="alert-box success"><div class="alert-title success">✓ Warenkosten insgesamt im Rahmen</div><div class="alert-body">Gesamte COGS-Quote bei 25.3% vs. Budget 26.4%. Besonders Wein (26.5% vs. 35% Budget) und Spirituosen (14.2% vs. 22%) performieren deutlich besser als geplant.</div></div>
+</section>
+
+<div class="kpi-grid">
+<div class="kpi alert"><div class="kpi-label">Umsatz Juni</div><div class="kpi-value red">CHF 173'888</div><div class="kpi-sub red">−30.4% vs. Budget (CHF 250'000)</div></div>
+<div class="kpi good"><div class="kpi-label">Warenkosten</div><div class="kpi-value green">CHF 44'079</div><div class="kpi-sub">25.3% vom Umsatz</div></div>
+<div class="kpi"><div class="kpi-label">Rohertrag</div><div class="kpi-value">CHF 129'809</div><div class="kpi-sub">74.7% Bruttomarge</div></div>
+<div class="kpi alert"><div class="kpi-label">EBITDA (Est.)</div><div class="kpi-value red">CHF −33'170</div><div class="kpi-sub red">Geschätzter Monatsverlust</div></div>
+</div>
+
+<div class="kpi-grid">
+<div class="kpi"><div class="kpi-label">Quittungen</div><div class="kpi-value">1'148</div><div class="kpi-sub">Ø 38.3 pro Tag</div></div>
+<div class="kpi"><div class="kpi-label">Ø Quittung</div><div class="kpi-value">CHF 151</div><div class="kpi-sub">Bruttowert pro Bon</div></div>
+<div class="kpi good"><div class="kpi-label">Trinkgeld</div><div class="kpi-value green">CHF 12'231</div><div class="kpi-sub">7.0% des Umsatzes</div></div>
+<div class="kpi"><div class="kpi-label">Kartenzahlung</div><div class="kpi-value">94.9%</div><div class="kpi-sub">Lightspeed Payments</div></div>
+</div>
+
+<section>
+<h2>Budget-Erreichung nach Kategorie</h2>
+<div style="margin:12px 0">
+<div style="display:flex;align-items:center;margin-bottom:8px"><span style="width:90px;font-size:12px;font-weight:600">Küche</span><div class="bar-container" style="flex:1"><div class="bar-fill" style="width:72%;background:var(--red)">72.0%</div></div></div>
+<div style="display:flex;align-items:center;margin-bottom:8px"><span style="width:90px;font-size:12px;font-weight:600">Wein</span><div class="bar-container" style="flex:1"><div class="bar-fill" style="width:52.1%;background:var(--red)">52.1%</div></div></div>
+<div style="display:flex;align-items:center;margin-bottom:8px"><span style="width:90px;font-size:12px;font-weight:600">Mineral</span><div class="bar-container" style="flex:1"><div class="bar-fill" style="width:91.7%;background:var(--teal)">91.7%</div></div></div>
+<div style="display:flex;align-items:center;margin-bottom:8px"><span style="width:90px;font-size:12px;font-weight:600">Spirituosen</span><div class="bar-container" style="flex:1"><div class="bar-fill" style="width:85.1%;background:var(--teal)">85.1%</div></div></div>
+<div style="display:flex;align-items:center;margin-bottom:8px"><span style="width:90px;font-size:12px;font-weight:600">Kaffee</span><div class="bar-container" style="flex:1"><div class="bar-fill" style="width:70.8%;background:var(--yellow)">70.8%</div></div></div>
+<div style="display:flex;align-items:center;margin-bottom:8px"><span style="width:90px;font-size:12px;font-weight:600">Bier</span><div class="bar-container" style="flex:1"><div class="bar-fill" style="width:84%;background:var(--yellow)">84.0%</div></div></div>
+</div>
+<div style="display:flex;gap:16px;justify-content:center;margin-top:12px;font-size:11px"><span style="color:var(--red)">● &lt;70% kritisch</span><span style="color:var(--yellow)">● 70–85% Warnung</span><span style="color:var(--teal)">● &gt;85% akzeptabel</span></div>
+</section>
+</div>
+
+<!-- ═══════════ REVENUE TAB ═══════════ -->
+<div id="tab-revenue" class="hidden">
+<section>
+<h2>Umsatzanalyse: Ist vs. Budget</h2>
+<table>
+<thead><tr><th>Kategorie</th><th class="text-right">Ist</th><th class="text-right">Budget</th><th class="text-right">Diff</th><th class="text-right">Erzielt</th></tr></thead>
+<tbody>
+<tr><td><span class="color-dot" style="background:#E94560"></span>Küche</td><td class="text-right mono">CHF 117'933</td><td class="text-right mono" style="color:var(--grey)">CHF 163'750</td><td class="text-right mono" style="color:var(--red)">−CHF 45'817</td><td class="text-right mono fw-700" style="color:var(--red)">72.0%</td></tr>
+<tr><td><span class="color-dot" style="background:#533483"></span>Wein</td><td class="text-right mono">CHF 28'146</td><td class="text-right mono" style="color:var(--grey)">CHF 54'000</td><td class="text-right mono" style="color:var(--red)">−CHF 25'854</td><td class="text-right mono fw-700" style="color:var(--red)">52.1%</td></tr>
+<tr><td><span class="color-dot" style="background:#38ADA9"></span>Mineral</td><td class="text-right mono">CHF 12'380</td><td class="text-right mono" style="color:var(--grey)">CHF 13'500</td><td class="text-right mono" style="color:var(--yellow)">−CHF 1'120</td><td class="text-right mono fw-700" style="color:var(--teal)">91.7%</td></tr>
+<tr><td><span class="color-dot" style="background:#4A69BD"></span>Spirituosen</td><td class="text-right mono">CHF 10'000</td><td class="text-right mono" style="color:var(--grey)">CHF 11'750</td><td class="text-right mono" style="color:var(--yellow)">−CHF 1'750</td><td class="text-right mono fw-700" style="color:var(--teal)">85.1%</td></tr>
+<tr><td><span class="color-dot" style="background:#F6B93B"></span>Kaffee</td><td class="text-right mono">CHF 3'539</td><td class="text-right mono" style="color:var(--grey)">CHF 5'000</td><td class="text-right mono" style="color:var(--red)">−CHF 1'461</td><td class="text-right mono fw-700" style="color:var(--yellow)">70.8%</td></tr>
+<tr><td><span class="color-dot" style="background:#78E08F"></span>Bier</td><td class="text-right mono">CHF 1'680</td><td class="text-right mono" style="color:var(--grey)">CHF 2'000</td><td class="text-right mono" style="color:var(--yellow)">−CHF 320</td><td class="text-right mono fw-700" style="color:var(--yellow)">84.0%</td></tr>
+<tr style="border-top:2px solid rgba(255,255,255,0.15)"><td class="fw-700">Total</td><td class="text-right mono fw-700">CHF 173'888</td><td class="text-right mono fw-700" style="color:var(--grey)">CHF 250'000</td><td class="text-right mono fw-700" style="color:var(--red)">−CHF 76'112</td><td class="text-right mono fw-700" style="color:var(--red)">69.6%</td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2>Stückanalyse & Durchschnittspreis</h2>
+<table>
+<thead><tr><th>Kategorie</th><th class="text-right">Stück</th><th class="text-right">Umsatz</th><th class="text-right">Ø Preis</th></tr></thead>
+<tbody>
+<tr><td>Küche</td><td class="text-right mono">5'851</td><td class="text-right mono">CHF 117'933</td><td class="text-right mono" style="color:var(--yellow)">CHF 20.16</td></tr>
+<tr><td>Wein</td><td class="text-right mono">1'291</td><td class="text-right mono">CHF 28'146</td><td class="text-right mono" style="color:var(--yellow)">CHF 21.80</td></tr>
+<tr><td>Mineral</td><td class="text-right mono">1'665</td><td class="text-right mono">CHF 12'380</td><td class="text-right mono" style="color:var(--yellow)">CHF 7.43</td></tr>
+<tr><td>Spirituosen</td><td class="text-right mono">566</td><td class="text-right mono">CHF 10'000</td><td class="text-right mono" style="color:var(--yellow)">CHF 17.67</td></tr>
+<tr><td>Kaffee</td><td class="text-right mono">655</td><td class="text-right mono">CHF 3'539</td><td class="text-right mono" style="color:var(--yellow)">CHF 5.40</td></tr>
+<tr><td>Bier</td><td class="text-right mono">207</td><td class="text-right mono">CHF 1'680</td><td class="text-right mono" style="color:var(--yellow)">CHF 8.12</td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2>Schlüsselbeobachtungen: Umsatz</h2>
+<div class="alert-box danger"><div class="alert-title danger">⚠ Wein: Nur 52% des Budgets erreicht (−CHF 25'854)</div><div class="alert-body">Grösste Einzelabweichung. Der Weinumsatz liegt bei CHF 28'146 statt CHF 54'000. Bei 1'291 verkauften Positionen und Ø CHF 21.80 pro Position muss entweder die Verkaufsfrequenz oder der Durchschnittspreis deutlich steigen.</div></div>
+<div class="alert-box danger"><div class="alert-title danger">⚠ Küche: 28% unter Plan (−CHF 45'817)</div><div class="alert-body">Bei CHF 117'933 vs. CHF 163'750 Budget fehlen ca. 2'300 Hauptgerichte (bei Ø CHF 20.16). Dies deutet auf zu wenige Gäste hin, nicht auf ein Preisproblem.</div></div>
+<div class="alert-box warning"><div class="alert-title warning">△ Bier: 1% Umsatzanteil ist ungewöhnlich tief</div><div class="alert-body">207 Bier in einem Monat — das sind nur 7 pro Tag. Craft-Bier-Selektion oder Bier-Pairing könnten den Anteil verdoppeln.</div></div>
+</section>
+</div>
+
+<!-- ═══════════ COGS TAB ═══════════ -->
+<div id="tab-cogs" class="hidden">
+<section>
+<h2>Warenkosten: Ist vs. Budget-Ziel</h2>
+<div class="kpi-grid">
+<div class="kpi good"><div class="kpi-label">Gesamte COGS</div><div class="kpi-value green">CHF 44'079</div><div class="kpi-sub">25.3% vom Umsatz</div></div>
+<div class="kpi"><div class="kpi-label">Budget-Ziel</div><div class="kpi-value">26.4%</div><div class="kpi-sub">COGS-Quote laut Plan</div></div>
+<div class="kpi good"><div class="kpi-label">Differenz</div><div class="kpi-value green">−1.1%</div><div class="kpi-sub">Besser als budgetiert</div></div>
+<div class="kpi good"><div class="kpi-label">Rohertrag</div><div class="kpi-value green">CHF 129'809</div><div class="kpi-sub">74.7% Bruttomarge</div></div>
+</div>
+</section>
+
+<section>
+<h2>Detailtabelle: Warenkosten je Kategorie</h2>
+<table>
+<thead><tr><th>Kategorie</th><th class="text-right">Umsatz</th><th class="text-right">COGS</th><th class="text-right">COGS %</th><th class="text-right">Budget %</th><th class="text-right">Abw.</th><th class="text-right">Rohertrag</th><th class="text-right">Marge</th></tr></thead>
+<tbody>
+<tr><td><span class="color-dot" style="background:#E94560"></span>Küche</td><td class="text-right mono">CHF 117'933</td><td class="text-right mono">CHF 33'743</td><td class="text-right mono fw-700" style="color:var(--red)">28.6%</td><td class="text-right mono" style="color:var(--grey)">26.5%</td><td class="text-right mono" style="color:var(--red)">+2.1%</td><td class="text-right mono">CHF 84'190</td><td class="text-right mono" style="color:var(--green)">71.4%</td></tr>
+<tr><td><span class="color-dot" style="background:#533483"></span>Wein</td><td class="text-right mono">CHF 28'146</td><td class="text-right mono">CHF 7'455</td><td class="text-right mono fw-700" style="color:var(--green)">26.5%</td><td class="text-right mono" style="color:var(--grey)">35.0%</td><td class="text-right mono" style="color:var(--green)">−8.5%</td><td class="text-right mono">CHF 20'691</td><td class="text-right mono" style="color:var(--green)">73.5%</td></tr>
+<tr><td><span class="color-dot" style="background:#38ADA9"></span>Mineral</td><td class="text-right mono">CHF 12'380</td><td class="text-right mono">CHF 533</td><td class="text-right mono fw-700" style="color:var(--green)">4.3%</td><td class="text-right mono" style="color:var(--grey)">3.0%</td><td class="text-right mono" style="color:var(--yellow)">+1.3%</td><td class="text-right mono">CHF 11'847</td><td class="text-right mono" style="color:var(--green)">95.7%</td></tr>
+<tr><td><span class="color-dot" style="background:#4A69BD"></span>Spirituosen</td><td class="text-right mono">CHF 10'000</td><td class="text-right mono">CHF 1'422</td><td class="text-right mono fw-700" style="color:var(--green)">14.2%</td><td class="text-right mono" style="color:var(--grey)">22.0%</td><td class="text-right mono" style="color:var(--green)">−7.8%</td><td class="text-right mono">CHF 8'578</td><td class="text-right mono" style="color:var(--green)">85.8%</td></tr>
+<tr><td><span class="color-dot" style="background:#F6B93B"></span>Kaffee</td><td class="text-right mono">CHF 3'539</td><td class="text-right mono">CHF 347</td><td class="text-right mono fw-700" style="color:var(--green)">9.8%</td><td class="text-right mono" style="color:var(--grey)">8.0%</td><td class="text-right mono" style="color:var(--yellow)">+1.8%</td><td class="text-right mono">CHF 3'192</td><td class="text-right mono" style="color:var(--green)">90.2%</td></tr>
+<tr><td><span class="color-dot" style="background:#78E08F"></span>Bier</td><td class="text-right mono">CHF 1'680</td><td class="text-right mono">CHF 522</td><td class="text-right mono fw-700" style="color:var(--red)">31.1%</td><td class="text-right mono" style="color:var(--grey)">18.4%</td><td class="text-right mono" style="color:var(--red)">+12.7%</td><td class="text-right mono">CHF 1'158</td><td class="text-right mono" style="color:var(--green)">68.9%</td></tr>
+<tr style="border-top:2px solid rgba(255,255,255,0.15)"><td class="fw-700">Total</td><td class="text-right mono fw-700">CHF 173'888</td><td class="text-right mono fw-700">CHF 44'079</td><td class="text-right mono fw-700" style="color:var(--green)">25.3%</td><td class="text-right mono" style="color:var(--grey)">26.4%</td><td class="text-right mono fw-700" style="color:var(--green)">−1.1%</td><td class="text-right mono fw-700">CHF 129'809</td><td class="text-right mono fw-700" style="color:var(--green)">74.7%</td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2>Lieferantenanalyse: Küche (grösster Posten)</h2>
+<p style="font-size:12px;color:var(--light);margin-bottom:12px">Die Küche macht 76.5% der gesamten Warenkosten aus (CHF 33'743 von CHF 44'079).</p>
+<div class="supplier-row"><span><span class="name">MARINELLO + CO AG</span> <span class="note">— Grösster Einzellieferant</span></span><span class="amount">CHF 8'193</span></div>
+<div class="supplier-row"><span><span class="name">Angst AG Zürich</span> <span class="note">— Zweiter Grosslieferant</span></span><span class="amount">CHF 8'394</span></div>
+<div class="supplier-row"><span><span class="name">G. Bianchi AG</span> <span class="note">— Italienische Spezialitäten</span></span><span class="amount">CHF 5'203</span></div>
+<div class="supplier-row"><span><span class="name">Augustus GmbH</span> <span class="note">— Spezialprodukte</span></span><span class="amount">CHF 2'532</span></div>
+<div class="supplier-row"><span><span class="name">Luma Beef AG</span> <span class="note">— Premium-Fleisch</span></span><span class="amount">CHF 2'419</span></div>
+<div class="supplier-row"><span><span class="name">Hugo Dubno AG</span> <span class="note">— Metzgereiprodukte</span></span><span class="amount">CHF 2'119</span></div>
+<div class="supplier-row"><span><span class="name">Chäs&Co</span> <span class="note">— Käsehandel</span></span><span class="amount">CHF 3'022</span></div>
+<div class="supplier-row"><span><span class="name">Landolt Weine AG</span> <span class="note">— Wein-Hauptlieferant</span></span><span class="amount">CHF 5'796</span></div>
+</section>
+</div>
+
+<!-- ═══════════ P&L TAB ═══════════ -->
+<div id="tab-pnl" class="hidden">
+<section>
+<h2>Geschätzte Erfolgsrechnung Juni 2026</h2>
+<div class="alert-box danger"><div class="alert-title danger">⚠ Geschätzter Monatsverlust: CHF −37'670</div><div class="alert-body">Bei gleichbleibenden Fixkosten und dem tatsächlichen Umsatz von CHF 173'888 ergibt sich ein deutlich negatives Ergebnis. Der Break-Even liegt bei ca. CHF 224'000 Monatsumsatz.</div></div>
+
+<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:16px 0">
+<div class="pnl-row bold"><span class="pnl-label">Umsatz (brutto, inkl. MwSt.)</span><span class="pnl-value">CHF 173'888</span><span class="pnl-pct">100.0%</span></div>
+<div class="pnl-row"><span class="pnl-label">Warenkosten</span><span class="pnl-value">−CHF 44'079</span><span class="pnl-pct">−25.3%</span></div>
+<div class="pnl-row bold line"><span class="pnl-label">Rohertrag (Bruttogewinn)</span><span class="pnl-value">CHF 129'809</span><span class="pnl-pct">74.7%</span></div>
+<div class="pnl-row" style="color:var(--red)"><span class="pnl-label">Personalkosten (Budget)</span><span class="pnl-value">−CHF 98'208</span><span class="pnl-pct">−56.5%</span></div>
+<div class="pnl-row"><span class="pnl-label">Betriebskosten (Budget)</span><span class="pnl-value">−CHF 34'449</span><span class="pnl-pct">−19.8%</span></div>
+<div class="pnl-row bold line"><span class="pnl-label">Betriebsergebnis 1</span><span class="pnl-value" style="color:var(--red)">−CHF 2'848</span><span class="pnl-pct">−1.6%</span></div>
+<div class="pnl-row"><span class="pnl-label">Miete</span><span class="pnl-value">−CHF 21'322</span><span class="pnl-pct">−12.3%</span></div>
+<div class="pnl-row"><span class="pnl-label">Unterhalt</span><span class="pnl-value">−CHF 9'000</span><span class="pnl-pct">−5.2%</span></div>
+<div class="pnl-row bold line"><span class="pnl-label">EBITDA</span><span class="pnl-value" style="color:var(--red)">−CHF 33'170</span><span class="pnl-pct">−19.1%</span></div>
+<div class="pnl-row"><span class="pnl-label">Abschreibungen</span><span class="pnl-value">−CHF 4'500</span><span class="pnl-pct">−2.6%</span></div>
+<div class="pnl-row bold line"><span class="pnl-label" style="color:var(--red)">Ergebnis nach Steuern</span><span class="pnl-value" style="color:var(--red)">−CHF 37'670</span><span class="pnl-pct" style="color:var(--red)">−21.7%</span></div>
+</div>
+</section>
+
+<section>
+<h2>Break-Even Analyse</h2>
+<div class="info-box">
+<p><strong style="color:var(--white)">Fixkosten (monatlich):</strong> Personal CHF 98'208 + Betriebskosten CHF 34'449 + Miete CHF 21'322 + Unterhalt CHF 9'000 + AfA CHF 4'500 = <strong style="color:var(--yellow)">CHF 167'479</strong></p>
+<p><strong style="color:var(--white)">Variable Kosten:</strong> COGS bei 25.3% → Deckungsbeitrag = 74.7%</p>
+<p><strong style="color:var(--white)">Break-Even Umsatz:</strong> CHF 167'479 / 0.747 = <strong style="color:var(--red)">CHF 224'201 / Monat</strong></p>
+<p><strong style="color:var(--white)">Aktueller Umsatz:</strong> CHF 173'888 → <strong style="color:var(--red)">CHF 50'313 unter Break-Even</strong></p>
+<p style="margin-top:8px">Bei Ø CHF 151 pro Quittung benötigt Capri mindestens <strong style="color:var(--yellow)">~1'485 Quittungen/Monat</strong> (vs. aktuell 1'148) oder eine Erhöhung des Ø-Bons auf <strong style="color:var(--yellow)">~CHF 195</strong>.</p>
+</div>
+</section>
+</div>
+
+<!-- ═══════════ RECOMMENDATIONS TAB ═══════════ -->
+<div id="tab-recs" class="hidden">
+<section>
+<h2>Umsatzsteigerung — Sofortmassnahmen</h2>
+<div class="rec-box"><span class="rec-nr">R1</span><div class="rec-title">Weinverkauf aktiv fördern (grösster Hebel: +CHF 20K/Mt.)</div><div class="rec-body">Der Weinumsatz liegt 48% unter Plan — CHF 25'854/Mt. Dabei ist die Weinmarge hervorragend (73.5%). <strong>Konkret:</strong> Sommelier-Empfehlung auf jeder Menüseite, Weinbegleitung zum 3-Gang-Menü für CHF 39/49, "Wein des Monats" am Tisch proaktiv vorstellen, Offene Weine von 4 auf 8+ erweitern. Ziel: +CHF 8'500/Mt.</div><div class="rec-meta"><span class="impact">Impact: Hoch</span><span class="effort">Aufwand: Mittel</span></div></div>
+<div class="rec-box"><span class="rec-nr">R2</span><div class="rec-title">Bier-Programm lancieren (Quick Win)</div><div class="rec-body">Nur 207 Bier/Mt. (7/Tag) bei 1% Umsatzanteil. <strong>Konkret:</strong> 3–4 Schweizer Craft-Biere, Bier-Pairing zum Menü, Aperitif-Bier sichtbar platzieren, Fassbierbezug (Marge steigt, COGS sinkt von 31% auf ~15%). Ziel: Verdreifachung auf 600 Bier/Mt. = +CHF 3'200/Mt.</div><div class="rec-meta"><span class="impact">Impact: Mittel</span><span class="effort">Aufwand: Niedrig</span></div></div>
+<div class="rec-box"><span class="rec-nr">R3</span><div class="rec-title">Gästefrequenz erhöhen (Mittagsgeschäft)</div><div class="rec-body">Mit 38 Quittungen/Tag fehlen ca. 12/Tag zum Break-Even. <strong>Konkret:</strong> Business-Lunch (2 Gänge CHF 39, 3 Gänge CHF 49), Firmen-Partnerschaften Dufourstrasse, Google Business & TripAdvisor aktiv bewirtschaften. Ziel: +10 Covers/Tag = +CHF 30'000–40'000/Mt.</div><div class="rec-meta"><span class="impact">Impact: Hoch</span><span class="effort">Aufwand: Hoch</span></div></div>
+<div class="rec-box"><span class="rec-nr">R4</span><div class="rec-title">Spirituosen & Cocktails ausbauen</div><div class="rec-body">Spirituosen haben die beste Marge (85.8%!). <strong>Konkret:</strong> Signature Cocktails (3–4 Stück), Digestif-Empfehlung aktiv anbieten, Aperitivo-Angebot (17–19 Uhr). Potenzial: +CHF 3'000–5'000/Mt.</div><div class="rec-meta"><span class="impact">Impact: Mittel</span><span class="effort">Aufwand: Mittel</span></div></div>
+</section>
+
+<section>
+<h2>Kostensenkung — Sofortmassnahmen</h2>
+<div class="rec-box"><span class="rec-nr">K1</span><div class="rec-title">Küche-COGS von 28.6% auf 26.5% senken</div><div class="rec-body">2.1 Prozentpunkte über Budget = CHF 2'476 zu viel. <strong>Konkret:</strong> Tägliche Wareneinsatzkontrolle, Portionsgrössen standardisieren, Menu Engineering (margenstarke Gerichte prominent), saisonale Alternativen für teure Zutaten.</div><div class="rec-meta"><span class="impact">Impact: Mittel</span><span class="effort">Aufwand: Mittel</span></div></div>
+<div class="rec-box"><span class="rec-nr">K2</span><div class="rec-title">Bier-Wareneinsatz korrigieren (31% → 18%)</div><div class="rec-body">COGS 31.1% vs. Budget 18.4%. <strong>Konkret:</strong> Einkaufspreise prüfen, Biersortiment auf margenstarke Positionen, Fassbierbezug statt Flaschen.</div><div class="rec-meta"><span class="impact">Impact: Niedrig</span><span class="effort">Aufwand: Niedrig</span></div></div>
+<div class="rec-box"><span class="rec-nr">K3</span><div class="rec-title">Personalplanung flexibilisieren</div><div class="rec-body">56.5% Personalquote (statt 35.6%) — grösster Kostenhebel. <strong>Konkret:</strong> Schichtplanung an Gästeaufkommen anpassen, Kurzarbeit/Stundenreduktion für schwache Tage, Teilzeitkräfte für Randzeiten, Admin-Kosten (CHF 18'297/Mt.) hinterfragen.</div><div class="rec-meta"><span class="impact">Impact: Hoch</span><span class="effort">Aufwand: Hoch</span></div></div>
+<div class="rec-box"><span class="rec-nr">K4</span><div class="rec-title">Offeriert/Gratis-Abgaben kontrollieren</div><div class="rec-body">CHF 554 Gratis-Abgaben im Juni. <strong>Konkret:</strong> Klare Policy, monatliches Budget setzen, Genehmigungsprozess einführen.</div><div class="rec-meta"><span class="impact">Impact: Niedrig</span><span class="effort">Aufwand: Niedrig</span></div></div>
+</section>
+
+<section>
+<h2>Prioritätenmatrix</h2>
+<table class="priority-table">
+<thead><tr><th>Massnahme</th><th>Umsatz-Impact</th><th>Kosten-Impact</th><th>Aufwand</th><th>Zeitrahmen</th></tr></thead>
+<tbody>
+<tr><td>Weinverkauf fördern</td><td style="color:var(--green)" class="mono">+CHF 8.5K/Mt.</td><td class="mono">—</td><td>●●○</td><td style="color:var(--yellow)">Sofort</td></tr>
+<tr><td>Bier-Sortiment</td><td style="color:var(--green)" class="mono">+CHF 3.2K/Mt.</td><td style="color:var(--teal)" class="mono">−CHF 200</td><td>●○○</td><td style="color:var(--yellow)">2 Wochen</td></tr>
+<tr><td>Business-Lunch</td><td style="color:var(--green)" class="mono">+CHF 30K/Mt.</td><td class="mono">—</td><td>●●●</td><td style="color:var(--yellow)">4–6 Wochen</td></tr>
+<tr><td>Cocktail/Aperitivo</td><td style="color:var(--green)" class="mono">+CHF 4K/Mt.</td><td class="mono">—</td><td>●●○</td><td style="color:var(--yellow)">2–3 Wochen</td></tr>
+<tr><td>Küche-COGS senken</td><td class="mono">—</td><td style="color:var(--teal)" class="mono">−CHF 2.5K/Mt.</td><td>●●○</td><td style="color:var(--yellow)">Sofort</td></tr>
+<tr><td>Personalplanung</td><td class="mono">—</td><td style="color:var(--teal)" class="mono">−CHF 10–15K/Mt.</td><td>●●●</td><td style="color:var(--yellow)">1–2 Monate</td></tr>
+<tr><td>Offeriert begrenzen</td><td class="mono">—</td><td style="color:var(--teal)" class="mono">−CHF 500/Mt.</td><td>●○○</td><td style="color:var(--yellow)">Sofort</td></tr>
+</tbody>
+</table>
+</section>
+</div>
+
+<!-- Footer -->
+<div class="footer">Capri AG · Dufourstrasse 80 · 8008 Zürich · Analyse basierend auf Lightspeed Sales Report, F&B Kontoauszug & Budget 2026 · Juli 2026</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+  document.getElementById('tab-' + id).classList.remove('hidden');
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
