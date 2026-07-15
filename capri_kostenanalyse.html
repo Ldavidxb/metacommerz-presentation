@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Capri AG — Betriebskostenanalyse 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a1a;--bg2:#12122e;--card:rgba(255,255,255,0.03);--card2:rgba(255,255,255,0.04);--red:#e94560;--purple:#533483;--teal:#38ada9;--blue:#4a69bd;--yellow:#f6b93b;--green:#78e08f;--orange:#fa983a;--white:#ffffff;--grey:#8899aa;--light:#cccccc;--border:rgba(255,255,255,0.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(160deg,#0a0a1a 0%,#12122e 50%,#0a0a1a 100%);color:var(--white);font-family:'DM Sans',sans-serif;line-height:1.65;padding:24px 20px;min-height:100vh}
+.mono{font-family:'Space Mono',monospace}
+h1{font-size:26px;font-weight:700;margin:0}
+h2{font-size:18px;font-weight:700;border-left:3px solid var(--red);padding-left:12px;margin-bottom:16px}
+h3{font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:14px}
+.header-tag{font-size:11px;color:var(--red);letter-spacing:3px;text-transform:uppercase;font-family:'Space Mono',monospace;margin-bottom:4px}
+.header-sub{font-size:12px;color:var(--grey);margin-top:4px}
+section{margin-bottom:32px}
+
+/* KPI Cards */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%}
+.kpi:nth-child(1)::before{background:var(--red)}
+.kpi:nth-child(2)::before{background:var(--yellow)}
+.kpi:nth-child(3)::before{background:var(--teal)}
+.kpi:nth-child(4)::before{background:var(--green)}
+.kpi-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:600}
+.kpi-value{font-size:22px;font-weight:700;font-family:'Space Mono',monospace}
+.kpi-sub{font-size:12px;color:#666;margin-top:2px}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:24px;background:rgba(255,255,255,0.03);border-radius:10px;padding:4px;border:1px solid rgba(255,255,255,0.06)}
+.tab{flex:1;padding:10px 16px;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;transition:all 0.2s;background:transparent;color:#888}
+.tab.active{background:rgba(233,69,96,0.15);color:var(--red)}
+.tab:hover{background:rgba(233,69,96,0.1);color:var(--red)}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:24px}
+
+/* Bar Charts */
+.bar-row{margin-bottom:10px}
+.bar-row-header{display:flex;justify-content:space-between;margin-bottom:3px;font-size:12px}
+.bar-row-label{color:#ccc;font-weight:500}
+.bar-row-value{font-family:'Space Mono',monospace;font-weight:600;color:var(--yellow)}
+.bar-track{height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:3px;transition:width 0.8s ease}
+.bar-row-meta{display:flex;align-items:center;gap:8px;margin-top:2px}
+.badge{font-size:10px;padding:1px 6px;border-radius:4px;font-weight:600;white-space:nowrap}
+.badge-red{background:rgba(233,69,96,0.15);color:var(--red)}
+.badge-yellow{background:rgba(246,185,59,0.15);color:var(--yellow)}
+.badge-green{background:rgba(120,224,143,0.15);color:var(--green)}
+.badge-teal{background:rgba(56,173,169,0.15);color:var(--teal)}
+
+/* Monthly bar chart */
+.month-bar-container{display:flex;align-items:flex-end;gap:6px;height:200px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08)}
+.month-bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.month-bar-fill{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(--yellow) 0%,var(--red) 100%);opacity:0.7;transition:height 0.5s;min-width:20px}
+.month-bar-label{font-size:9px;color:#888;margin-top:6px;text-align:center;font-family:'Space Mono',monospace}
+.month-bar-value{font-size:9px;color:var(--light);margin-bottom:4px;font-family:'Space Mono',monospace;text-align:center}
+
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:12px;margin:16px 0}
+th{text-align:left;padding:8px;color:var(--grey);font-size:10px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.1)}
+td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.text-right{text-align:right}
+.fw-700{font-weight:700}
+
+/* Operative stacked bars */
+.stacked-row{display:flex;align-items:center;margin-bottom:12px;gap:10px}
+.stacked-label{width:50px;font-size:11px;color:#888;font-family:'Space Mono',monospace}
+.stacked-bar{flex:1;height:22px;display:flex;border-radius:4px;overflow:hidden}
+.stacked-segment{height:100%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:600;min-width:1px}
+.stacked-total{width:60px;text-align:right;font-size:11px;font-family:'Space Mono',monospace;color:var(--light)}
+
+/* Legend */
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;font-size:11px}
+.legend-item{display:flex;align-items:center;gap:5px}
+.legend-dot{width:10px;height:10px;border-radius:2px}
+
+/* Recommendation cards */
+.rec-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.rec-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%}
+.rec-card.prio-hoch::before{background:var(--red)}
+.rec-card.prio-mittel::before{background:var(--yellow)}
+.rec-card.prio-niedrig::before{background:var(--teal)}
+.rec-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.rec-title{font-size:15px;font-weight:700;color:#eee;margin-bottom:4px}
+.rec-meta{display:flex;gap:12px;font-size:12px}
+.rec-meta .cost{color:#888}.rec-meta .cost strong{color:var(--red)}
+.rec-meta .potential{color:#888}.rec-meta .potential strong{color:var(--green)}
+.priority-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px}
+.priority-badge.hoch{background:rgba(233,69,96,0.15);color:var(--red)}
+.priority-badge.mittel{background:rgba(246,185,59,0.15);color:var(--yellow)}
+.priority-badge.niedrig{background:rgba(56,173,169,0.15);color:var(--teal)}
+.rec-list{margin:0;padding-left:20px;font-size:12.5px;line-height:1.8;color:#bbb}
+.rec-list li{margin-bottom:4px}
+
+/* Summary box */
+.summary-box{background:linear-gradient(135deg,rgba(233,69,96,0.08),rgba(246,185,59,0.08));border:1px solid rgba(233,69,96,0.2);border-radius:14px;padding:20px;margin-bottom:24px}
+.summary-box h3{font-size:16px;color:var(--yellow);margin-bottom:8px}
+.summary-box p{font-size:13px;color:#bbb;line-height:1.6}
+
+/* Footer */
+.footer{text-align:center;margin-top:32px;padding:16px 0;border-top:1px solid rgba(255,255,255,0.06);font-size:11px;color:#555;font-family:'Space Mono',monospace}
+
+/* Hidden */
+.hidden{display:none}
+
+/* Responsive */
+@media(max-width:768px){.kpi-grid{grid-template-columns:1fr}.tabs{flex-direction:column}.month-bar-container{height:160px}.stacked-label{width:40px}}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div style="text-align:center;margin-bottom:32px">
+<div class="header-tag">CAPRI AG · BETRIEBSKOSTENANALYSE</div>
+<h1 style="font-family:'Space Mono',monospace;font-size:28px;background:linear-gradient(135deg,#f6b93b,#e94560);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;letter-spacing:-0.5px">CAPRI AG — Betriebskostenanalyse</h1>
+<div class="header-sub">Geschäftsjahr 2025 · Dufourstrasse 80, 8008 Zürich</div>
+</div>
+
+<!-- KPIs -->
+<div class="kpi-grid">
+<div class="kpi"><div class="kpi-label">Gesamtkosten</div><div class="kpi-value" style="color:var(--red)">CHF 550'144</div></div>
+<div class="kpi"><div class="kpi-label">Ø Monatlich</div><div class="kpi-value" style="color:var(--yellow)">CHF 42'319</div></div>
+<div class="kpi"><div class="kpi-label">Grösster Posten</div><div class="kpi-value" style="color:var(--teal)">Mietzins</div><div class="kpi-sub">CHF 122'800</div></div>
+<div class="kpi"><div class="kpi-label">Einsparpotenzial</div><div class="kpi-value" style="color:var(--green)">CHF 37K–57K</div></div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+<button class="tab active" onclick="showTab('uebersicht')">Übersicht</button>
+<button class="tab" onclick="showTab('monatsverlauf')">Monatsverlauf</button>
+<button class="tab" onclick="showTab('einsparungen')">Einsparungen</button>
+</div>
+
+<!-- ═══════════ TAB 1: ÜBERSICHT ═══════════ -->
+<div id="tab-uebersicht">
+<div class="card">
+<h3>Top 10 Kostenkategorien</h3>
+<div id="top10-bars"></div>
+</div>
+
+<div class="card">
+<h3>Gesamtkosten pro Monat</h3>
+<div class="month-bar-container" id="monthly-bars"></div>
+</div>
+</div>
+
+<!-- ═══════════ TAB 2: MONATSVERLAUF ═══════════ -->
+<div id="tab-monatsverlauf" class="hidden">
+<div class="card">
+<h3>Operative Kosten im Monatsverlauf (Mai 25 – Dez 25)</h3>
+<div id="operative-chart"></div>
+<div class="legend">
+<div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Reinigung</div>
+<div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div>Energie</div>
+<div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Material</div>
+<div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Werbung</div>
+<div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>IT & Telefon</div>
+</div>
+</div>
+
+<div class="card">
+<h3>Fixkosten im Monatsverlauf</h3>
+<table>
+<thead><tr><th>Monat</th><th class="text-right">Mietzins</th><th class="text-right">Abschreibung</th><th class="text-right">Zinsaufwand</th><th class="text-right">Buchhaltung</th><th class="text-right">Total Fix</th></tr></thead>
+<tbody id="fixkosten-table"></tbody>
+</table>
+</div>
+</div>
+
+<!-- ═══════════ TAB 3: EINSPARUNGEN ═══════════ -->
+<div id="tab-einsparungen" class="hidden">
+<div class="summary-box">
+<h3>💡 Zusammenfassung Einsparpotenzial</h3>
+<p>Basierend auf der Analyse des Kontoauszugs für das Geschäftsjahr 2025 wurden <strong style="color:var(--red)">8 Bereiche</strong> mit einem geschätzten Gesamteinsparpotenzial von <strong style="color:var(--green)">CHF 37'000 – 57'000</strong> identifiziert. Die Empfehlungen sind nach Priorität und Umsetzbarkeit geordnet.</p>
+</div>
+<div id="recommendations"></div>
+</div>
+
+<!-- Footer -->
+<div class="footer">Capri AG · Kontoauszug Dez 2024 – Abschluss 2025 · Analyse erstellt am 10.02.2026</div>
+
+<script>
+// ─── DATA ───
+const topCosts = [
+  { kategorie: "Mietzins (7350)", betrag: 122800, anteil: 22.3, trend: "stabil", einsparung: "mittel" },
+  { kategorie: "Abschreibung (7900)", betrag: 106667, anteil: 19.4, trend: "stabil", einsparung: "gering" },
+  { kategorie: "Buchhaltung (6071)", betrag: 37320, anteil: 6.8, trend: "steigend", einsparung: "hoch" },
+  { kategorie: "Zinsaufwand (7850)", betrag: 35615, anteil: 6.5, trend: "stabil", einsparung: "mittel" },
+  { kategorie: "Reinigung/Wäsche (6020)", betrag: 32864, anteil: 6.0, trend: "steigend", einsparung: "hoch" },
+  { kategorie: "Werbung (6041)", betrag: 28285, anteil: 5.1, trend: "schwankend", einsparung: "hoch" },
+  { kategorie: "Betriebsmaterial (6031)", betrag: 25192, anteil: 4.6, trend: "steigend", einsparung: "mittel" },
+  { kategorie: "Elektrizität/Gas (6011)", betrag: 25162, anteil: 4.6, trend: "steigend", einsparung: "mittel" },
+  { kategorie: "Fremdreinigung (6021)", betrag: 23523, anteil: 4.3, trend: "stabil", einsparung: "hoch" },
+  { kategorie: "KK Kommissionen (6044)", betrag: 23196, anteil: 4.2, trend: "steigend", einsparung: "mittel" },
+];
+
+const monthlyTotals = [
+  { monat: "Dez 24", total: 64843 },
+  { monat: "Jan 25", total: 15918 },
+  { monat: "Feb 25", total: 16930 },
+  { monat: "Mär 25", total: 18621 },
+  { monat: "Apr 25", total: 42232 },
+  { monat: "Mai 25", total: 78537 },
+  { monat: "Jun 25", total: 68462 },
+  { monat: "Jul 25", total: 74034 },
+  { monat: "Aug 25", total: 58545 },
+  { monat: "Sep 25", total: 68129 },
+  { monat: "Okt 25", total: 64962 },
+  { monat: "Nov 25", total: 74185 },
+  { monat: "Dez 25", total: 65898 },
+];
+
+const operativeData = [
+  { monat: "Mai", reinigung: 10207, energie: 2453, material: 8268, werbung: 1182, it: 2753 },
+  { monat: "Jun", reinigung: 5387, energie: 3061, material: 9230, werbung: 3700, it: 1929 },
+  { monat: "Jul", reinigung: 7434, energie: 2977, material: 2287, werbung: 541, it: 1379 },
+  { monat: "Aug", reinigung: 7338, energie: 2889, material: 2683, werbung: 2030, it: 1008 },
+  { monat: "Sep", reinigung: 8133, energie: 3114, material: 3387, werbung: 2030, it: 1507 },
+  { monat: "Okt", reinigung: 7648, energie: 2820, material: 4511, werbung: 0, it: 1168 },
+  { monat: "Nov", reinigung: 8354, energie: 2649, material: 5256, werbung: 4430, it: 1080 },
+  { monat: "Dez", reinigung: 7958, energie: 5987, material: 2437, werbung: 2250, it: 2573 },
+];
+
+const fixkostenData = [
+  { monat: "Dez 24", mietzins: 63672, abschreibung: 0, zinsaufwand: 0, buchhaltung: 0 },
+  { monat: "Jan 25", mietzins: 15918, abschreibung: 0, zinsaufwand: 0, buchhaltung: 0 },
+  { monat: "Feb 25", mietzins: 15568, abschreibung: 0, zinsaufwand: 794, buchhaltung: 0 },
+  { monat: "Mär 25", mietzins: 15918, abschreibung: 0, zinsaufwand: 1254, buchhaltung: 0 },
+  { monat: "Apr 25", mietzins: 15918, abschreibung: 0, zinsaufwand: 2672, buchhaltung: 4500 },
+  { monat: "Mai 25", mietzins: 15918, abschreibung: 13333, zinsaufwand: 3282, buchhaltung: 4500 },
+  { monat: "Jun 25", mietzins: 15918, abschreibung: 13333, zinsaufwand: 3613, buchhaltung: 4500 },
+  { monat: "Jul 25", mietzins: 15918, abschreibung: 13333, zinsaufwand: 4040, buchhaltung: 17160 },
+  { monat: "Aug 25", mietzins: 15350, abschreibung: 13333, zinsaufwand: 4042, buchhaltung: 4500 },
+  { monat: "Sep 25", mietzins: 15350, abschreibung: 13333, zinsaufwand: 3914, buchhaltung: 3960 },
+  { monat: "Okt 25", mietzins: 15350, abschreibung: 13333, zinsaufwand: 4045, buchhaltung: 3600 },
+  { monat: "Nov 25", mietzins: 15350, abschreibung: 13333, zinsaufwand: 3914, buchhaltung: 10980 },
+  { monat: "Dez 25", mietzins: 16918, abschreibung: 13333, zinsaufwand: 4045, buchhaltung: 4080 },
+];
+
+const empfehlungen = [
+  {
+    bereich: "Reinigung Gesamt (6020+6021)",
+    kosten: "CHF 56'387",
+    potenzial: "CHF 8'000–12'000",
+    prioritaet: "hoch",
+    massnahmen: [
+      "Wäscherei Samstagern: Konditionen neu verhandeln",
+      "Fair4all GmbH: Monatliche Pauschale ~CHF 3'430 hinterfragen",
+      "Inhouse-Reinigung evaluieren"
+    ]
+  },
+  {
+    bereich: "Buchhaltung Honorare (6071)",
+    kosten: "CHF 37'320",
+    potenzial: "CHF 10'000–15'000",
+    prioritaet: "hoch",
+    massnahmen: [
+      "TESMAG Schwankungen CHF 3'960–17'160 standardisieren",
+      "Monatliche Pauschale verhandeln",
+      "Automatisierung (beleglose Verbuchung, API)"
+    ]
+  },
+  {
+    bereich: "Werbung & Verkaufsförderung (6041/6042)",
+    kosten: "CHF 36'247",
+    potenzial: "CHF 5'000–8'000",
+    prioritaet: "mittel",
+    massnahmen: [
+      "Fanny Eisl Honorare ~CHF 21'160: KPIs definieren",
+      "Florian Kalotay: ROI-Analyse",
+      "Offeriert-Posten CHF 5'786: systematisch tracken"
+    ]
+  },
+  {
+    bereich: "Betriebsmaterial (6031+6035)",
+    kosten: "CHF 35'140",
+    potenzial: "CHF 4'000–6'000",
+    prioritaet: "mittel",
+    massnahmen: [
+      "Kleineinkäufe bündeln (Coop, Migros, Galaxus, Temu)",
+      "Sinnesdüfte AG: CHF 3'737 + CHF 2'997 überprüfen",
+      "E. Weber: Konsolidieren für Mengenrabatte"
+    ]
+  },
+  {
+    bereich: "Elektrizität & Gas (6011)",
+    kosten: "CHF 25'162",
+    potenzial: "CHF 3'000–5'000",
+    prioritaet: "mittel",
+    massnahmen: [
+      "Anstieg Mai CHF 2'453 → Dez CHF 5'987: Energieaudit",
+      "Energie 360 Grad: Gasliefervertrag prüfen",
+      "LED, Thermostate, Standby-Management"
+    ]
+  },
+  {
+    bereich: "KK Kommissionen (6044)",
+    kosten: "CHF 23'196",
+    potenzial: "CHF 3'000–5'000",
+    prioritaet: "mittel",
+    massnahmen: [
+      "Alternative zu Lightspeed Payments (SumUp, Worldline)",
+      "Gebührenstruktur neu verhandeln",
+      "Barzahlungsanteil leicht erhöhen"
+    ]
+  },
+  {
+    bereich: "IT Lizenzen (7040)",
+    kosten: "CHF 10'716",
+    potenzial: "CHF 1'500–2'500",
+    prioritaet: "niedrig",
+    massnahmen: [
+      "CookpIT AG CHF 4'150: Nutzung evaluieren",
+      "Lightspeed CHF 147/Mt.: Jahresabo prüfen",
+      "aleno AG CHF 250–598/Mt.: günstigeren Plan"
+    ]
+  },
+  {
+    bereich: "Blumen & Dekoration (6081)",
+    kosten: "CHF 8'271",
+    potenzial: "CHF 2'000–3'000",
+    prioritaet: "niedrig",
+    massnahmen: [
+      "Martin Grossenbacher: Lieferfrequenz reduzieren",
+      "Temu-Dekoeinkäufe: langlebige Elemente",
+      "Budget festlegen und monatlich überwachen"
+    ]
+  }
+];
+
+// ─── HELPERS ───
+function formatCHF(val) {
+  return "CHF " + Math.round(val).toLocaleString("de-CH");
+}
+
+const barColors = ["#e94560","#f6b93b","#38ada9","#4a69bd","#78e08f","#fa983a","#533483","#2b6777","#eb2f06","#1e3799"];
+
+// ─── RENDER TOP 10 ───
+function renderTop10() {
+  const container = document.getElementById("top10-bars");
+  const maxBetrag = topCosts[0].betrag;
+  let html = "";
+  topCosts.forEach((c, i) => {
+    const pct = (c.betrag / maxBetrag) * 100;
+    const einsparClass = c.einsparung === "hoch" ? "badge-red" : c.einsparung === "mittel" ? "badge-yellow" : "badge-green";
+    const trendIcon = c.trend === "steigend" ? "↑" : c.trend === "schwankend" ? "↕" : "";
+    html += '<div class="bar-row">';
+    html += '<div class="bar-row-header">';
+    html += '<span class="bar-row-label">' + c.kategorie + (trendIcon ? ' <span style="color:var(--red);font-size:11px">' + trendIcon + '</span>' : '') + '</span>';
+    html += '<span class="bar-row-value">' + formatCHF(c.betrag) + '</span>';
+    html += '</div>';
+    html += '<div class="bar-row-meta">';
+    html += '<div class="bar-track" style="flex:1"><div class="bar-fill" style="width:' + pct + '%;background:linear-gradient(90deg,' + barColors[i] + ',' + barColors[(i+1)%barColors.length] + ')"></div></div>';
+    html += '<span class="badge ' + einsparClass + '">' + c.anteil + '%</span>';
+    html += '</div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+// ─── RENDER MONTHLY BARS ───
+function renderMonthlyBars() {
+  const container = document.getElementById("monthly-bars");
+  const maxTotal = Math.max(...monthlyTotals.map(m => m.total));
+  let html = "";
+  monthlyTotals.forEach(m => {
+    const pct = (m.total / maxTotal) * 100;
+    html += '<div class="month-bar">';
+    html += '<div class="month-bar-value">' + Math.round(m.total/1000) + "K</div>";
+    html += '<div class="month-bar-fill" style="height:' + pct + '%"></div>';
+    html += '<div class="month-bar-label">' + m.monat + '</div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+// ─── RENDER OPERATIVE CHART ───
+function renderOperativeChart() {
+  const container = document.getElementById("operative-chart");
+  const maxTotal = Math.max(...operativeData.map(d => d.reinigung + d.energie + d.material + d.werbung + d.it));
+  let html = "";
+  operativeData.forEach(d => {
+    const total = d.reinigung + d.energie + d.material + d.werbung + d.it;
+    const segments = [
+      { val: d.reinigung, color: "var(--red)", label: "R" },
+      { val: d.energie, color: "var(--yellow)", label: "E" },
+      { val: d.material, color: "var(--teal)", label: "M" },
+      { val: d.werbung, color: "var(--blue)", label: "W" },
+      { val: d.it, color: "var(--green)", label: "IT" },
+    ];
+    html += '<div class="stacked-row">';
+    html += '<div class="stacked-label">' + d.monat + '</div>';
+    html += '<div class="stacked-bar" style="max-width:calc(100% * ' + (total/maxTotal) + ')">';
+    segments.forEach(s => {
+      if (s.val > 0) {
+        const segPct = (s.val / total) * 100;
+        html += '<div class="stacked-segment" style="width:' + segPct + '%;background:' + s.color + '">' + (segPct > 8 ? Math.round(s.val/1000) + "K" : "") + '</div>';
+      }
+    });
+    html += '</div>';
+    html += '<div class="stacked-total">' + formatCHF(total) + '</div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+// ─── RENDER FIXKOSTEN TABLE ───
+function renderFixkostenTable() {
+  const tbody = document.getElementById("fixkosten-table");
+  let html = "";
+  fixkostenData.forEach(d => {
+    const total = d.mietzins + d.abschreibung + d.zinsaufwand + d.buchhaltung;
+    html += "<tr>";
+    html += '<td class="fw-700">' + d.monat + "</td>";
+    html += '<td class="text-right mono">' + formatCHF(d.mietzins) + "</td>";
+    html += '<td class="text-right mono">' + formatCHF(d.abschreibung) + "</td>";
+    html += '<td class="text-right mono">' + formatCHF(d.zinsaufwand) + "</td>";
+    html += '<td class="text-right mono">' + formatCHF(d.buchhaltung) + "</td>";
+    html += '<td class="text-right mono fw-700">' + formatCHF(total) + "</td>";
+    html += "</tr>";
+  });
+  tbody.innerHTML = html;
+}
+
+// ─── RENDER RECOMMENDATIONS ───
+function renderRecommendations() {
+  const container = document.getElementById("recommendations");
+  let html = "";
+  empfehlungen.forEach((e, i) => {
+    html += '<div class="rec-card prio-' + e.prioritaet + '">';
+    html += '<div class="rec-header">';
+    html += '<div>';
+    html += '<div class="rec-title">' + (i+1) + '. ' + e.bereich + '</div>';
+    html += '<div class="rec-meta">';
+    html += '<span class="cost">Kosten: <strong>' + e.kosten + '</strong></span>';
+    html += '<span class="potential">Potenzial: <strong>' + e.potenzial + '</strong></span>';
+    html += '</div>';
+    html += '</div>';
+    html += '<span class="priority-badge ' + e.prioritaet + '">' + e.prioritaet + '</span>';
+    html += '</div>';
+    html += '<ul class="rec-list">';
+    e.massnahmen.forEach(m => {
+      html += "<li>" + m + "</li>";
+    });
+    html += '</ul>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+// ─── TAB SWITCHING ───
+function showTab(id) {
+  document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+  document.getElementById('tab-' + id).classList.remove('hidden');
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// ─── INIT ───
+renderTop10();
+renderMonthlyBars();
+renderOperativeChart();
+renderFixkostenTable();
+renderRecommendations();
+</script>
+</body>
+</html>
