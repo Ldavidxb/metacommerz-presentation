@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Capri AG — Promo-Konzepte & Workforce-Optimierung</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0B0B1A;--bg2:#12122e;--card:rgba(255,255,255,0.035);--border:rgba(255,255,255,0.07);--red:#E94560;--gold:#F6B93B;--teal:#38ADA9;--green:#78E08F;--blue:#4A69BD;--purple:#533483;--orange:#FA983A;--white:#FFFFFF;--grey:#8899AA;--light:#CCCCCC}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(160deg,#0B0B1A 0%,#12122e 50%,#0B0B1A 100%);color:var(--white);font-family:'DM Sans',sans-serif;line-height:1.65;padding:24px 20px;min-height:100vh}
+.mono{font-family:'Space Mono',monospace}
+h1{font-size:24px;font-weight:700;margin:0}
+h2{font-size:18px;font-weight:700;border-left:3px solid var(--red);padding-left:12px;margin-bottom:16px}
+h2.purple{border-color:var(--purple)}
+h2.blue{border-color:var(--blue)}
+h2.teal{border-color:var(--teal)}
+h2.gold{border-color:var(--gold)}
+h2.orange{border-color:var(--orange)}
+h2.green{border-color:var(--green)}
+h3{font-size:14px;font-weight:700;margin-bottom:8px}
+.header-tag{font-size:10px;color:var(--red);letter-spacing:3px;text-transform:uppercase;font-family:'Space Mono',monospace;margin-bottom:4px}
+.header-sub{font-size:12px;color:var(--grey);margin-top:4px}
+section{margin-bottom:32px}
+.section-sub{font-size:12px;color:var(--grey);margin:-12px 0 16px 15px}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:24px;flex-wrap:wrap}
+.tab{background:rgba(255,255,255,0.05);border:none;color:var(--grey);padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:400;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.tab.active{background:var(--red);color:#fff;font-weight:700}
+.tab:hover{background:rgba(233,69,96,0.3);color:#fff}
+
+/* Promo Cards */
+.promo-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:16px}
+.promo-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.promo-title{font-size:16px;font-weight:700}
+.promo-meta{display:flex;gap:12px;font-size:11px;color:var(--grey);margin-bottom:14px}
+.promo-meta span{display:flex;align-items:center;gap:4px}
+.promo-items{list-style:none}
+.promo-item{display:flex;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.promo-item:last-child{border-bottom:none}
+.promo-nr{background:rgba(255,255,255,0.08);color:var(--light);border-radius:4px;min-width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-right:10px;font-family:'Space Mono',monospace;flex-shrink:0}
+.promo-item-content{flex:1}
+.promo-item-title{font-size:13px;font-weight:600;color:var(--white)}
+.promo-item-desc{font-size:11px;color:var(--grey);margin-top:2px}
+.promo-item-price{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;white-space:nowrap;margin-left:12px;flex-shrink:0}
+.promo-footer{display:flex;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.07);font-size:12px;font-weight:600}
+
+/* Alert boxes */
+.alert-box{border-radius:8px;padding:12px 16px;margin-bottom:16px}
+.alert-box.danger{background:rgba(233,69,96,0.08);border:1px solid rgba(233,69,96,0.25)}
+.alert-box.success{background:rgba(120,224,143,0.08);border:1px solid rgba(120,224,143,0.25)}
+.alert-box.warning{background:rgba(246,185,59,0.08);border:1px solid rgba(246,185,59,0.25)}
+.alert-title{font-weight:700;font-size:13px;margin-bottom:4px}
+.alert-title.danger{color:var(--red)}
+.alert-title.success{color:var(--green)}
+.alert-title.warning{color:var(--gold)}
+.alert-body{font-size:12px;color:var(--light);line-height:1.6}
+
+/* Shift Blocks */
+.shift-grid{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.shift-block{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px;flex:1;min-width:160px}
+.shift-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:3px;display:inline-block;margin-bottom:8px}
+.shift-label.teal{background:rgba(56,173,169,0.2);color:var(--teal)}
+.shift-label.gold{background:rgba(246,185,59,0.2);color:var(--gold)}
+.shift-label.grey{background:rgba(136,153,170,0.15);color:var(--grey)}
+.shift-label.red{background:rgba(233,69,96,0.2);color:var(--red)}
+.shift-label.blue{background:rgba(74,105,189,0.2);color:var(--blue)}
+.shift-label.orange{background:rgba(250,152,58,0.2);color:var(--orange)}
+.shift-label.green{background:rgba(120,224,143,0.2);color:var(--green)}
+.shift-time{font-size:14px;font-weight:700;font-family:'Space Mono',monospace;margin-bottom:4px}
+.shift-staff{font-size:12px;color:var(--light);margin-bottom:6px}
+.shift-tasks{font-size:11px;color:var(--grey);line-height:1.5}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;font-size:12px;margin:16px 0}
+th{text-align:left;padding:8px 10px;color:var(--grey);font-size:10px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.1)}
+td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.text-right{text-align:right}
+.fw-700{font-weight:700}
+
+/* Summary cards */
+.summary-grid{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+.summary-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;flex:1;min-width:200px;text-align:center}
+.summary-card.red{border-color:rgba(233,69,96,0.3)}
+.summary-card.gold{border-color:rgba(246,185,59,0.3)}
+.summary-card.green{border-color:rgba(120,224,143,0.3)}
+.summary-label{font-size:11px;color:var(--grey);letter-spacing:1.5px;text-transform:uppercase;font-family:'Space Mono',monospace;margin-bottom:8px}
+.summary-value{font-size:22px;font-weight:700;font-family:'Space Mono',monospace;margin-bottom:4px}
+.summary-sub{font-size:11px;color:var(--grey)}
+
+/* Roadmap */
+.roadmap-item{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+.roadmap-badge{font-size:10px;font-weight:700;font-family:'Space Mono',monospace;padding:4px 10px;border-radius:4px;white-space:nowrap;flex-shrink:0}
+.roadmap-badge.red{background:rgba(233,69,96,0.15);color:var(--red)}
+.roadmap-badge.gold{background:rgba(246,185,59,0.15);color:var(--gold)}
+.roadmap-badge.green{background:rgba(120,224,143,0.15);color:var(--green)}
+.roadmap-content{font-size:12px;color:var(--light);line-height:1.6}
+
+/* Additional measures cards */
+.measure-grid{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.measure-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;flex:1;min-width:200px}
+.measure-title{font-size:13px;font-weight:600;margin-bottom:4px}
+.measure-save{font-size:12px;font-family:'Space Mono',monospace;color:var(--green)}
+
+.hidden{display:none}
+.footer{margin-top:32px;padding:12px 0;border-top:1px solid rgba(255,255,255,0.06);font-size:11px;color:#555;text-align:center}
+@media(max-width:768px){.shift-grid{flex-direction:column}.summary-grid{flex-direction:column}.measure-grid{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div style="margin-bottom:24px">
+<div class="header-tag">CAPRI AG · STRATEGIEPLAN</div>
+<h1>Promo-Konzepte & Workforce-Optimierung</h1>
+<div class="header-sub">Detaillierte Massnahmen für Umsatzsteigerung und Kostenkontrolle</div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+<button class="tab active" onclick="showTab('getraenke')">Getränke-Promos</button>
+<button class="tab" onclick="showTab('food')">Food-Promos</button>
+<button class="tab" onclick="showTab('workforce')">Workforce</button>
+<button class="tab" onclick="showTab('uebersicht')">Übersicht</button>
+</div>
+
+<!-- ═══════════ TAB 1: GETRÄNKE-PROMOS ═══════════ -->
+<div id="tab-getraenke">
+
+<section>
+<h2>Bier-Programm</h2>
+<div class="section-sub">Aktuell: 1% Umsatzanteil (CHF 1'680/Mt.) · Ziel: 5% (CHF 8'700/Mt.)</div>
+
+<div class="promo-card">
+<div class="promo-header"><div class="promo-title" style="color:var(--gold)">🍺 Craft Beer Flight</div></div>
+<div class="promo-meta"><span>📅 Täglich, ganztags</span><span>🎯 Bier-Interessierte, Paare</span></div>
+<ul class="promo-items">
+<li class="promo-item"><span class="promo-nr">1</span><div class="promo-item-content"><div class="promo-item-title">3er Degustations-Flight</div><div class="promo-item-desc">3 × 1.5 dl Schweizer Craft-Biere auf Holzbrett mit Beschreibungskarte</div></div><span class="promo-item-price" style="color:var(--gold)">CHF 18</span></li>
+<li class="promo-item"><span class="promo-nr">2</span><div class="promo-item-content"><div class="promo-item-title">Bier zum Menü</div><div class="promo-item-desc">Service bietet Bier als Alternative zur Weinbegleitung an</div></div><span class="promo-item-price" style="color:var(--gold)">CHF 8–12/Glas</span></li>
+<li class="promo-item"><span class="promo-nr">3</span><div class="promo-item-content"><div class="promo-item-title">Bier vom Fass einführen</div><div class="promo-item-desc">1–2 Zapfhähne. COGS sinkt von 31% auf ~15%. ROI in 3 Monaten</div></div><span class="promo-item-price" style="color:var(--gold)">CHF 7–9/3dl</span></li>
+<li class="promo-item"><span class="promo-nr">4</span><div class="promo-item-content"><div class="promo-item-title">Weekend Bier & Burger Special</div><div class="promo-item-desc">Sa/So Mittag: Handmade Burger + Craft-Bier-Kombi</div></div><span class="promo-item-price" style="color:var(--gold)">CHF 32</span></li>
+</ul>
+<div class="promo-footer"><span style="color:var(--green)">Revenue: +CHF 5'000–7'000/Mt.</span><span style="color:var(--teal)">Margin: 75–85%</span></div>
+</div>
+</section>
+
+<section>
+<h2 class="purple">Wein-Programm</h2>
+<div class="section-sub">Aktuell: 16.2% (CHF 28'146) · Budget: CHF 54'000 · Marge: 73.5%</div>
+
+<div class="promo-card">
+<div class="promo-header"><div class="promo-title" style="color:var(--purple)">🍷 Weinbegleitung & By-the-Glass</div></div>
+<div class="promo-meta"><span>📅 Lunch & Dinner</span><span>🎯 Feinschmecker, Geschäftsessen</span></div>
+<ul class="promo-items">
+<li class="promo-item"><span class="promo-nr">1</span><div class="promo-item-content"><div class="promo-item-title">3-Gang Weinbegleitung</div><div class="promo-item-desc">3 × 1 dl passend zum Menü</div></div><span class="promo-item-price" style="color:var(--purple)">CHF 39</span></li>
+<li class="promo-item"><span class="promo-nr">2</span><div class="promo-item-content"><div class="promo-item-title">5-Gang Weinbegleitung Premium</div><div class="promo-item-desc">Inkl. Aperitif-Glas und Dessertwein</div></div><span class="promo-item-price" style="color:var(--purple)">CHF 69</span></li>
+<li class="promo-item"><span class="promo-nr">3</span><div class="promo-item-content"><div class="promo-item-title">Wein-Mittwoch</div><div class="promo-item-desc">Alle offenen Weine −20%</div></div><span class="promo-item-price" style="color:var(--purple)">−20% offen</span></li>
+<li class="promo-item"><span class="promo-nr">4</span><div class="promo-item-content"><div class="promo-item-title">Weekend Discovery Glass</div><div class="promo-item-desc">1 Premium-Wein als Entdeckerglas</div></div><span class="promo-item-price" style="color:var(--purple)">CHF 16–22</span></li>
+<li class="promo-item"><span class="promo-nr">5</span><div class="promo-item-content"><div class="promo-item-title">Service-Schulung: Proaktive Empfehlung</div><div class="promo-item-desc">+25% Weinbestellungen</div></div><span class="promo-item-price" style="color:var(--purple)">—</span></li>
+</ul>
+<div class="promo-footer"><span style="color:var(--green)">Revenue: +CHF 8'000–15'000/Mt.</span><span style="color:var(--teal)">Margin: 73–78%</span></div>
+</div>
+</section>
+
+<section>
+<h2 class="blue">Cocktails & Spirituosen</h2>
+<div class="section-sub">Aktuell: 5.8% (CHF 10'000) · Marge: 85.8%</div>
+
+<div class="promo-card">
+<div class="promo-header"><div class="promo-title" style="color:var(--blue)">🍸 Aperitivo Hour & Signature Cocktails</div></div>
+<div class="promo-meta"><span>📅 17:00–19:00 + ganztags</span><span>🎯 After-Work, Pre-Dinner</span></div>
+<ul class="promo-items">
+<li class="promo-item"><span class="promo-nr">1</span><div class="promo-item-content"><div class="promo-item-title">Aperitivo Hour (17–19 Uhr)</div><div class="promo-item-desc">Negroni, Aperol Spritz, Hugo für CHF 14 statt CHF 18 inkl. Oliven/Grissini</div></div><span class="promo-item-price" style="color:var(--blue)">CHF 14</span></li>
+<li class="promo-item"><span class="promo-nr">2</span><div class="promo-item-content"><div class="promo-item-title">4 Signature Cocktails</div><div class="promo-item-desc">Dufour Sour, Seefeld Spritz, Capri Negroni, Limmat Mule</div></div><span class="promo-item-price" style="color:var(--blue)">CHF 18–22</span></li>
+<li class="promo-item"><span class="promo-nr">3</span><div class="promo-item-content"><div class="promo-item-title">Digestif-Push am Tischende</div><div class="promo-item-desc">Aktiv Grappa/Amaro/Limoncello anbieten</div></div><span class="promo-item-price" style="color:var(--blue)">CHF 12–16</span></li>
+<li class="promo-item"><span class="promo-nr">4</span><div class="promo-item-content"><div class="promo-item-title">Weekend Late-Night Cocktails</div><div class="promo-item-desc">Fr/Sa ab 21:30 mit DJ/Lounge-Musik</div></div><span class="promo-item-price" style="color:var(--blue)">CHF 18–22</span></li>
+</ul>
+<div class="promo-footer"><span style="color:var(--green)">Revenue: +CHF 4'000–6'000/Mt.</span><span style="color:var(--teal)">Margin: 82–88%</span></div>
+</div>
+</section>
+
+<section>
+<h2 class="teal">Alkoholfreie & Kaffee</h2>
+<div class="section-sub">Mineral 7.1% + Kaffee 2.0% · Kaffee-Marge: 90.2%</div>
+
+<div class="promo-card">
+<div class="promo-header"><div class="promo-title" style="color:var(--teal)">🫧 Premium Non-Alcoholic Program</div></div>
+<div class="promo-meta"><span>📅 Ganztags</span><span>🎯 Nicht-Trinker, Health-Conscious</span></div>
+<ul class="promo-items">
+<li class="promo-item"><span class="promo-nr">1</span><div class="promo-item-content"><div class="promo-item-title">3 Signature Mocktails</div><div class="promo-item-desc">Gleiche Präsentation wie Cocktails. COGS ~CHF 1.50</div></div><span class="promo-item-price" style="color:var(--teal)">CHF 14–16</span></li>
+<li class="promo-item"><span class="promo-nr">2</span><div class="promo-item-content"><div class="promo-item-title">Alkoholfreie Weinbegleitung</div><div class="promo-item-desc">Kombucha, Shrub, Tee-Infusion</div></div><span class="promo-item-price" style="color:var(--teal)">CHF 29</span></li>
+<li class="promo-item"><span class="promo-nr">3</span><div class="promo-item-content"><div class="promo-item-title">House Lemonade / Iced Tea</div><div class="promo-item-desc">Hausgemacht, COGS ~CHF 0.80</div></div><span class="promo-item-price" style="color:var(--teal)">CHF 9/Glas, CHF 22/Karaffe</span></li>
+<li class="promo-item"><span class="promo-nr">4</span><div class="promo-item-content"><div class="promo-item-title">Caffè Speciale Nachmittags-Push</div><div class="promo-item-desc">14–17 Uhr: Specialty Coffee + Mini-Dessert</div></div><span class="promo-item-price" style="color:var(--teal)">CHF 12–15</span></li>
+</ul>
+<div class="promo-footer"><span style="color:var(--green)">Revenue: +CHF 2'000–3'500/Mt.</span><span style="color:var(--teal)">Margin: 85–92%</span></div>
+</div>
+</section>
+
+</div>
+
+<!-- ═══════════ TAB 2: FOOD-PROMOS ═══════════ -->
+<div id="tab-food" class="hidden">
+
+<section>
+<h2>Mittagsgeschäft (Mo–Fr)</h2>
+<div class="section-sub">+10 Covers/Tag = +CHF 30'000/Mt. · Dufourstrasse = Büroquartier</div>
+
+<div class="promo-card">
+<div class="promo-header"><div class="promo-title" style="color:var(--red)">☀️ Business Lunch Programm</div></div>
+<div class="promo-meta"><span>📅 Mo–Fr, 11:30–14:00</span><span>🎯 Büro-Angestellte</span></div>
+<ul class="promo-items">
+<li class="promo-item"><span class="promo-nr">1</span><div class="promo-item-content"><div class="promo-item-title">Express-Lunch (2 Gänge)</div><div class="promo-item-desc">Max. 45 Min. Garantie</div></div><span class="promo-item-price" style="color:var(--red)">CHF 35</span></li>
+<li class="promo-item"><span class="promo-nr">2</span><div class="promo-item-content"><div class="promo-item-title">Business-Lunch (3 Gänge)</div><div class="promo-item-desc">Wechselt täglich, 2 Optionen pro Gang</div></div><span class="promo-item-price" style="color:var(--red)">CHF 45</span></li>
+<li class="promo-item"><span class="promo-nr">3</span><div class="promo-item-content"><div class="promo-item-title">Sharing Antipasti Lunch</div><div class="promo-item-desc">Platte mit 5–6 Vorspeisen für 2–4 Pers.</div></div><span class="promo-item-price" style="color:var(--red)">CHF 28/Person</span></li>
+<li class="promo-item"><span class="promo-nr">4</span><div class="promo-item-content"><div class="promo-item-title">Firmenpartnerschaften Dufourstrasse</div><div class="promo-item-desc">10er-Karte mit 10% Rabatt</div></div><span class="promo-item-price" style="color:var(--red)">10er-Karte CHF 315</span></li>
+</ul>
+<div class="promo-footer"><span style="color:var(--green)">Revenue: +CHF 20'000–35'000/Mt.</span><span style="color:var(--teal)">Margin: 68–72%</span></div>
+</div>
+
+<div class="promo-card">
+<div class="promo-header"><div class="promo-title" style="color:var(--purple)">🌅 Abend-Specials & Upselling</div></div>
+<div class="promo-meta"><span>📅 Mo–So, 18:00–22:00</span><span>🎯 Paare, Gruppen</span></div>
+<ul class="promo-items">
+<li class="promo-item"><span class="promo-nr">1</span><div class="promo-item-content"><div class="promo-item-title">Tasting-Menü (5 Gänge)</div><div class="promo-item-desc">Signature-Erlebnis mit optionaler Weinbegleitung</div></div><span class="promo-item-price" style="color:var(--purple)">CHF 89 (+ WHF CHF 49)</span></li>
+<li class="promo-item"><span class="promo-nr">2</span><div class="promo-item-content"><div class="promo-item-title">Tasting-Menü Premium (7 Gänge)</div><div class="promo-item-desc">Für besondere Anlässe</div></div><span class="promo-item-price" style="color:var(--purple)">CHF 129 (+ WHF CHF 79)</span></li>
+<li class="promo-item"><span class="promo-nr">3</span><div class="promo-item-content"><div class="promo-item-title">Proaktives Dessert-Upselling</div><div class="promo-item-desc">40% bestellen wenn gefragt vs 15%</div></div><span class="promo-item-price" style="color:var(--purple)">Ø CHF 15</span></li>
+<li class="promo-item"><span class="promo-nr">4</span><div class="promo-item-content"><div class="promo-item-title">Pre-Theater / Early Bird</div><div class="promo-item-desc">Mo–Do 18:00–19:00</div></div><span class="promo-item-price" style="color:var(--purple)">CHF 49</span></li>
+</ul>
+<div class="promo-footer"><span style="color:var(--green)">Revenue: +CHF 8'000–15'000/Mt.</span><span style="color:var(--teal)">Margin: 70–75%</span></div>
+</div>
+</section>
+
+<section>
+<h2 class="gold">Wochenend-Programm</h2>
+
+<div class="promo-card">
+<div class="promo-header"><div class="promo-title" style="color:var(--gold)">🥂 Samstag-Specials</div></div>
+<div class="promo-meta"><span>📅 Samstag ganztags</span><span>🎯 Familien, Freundesgruppen</span></div>
+<ul class="promo-items">
+<li class="promo-item"><span class="promo-nr">1</span><div class="promo-item-content"><div class="promo-item-title">Saturday Brunch (11:00–14:30)</div><div class="promo-item-desc">Italienisch inspiriert inkl. 1 Prosecco</div></div><span class="promo-item-price" style="color:var(--gold)">CHF 45/Person</span></li>
+<li class="promo-item"><span class="promo-nr">2</span><div class="promo-item-content"><div class="promo-item-title">Aperitivo Platte + Prosecco</div><div class="promo-item-desc">Ab 16:00 für 2</div></div><span class="promo-item-price" style="color:var(--gold)">CHF 59 für 2</span></li>
+<li class="promo-item"><span class="promo-nr">3</span><div class="promo-item-content"><div class="promo-item-title">Chef's Table (1× monatlich)</div><div class="promo-item-desc">Max. 12 Gäste, 6-Gang-Menü</div></div><span class="promo-item-price" style="color:var(--gold)">CHF 149/Person</span></li>
+</ul>
+<div class="promo-footer"><span style="color:var(--green)">Revenue: +CHF 6'000–10'000/Mt.</span><span style="color:var(--teal)">Margin: 65–72%</span></div>
+</div>
+
+<div class="promo-card">
+<div class="promo-header"><div class="promo-title" style="color:var(--green)">🌿 Sonntag-Programm</div></div>
+<div class="promo-meta"><span>📅 Sonntag 11:00–21:00</span><span>🎯 Familien, Spaziergänger</span></div>
+<ul class="promo-items">
+<li class="promo-item"><span class="promo-nr">1</span><div class="promo-item-content"><div class="promo-item-title">Sonntagsbraten / Pranzo della Domenica</div><div class="promo-item-desc">Ossobuco, Brasato, Arrosto. Familienformat</div></div><span class="promo-item-price" style="color:var(--green)">CHF 38/Person</span></li>
+<li class="promo-item"><span class="promo-nr">2</span><div class="promo-item-content"><div class="promo-item-title">Sonntags-Family-Deal</div><div class="promo-item-desc">Kinder 50% Rabatt</div></div><span class="promo-item-price" style="color:var(--green)">Kinder 50%</span></li>
+<li class="promo-item"><span class="promo-nr">3</span><div class="promo-item-content"><div class="promo-item-title">Sonntag Caffè & Dolci (14–17 Uhr)</div><div class="promo-item-desc">Nachmittags Dolci + Caffè</div></div><span class="promo-item-price" style="color:var(--green)">CHF 16</span></li>
+<li class="promo-item"><span class="promo-nr">4</span><div class="promo-item-content"><div class="promo-item-title">Sonntagabend: Pasta-Spezial</div><div class="promo-item-desc">4 frische Pasta-Variationen. COGS ~18%</div></div><span class="promo-item-price" style="color:var(--green)">CHF 26–32</span></li>
+</ul>
+<div class="promo-footer"><span style="color:var(--green)">Revenue: +CHF 4'000–8'000/Mt.</span><span style="color:var(--teal)">Margin: 72–78%</span></div>
+</div>
+</section>
+
+</div>
+
+<!-- ═══════════ TAB 3: WORKFORCE ═══════════ -->
+<div id="tab-workforce" class="hidden">
+
+<div class="alert-box danger">
+<div class="alert-title danger">⚠ Kernproblem: Personalquote 56.5% statt 35.6%</div>
+<div class="alert-body">Bei CHF 173'888 Umsatz und geschätzten CHF 98'208 Personalkosten... Fixkosten-Struktur (Admin CHF 18'297, Küche CHF 44'941, Service CHF 23'563, Sozialkosten CHF 10'522 = CHF 97'323) ist auf CHF 250'000 dimensioniert.</div>
+</div>
+
+<section>
+<h2 class="gold">Schichtmodell: Mo–Do (Low Days)</h2>
+
+<h3 style="margin-bottom:10px;color:var(--light)">KÜCHE</h3>
+<div class="shift-grid">
+<div class="shift-block"><div class="shift-label teal">Prep/Mise</div><div class="shift-time">07:00–11:00</div><div class="shift-staff">2 Köche</div><div class="shift-tasks">Mise-en-place · Saucen/Fonds · Teigwaren</div></div>
+<div class="shift-block"><div class="shift-label gold">Lunch Service</div><div class="shift-time">11:00–14:30</div><div class="shift-staff">3 Köche</div><div class="shift-tasks">Küchenchef + 2 CDP · 6 Positionen · Business-Lunch</div></div>
+<div class="shift-block"><div class="shift-label grey">Pause/Prep</div><div class="shift-time">14:30–17:30</div><div class="shift-staff">1 Koch</div><div class="shift-tasks">Dinner Mise-en-place · Bestellungen · Dessert-Vorb.</div></div>
+<div class="shift-block"><div class="shift-label red">Dinner Service</div><div class="shift-time">17:30–22:30</div><div class="shift-staff">3–4 Köche</div><div class="shift-tasks">Vollbesetzung 18:00 · Küchenchef + 2–3 · Volle Abendkarte</div></div>
+</div>
+
+<h3 style="margin-bottom:10px;color:var(--light)">SERVICE</h3>
+<div class="shift-grid">
+<div class="shift-block"><div class="shift-label gold">Lunch</div><div class="shift-time">11:00–14:30</div><div class="shift-staff">2 Service</div><div class="shift-tasks">1 Chef de Rang + 1 Commis · Max 30 Covers</div></div>
+<div class="shift-block"><div class="shift-label blue">Aperitivo</div><div class="shift-time">17:00–18:30</div><div class="shift-staff">1 Barkeeper</div><div class="shift-tasks">Bar & Aperitivo · Setup Tische</div></div>
+<div class="shift-block"><div class="shift-label red">Dinner</div><div class="shift-time">18:00–23:00</div><div class="shift-staff">3–4 Service</div><div class="shift-tasks">Chef de Service + 2–3 · Weinempfehlung · Digestif-Push</div></div>
+</div>
+
+<h3 style="margin-bottom:10px;color:var(--light)">EINSPARUNG Mo–Do</h3>
+<table>
+<thead><tr><th>Bereich</th><th>Aktuell</th><th>Optimiert</th><th class="text-right">Einsparung/Tag</th></tr></thead>
+<tbody>
+<tr><td class="fw-700">Küche</td><td>4 FTE × 10h</td><td>2–4 gestaffelt</td><td class="text-right mono" style="color:var(--green)">CHF 280</td></tr>
+<tr><td class="fw-700">Service</td><td>3 FTE × 9h</td><td>1–4 gestaffelt</td><td class="text-right mono" style="color:var(--green)">CHF 210</td></tr>
+<tr><td class="fw-700">Admin</td><td>1 FTE × 8.5h</td><td>unverändert</td><td class="text-right mono" style="color:var(--grey)">—</td></tr>
+<tr style="border-top:2px solid rgba(255,255,255,0.15)"><td class="fw-700">Total Mo–Do</td><td colspan="2"></td><td class="text-right mono fw-700" style="color:var(--green)">CHF 490/Tag × 17 Tage = CHF 8'330/Monat</td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2 class="orange">Fr & Sa (Peak Days)</h2>
+<div class="shift-grid">
+<div class="shift-block"><div class="shift-label orange">Prep</div><div class="shift-time">08:00–11:00</div><div class="shift-staff">3 Köche</div><div class="shift-tasks">Erweiterte Mise-en-place für Peak</div></div>
+<div class="shift-block"><div class="shift-label gold">Lunch/Brunch</div><div class="shift-time">11:00–15:00</div><div class="shift-staff">4K + 3S</div><div class="shift-tasks">Volle Küche + Service für Brunch/Lunch</div></div>
+<div class="shift-block"><div class="shift-label red">Dinner</div><div class="shift-time">17:30–23:30</div><div class="shift-staff">5K + 4S</div><div class="shift-tasks">Maximale Besetzung · Late-Night Service</div></div>
+</div>
+</section>
+
+<section>
+<h2 class="green">Sonntag (Smart Day)</h2>
+<div class="shift-grid">
+<div class="shift-block"><div class="shift-label green">Brunch/Lunch</div><div class="shift-time">10:00–15:00</div><div class="shift-staff">3K + 3S</div><div class="shift-tasks">Sonntagsbraten · Family-Deal · Brunch</div></div>
+<div class="shift-block"><div class="shift-label grey">Abend reduziert</div><div class="shift-time">18:00–21:00</div><div class="shift-staff">2K + 2S</div><div class="shift-tasks">Nur Pasta-Spezial · Reduzierte Karte</div></div>
+</div>
+<div style="font-size:12px;color:var(--green);margin-top:8px;font-weight:600">Einsparung: ~3 FTE × 4.5h = CHF 540/Sonntag = CHF 2'160/Monat</div>
+</section>
+
+<section>
+<h2 class="blue">Zusätzliche Massnahmen</h2>
+<div class="measure-grid">
+<div class="measure-card"><div class="measure-title">📊 Aleno-Daten für Schichtplanung</div><div class="measure-save">CHF 720–900/Mt.</div></div>
+<div class="measure-card"><div class="measure-title">🔄 Cross-Training Service ↔ Bar</div><div class="measure-save">CHF 1'200/Mt.</div></div>
+<div class="measure-card"><div class="measure-title">📋 Flexible Arbeitsverträge / Stundenlohn</div><div class="measure-save" style="color:var(--grey)">Flexibilität</div></div>
+<div class="measure-card"><div class="measure-title">🔍 Admin-Kosten überprüfen (CHF 18'297/Mt.)</div><div class="measure-save">CHF 4'600/Mt. potential</div></div>
+</div>
+</section>
+
+<div class="alert-box success">
+<div class="alert-title success">✓ Gesamtes Einsparpotenzial: Personal</div>
+<div class="alert-body">
+<table style="margin:8px 0">
+<tbody>
+<tr><td>Split-Shift Mo–Do</td><td class="text-right mono fw-700">CHF 8'330</td></tr>
+<tr><td>Sonntag reduzierter Abend</td><td class="text-right mono fw-700">CHF 2'160</td></tr>
+<tr><td>Aleno-basierte Flex-Besetzung</td><td class="text-right mono fw-700">CHF 900</td></tr>
+<tr><td>Cross-Training</td><td class="text-right mono fw-700">CHF 1'200</td></tr>
+<tr><td>Admin-Optimierung</td><td class="text-right mono fw-700">CHF 2'000</td></tr>
+<tr style="border-top:2px solid rgba(120,224,143,0.3)"><td class="fw-700" style="color:var(--green)">TOTAL</td><td class="text-right mono fw-700" style="color:var(--green);font-size:16px">CHF 14'590/Mt.</td></tr>
+</tbody>
+</table>
+<div style="margin-top:8px;font-weight:700;color:var(--green)">Neue Personalquote: ~48.1% (statt 56.5%)</div>
+</div>
+</div>
+
+</div>
+
+<!-- ═══════════ TAB 4: ÜBERSICHT ═══════════ -->
+<div id="tab-uebersicht" class="hidden">
+
+<section>
+<h2>Umsatzsteigerung: Übersicht</h2>
+<table>
+<thead><tr><th>Massnahme</th><th class="text-right">Min.</th><th class="text-right">Max.</th><th>Zeitrahmen</th><th class="text-right">Marge</th></tr></thead>
+<tbody>
+<tr><td>Weinbegleitung</td><td class="text-right mono">+CHF 8K</td><td class="text-right mono">+CHF 15K</td><td>Sofort</td><td class="text-right mono" style="color:var(--green)">74%</td></tr>
+<tr><td>Business Lunch</td><td class="text-right mono">+CHF 20K</td><td class="text-right mono">+CHF 35K</td><td>3–4 Wo.</td><td class="text-right mono" style="color:var(--green)">70%</td></tr>
+<tr><td>Craft Beer</td><td class="text-right mono">+CHF 5K</td><td class="text-right mono">+CHF 7K</td><td>2 Wo.</td><td class="text-right mono" style="color:var(--green)">80%</td></tr>
+<tr><td>Aperitivo & Cocktails</td><td class="text-right mono">+CHF 4K</td><td class="text-right mono">+CHF 6K</td><td>2 Wo.</td><td class="text-right mono" style="color:var(--green)">85%</td></tr>
+<tr><td>Weekend Brunch/Specials</td><td class="text-right mono">+CHF 6K</td><td class="text-right mono">+CHF 10K</td><td>3 Wo.</td><td class="text-right mono" style="color:var(--green)">68%</td></tr>
+<tr><td>Sonntags-Programm</td><td class="text-right mono">+CHF 4K</td><td class="text-right mono">+CHF 8K</td><td>2 Wo.</td><td class="text-right mono" style="color:var(--green)">75%</td></tr>
+<tr><td>Dessert/Digestif Upselling</td><td class="text-right mono">+CHF 3K</td><td class="text-right mono">+CHF 6K</td><td>Sofort</td><td class="text-right mono" style="color:var(--green)">78%</td></tr>
+<tr><td>Premium Mocktails & Kaffee</td><td class="text-right mono">+CHF 2K</td><td class="text-right mono">+CHF 3.5K</td><td>1 Wo.</td><td class="text-right mono" style="color:var(--green)">88%</td></tr>
+<tr style="border-top:2px solid rgba(255,255,255,0.15)"><td class="fw-700">TOTAL</td><td class="text-right mono fw-700" style="color:var(--green)">+CHF 52K</td><td class="text-right mono fw-700" style="color:var(--green)">+CHF 90.5K</td><td></td><td></td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2>Kostensenkung: Übersicht</h2>
+<table>
+<thead><tr><th>Massnahme</th><th class="text-right">Einsparung/Mt.</th><th>Zeitrahmen</th></tr></thead>
+<tbody>
+<tr><td>Split-Shift Mo–Do</td><td class="text-right mono" style="color:var(--green)">CHF 8'330</td><td>Sofort</td></tr>
+<tr><td>Sonntag reduzierter Abend</td><td class="text-right mono" style="color:var(--green)">CHF 2'160</td><td>Sofort</td></tr>
+<tr><td>Küche COGS 28.6% → 26.5%</td><td class="text-right mono" style="color:var(--green)">CHF 2'476</td><td>2–4 Wo.</td></tr>
+<tr><td>Admin-Optimierung</td><td class="text-right mono" style="color:var(--green)">CHF 2'000</td><td>1–2 Mt.</td></tr>
+<tr><td>Cross-Training/Aleno-Flex</td><td class="text-right mono" style="color:var(--green)">CHF 2'100</td><td>1 Mt.</td></tr>
+<tr><td>Bier-COGS 31% → 18%</td><td class="text-right mono" style="color:var(--green)">CHF 214</td><td>Sofort</td></tr>
+<tr><td>Offeriert-Kontrolle</td><td class="text-right mono" style="color:var(--green)">CHF 500</td><td>Sofort</td></tr>
+<tr style="border-top:2px solid rgba(255,255,255,0.15)"><td class="fw-700">TOTAL</td><td class="text-right mono fw-700" style="color:var(--green)">−CHF 17'780</td><td></td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2>Projizierte P&L</h2>
+<div class="summary-grid">
+<div class="summary-card red">
+<div class="summary-label">Aktuell</div>
+<div class="summary-value" style="color:var(--red)">−CHF 38K</div>
+<div class="summary-sub">Rev CHF 174K</div>
+</div>
+<div class="summary-card gold">
+<div class="summary-label">Konservativ</div>
+<div class="summary-value" style="color:var(--gold)">+CHF 32K</div>
+<div class="summary-sub">Rev CHF 226K · Knapp über Break-Even</div>
+</div>
+<div class="summary-card green">
+<div class="summary-label">Optimistisch</div>
+<div class="summary-value" style="color:var(--green)">+CHF 70K</div>
+<div class="summary-sub">Rev CHF 264K · Über Budget-Niveau</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2>Umsetzungs-Roadmap</h2>
+<div class="roadmap-item"><span class="roadmap-badge red">WOCHE 1–2</span><div class="roadmap-content">Weinbegleitung drucken · Service-Schulung · Craft Beer bestellen · Cocktails entwickeln · Split-Shift einführen · Pasta-Abendkarte</div></div>
+<div class="roadmap-item"><span class="roadmap-badge gold">WOCHE 3–4</span><div class="roadmap-content">Business Lunch starten · Firmen-Mailing · Brunch lancieren · Aperitivo bewerben · Aleno integrieren · Admin digitalisieren</div></div>
+<div class="roadmap-item"><span class="roadmap-badge green">MONAT 2–3</span><div class="roadmap-content">Tasting-Menü · Chef's Table · Sonntagsbraten · Cross-Training · COGS-Kontrolle · Ergebnismessung</div></div>
+</section>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">Capri AG · Dufourstrasse 80 · 8008 Zürich · Strategie & Workforce-Optimierung · Juli 2026</div>
+
+<script>
+function showTab(id){
+  document.querySelectorAll('[id^="tab-"]').forEach(function(el){el.classList.add('hidden')});
+  document.getElementById('tab-'+id).classList.remove('hidden');
+  document.querySelectorAll('.tab').forEach(function(el){el.classList.remove('active')});
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
