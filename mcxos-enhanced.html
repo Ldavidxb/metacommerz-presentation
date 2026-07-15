@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>mcxOS — Unified Supply Chain Neural Network</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080C18;--bg2:#0D1225;--card:#121930;--card2:#182040;--gold:#F0C430;--blue:#4A90E2;--teal:#0DD4A0;--green:#34D399;--pink:#F472B6;--red:#EF5350;--cyan:#22D3EE;--orange:#FB923C;--white:#E4E8F0;--grey:#7A869A;--dim:#4A5568;--border:rgba(240,196,48,0.12)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:80px}body{background:var(--bg);color:var(--white);font-family:'Outfit',sans-serif;line-height:1.65}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,12,24,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;gap:20px}
+nav .dots{display:flex;flex-direction:column;gap:3px}nav .dots .r{display:flex;gap:3px}nav .dots .d{width:8px;height:8px;border-radius:50%;background:var(--blue)}nav .dots .d.s{width:6px;height:6px}
+nav .brand{font-weight:700;font-size:1rem}nav a{color:var(--grey);text-decoration:none;font-size:0.72rem;font-weight:500;margin-left:12px;transition:color 0.2s}nav a:hover{color:var(--gold)}.nav-r{margin-left:auto;display:flex;flex-wrap:wrap;gap:4px}
+section{max-width:1140px;margin:0 auto;padding:100px 40px 60px}.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:80px}
+.dv{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0.2;max-width:1140px;margin:0 auto}
+h1{font-size:3.6rem;font-weight:900;letter-spacing:-0.03em;line-height:1.1}h2{font-size:1.9rem;font-weight:800;color:var(--gold);margin-bottom:6px}h3{font-size:0.95rem;font-weight:700;color:var(--gold);margin-bottom:8px}
+.sub{font-size:1rem;color:var(--grey);margin-top:8px;font-weight:300}.si{font-size:0.88rem;color:var(--grey);margin-bottom:20px;max-width:800px;line-height:1.8}
+.stats{display:flex;margin:36px 0;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card)}.stat{flex:1;padding:20px 12px;text-align:center;border-right:1px solid var(--border)}.stat:last-child{border:none}.stat .v{font-size:1.5rem;font-weight:800;color:var(--gold)}.stat .l{font-size:0.65rem;color:var(--grey);text-transform:uppercase;letter-spacing:0.08em;margin-top:3px}
+.g{display:grid;gap:14px;margin:16px 0}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g4{grid-template-columns:1fr 1fr 1fr 1fr}
+.c{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:8px;padding:22px;transition:transform 0.15s,box-shadow 0.15s}.c:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(240,196,48,0.06)}
+.c p,.c li{font-size:0.82rem;color:var(--grey);line-height:1.7}.c ul{list-style:none;padding:0}.c ul li{padding:2px 0}.c ul li::before{content:"▸ ";color:var(--gold);font-weight:600}
+.c.bl{border-left-color:var(--blue)}.c.bl h3{color:var(--blue)}.c.tl{border-left-color:var(--teal)}.c.tl h3{color:var(--teal)}.c.pk{border-left-color:var(--pink)}.c.pk h3{color:var(--pink)}
+.c.gn{border-left-color:var(--green)}.c.gn h3{color:var(--green)}.c.or{border-left-color:var(--orange)}.c.or h3{color:var(--orange)}.c.cy{border-left-color:var(--cyan)}.c.cy h3{color:var(--cyan)}
+.bn{background:var(--card2);border:1px solid var(--gold);border-radius:8px;padding:14px 24px;text-align:center;margin:16px 0}.bn p{color:var(--gold);font-weight:600;font-size:0.88rem}
+.wf{display:flex;align-items:center;margin:14px 0;padding:16px;background:var(--card);border-radius:8px;overflow-x:auto;gap:0}
+.wf .s{flex:0 0 auto;padding:8px 12px;border:1px solid var(--border);border-radius:5px;font-size:0.72rem;font-weight:600;color:var(--white);background:var(--bg2);white-space:nowrap}
+.wf .s.hi{border-color:var(--gold);color:var(--gold);background:rgba(240,196,48,0.04)}.wf .s.gr{border-color:var(--green);color:var(--green)}.wf .s.rd{border-color:var(--red);color:var(--red)}.wf .s.tl{border-color:var(--teal);color:var(--teal)}
+.wf .ar{flex:0 0 auto;width:20px;text-align:center;color:var(--gold);font-size:0.75rem;opacity:0.35}
+.mh{display:flex;align-items:baseline;gap:12px;margin-bottom:6px;flex-wrap:wrap}.mh .mn{font-size:0.68rem;font-weight:700;color:var(--bg);background:var(--gold);border-radius:3px;padding:1px 7px}.mh .ms{font-size:0.7rem;color:var(--dim);margin-left:auto}
+table.cmp{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.76rem}table.cmp th{background:var(--card2);padding:9px 10px;text-align:left;font-weight:700;color:var(--white);border-bottom:2px solid var(--gold)}
+table.cmp th:nth-child(2){color:var(--gold)}table.cmp td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--grey)}table.cmp td:first-child{font-weight:600;color:var(--white)}
+table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{color:var(--red)}table.cmp tr:hover td{background:rgba(74,144,226,0.03)}
+.ooda{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin:18px 0}.ooda-s{background:var(--card);border-radius:8px;padding:18px;text-align:center;border-top:3px solid var(--gold);position:relative}
+.ooda-s .on{font-size:1.8rem;font-weight:900;color:var(--gold);opacity:0.15;position:absolute;top:6px;right:10px}.ooda-s h3{font-size:0.85rem;margin-bottom:6px}.ooda-s p{font-size:0.72rem;color:var(--grey)}
+.e2e{background:var(--card);border-radius:8px;padding:18px;margin:14px 0}.e2e-s{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.03)}.e2e-s:last-child{border:none}
+.e2e-n{flex:0 0 26px;height:26px;background:var(--gold);color:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:800}
+.e2e-c{flex:1}.e2e-c strong{color:var(--gold);font-size:0.78rem}.e2e-c p{font-size:0.72rem;color:var(--grey);margin-top:1px}
+.rv{opacity:0;transform:translateY(20px);transition:opacity 0.5s,transform 0.5s}.rv.vis{opacity:1;transform:translateY(0)}
+.suite-badge{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:7px 14px}
+.suite-badge .num{background:var(--gold);color:var(--bg);font-size:0.6rem;font-weight:800;border-radius:3px;padding:1px 5px}
+.suite-badge .name{font-size:0.75rem;font-weight:600;color:var(--white)}
+.agent-tag{display:inline-block;background:rgba(13,212,160,0.06);border:1px solid var(--teal);border-radius:4px;padding:2px 8px;font-size:0.68rem;color:var(--teal);margin:2px 3px;font-weight:500}
+.positioning-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:0.75rem;font-weight:700;margin:4px}
+.pos-sor{background:rgba(240,196,48,0.1);border:1px solid var(--gold);color:var(--gold)}
+.pos-soe{background:rgba(74,144,226,0.1);border:1px solid var(--blue);color:var(--blue)}
+.pos-er{background:rgba(13,212,160,0.1);border:1px solid var(--teal);color:var(--teal)}
+.key-num{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--card);border-radius:8px;border-left:3px solid var(--gold)}.key-num .kv{font-size:1.8rem;font-weight:900;color:var(--gold);min-width:60px}.key-num .kl{font-size:0.8rem;color:var(--grey)}
+@media(max-width:768px){section{padding:80px 20px 40px}h1{font-size:2.2rem}h2{font-size:1.3rem}.g2,.g3,.g4{grid-template-columns:1fr}.stats{flex-wrap:wrap}.stat{flex:0 0 33.33%}.ooda{grid-template-columns:1fr 1fr}.nav-r{display:none}}
+</style>
+</head>
+<body>
+<nav><div class="dots"><div class="r"><div class="d s"></div><div class="d"></div></div><div class="r"><div class="d"></div><div class="d s"></div></div></div><span class="brand">mcxOS</span><div class="nav-r"><a href="#platform">Platform</a><a href="#positioning">Positioning</a><a href="#suites">Suites</a><a href="#agents">Agents</a><a href="#sec">Security</a><a href="#backbone">Backbone</a><a href="#cmp">Compare</a><a href="#integ">Integrations</a><a href="#contact">Contact</a></div></nav>
+
+<!-- HERO -->
+<section class="hero" id="platform">
+<h1>mcxOS Operating System</h1>
+<p class="sub">metacommerz — Unified Supply Chain Neural Network</p>
+<p style="color:var(--teal);font-size:0.85rem;margin-top:12px;font-weight:500">System of Record · System of Engagement · Embrace &amp; Replace</p>
+
+<div class="stats">
+<div class="stat"><div class="v">12</div><div class="l">Domain Suites</div></div>
+<div class="stat"><div class="v">~80</div><div class="l">Modules</div></div>
+<div class="stat"><div class="v">35</div><div class="l">OODA Agents</div></div>
+<div class="stat"><div class="v">324+</div><div class="l">Frontend Pages</div></div>
+<div class="stat"><div class="v">26</div><div class="l">Domain Events</div></div>
+<div class="stat"><div class="v">300+</div><div class="l">Enum Entries</div></div>
+<div class="stat"><div class="v">98.3%</div><div class="l">Hardcode Eliminated</div></div>
+</div>
+
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;justify-content:center">
+<div class="suite-badge"><span class="num">1</span><span class="name">SCM Operations</span></div>
+<div class="suite-badge"><span class="num">2</span><span class="name">Planning &amp; S&OP</span></div>
+<div class="suite-badge"><span class="num">3</span><span class="name">TMS</span></div>
+<div class="suite-badge"><span class="num">4</span><span class="name">WMS</span></div>
+<div class="suite-badge"><span class="num">5</span><span class="name">Finance ERP</span></div>
+<div class="suite-badge"><span class="num">6</span><span class="name">Trade Finance</span></div>
+<div class="suite-badge"><span class="num">7</span><span class="name">Procurement</span></div>
+<div class="suite-badge"><span class="num">8</span><span class="name">Tender &amp; Freight Quotes</span></div>
+<div class="suite-badge"><span class="num">9</span><span class="name">Contract Management</span></div>
+<div class="suite-badge"><span class="num">10</span><span class="name">Audit</span></div>
+<div class="suite-badge"><span class="num">11</span><span class="name">Enterprise Parity</span></div>
+<div class="suite-badge"><span class="num">12</span><span class="name">Agentic AI / OODA</span></div>
+</div>
+</section><div class="dv"></div>
+
+<!-- STRATEGIC POSITIONING -->
+<section class="rv" id="positioning">
+<h2>Strategic Positioning</h2>
+<p class="si">mcxOS is built on N-Tier Multi-Tenant architecture with Row-Level Security policies and enterprise-grade RBAC (role → permission → role_permission many-to-many on SQLAlchemy ORM). It sits on top of existing operating systems with an <strong style="color:var(--gold)">Embrace &amp; Replace</strong> approach.</p>
+
+<div class="g g3">
+<div class="c"><h3>System of Record</h3><p>mcxOS becomes the single source of truth. All master data, transactions, and financial records live here. Legacy systems feed into mcxOS as the canonical data store.</p><span class="positioning-badge pos-sor">SOR Mode</span></div>
+<div class="c bl"><h3>System of Engagement</h3><p>mcxOS sits above existing ERPs as the orchestration and user interaction layer. Users work in mcxOS while backend operations continue on SAP/Oracle/D365.</p><span class="positioning-badge pos-soe">SOE Mode</span></div>
+<div class="c tl"><h3>Embrace &amp; Replace</h3><p>Phase 1: Embrace — integrate with all existing systems, provide unified view. Phase 2: Replace — gradually migrate workloads as trust builds. Zero big-bang risk.</p><span class="positioning-badge pos-er">E&amp;R Strategy</span></div>
+</div>
+
+<div class="bn"><p>Not rip-and-replace. Not another overlay. A neural network that absorbs your ecosystem and elevates it.</p></div>
+
+<!-- Architecture Tiers -->
+<div style="margin-top:24px">
+<h3 style="color:var(--cyan);margin-bottom:12px">Three-Tier Architecture</h3>
+<div class="wf">
+<div class="s hi">Domain Suites (12)</div><div class="ar">→</div>
+<div class="s tl">Modules (~80)</div><div class="ar">→</div>
+<div class="s gr">Services &amp; APIs</div><div class="ar">→</div>
+<div class="s" style="border-color:var(--pink);color:var(--pink)">Autonomous AI Layer (35 Agents)</div>
+</div>
+</div>
+</section><div class="dv"></div>
+
+<!-- 12 DOMAIN SUITES DETAIL -->
+<section class="rv" id="suites">
+<h2>12 Domain Suites — Full Breakdown</h2>
+<p class="si">Each suite operates independently with its own modules, services, and autonomous agents. Connected via the Enterprise Parity backbone and Kafka event bus.</p>
+</section><div class="dv"></div>
+
+<!-- Suite 1: SCM Operations -->
+<section class="rv">
+<div class="mh"><span class="mn">S1</span><h2 style="margin:0;font-size:1.5rem">SCM Operations</h2><span class="ms">7 modules · 3 agents · The execution layer</span></div>
+<p class="si">What's happening right now — order management, BOM, MRP, assembly, quality, collaboration, and approvals.</p>
+<div class="g g4">
+<div class="c"><h3>Order Management</h3><p>Sales orders, fulfillment, OMS</p></div>
+<div class="c bl"><h3>BOM Management</h3><p>EBOM, SCBOM, MBOM</p></div>
+<div class="c tl"><h3>MRP</h3><p>Material requirements planning, MRP runs</p></div>
+<div class="c pk"><h3>Assembly Orders</h3><p>Production assembly tracking</p></div>
+</div>
+<div class="g g3">
+<div class="c or"><h3>Quality Inspection</h3><p>Goods inspection, QC workflows</p></div>
+<div class="c gn"><h3>Collaboration</h3><p>Supplier/buyer task collaboration</p></div>
+<div class="c cy"><h3>Approval Queue</h3><p>VPR approvals, multi-tier approvals</p></div>
+</div>
+<div style="margin-top:12px"><span class="agent-tag">MRPAgent</span><span class="agent-tag">BOMChangeAgent</span><span class="agent-tag">AssemblySchedulerAgent</span></div>
+</section><div class="dv"></div>
+
+<!-- Suite 2: Planning & S&OP -->
+<section class="rv">
+<div class="mh"><span class="mn">S2</span><h2 style="margin:0;font-size:1.5rem">Planning &amp; S&OP</h2><span class="ms">5 modules · 4 agents · The forward-looking layer</span></div>
+<p class="si">What should happen — consensus planning, demand/supply gap review, forecasting, budgets, capacity, and replenishment.</p>
+<div class="g g3">
+<div class="c"><h3>S&OP Dashboard</h3><p>Consensus planning, demand/supply gap review</p></div>
+<div class="c bl"><h3>Sales Forecasting</h3><p>Demand signals, 4 forecast methods, ML-driven</p></div>
+<div class="c tl"><h3>Budget Management</h3><p>Budget creation, actuals vs plan, variance</p></div>
+</div>
+<div class="g g2">
+<div class="c pk"><h3>Capacity Planning</h3><p>Capacity config, constraints</p></div>
+<div class="c or"><h3>Replenishment</h3><p>Reorder points, safety stock optimization</p></div>
+</div>
+<div style="margin-top:12px"><span class="agent-tag">ForecastRevisionAgent</span><span class="agent-tag">DemandSensingAgent</span><span class="agent-tag">SalesOperationsBridgeAgent</span><span class="agent-tag">SafetyStockRecalibrationAgent</span></div>
+</section><div class="dv"></div>
+
+<!-- Suite 3: TMS -->
+<section class="rv">
+<div class="mh"><span class="mn">S3</span><h2 style="margin:0;font-size:1.5rem">TMS — Transport Management</h2><span class="ms">8 modules · 5 agents · Everything that moves</span></div>
+<div class="g g4">
+<div class="c"><h3>Freight RFQ</h3><p>Request quotes from forwarders</p></div>
+<div class="c bl"><h3>Spot Quote</h3><p>Spot market pricing</p></div>
+<div class="c tl"><h3>Booking Mgmt</h3><p>Book shipments, track bookings</p></div>
+<div class="c pk"><h3>Import/Export</h3><p>Inbound/outbound lifecycle</p></div>
+</div>
+<div class="g g4">
+<div class="c or"><h3>Transport Planning</h3><p>Route optimization, load planning</p></div>
+<div class="c gn"><h3>Freight Pricing</h3><p>Rate cards — air/ocean/rail/road</p></div>
+<div class="c cy"><h3>DGR Management</h3><p>Dangerous goods compliance</p></div>
+<div class="c"><h3>Carrier Scoring</h3><p>Performance-based carrier ranking</p></div>
+</div>
+<div style="margin-top:12px"><span class="agent-tag">FreightBookingAgent</span><span class="agent-tag">ShipmentDelayAgent</span><span class="agent-tag">CarrierScorecardAgent</span><span class="agent-tag">CustomsComplianceAgent</span><span class="agent-tag">FreightCostVarianceAgent</span></div>
+</section><div class="dv"></div>
+
+<!-- Suite 4: WMS -->
+<section class="rv">
+<div class="mh"><span class="mn">S4</span><h2 style="margin:0;font-size:1.5rem">WMS — Warehouse Management</h2><span class="ms">7 modules · 4 agents · Everything in the four walls</span></div>
+<div class="g g4">
+<div class="c"><h3>Warehouse Setup</h3><p>Zones, docks, storage locations</p></div>
+<div class="c bl"><h3>Storage Locations</h3><p>Location master, capacities</p></div>
+<div class="c tl"><h3>Inventory</h3><p>Stock levels, adjustments, movements</p></div>
+<div class="c pk"><h3>Cycle Counting</h3><p>Count plans, variances</p></div>
+</div>
+<div class="g g3">
+<div class="c or"><h3>Pick Tasks</h3><p>Pick lists, wave management</p></div>
+<div class="c gn"><h3>Cross-Dock</h3><p>Cross-dock task management</p></div>
+<div class="c cy"><h3>Goods Receipt</h3><p>VGRN / BGRN processing</p></div>
+</div>
+<div style="margin-top:12px"><span class="agent-tag">ReplenishmentAgent</span><span class="agent-tag">InboundDockAgent</span><span class="agent-tag">CycleCountSchedulerAgent</span><span class="agent-tag">DeadStockAgent</span></div>
+</section><div class="dv"></div>
+
+<!-- Suite 5: Finance ERP -->
+<section class="rv">
+<div class="mh"><span class="mn">S5</span><h2 style="margin:0;font-size:1.5rem">Finance ERP</h2><span class="ms">9 modules · 7 agents · The books</span></div>
+<div class="g g3">
+<div class="c"><h3>Chart of Accounts</h3><p>COA setup, account types, industry templates</p></div>
+<div class="c bl"><h3>General Ledger</h3><p>Journal entries, period-end, cost centers</p></div>
+<div class="c tl"><h3>AR (Invoices)</h3><p>Sales invoices, collections, aging</p></div>
+</div>
+<div class="g g3">
+<div class="c pk"><h3>AP (Bills)</h3><p>Vendor bills, liabilities, three-way match</p></div>
+<div class="c or"><h3>Payments</h3><p>Payment runs, reconciliation, multi-method</p></div>
+<div class="c gn"><h3>Expenses</h3><p>T&amp;E, employee expenses, approvals</p></div>
+</div>
+<div class="g g3">
+<div class="c cy"><h3>Banking</h3><p>Bank accounts, Plaid sync, auto-match</p></div>
+<div class="c"><h3>Budget vs Actuals</h3><p>Variance analysis, threshold alerts</p></div>
+<div class="c bl"><h3>Default Chart Setup</h3><p>Template COA by industry vertical</p></div>
+</div>
+<div style="margin-top:12px"><span class="agent-tag">APAgingAgent</span><span class="agent-tag">ARCollectionAgent</span><span class="agent-tag">BankReconciliationAgent</span><span class="agent-tag">ThreeWayMatchAgent</span><span class="agent-tag">PeriodCloseAgent</span><span class="agent-tag">CashFlowForecastAgent</span><span class="agent-tag">BudgetVarianceAgent</span></div>
+</section><div class="dv"></div>
+
+<!-- Suite 6: Trade Finance -->
+<section class="rv">
+<div class="mh"><span class="mn">S6</span><h2 style="margin:0;font-size:1.5rem">Trade Finance</h2><span class="ms">5 modules · 3 agents · Cross-border instruments</span></div>
+<div class="g g3">
+<div class="c"><h3>Letter of Credit</h3><p>LC creation, drawdowns, amendments, UCP 600</p></div>
+<div class="c bl"><h3>IAWB</h3><p>Air waybill financial instrument</p></div>
+<div class="c tl"><h3>Bank Guarantees</h3><p>Bid bonds, performance bonds</p></div>
+</div>
+<div class="g g2">
+<div class="c pk"><h3>Currency &amp; FX</h3><p>Exchange rates, XE API, hedging</p></div>
+<div class="c or"><h3>Tax &amp; Duties</h3><p>Duty rates, HS codes, DGR classification</p></div>
+</div>
+<div style="margin-top:12px"><span class="agent-tag">LCMonitorAgent</span><span class="agent-tag">LCDocumentComplianceAgent</span><span class="agent-tag">FXExposureAgent</span></div>
+</section><div class="dv"></div>
+
+<!-- Suite 7: Procurement -->
+<section class="rv">
+<div class="mh"><span class="mn">S7</span><h2 style="margin:0;font-size:1.5rem">Procurement</h2><span class="ms">6 modules · 3 agents · Buy-side operations</span></div>
+<div class="g g3">
+<div class="c"><h3>Vendor Management</h3><p>Vendor profiles, qualification, scoring</p></div>
+<div class="c bl"><h3>Purchase Orders</h3><p>PO lifecycle — draft → approve → confirm</p></div>
+<div class="c tl"><h3>Goods Receipt (VGRN)</h3><p>Receiving workflow, inspection, putaway</p></div>
+</div>
+<div class="g g3">
+<div class="c pk"><h3>3-Way Match</h3><p>PO × GRN × Invoice verification</p></div>
+<div class="c or"><h3>Contract Conditions</h3><p>Insurance, SLAs, penalties</p></div>
+<div class="c gn"><h3>TPRM &amp; Entity Mgmt</h3><p>Third-party risk, buyers, sellers, 3PLs</p></div>
+</div>
+<div style="margin-top:12px"><span class="agent-tag">PurchaseOrderAgent</span><span class="agent-tag">VendorQualificationAgent</span><span class="agent-tag">SpendAnalysisAgent</span></div>
+</section><div class="dv"></div>
+
+<!-- Suite 8: Tender -->
+<section class="rv">
+<div class="mh"><span class="mn">S8</span><h2 style="margin:0;font-size:1.5rem">Tender &amp; Freight Quote Management</h2><span class="ms">7 modules · 13 agents · The sourcing engine</span></div>
+<div class="g g4">
+<div class="c"><h3>Tender Create</h3><p>RFP/RFQ/RFI creation</p></div>
+<div class="c bl"><h3>Tender Mgmt</h3><p>Bid collection, 25-criterion scoring, award</p></div>
+<div class="c tl"><h3>Pricing Contracts</h3><p>Rate contracts per mode</p></div>
+<div class="c pk"><h3>IFC / EFC</h3><p>Import/export freight contracts</p></div>
+</div>
+<div class="g g3">
+<div class="c or"><h3>VPC / BSC</h3><p>Volume/bespoke sales contracts</p></div>
+<div class="c gn"><h3>Surcharges</h3><p>Fuel, security, terminal surcharges</p></div>
+<div class="c cy"><h3>Evaluation Profiles</h3><p>Scoring criteria, weightings</p></div>
+</div>
+<div style="margin-top:12px;line-height:2"><span class="agent-tag">TenderOrchestratorAgent</span><span class="agent-tag">TechnicalAgent</span><span class="agent-tag">HSEAgent</span><span class="agent-tag">CommercialAgent</span><span class="agent-tag">ExperienceAgent</span><span class="agent-tag">OperationalAgent</span><span class="agent-tag">RiskAgent</span><span class="agent-tag">SustainabilityAgent</span><span class="agent-tag">DrawingAgent</span><span class="agent-tag">ERPDataAgent</span><span class="agent-tag">AwardRecommendationAgent</span><span class="agent-tag">VendorRiskAgent</span><span class="agent-tag">BenchmarkingAgent</span></div>
+</section><div class="dv"></div>
+
+<!-- Suite 9: Contract Management -->
+<section class="rv">
+<div class="mh"><span class="mn">S9</span><h2 style="margin:0;font-size:1.5rem">Contract Management</h2><span class="ms">5 modules · 9-step automated workflow</span></div>
+<div class="g g3">
+<div class="c"><h3>Contract Lifecycle</h3><p>Draft → signed → active → expired</p></div>
+<div class="c bl"><h3>Insurance &amp; eSign</h3><p>Policy coverage, digital signatures, signer roles</p></div>
+<div class="c tl"><h3>Document &amp; Compliance</h3><p>Attachments, versioning, compliance tracking</p></div>
+</div>
+<p style="color:var(--gold);font-size:0.82rem;font-weight:600;margin:12px 0">9-Step Automated Contract Workflow:</p>
+<div class="wf"><div class="s">Architect</div><div class="ar">→</div><div class="s">Clause</div><div class="ar">→</div><div class="s">Negotiate</div><div class="ar">→</div><div class="s hi">Compliance</div><div class="ar">→</div><div class="s">Risk</div><div class="ar">→</div><div class="s">Approve</div><div class="ar">→</div><div class="s tl">Memory</div><div class="ar">→</div><div class="s">Repository</div><div class="ar">→</div><div class="s gr">Audit</div></div>
+</section><div class="dv"></div>
+
+<!-- Suite 10: Audit -->
+<section class="rv">
+<div class="mh"><span class="mn">S10</span><h2 style="margin:0;font-size:1.5rem">Audit</h2><span class="ms">6 modules · 3 agents · The control layer</span></div>
+<div class="g g3">
+<div class="c"><h3>Document Audit</h3><p>AI-assisted document analysis</p></div>
+<div class="c bl"><h3>Analysis &amp; Quick Check</h3><p>Audit trail, session history, one-off checks</p></div>
+<div class="c tl"><h3>Workflow &amp; Compliance</h3><p>Multi-step approvals, regulatory tracking</p></div>
+</div>
+<div class="g g2">
+<div class="c pk"><h3>Field Mapper</h3><p>OCR → structured data mapping (5000+ patterns via Bedrock)</p></div>
+<div class="c or"><h3>Compliance Documents</h3><p>Regulatory document tracking, deadline management</p></div>
+</div>
+<div style="margin-top:12px"><span class="agent-tag">DocumentAuditAnomalyAgent</span><span class="agent-tag">ComplianceMonitorAgent</span><span class="agent-tag">AuditEscalationAgent</span></div>
+</section><div class="dv"></div>
+
+<!-- Suite 11: Enterprise Parity -->
+<section class="rv">
+<div class="mh"><span class="mn">S11</span><h2 style="margin:0;font-size:1.5rem">Enterprise Parity</h2><span class="ms">9 modules · The glue (not user-facing)</span></div>
+<p class="si">Cross-cutting platform concerns — RBAC, multi-tenancy, workflows, analytics, and the AI/Bedrock integration layer.</p>
+<div class="g g3">
+<div class="c"><h3>RBAC &amp; Multi-Tenancy</h3><p>Roles, permissions, RLS policies, tenant isolation. Many-to-many role_permission on SQLAlchemy ORM.</p></div>
+<div class="c bl"><h3>Enum Registry &amp; Ref Data</h3><p>300+ enum entries, ports, countries, currencies, units. 98.3% hardcoded data eliminated.</p></div>
+<div class="c tl"><h3>Orchestrator &amp; AI</h3><p>Multi-step workflow orchestration (Bedrock), LLM integrations, field mapping, Kafka events.</p></div>
+</div>
+<div class="g g3">
+<div class="c pk"><h3>Analytics</h3><p>Cross-module reporting, dashboards</p></div>
+<div class="c or"><h3>Jobs / Async</h3><p>Background jobs, Kafka event processing</p></div>
+<div class="c gn"><h3>Notifications</h3><p>Email, in-app alerts, multi-channel</p></div>
+</div>
+</section><div class="dv"></div>
+
+<!-- Suite 12: Agentic AI / OODA -->
+<section class="rv" id="agents">
+<div class="mh"><span class="mn">S12</span><h2 style="margin:0;font-size:1.5rem">Agentic AI / OODA</h2><span class="ms">35 agents · 4 DB tables · The autonomous layer</span></div>
+<p class="si">The layer that makes users' lives hands-free. Every suite has agents that run continuously without manual intervention. Architecture: Observe → Orient → Decide → Act.</p>
+
+<div class="ooda">
+<div class="ooda-s"><div class="on">O</div><h3>OBSERVE</h3><p>ObservationBus polls DB state, domain events, external APIs</p></div>
+<div class="ooda-s"><div class="on">O</div><h3>ORIENT</h3><p>OrientationEngine contextualizes with history, thresholds, policies</p></div>
+<div class="ooda-s"><div class="on">D</div><h3>DECIDE</h3><p>DecisionMatrix maps (module, signal, context) → action set with confidence</p></div>
+<div class="ooda-s"><div class="on">A</div><h3>ACT</h3><p>ActorDispatcher executes, emits DomainEvent, writes AgentAction record</p></div>
+</div>
+
+<div class="bn"><p>Auto-act @ confidence ≥ 85% &amp; value &lt; threshold · Escalate @ confidence &lt; 70% or novel pattern · Human sees: observation + reasoning + proposed action</p></div>
+
+<!-- Agent Distribution Table -->
+<h3 style="margin-top:20px;color:var(--cyan)">35 Autonomous Agents by Suite</h3>
+<table class="cmp">
+<thead><tr><th>Suite</th><th>Count</th><th>Agents</th></tr></thead>
+<tbody>
+<tr><td>Finance</td><td>7</td><td>APAging, ARCollection, BankRecon, ThreeWayMatch, PeriodClose, CashFlowForecast, BudgetVariance</td></tr>
+<tr><td>TMS</td><td>5</td><td>FreightBooking, ShipmentDelay, CarrierScorecard, CustomsCompliance, FreightCostVariance</td></tr>
+<tr><td>WMS</td><td>4</td><td>Replenishment, InboundDock, CycleCountScheduler, DeadStock</td></tr>
+<tr><td>Planning</td><td>4</td><td>ForecastRevision, DemandSensing, SalesOperationsBridge, SafetyStockRecalibration</td></tr>
+<tr><td>SCM</td><td>3</td><td>MRP, BOMChange, AssemblyScheduler</td></tr>
+<tr><td>Procurement</td><td>3</td><td>PurchaseOrder, VendorQualification, SpendAnalysis</td></tr>
+<tr><td>Trade Finance</td><td>3</td><td>LCMonitor, LCDocumentCompliance, FXExposure</td></tr>
+<tr><td>Audit</td><td>3</td><td>DocumentAuditAnomaly, ComplianceMonitor, AuditEscalation</td></tr>
+<tr><td>Tender</td><td>13</td><td>TenderOrchestrator + 12 specialist evaluation agents</td></tr>
+</tbody>
+</table>
+
+<!-- Agent DB Schema -->
+<h3 style="margin-top:20px;color:var(--teal)">Agent Database Tables (Aurora)</h3>
+<div class="g g4">
+<div class="c"><h3>agent_observation</h3><p>Every signal detected by agents</p></div>
+<div class="c bl"><h3>agent_decision</h3><p>Every decision (confidence, reasoning, params)</p></div>
+<div class="c tl"><h3>agent_action</h3><p>Every action executed (success/fail, result)</p></div>
+<div class="c pk"><h3>agent_config</h3><p>Per-tenant, per-agent config (thresholds, intervals)</p></div>
+</div>
+</section><div class="dv"></div>
+
+<!-- SECURITY -->
+<section class="rv" id="sec">
+<h2>Enterprise-Grade Security</h2>
+<p class="si">N-Tier organization hierarchy with RBAC (role → permission → role_permission, many-to-many on SQLAlchemy ORM) and Row-Level Security policies enforced at PostgreSQL layer. No application bypass possible.</p>
+
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;margin:16px auto;display:block">
+<text x="450" y="25" fill="#F0C430" font-family="Outfit,sans-serif" font-size="14" font-weight="800" text-anchor="middle">N-Tier Multi-Tenant Architecture with RLS &amp; RBAC</text>
+<rect x="325" y="45" width="250" height="40" rx="8" fill="rgba(240,196,48,0.08)" stroke="#F0C430" stroke-width="2"/>
+<text x="450" y="69" fill="#F0C430" font-family="Outfit,sans-serif" font-size="12" font-weight="700" text-anchor="middle">CUSTOMER (Parent Holding)</text>
+<line x1="370" y1="85" x2="200" y2="115" stroke="#F0C430" stroke-width="1" opacity="0.4"/><line x1="450" y1="85" x2="450" y2="115" stroke="#F0C430" stroke-width="1" opacity="0.4"/><line x1="530" y1="85" x2="700" y2="115" stroke="#F0C430" stroke-width="1" opacity="0.4"/>
+<rect x="100" y="115" width="200" height="36" rx="6" fill="rgba(74,144,226,0.06)" stroke="#4A90E2" stroke-width="1.5"/>
+<text x="200" y="137" fill="#4A90E2" font-family="Outfit,sans-serif" font-size="11" font-weight="700" text-anchor="middle">Subsidiary — EU</text>
+<rect x="350" y="115" width="200" height="36" rx="6" fill="rgba(74,144,226,0.06)" stroke="#4A90E2" stroke-width="1.5"/>
+<text x="450" y="137" fill="#4A90E2" font-family="Outfit,sans-serif" font-size="11" font-weight="700" text-anchor="middle">Subsidiary — APAC</text>
+<rect x="600" y="115" width="200" height="36" rx="6" fill="rgba(74,144,226,0.06)" stroke="#4A90E2" stroke-width="1.5"/>
+<text x="700" y="137" fill="#4A90E2" font-family="Outfit,sans-serif" font-size="11" font-weight="700" text-anchor="middle">Subsidiary — Americas</text>
+<text x="450" y="185" fill="#F0C430" font-family="Outfit,sans-serif" font-size="13" font-weight="800" text-anchor="middle">Row-Level Security (RLS) — 4 Tiers</text>
+<defs><marker id="arrow" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#F0C430"/></marker></defs>
+<rect x="60" y="210" width="170" height="50" rx="8" fill="rgba(46,125,50,0.12)" stroke="#2E7D32" stroke-width="1.5"/>
+<text x="145" y="233" fill="#66BB6A" font-family="Outfit,sans-serif" font-size="11" font-weight="700" text-anchor="middle">TIER 1: Tenant</text>
+<text x="145" y="249" fill="#7A869A" font-family="Outfit,sans-serif" font-size="9" text-anchor="middle">tenant_id</text>
+<line x1="230" y1="235" x2="265" y2="235" stroke="#F0C430" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="265" y="210" width="170" height="50" rx="8" fill="rgba(21,101,192,0.1)" stroke="#1565C0" stroke-width="1.5"/>
+<text x="350" y="233" fill="#42A5F5" font-family="Outfit,sans-serif" font-size="11" font-weight="700" text-anchor="middle">TIER 2: Organization</text>
+<text x="350" y="249" fill="#7A869A" font-family="Outfit,sans-serif" font-size="9" text-anchor="middle">tenant_id, org_id</text>
+<line x1="435" y1="235" x2="470" y2="235" stroke="#F0C430" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="470" y="210" width="170" height="50" rx="8" fill="rgba(230,81,0,0.08)" stroke="#E65100" stroke-width="1.5"/>
+<text x="555" y="233" fill="#FF9800" font-family="Outfit,sans-serif" font-size="11" font-weight="700" text-anchor="middle">TIER 3: Entity</text>
+<text x="555" y="249" fill="#7A869A" font-family="Outfit,sans-serif" font-size="9" text-anchor="middle">tenant_id, org_id, entity_id</text>
+<line x1="640" y1="235" x2="675" y2="235" stroke="#F0C430" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="675" y="210" width="170" height="50" rx="8" fill="rgba(211,47,47,0.06)" stroke="#D32F2F" stroke-width="1.5"/>
+<text x="760" y="233" fill="#EF5350" font-family="Outfit,sans-serif" font-size="11" font-weight="700" text-anchor="middle">TIER 4: Records</text>
+<text x="760" y="249" fill="#7A869A" font-family="Outfit,sans-serif" font-size="9" text-anchor="middle">Orders / Invoices / Docs</text>
+<rect x="120" y="290" width="660" height="90" rx="8" fill="rgba(18,25,48,0.8)" stroke="rgba(240,196,48,0.12)" stroke-width="1"/>
+<text x="450" y="315" fill="#F0C430" font-family="Outfit,sans-serif" font-size="11" font-weight="700" text-anchor="middle">RBAC Model (SQLAlchemy ORM)</text>
+<text x="450" y="337" fill="#7A869A" font-family="Outfit,sans-serif" font-size="9" text-anchor="middle">role ←→ role_permission (M2M) ←→ permission · Inheritance down N-Tier hierarchy</text>
+<text x="450" y="355" fill="#7A869A" font-family="Outfit,sans-serif" font-size="9" text-anchor="middle">PostgreSQL RLS enforcement · No application bypass · Complete audit trail</text>
+<text x="450" y="373" fill="#0DD4A0" font-family="Outfit,sans-serif" font-size="9" font-weight="600" text-anchor="middle">OAuth2/OIDC SSO · Database-level isolation · Every row tagged with composite key</text>
+</svg>
+</section><div class="dv"></div>
+
+<!-- FEDERATED BACKBONE -->
+<section class="rv" id="backbone">
+<h2>mcxOS Backbone — Federated Network</h2>
+<p class="si">Three independent multi-tenant networks — each with their own organizations, vendors, and data — all federated through the mcxOS Backbone for a single unified view.</p>
+<div class="bn" style="border-color:var(--green)"><p style="color:var(--green)">UNIFIED NETWORK FABRIC · COMMON MASTER DATA · SINGLE VERSION OF TRUTH (SVOT)</p></div>
+<div class="g g3">
+<div class="c tl"><h3>Federated Architecture</h3><ul><li>Each tenant operates independently</li><li>Own org hierarchy, data, workflows</li><li>Connected via mcxOS Backbone</li><li>Zero cross-tenant data leakage (RLS)</li></ul></div>
+<div class="c bl"><h3>Connectivity</h3><ul><li>Real-time sync when online</li><li>Offline-first capability</li><li>Automatic resync on reconnect</li><li>Built-in conflict resolution</li></ul></div>
+<div class="c pk"><h3>Network Effects</h3><ul><li>Value scales with participants</li><li>Collective intelligence shared</li><li>Standardized data formats</li><li>Unlimited trading partners</li></ul></div>
+</div>
+</section><div class="dv"></div>
+
+<!-- COMPETITIVE COMPARISON — TOP 5 -->
+<section class="rv" id="cmp">
+<h2>mcxOS vs. Top 5 Supply Chain ERPs</h2>
+<p class="si">How mcxOS positions against the world's largest supply chain ERP providers. Built from the ground up as a unified neural network — not assembled from acquisitions.</p>
+
+<table class="cmp">
+<thead><tr><th>Dimension</th><th>mcxOS</th><th>SAP S/4HANA</th><th>Oracle SCM Cloud</th><th>Kinaxis / o9</th><th>Blue Yonder</th><th>Coupa / GEP</th></tr></thead>
+<tbody>
+<tr><td>Core Focus</td><td>End-to-End Unified SC OS</td><td class="ng">Finance + Back-Office ERP</td><td class="ng">Modular Cloud ERP</td><td>SC Planning &amp; Analytics</td><td>SC Planning &amp; Execution</td><td>Procurement / Source-to-Pay</td></tr>
+<tr><td>Architecture</td><td>Cloud-Native, N-Tier Multi-Tenant, RLS</td><td class="ng">Monolith (On-Prem → Cloud lift)</td><td>Cloud SaaS (acquired modules)</td><td>Cloud planning overlay</td><td class="ng">Legacy + Cloud hybrid</td><td>Cloud SaaS (procurement only)</td></tr>
+<tr><td>Multi-Tenancy</td><td>True N-Tier RLS at DB layer</td><td class="ng">Single-tenant or hosted</td><td>Multi-tenant (application layer)</td><td class="ng">Tenant per instance</td><td class="ng">Instance-based</td><td>Multi-tenant SaaS</td></tr>
+<tr><td>Domain Coverage</td><td>12 Suites, ~80 modules unified</td><td class="ng">Broad but fragmented (separate TM, EWM, IBP)</td><td class="ng">Separate clouds (SCM, ERP, HCM)</td><td class="ng">Planning only — no execution</td><td class="ng">Planning + WMS (no finance)</td><td class="ng">Procurement only</td></tr>
+<tr><td>AI / Autonomous</td><td>35 OODA Agents, continuous, human-in-loop</td><td class="ng">Joule (chatbot, limited automation)</td><td class="ng">ML features per module</td><td>ML-driven scenarios</td><td>ML forecasting</td><td class="ng">Spend intelligence only</td></tr>
+<tr><td>TMS Built-In</td><td>Full TMS (6 modes, RFQ, booking, tracking)</td><td class="ng">Separate SAP TM module</td><td>OTM (separate product)</td><td class="ng">No TMS</td><td>TMS available</td><td class="ng">No TMS</td></tr>
+<tr><td>WMS Built-In</td><td>Full WMS (zones, pick, cross-dock)</td><td class="ng">Separate SAP EWM</td><td>WMS Cloud (separate)</td><td class="ng">No WMS</td><td>Luminate WMS</td><td class="ng">No WMS</td></tr>
+<tr><td>Trade Finance</td><td>LC lifecycle (UCP 600), bank guarantees, FX</td><td class="ng">Basic / separate module</td><td class="ng">Not core</td><td class="ng">None</td><td class="ng">None</td><td class="ng">AP/invoicing only</td></tr>
+<tr><td>Contract Intelligence</td><td>4 types, operational, AI-drafted, 9-step workflow</td><td class="ng">SAP CLM (legal-focused)</td><td class="ng">Procurement contracts only</td><td class="ng">None</td><td class="ng">None</td><td>Source-to-contract</td></tr>
+<tr><td>Integration Approach</td><td>Embrace &amp; Replace (SOR or SOE)</td><td class="ng">Rip-and-replace</td><td class="ng">Oracle ecosystem lock-in</td><td>Overlay on existing ERP</td><td class="ng">Requires ERP underneath</td><td>Overlay (procurement layer)</td></tr>
+<tr><td>Event Architecture</td><td>Kafka bus, 26 domain events, replay</td><td class="ng">Batch processing, limited events</td><td>Events (within Oracle cloud)</td><td class="ng">Not event-driven</td><td class="ng">Batch/API</td><td class="ng">Webhook-based</td></tr>
+<tr><td>Deployment Time</td><td>Months</td><td class="ng">1-3+ Years</td><td class="ng">6-18 Months</td><td>3-6 Months</td><td class="ng">6-12 Months</td><td>3-9 Months</td></tr>
+<tr><td>TCO</td><td>Low, predictable</td><td class="ng">Very High ($M+ licenses)</td><td class="ng">High</td><td>Medium-High</td><td class="ng">High</td><td>Medium</td></tr>
+<tr><td>Target</td><td>Mid-market → Enterprise (any vertical)</td><td>Large Enterprise</td><td>Large Enterprise</td><td>Enterprise (planning teams)</td><td>Enterprise (retail/CPG)</td><td>Mid-market → Enterprise</td></tr>
+</tbody>
+</table>
+
+<div class="bn"><p>mcxOS: The only platform that unifies SCM Operations, TMS, WMS, Finance, Trade Finance, Procurement, Contracts, Audit, and Autonomous AI in a single multi-tenant OS.</p></div>
+
+<!-- Key Differentiators -->
+<h3 style="margin-top:24px;color:var(--cyan)">Why mcxOS Wins</h3>
+<div class="g g3">
+<div class="c tl"><h3>vs SAP / Oracle</h3><ul><li>No $50M+ license fees</li><li>Deploy in months, not years</li><li>True multi-tenant from day 1</li><li>AI-native, not AI-bolted-on</li><li>Embrace &amp; Replace vs rip-and-replace</li></ul></div>
+<div class="c bl"><h3>vs Kinaxis / o9 / Blue Yonder</h3><ul><li>Full execution, not just planning</li><li>Built-in TMS, WMS, Finance</li><li>Trade Finance &amp; LC lifecycle</li><li>Not dependent on underlying ERP</li><li>Autonomous agents beyond ML forecasts</li></ul></div>
+<div class="c or"><h3>vs Coupa / GEP</h3><ul><li>Goes far beyond procurement</li><li>Full supply chain orchestration</li><li>Operational contracts (not just sourcing)</li><li>Warehouse + logistics included</li><li>35 autonomous agents vs spend analytics</li></ul></div>
+</div>
+</section><div class="dv"></div>
+
+<!-- INTEGRATIONS -->
+<section class="rv" id="integ">
+<h2>Integration &amp; Backward Compatibility</h2>
+<p class="si">mcxOS integrates with all existing systems — ERP, Finance, Operations, Procurement, S&OP, IBP, Planning, Trade Finance, WMS, TMS. Users continue using their current tools while mcxOS orchestrates above.</p>
+
+<div class="g g4">
+<div class="c bl"><h3>ERP Systems</h3><ul><li>SAP S/4HANA (iDOCS, BAPI)</li><li>Oracle EBS / Fusion (OData)</li><li>Microsoft D365</li><li>NetSuite</li><li>Infor / JD Edwards</li></ul></div>
+<div class="c tl"><h3>Operations Apps</h3><ul><li>Procurement systems</li><li>Supply Chain Ops</li><li>S&OP / IBP platforms</li><li>Planning &amp; Forecasting</li><li>WMS / TMS systems</li></ul></div>
+<div class="c pk"><h3>Finance Apps</h3><ul><li>Plaid (banking sync)</li><li>Stripe / payment gateways</li><li>Trade Finance / LC systems</li><li>FX / Treasury systems</li><li>Tax &amp; compliance engines</li></ul></div>
+<div class="c or"><h3>Protocols &amp; Formats</h3><ul><li>REST / gRPC / SOAP</li><li>SFTP / AS2 / HTTP(S)</li><li>Kafka (Confluent / self-hosted)</li><li>CSV / EDI / XML / JSON</li><li>iDOCS / BAPI / OData</li></ul></div>
+</div>
+
+<div class="bn"><p>Connect Once, Orchestrate Everything — mcxOS meets your ecosystem where it is today.</p></div>
+</section><div class="dv"></div>
+
+<!-- KEY NUMBERS -->
+<section class="rv">
+<h2>Platform at a Glance</h2>
+<div class="g g3" style="margin-top:20px">
+<div class="key-num"><div class="kv">12</div><div class="kl">Domain Suites</div></div>
+<div class="key-num"><div class="kv">~80</div><div class="kl">Modules across all suites</div></div>
+<div class="key-num"><div class="kv">35</div><div class="kl">Autonomous OODA Agents</div></div>
+<div class="key-num"><div class="kv">26</div><div class="kl">Domain events routed by bus</div></div>
+<div class="key-num"><div class="kv">4</div><div class="kl">Agent DB tables (Aurora)</div></div>
+<div class="key-num"><div class="kv">324</div><div class="kl">Frontend pages (TSX)</div></div>
+<div class="key-num"><div class="kv">98.3%</div><div class="kl">Hardcoded data eliminated</div></div>
+<div class="key-num"><div class="kv">300+</div><div class="kl">Backend enum registry entries</div></div>
+<div class="key-num"><div class="kv">10</div><div class="kl">Industry verticals</div></div>
+</div>
+</section><div class="dv"></div>
+
+<!-- CLIENTS -->
+<section class="rv" style="text-align:center">
+<h2>Enterprise Clients</h2>
+<div style="display:flex;justify-content:center;gap:40px;margin:30px 0;flex-wrap:wrap">
+<div style="padding:16px 32px;border:1px solid var(--border);border-radius:8px;background:var(--card)"><span style="font-size:1.1rem;font-weight:700;color:var(--white)">Schneider Electric</span></div>
+<div style="padding:16px 32px;border:1px solid var(--border);border-radius:8px;background:var(--card)"><span style="font-size:1.1rem;font-weight:700;color:var(--white)">Total Energies</span></div>
+</div>
+</section><div class="dv"></div>
+
+<!-- SUMMARY -->
+<section class="rv" style="text-align:center">
+<h2 style="font-size:1.7rem">Unified Neural Network Platform. Complete Control.</h2>
+<div style="max-width:700px;margin:28px auto;display:flex;flex-direction:column;gap:10px">
+<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem">🌍 <strong style="color:var(--gold)">Multi-Tenant N-Tier</strong> with RLS + RBAC (SQLAlchemy ORM)</div>
+<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem">🔄 <strong style="color:var(--gold)">12 Domain Suites</strong> ~80 modules, unified platform</div>
+<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem">🤖 <strong style="color:var(--gold)">35 Autonomous Agents</strong> OODA loop, human-in-the-loop</div>
+<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem">🔗 <strong style="color:var(--gold)">Embrace &amp; Replace</strong> System of Record OR System of Engagement</div>
+<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem">🏢 <strong style="color:var(--gold)">Backward Compatible</strong> integrates with SAP, Oracle, D365, NetSuite, any ERP</div>
+<div style="padding:8px 0;font-size:0.9rem">🏭 <strong style="color:var(--gold)">10 Industry Verticals</strong> deploy in months, not years</div>
+</div>
+<div class="bn"><p>Stop stitching together tools. Start orchestrating your business.</p></div>
+</section><div class="dv"></div>
+
+<!-- THANK YOU -->
+<section id="contact" style="min-height:40vh;display:flex;flex-direction:column;justify-content:center;max-width:1140px;margin:0 auto;padding:80px 40px">
+<h1 style="font-size:2.8rem">Thank you</h1>
+<p class="sub">Ready to transform your supply chain</p>
+<div style="margin-top:28px">
+<p style="color:var(--grey);font-size:0.88rem">Leo David · Founder, CEO</p>
+<p style="color:var(--blue);font-size:0.88rem;margin-top:5px">ldavid@metacommerz.io</p>
+<p style="color:var(--grey);font-size:0.78rem;margin-top:3px">metacommerz.io</p>
+</div>
+</section>
+
+<script>const o=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('vis')})},{threshold:0.06});document.querySelectorAll('.rv').forEach(el=>o.observe(el));</script>
+</body>
+</html>
