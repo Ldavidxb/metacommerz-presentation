@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Capri AG — Juni 2026 Finanzanalyse (PPT)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a1a;font-family:'DM Sans',sans-serif;color:#fff;overflow-x:hidden}
+.mono{font-family:'Space Mono',monospace}
+
+/* Slide container */
+.slide{width:100%;max-width:1280px;margin:0 auto 4px;aspect-ratio:16/9;background:linear-gradient(160deg,#0a0a1a 0%,#12122e 50%,#0a0a1a 100%);padding:60px 80px;display:flex;flex-direction:column;justify-content:center;position:relative;border:1px solid rgba(255,255,255,0.04);overflow:hidden}
+.slide::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#E94560,#533483,#38ADA9)}
+.slide-number{position:absolute;bottom:20px;right:40px;font-size:11px;color:rgba(255,255,255,0.2);font-family:'Space Mono',monospace}
+.slide-logo{position:absolute;top:24px;left:40px;font-size:11px;color:#E94560;letter-spacing:3px;text-transform:uppercase;font-family:'Space Mono',monospace}
+
+/* Typography */
+.slide h1{font-size:42px;font-weight:800;line-height:1.1;margin-bottom:12px}
+.slide h2{font-size:28px;font-weight:700;margin-bottom:16px;color:#fff}
+.slide h3{font-size:18px;font-weight:700;color:#E94560;margin-bottom:8px}
+.slide .subtitle{font-size:16px;color:#8899AA;font-weight:300}
+.slide p{font-size:14px;color:#CCC;line-height:1.6}
+
+/* KPI row */
+.kpi-row{display:flex;gap:16px;margin:20px 0;flex-wrap:wrap}
+.kpi-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:20px 24px;flex:1;min-width:180px}
+.kpi-card.alert{border-color:rgba(233,69,96,0.4)}.kpi-card.good{border-color:rgba(120,224,143,0.4)}
+.kpi-card .label{font-size:11px;color:#8899AA;letter-spacing:1.5px;text-transform:uppercase;font-family:'Space Mono',monospace;margin-bottom:8px}
+.kpi-card .value{font-size:28px;font-weight:700;font-family:'Space Mono',monospace}
+.kpi-card .value.red{color:#E94560}.kpi-card .value.green{color:#78E08F}
+.kpi-card .sub{font-size:12px;color:#8899AA;margin-top:6px}
+
+/* Table */
+.ppt-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+.ppt-table th{text-align:left;padding:10px 12px;color:#8899AA;font-size:11px;letter-spacing:1px;border-bottom:2px solid rgba(233,69,96,0.3);text-transform:uppercase}
+.ppt-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.ppt-table tr:hover td{background:rgba(255,255,255,0.02)}
+
+/* Bars */
+.h-bar{display:flex;align-items:center;margin:8px 0;gap:12px}
+.h-bar .lbl{width:100px;font-size:13px;font-weight:600;text-align:right}
+.h-bar .track{flex:1;height:28px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;position:relative}
+.h-bar .fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:10px;font-size:11px;font-weight:700;color:#fff}
+
+/* Grid layouts */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+
+/* Cards */
+.insight-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:16px 20px;border-left:3px solid var(--accent,#E94560)}
+.insight-card h3{font-size:14px;margin-bottom:6px}
+.insight-card p{font-size:12px;color:#AAA;line-height:1.5}
+
+/* P&L */
+.pnl-line{display:flex;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.pnl-line.total{background:rgba(255,255,255,0.03);font-weight:700;border-top:2px solid rgba(255,255,255,0.12)}
+.pnl-line .l{flex:1;font-size:14px}.pnl-line .v{width:160px;text-align:right;font-family:'Space Mono',monospace;font-size:13px}.pnl-line .p{width:80px;text-align:right;font-family:'Space Mono',monospace;font-size:12px;color:#8899AA}
+
+/* Rec */
+.rec-slide-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:16px 20px;margin-bottom:12px}
+.rec-slide-card .nr{background:#E94560;color:#fff;border-radius:4px;padding:3px 10px;font-size:12px;font-weight:700;font-family:'Space Mono',monospace;display:inline-block;margin-right:10px}
+.rec-slide-card .title{font-size:15px;font-weight:700;display:inline}
+.rec-slide-card .body{font-size:12px;color:#CCC;margin-top:8px;line-height:1.5}
+.rec-slide-card .meta{display:flex;gap:20px;margin-top:8px;font-size:11px}
+.rec-slide-card .meta .g{color:#78E08F}.rec-slide-card .meta .y{color:#F6B93B}
+
+/* Navigation */
+.nav-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,26,0.95);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,0.06);padding:10px 20px;display:flex;align-items:center;justify-content:center;gap:8px;z-index:100}
+.nav-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.15);cursor:pointer;transition:all 0.2s}
+.nav-dot.active{background:#E94560;transform:scale(1.3)}
+.nav-dot:hover{background:rgba(233,69,96,0.5)}
+
+@media(max-width:900px){.slide{padding:30px 40px;aspect-ratio:auto;min-height:100vh}.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}.kpi-row{flex-direction:column}}
+@media print{.nav-bar{display:none}.slide{page-break-after:always;border:none}}
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: Title -->
+<div class="slide" id="s1">
+<div class="slide-logo">CAPRI AG</div>
+<div>
+<h1>Juni 2026<br>Finanzanalyse</h1>
+<p class="subtitle" style="margin-top:16px;font-size:18px">Umsatz · Warenkosten · P&L · Handlungsempfehlungen</p>
+<p style="margin-top:24px;font-size:13px;color:#555">Capri AG · Dufourstrasse 80 · 8008 Zürich</p>
+<p style="margin-top:6px;font-size:12px;color:#8899AA">Basierend auf Lightspeed Sales Report, F&B Kontoauszug & Budget 2026</p>
+</div>
+<div class="slide-number">01</div>
+</div>
+
+<!-- SLIDE 2: Executive Summary KPIs -->
+<div class="slide" id="s2">
+<div class="slide-logo">CAPRI AG</div>
+<h2>Executive Summary</h2>
+<div class="kpi-row">
+<div class="kpi-card alert"><div class="label">Umsatz Juni</div><div class="value red">CHF 173'888</div><div class="sub">−30.4% vs. Budget (CHF 250'000)</div></div>
+<div class="kpi-card good"><div class="label">Warenkosten</div><div class="value green">CHF 44'079</div><div class="sub">25.3% vom Umsatz (Budget: 26.4%)</div></div>
+<div class="kpi-card"><div class="label">Rohertrag</div><div class="value">CHF 129'809</div><div class="sub">74.7% Bruttomarge</div></div>
+<div class="kpi-card alert"><div class="label">EBITDA (Est.)</div><div class="value red">−CHF 33'170</div><div class="sub">Geschätzter Monatsverlust</div></div>
+</div>
+<div class="kpi-row">
+<div class="kpi-card"><div class="label">Quittungen</div><div class="value">1'148</div><div class="sub">Ø 38.3 pro Tag</div></div>
+<div class="kpi-card"><div class="label">Ø Quittung</div><div class="value">CHF 151</div><div class="sub">Bruttowert pro Bon</div></div>
+<div class="kpi-card good"><div class="label">Trinkgeld</div><div class="value green">CHF 12'231</div><div class="sub">7.0% des Umsatzes</div></div>
+<div class="kpi-card"><div class="label">Kartenzahlung</div><div class="value">94.9%</div><div class="sub">Lightspeed Payments</div></div>
+</div>
+<div class="slide-number">02</div>
+</div>
+
+<!-- SLIDE 3: Budget Achievement -->
+<div class="slide" id="s3">
+<div class="slide-logo">CAPRI AG</div>
+<h2>Budget-Erreichung nach Kategorie</h2>
+<div style="margin:20px 0">
+<div class="h-bar"><span class="lbl">Küche</span><div class="track"><div class="fill" style="width:72%;background:#E94560">72.0%</div></div></div>
+<div class="h-bar"><span class="lbl">Wein</span><div class="track"><div class="fill" style="width:52.1%;background:#E94560">52.1%</div></div></div>
+<div class="h-bar"><span class="lbl">Mineral</span><div class="track"><div class="fill" style="width:91.7%;background:#38ADA9">91.7%</div></div></div>
+<div class="h-bar"><span class="lbl">Spirituosen</span><div class="track"><div class="fill" style="width:85.1%;background:#38ADA9">85.1%</div></div></div>
+<div class="h-bar"><span class="lbl">Kaffee</span><div class="track"><div class="fill" style="width:70.8%;background:#F6B93B">70.8%</div></div></div>
+<div class="h-bar"><span class="lbl">Bier</span><div class="track"><div class="fill" style="width:84%;background:#F6B93B">84.0%</div></div></div>
+</div>
+<div style="display:flex;gap:24px;margin-top:16px;font-size:12px"><span style="color:#E94560">● &lt;70% kritisch</span><span style="color:#F6B93B">● 70–85% Warnung</span><span style="color:#38ADA9">● &gt;85% akzeptabel</span></div>
+<div class="slide-number">03</div>
+</div>
+
+<!-- SLIDE 4: Revenue Breakdown -->
+<div class="slide" id="s4">
+<div class="slide-logo">CAPRI AG</div>
+<h2>Umsatzanalyse: Ist vs. Budget</h2>
+<table class="ppt-table">
+<thead><tr><th>Kategorie</th><th style="text-align:right">Ist</th><th style="text-align:right">Budget</th><th style="text-align:right">Differenz</th><th style="text-align:right">Erreichung</th></tr></thead>
+<tbody>
+<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#E94560;margin-right:8px"></span>Küche</td><td style="text-align:right" class="mono">CHF 117'933</td><td style="text-align:right;color:#8899AA" class="mono">CHF 163'750</td><td style="text-align:right;color:#E94560" class="mono">−CHF 45'817</td><td style="text-align:right;color:#E94560;font-weight:700" class="mono">72.0%</td></tr>
+<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#533483;margin-right:8px"></span>Wein</td><td style="text-align:right" class="mono">CHF 28'146</td><td style="text-align:right;color:#8899AA" class="mono">CHF 54'000</td><td style="text-align:right;color:#E94560" class="mono">−CHF 25'854</td><td style="text-align:right;color:#E94560;font-weight:700" class="mono">52.1%</td></tr>
+<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#38ADA9;margin-right:8px"></span>Mineral</td><td style="text-align:right" class="mono">CHF 12'380</td><td style="text-align:right;color:#8899AA" class="mono">CHF 13'500</td><td style="text-align:right;color:#F6B93B" class="mono">−CHF 1'120</td><td style="text-align:right;color:#38ADA9;font-weight:700" class="mono">91.7%</td></tr>
+<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#4A69BD;margin-right:8px"></span>Spirituosen</td><td style="text-align:right" class="mono">CHF 10'000</td><td style="text-align:right;color:#8899AA" class="mono">CHF 11'750</td><td style="text-align:right;color:#F6B93B" class="mono">−CHF 1'750</td><td style="text-align:right;color:#38ADA9;font-weight:700" class="mono">85.1%</td></tr>
+<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#F6B93B;margin-right:8px"></span>Kaffee</td><td style="text-align:right" class="mono">CHF 3'539</td><td style="text-align:right;color:#8899AA" class="mono">CHF 5'000</td><td style="text-align:right;color:#E94560" class="mono">−CHF 1'461</td><td style="text-align:right;color:#F6B93B;font-weight:700" class="mono">70.8%</td></tr>
+<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#78E08F;margin-right:8px"></span>Bier</td><td style="text-align:right" class="mono">CHF 1'680</td><td style="text-align:right;color:#8899AA" class="mono">CHF 2'000</td><td style="text-align:right;color:#F6B93B" class="mono">−CHF 320</td><td style="text-align:right;color:#F6B93B;font-weight:700" class="mono">84.0%</td></tr>
+<tr style="border-top:2px solid rgba(233,69,96,0.3)"><td style="font-weight:700">Total</td><td style="text-align:right;font-weight:700" class="mono">CHF 173'888</td><td style="text-align:right;font-weight:700;color:#8899AA" class="mono">CHF 250'000</td><td style="text-align:right;font-weight:700;color:#E94560" class="mono">−CHF 76'112</td><td style="text-align:right;font-weight:700;color:#E94560" class="mono">69.6%</td></tr>
+</tbody>
+</table>
+<div class="slide-number">04</div>
+</div>
+
+<!-- SLIDE 5: COGS Analysis -->
+<div class="slide" id="s5">
+<div class="slide-logo">CAPRI AG</div>
+<h2>Warenkosten: Ist vs. Budget-Ziel</h2>
+<div class="kpi-row" style="margin-bottom:20px">
+<div class="kpi-card good"><div class="label">Gesamte COGS</div><div class="value green">25.3%</div><div class="sub">Budget: 26.4% (−1.1% besser)</div></div>
+<div class="kpi-card good"><div class="label">Rohertrag</div><div class="value green">CHF 129'809</div><div class="sub">74.7% Bruttomarge</div></div>
+</div>
+<div class="grid-3">
+<div class="insight-card" style="--accent:#78E08F"><h3 style="color:#78E08F">Wein: 26.5%</h3><p>Budget 35.0% → −8.5pp besser. Exzellente Marge (73.5%)</p></div>
+<div class="insight-card" style="--accent:#78E08F"><h3 style="color:#78E08F">Spirituosen: 14.2%</h3><p>Budget 22.0% → −7.8pp besser. Beste Marge (85.8%)</p></div>
+<div class="insight-card" style="--accent:#E94560"><h3 style="color:#E94560">Bier: 31.1%</h3><p>Budget 18.4% → +12.7pp schlechter. Einkauf überprüfen!</p></div>
+<div class="insight-card" style="--accent:#E94560"><h3 style="color:#E94560">Küche: 28.6%</h3><p>Budget 26.5% → +2.1pp über Ziel. CHF 2'476 zu viel</p></div>
+<div class="insight-card" style="--accent:#78E08F"><h3 style="color:#78E08F">Mineral: 4.3%</h3><p>Budget 3.0% → marginal drüber, exzellente Marge (95.7%)</p></div>
+<div class="insight-card" style="--accent:#F6B93B"><h3 style="color:#F6B93B">Kaffee: 9.8%</h3><p>Budget 8.0% → +1.8pp, gute Marge (90.2%)</p></div>
+</div>
+<div class="slide-number">05</div>
+</div>
+
+<!-- SLIDE 6: P&L -->
+<div class="slide" id="s6">
+<div class="slide-logo">CAPRI AG</div>
+<h2>Geschätzte Erfolgsrechnung</h2>
+<div style="border:1px solid rgba(255,255,255,0.08);border-radius:10px;overflow:hidden;margin:12px 0">
+<div class="pnl-line total"><span class="l">Umsatz (brutto)</span><span class="v">CHF 173'888</span><span class="p">100.0%</span></div>
+<div class="pnl-line"><span class="l">Warenkosten</span><span class="v">−CHF 44'079</span><span class="p">−25.3%</span></div>
+<div class="pnl-line total"><span class="l">Rohertrag</span><span class="v" style="color:#78E08F">CHF 129'809</span><span class="p">74.7%</span></div>
+<div class="pnl-line" style="color:#E94560"><span class="l">Personalkosten</span><span class="v">−CHF 98'208</span><span class="p">−56.5%</span></div>
+<div class="pnl-line"><span class="l">Betriebskosten</span><span class="v">−CHF 34'449</span><span class="p">−19.8%</span></div>
+<div class="pnl-line total"><span class="l">Betriebsergebnis 1</span><span class="v" style="color:#E94560">−CHF 2'848</span><span class="p">−1.6%</span></div>
+<div class="pnl-line"><span class="l">Miete + Unterhalt</span><span class="v">−CHF 30'322</span><span class="p">−17.4%</span></div>
+<div class="pnl-line total"><span class="l">EBITDA</span><span class="v" style="color:#E94560">−CHF 33'170</span><span class="p">−19.1%</span></div>
+<div class="pnl-line"><span class="l">Abschreibungen</span><span class="v">−CHF 4'500</span><span class="p">−2.6%</span></div>
+<div class="pnl-line total"><span class="l" style="color:#E94560">Netto-Ergebnis</span><span class="v" style="color:#E94560;font-size:16px">−CHF 37'670</span><span class="p" style="color:#E94560">−21.7%</span></div>
+</div>
+<div class="slide-number">06</div>
+</div>
+
+<!-- SLIDE 7: Break-Even -->
+<div class="slide" id="s7">
+<div class="slide-logo">CAPRI AG</div>
+<h2>Break-Even Analyse</h2>
+<div class="grid-2" style="margin:24px 0">
+<div>
+<h3 style="color:#F6B93B;margin-bottom:16px">Fixkosten monatlich</h3>
+<div style="font-size:14px;line-height:2">
+<div style="display:flex;justify-content:space-between"><span>Personal</span><span class="mono">CHF 98'208</span></div>
+<div style="display:flex;justify-content:space-between"><span>Betriebskosten</span><span class="mono">CHF 34'449</span></div>
+<div style="display:flex;justify-content:space-between"><span>Miete</span><span class="mono">CHF 21'322</span></div>
+<div style="display:flex;justify-content:space-between"><span>Unterhalt</span><span class="mono">CHF 9'000</span></div>
+<div style="display:flex;justify-content:space-between"><span>Abschreibungen</span><span class="mono">CHF 4'500</span></div>
+<div style="display:flex;justify-content:space-between;border-top:2px solid rgba(246,185,59,0.3);padding-top:8px;margin-top:8px;font-weight:700"><span>Total Fixkosten</span><span class="mono" style="color:#F6B93B">CHF 167'479</span></div>
+</div>
+</div>
+<div>
+<h3 style="color:#E94560;margin-bottom:16px">Break-Even Berechnung</h3>
+<div style="font-size:14px;line-height:2.2;color:#CCC">
+<p>Deckungsbeitrag: <strong style="color:#fff">74.7%</strong> (100% − 25.3% COGS)</p>
+<p>Break-Even: CHF 167'479 / 0.747 = <strong style="color:#E94560;font-size:18px">CHF 224'201</strong></p>
+<p style="margin-top:12px">Aktuell: CHF 173'888</p>
+<p style="color:#E94560;font-weight:700;font-size:16px">→ CHF 50'313 unter Break-Even</p>
+<p style="margin-top:12px;color:#8899AA">Benötigt: ~1'485 Quittungen/Mt. (vs. 1'148)<br>oder Ø-Bon von CHF 195 (vs. CHF 151)</p>
+</div>
+</div>
+</div>
+<div class="slide-number">07</div>
+</div>
+
+<!-- SLIDE 8: Revenue Recommendations -->
+<div class="slide" id="s8">
+<div class="slide-logo">CAPRI AG</div>
+<h2>Massnahmen: Umsatzsteigerung</h2>
+<div class="rec-slide-card"><span class="nr">R1</span><div class="title">Weinverkauf aktiv fördern</div><div class="body">Weinbegleitung zum Menü (CHF 39/49), Wein des Monats am Tisch, Offene Weine 4→8+ Positionen</div><div class="meta"><span class="g">Impact: +CHF 8'500/Mt.</span><span class="y">Aufwand: Mittel · Sofort</span></div></div>
+<div class="rec-slide-card"><span class="nr">R2</span><div class="title">Bier-Programm lancieren</div><div class="body">3–4 Schweizer Craft-Biere, Bier-Pairing, Fassbierbezug (COGS 31%→15%)</div><div class="meta"><span class="g">Impact: +CHF 3'200/Mt.</span><span class="y">Aufwand: Niedrig · 2 Wochen</span></div></div>
+<div class="rec-slide-card"><span class="nr">R3</span><div class="title">Business-Lunch & Gästefrequenz</div><div class="body">2 Gänge CHF 39, 3 Gänge CHF 49, Firmen-Partnerschaften, Google/TripAdvisor</div><div class="meta"><span class="g">Impact: +CHF 30'000/Mt.</span><span class="y">Aufwand: Hoch · 4–6 Wochen</span></div></div>
+<div class="rec-slide-card"><span class="nr">R4</span><div class="title">Spirituosen & Aperitivo</div><div class="body">Signature Cocktails, Digestif-Empfehlung, Aperitivo 17–19h (Marge 85.8%!)</div><div class="meta"><span class="g">Impact: +CHF 4'000/Mt.</span><span class="y">Aufwand: Mittel · 2–3 Wochen</span></div></div>
+<div class="slide-number">08</div>
+</div>
+
+<!-- SLIDE 9: Cost Recommendations -->
+<div class="slide" id="s9">
+<div class="slide-logo">CAPRI AG</div>
+<h2>Massnahmen: Kostensenkung</h2>
+<div class="rec-slide-card"><span class="nr">K1</span><div class="title">Küche-COGS 28.6% → 26.5%</div><div class="body">Tägliche Wareneinsatzkontrolle, Portionsgrössen standardisieren, Menu Engineering, saisonale Alternativen</div><div class="meta"><span class="g">Einsparung: CHF 2'500/Mt.</span><span class="y">Aufwand: Mittel · Sofort</span></div></div>
+<div class="rec-slide-card"><span class="nr">K2</span><div class="title">Bier-COGS 31% → 18%</div><div class="body">Einkaufspreise prüfen, margenstarke Sorten fokussieren, Fassbierbezug</div><div class="meta"><span class="g">Einsparung: CHF 200/Mt.</span><span class="y">Aufwand: Niedrig · 2 Wochen</span></div></div>
+<div class="rec-slide-card"><span class="nr">K3</span><div class="title">Personalplanung flexibilisieren</div><div class="body">Schichtplanung an Gästeaufkommen, Kurzarbeit/Stundenreduktion, Admin-Kosten (CHF 18'297) hinterfragen</div><div class="meta"><span class="g">Einsparung: CHF 10–15K/Mt.</span><span class="y">Aufwand: Hoch · 1–2 Monate</span></div></div>
+<div class="rec-slide-card"><span class="nr">K4</span><div class="title">Offeriert/Gratis begrenzen</div><div class="body">CHF 554/Mt. Gratis-Abgaben — klare Policy, Budget, Genehmigungsprozess</div><div class="meta"><span class="g">Einsparung: CHF 500/Mt.</span><span class="y">Aufwand: Niedrig · Sofort</span></div></div>
+<div class="slide-number">09</div>
+</div>
+
+<!-- SLIDE 10: Priority Matrix -->
+<div class="slide" id="s10">
+<div class="slide-logo">CAPRI AG</div>
+<h2>Prioritätenmatrix</h2>
+<table class="ppt-table">
+<thead><tr><th>Massnahme</th><th style="text-align:right">Umsatz-Impact</th><th style="text-align:right">Kosten-Impact</th><th>Aufwand</th><th>Zeitrahmen</th></tr></thead>
+<tbody>
+<tr><td style="font-weight:700">Weinverkauf fördern</td><td style="text-align:right;color:#78E08F" class="mono">+CHF 8.5K</td><td style="text-align:right" class="mono">—</td><td>●●○</td><td style="color:#F6B93B">Sofort</td></tr>
+<tr><td style="font-weight:700">Bier-Sortiment</td><td style="text-align:right;color:#78E08F" class="mono">+CHF 3.2K</td><td style="text-align:right;color:#38ADA9" class="mono">−CHF 200</td><td>●○○</td><td style="color:#F6B93B">2 Wochen</td></tr>
+<tr><td style="font-weight:700">Business-Lunch</td><td style="text-align:right;color:#78E08F" class="mono">+CHF 30K</td><td style="text-align:right" class="mono">—</td><td>●●●</td><td style="color:#F6B93B">4–6 Wochen</td></tr>
+<tr><td style="font-weight:700">Cocktail/Aperitivo</td><td style="text-align:right;color:#78E08F" class="mono">+CHF 4K</td><td style="text-align:right" class="mono">—</td><td>●●○</td><td style="color:#F6B93B">2–3 Wochen</td></tr>
+<tr><td style="font-weight:700">Küche-COGS senken</td><td style="text-align:right" class="mono">—</td><td style="text-align:right;color:#38ADA9" class="mono">−CHF 2.5K</td><td>●●○</td><td style="color:#F6B93B">Sofort</td></tr>
+<tr><td style="font-weight:700">Personalplanung</td><td style="text-align:right" class="mono">—</td><td style="text-align:right;color:#38ADA9" class="mono">−CHF 10–15K</td><td>●●●</td><td style="color:#F6B93B">1–2 Monate</td></tr>
+<tr><td style="font-weight:700">Offeriert begrenzen</td><td style="text-align:right" class="mono">—</td><td style="text-align:right;color:#38ADA9" class="mono">−CHF 500</td><td>●○○</td><td style="color:#F6B93B">Sofort</td></tr>
+</tbody>
+</table>
+<div style="margin-top:20px;padding:16px;background:rgba(233,69,96,0.06);border:1px solid rgba(233,69,96,0.2);border-radius:8px">
+<p style="font-size:14px;font-weight:700;color:#E94560;margin-bottom:6px">Gesamtpotenzial bei Umsetzung aller Massnahmen:</p>
+<p style="font-size:13px;color:#CCC">Umsatzsteigerung: <strong style="color:#78E08F">+CHF 45'700/Mt.</strong> · Kostensenkung: <strong style="color:#38ADA9">−CHF 13'200–18'200/Mt.</strong></p>
+<p style="font-size:13px;color:#CCC;margin-top:4px">→ Ergibt einen potenziellen Umsatz von <strong style="color:#fff">CHF 220'000+</strong> und annähernd Break-Even innerhalb von 6–8 Wochen.</p>
+</div>
+<div class="slide-number">10</div>
+</div>
+
+<!-- Navigation dots -->
+<div class="nav-bar">
+<div class="nav-dot active" onclick="goSlide(1)"></div>
+<div class="nav-dot" onclick="goSlide(2)"></div>
+<div class="nav-dot" onclick="goSlide(3)"></div>
+<div class="nav-dot" onclick="goSlide(4)"></div>
+<div class="nav-dot" onclick="goSlide(5)"></div>
+<div class="nav-dot" onclick="goSlide(6)"></div>
+<div class="nav-dot" onclick="goSlide(7)"></div>
+<div class="nav-dot" onclick="goSlide(8)"></div>
+<div class="nav-dot" onclick="goSlide(9)"></div>
+<div class="nav-dot" onclick="goSlide(10)"></div>
+</div>
+
+<script>
+function goSlide(n) {
+  document.getElementById('s' + n).scrollIntoView({ behavior: 'smooth' });
+  document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === n - 1));
+}
+// Update dots on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = parseInt(e.target.id.replace('s', '')) - 1;
+      document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.slide').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
