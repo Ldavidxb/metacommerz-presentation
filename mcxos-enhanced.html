@@ -60,10 +60,10 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 <div class="stats">
 <div class="stat"><div class="v">12</div><div class="l">Domain Suites</div></div>
 <div class="stat"><div class="v">~80</div><div class="l">Modules</div></div>
-<div class="stat"><div class="v">35</div><div class="l">OODA Agents</div></div>
+<div class="stat"><div class="v">74</div><div class="l">Total Agents</div></div>
+<div class="stat"><div class="v">62</div><div class="l">Full OODA Agents</div></div>
 <div class="stat"><div class="v">324+</div><div class="l">Frontend Pages</div></div>
 <div class="stat"><div class="v">26</div><div class="l">Domain Events</div></div>
-<div class="stat"><div class="v">300+</div><div class="l">Enum Entries</div></div>
 <div class="stat"><div class="v">98.3%</div><div class="l">Hardcode Eliminated</div></div>
 </div>
 
@@ -103,7 +103,7 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 <div class="s hi">Domain Suites (12)</div><div class="ar">→</div>
 <div class="s tl">Modules (~80)</div><div class="ar">→</div>
 <div class="s gr">Services &amp; APIs</div><div class="ar">→</div>
-<div class="s" style="border-color:var(--pink);color:var(--pink)">Autonomous AI Layer (35 Agents)</div>
+<div class="s" style="border-color:var(--pink);color:var(--pink)">Autonomous AI Layer (74 Agents)</div>
 </div>
 </div>
 </section><div class="dv"></div>
@@ -116,7 +116,7 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 
 <!-- Suite 1: SCM Operations -->
 <section class="rv">
-<div class="mh"><span class="mn">S1</span><h2 style="margin:0;font-size:1.5rem">SCM Operations</h2><span class="ms">7 modules · 3 agents · The execution layer</span></div>
+<div class="mh"><span class="mn">S1</span><h2 style="margin:0;font-size:1.5rem">SCM Operations</h2><span class="ms">7 modules · 9 agents (3 OODA + 6 Operations) · The execution layer</span></div>
 <p class="si">What's happening right now — order management, BOM, MRP, assembly, quality, collaboration, and approvals.</p>
 <div class="g g4">
 <div class="c"><h3>Order Management</h3><p>Sales orders, fulfillment, OMS</p></div>
@@ -129,12 +129,12 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 <div class="c gn"><h3>Collaboration</h3><p>Supplier/buyer task collaboration</p></div>
 <div class="c cy"><h3>Approval Queue</h3><p>VPR approvals, multi-tier approvals</p></div>
 </div>
-<div style="margin-top:12px"><span class="agent-tag">MRPAgent</span><span class="agent-tag">BOMChangeAgent</span><span class="agent-tag">AssemblySchedulerAgent</span></div>
+<div style="margin-top:12px"><span class="agent-tag">MRPAgent</span><span class="agent-tag">BOMChangeAgent</span><span class="agent-tag">AssemblySchedulerAgent</span><span class="agent-tag">OrderFulfillmentAgent</span><span class="agent-tag">RequisitionApprovalAgent</span><span class="agent-tag">MRPExceptionAgent</span><span class="agent-tag">VolumeTierComplianceAgent</span><span class="agent-tag">OrderPromiseAgent</span><span class="agent-tag">ProductLifecycleAgent</span></div>
 </section><div class="dv"></div>
 
 <!-- Suite 2: Planning & S&OP -->
 <section class="rv">
-<div class="mh"><span class="mn">S2</span><h2 style="margin:0;font-size:1.5rem">Planning &amp; S&OP</h2><span class="ms">5 modules · 4 agents · The forward-looking layer</span></div>
+<div class="mh"><span class="mn">S2</span><h2 style="margin:0;font-size:1.5rem">Planning &amp; S&OP</h2><span class="ms">5 modules · 9 agents (4 Planning + 5 IBP) · The forward-looking layer</span></div>
 <p class="si">What should happen — consensus planning, demand/supply gap review, forecasting, budgets, capacity, and replenishment.</p>
 <div class="g g3">
 <div class="c"><h3>S&OP Dashboard</h3><p>Consensus planning, demand/supply gap review</p></div>
@@ -145,12 +145,12 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 <div class="c pk"><h3>Capacity Planning</h3><p>Capacity config, constraints</p></div>
 <div class="c or"><h3>Replenishment</h3><p>Reorder points, safety stock optimization</p></div>
 </div>
-<div style="margin-top:12px"><span class="agent-tag">ForecastRevisionAgent</span><span class="agent-tag">DemandSensingAgent</span><span class="agent-tag">SalesOperationsBridgeAgent</span><span class="agent-tag">SafetyStockRecalibrationAgent</span></div>
+<div style="margin-top:12px"><span class="agent-tag">ForecastRevisionAgent</span><span class="agent-tag">DemandSensingAgent</span><span class="agent-tag">SalesOperationsBridgeAgent</span><span class="agent-tag">SafetyStockRecalibrationAgent</span><span class="agent-tag">IBPReconciliationAgent</span><span class="agent-tag">ForecastAccuracyAgent</span><span class="agent-tag">BudgetReforecastAgent</span><span class="agent-tag">CapacityConstraintAgent</span><span class="agent-tag">ProcurementPlanAgent</span></div>
 </section><div class="dv"></div>
 
 <!-- Suite 3: TMS -->
 <section class="rv">
-<div class="mh"><span class="mn">S3</span><h2 style="margin:0;font-size:1.5rem">TMS — Transport Management</h2><span class="ms">8 modules · 5 agents · Everything that moves</span></div>
+<div class="mh"><span class="mn">S3</span><h2 style="margin:0;font-size:1.5rem">TMS — Transport Management</h2><span class="ms">8 modules · 11 agents · Everything that moves</span></div>
 <div class="g g4">
 <div class="c"><h3>Freight RFQ</h3><p>Request quotes from forwarders</p></div>
 <div class="c bl"><h3>Spot Quote</h3><p>Spot market pricing</p></div>
@@ -163,12 +163,12 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 <div class="c cy"><h3>DGR Management</h3><p>Dangerous goods compliance</p></div>
 <div class="c"><h3>Carrier Scoring</h3><p>Performance-based carrier ranking</p></div>
 </div>
-<div style="margin-top:12px"><span class="agent-tag">FreightBookingAgent</span><span class="agent-tag">ShipmentDelayAgent</span><span class="agent-tag">CarrierScorecardAgent</span><span class="agent-tag">CustomsComplianceAgent</span><span class="agent-tag">FreightCostVarianceAgent</span></div>
+<div style="margin-top:12px"><span class="agent-tag">FreightBookingAgent</span><span class="agent-tag">ShipmentDelayAgent</span><span class="agent-tag">CarrierScorecardAgent</span><span class="agent-tag">CustomsComplianceAgent</span><span class="agent-tag">FreightCostVarianceAgent</span><span class="agent-tag">FreightRFQExpiryAgent</span><span class="agent-tag">SpotQuoteConversionAgent</span><span class="agent-tag">TrackingAnomalyAgent</span><span class="agent-tag">FreightContractRenewalAgent</span><span class="agent-tag">DemurrageDetectionAgent</span><span class="agent-tag">MultiModalOptimisationAgent</span></div>
 </section><div class="dv"></div>
 
 <!-- Suite 4: WMS -->
 <section class="rv">
-<div class="mh"><span class="mn">S4</span><h2 style="margin:0;font-size:1.5rem">WMS — Warehouse Management</h2><span class="ms">7 modules · 4 agents · Everything in the four walls</span></div>
+<div class="mh"><span class="mn">S4</span><h2 style="margin:0;font-size:1.5rem">WMS — Warehouse Management</h2><span class="ms">7 modules · 8 agents (4 WMS + 4 Inventory) · Everything in the four walls</span></div>
 <div class="g g4">
 <div class="c"><h3>Warehouse Setup</h3><p>Zones, docks, storage locations</p></div>
 <div class="c bl"><h3>Storage Locations</h3><p>Location master, capacities</p></div>
@@ -180,7 +180,7 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 <div class="c gn"><h3>Cross-Dock</h3><p>Cross-dock task management</p></div>
 <div class="c cy"><h3>Goods Receipt</h3><p>VGRN / BGRN processing</p></div>
 </div>
-<div style="margin-top:12px"><span class="agent-tag">ReplenishmentAgent</span><span class="agent-tag">InboundDockAgent</span><span class="agent-tag">CycleCountSchedulerAgent</span><span class="agent-tag">DeadStockAgent</span></div>
+<div style="margin-top:12px"><span class="agent-tag">ReplenishmentAgent</span><span class="agent-tag">InboundDockAgent</span><span class="agent-tag">CycleCountSchedulerAgent</span><span class="agent-tag">DeadStockAgent</span><span class="agent-tag">StockTransferAgent</span><span class="agent-tag">LotExpiryAgent</span><span class="agent-tag">QualityHoldAgent</span><span class="agent-tag">DemandSupplyMatchAgent</span></div>
 </section><div class="dv"></div>
 
 <!-- Suite 5: Finance ERP -->
@@ -221,7 +221,7 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 
 <!-- Suite 7: Procurement -->
 <section class="rv">
-<div class="mh"><span class="mn">S7</span><h2 style="margin:0;font-size:1.5rem">Procurement</h2><span class="ms">6 modules · 3 agents · Buy-side operations</span></div>
+<div class="mh"><span class="mn">S7</span><h2 style="margin:0;font-size:1.5rem">Procurement</h2><span class="ms">6 modules · 7 agents (3 procurement + 4 contract/pricing) · Buy-side operations</span></div>
 <div class="g g3">
 <div class="c"><h3>Vendor Management</h3><p>Vendor profiles, qualification, scoring</p></div>
 <div class="c bl"><h3>Purchase Orders</h3><p>PO lifecycle — draft → approve → confirm</p></div>
@@ -232,10 +232,8 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 <div class="c or"><h3>Contract Conditions</h3><p>Insurance, SLAs, penalties</p></div>
 <div class="c gn"><h3>TPRM &amp; Entity Mgmt</h3><p>Third-party risk, buyers, sellers, 3PLs</p></div>
 </div>
-<div style="margin-top:12px"><span class="agent-tag">PurchaseOrderAgent</span><span class="agent-tag">VendorQualificationAgent</span><span class="agent-tag">SpendAnalysisAgent</span></div>
+<div style="margin-top:12px"><span class="agent-tag">PurchaseOrderAgent</span><span class="agent-tag">VendorQualificationAgent</span><span class="agent-tag">SpendAnalysisAgent</span><span class="agent-tag">ContractExpiryAgent</span><span class="agent-tag">ContractPerformanceAgent</span><span class="agent-tag">PricingConditionAuditAgent</span><span class="agent-tag">TenderAwardExpiryAgent</span></div>
 </section><div class="dv"></div>
-
-<!-- Suite 8: Tender -->
 <section class="rv">
 <div class="mh"><span class="mn">S8</span><h2 style="margin:0;font-size:1.5rem">Tender &amp; Freight Quote Management</h2><span class="ms">7 modules · 13 agents · The sourcing engine</span></div>
 <div class="g g4">
@@ -266,7 +264,7 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 
 <!-- Suite 10: Audit -->
 <section class="rv">
-<div class="mh"><span class="mn">S10</span><h2 style="margin:0;font-size:1.5rem">Audit</h2><span class="ms">6 modules · 3 agents · The control layer</span></div>
+<div class="mh"><span class="mn">S10</span><h2 style="margin:0;font-size:1.5rem">Audit</h2><span class="ms">6 modules · 20 agents (8 OODA + 12 lifecycle) · The control layer</span></div>
 <div class="g g3">
 <div class="c"><h3>Document Audit</h3><p>AI-assisted document analysis</p></div>
 <div class="c bl"><h3>Analysis &amp; Quick Check</h3><p>Audit trail, session history, one-off checks</p></div>
@@ -276,7 +274,7 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 <div class="c pk"><h3>Field Mapper</h3><p>OCR → structured data mapping (5000+ patterns via Bedrock)</p></div>
 <div class="c or"><h3>Compliance Documents</h3><p>Regulatory document tracking, deadline management</p></div>
 </div>
-<div style="margin-top:12px"><span class="agent-tag">DocumentAuditAnomalyAgent</span><span class="agent-tag">ComplianceMonitorAgent</span><span class="agent-tag">AuditEscalationAgent</span></div>
+<div style="margin-top:12px"><span class="agent-tag">DocumentAuditAnomalyAgent</span><span class="agent-tag">ComplianceMonitorAgent</span><span class="agent-tag">AuditEscalationAgent</span><span class="agent-tag">InvoiceDiscrepancyAgent</span><span class="agent-tag">DocumentExpiryAgent</span><span class="agent-tag">AuditSessionTimeoutAgent</span><span class="agent-tag">FinancialSettlementAgent</span><span class="agent-tag">PricingAuditMatchAgent</span></div>
 </section><div class="dv"></div>
 
 <!-- Suite 11: Enterprise Parity -->
@@ -295,44 +293,134 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 </div>
 </section><div class="dv"></div>
 
-<!-- Suite 12: Agentic AI / OODA -->
+<!-- Suite 12: Agentic AI / OODA — FULL 74-AGENT ARCHITECTURE -->
 <section class="rv" id="agents">
-<div class="mh"><span class="mn">S12</span><h2 style="margin:0;font-size:1.5rem">Agentic AI / OODA</h2><span class="ms">35 agents · 4 DB tables · The autonomous layer</span></div>
-<p class="si">The layer that makes users' lives hands-free. Every suite has agents that run continuously without manual intervention. Architecture: Observe → Orient → Decide → Act.</p>
+<div class="mh"><span class="mn">S12</span><h2 style="margin:0;font-size:1.5rem">Agentic AI / OODA</h2><span class="ms">74 total agents · 62 full OODA · 4 DB tables · The autonomous layer</span></div>
+<p class="si">Every autonomous agent runs the same four-phase decision loop — no exceptions, no custom wiring. The framework lives in <code style="color:var(--cyan);font-size:0.82rem">backend/orchestrator/ooda/</code>. Three tiers: 62 Full OODA agents, 40 specialist agents, and 12 audit lifecycle agents.</p>
 
+<!-- OODA Framework Detail -->
 <div class="ooda">
-<div class="ooda-s"><div class="on">O</div><h3>OBSERVE</h3><p>ObservationBus polls DB state, domain events, external APIs</p></div>
-<div class="ooda-s"><div class="on">O</div><h3>ORIENT</h3><p>OrientationEngine contextualizes with history, thresholds, policies</p></div>
-<div class="ooda-s"><div class="on">D</div><h3>DECIDE</h3><p>DecisionMatrix maps (module, signal, context) → action set with confidence</p></div>
-<div class="ooda-s"><div class="on">A</div><h3>ACT</h3><p>ActorDispatcher executes, emits DomainEvent, writes AgentAction record</p></div>
+<div class="ooda-s"><div class="on">O</div><h3>OBSERVE</h3><p>Agent queries live DB for domain signals. Each wrapped in OODASignal (signal_type, signal_data, severity: info/warning/critical)</p></div>
+<div class="ooda-s"><div class="on">O</div><h3>ORIENT</h3><p>Signal contextualised with history, policy thresholds, prior decisions, risk metadata → OODAContext output</p></div>
+<div class="ooda-s"><div class="on">D</div><h3>DECIDE</h3><p>Confidence score 0.0–1.0 assigned. OODADecisionResult: decision, reasoning, action_params, requires_human boolean</p></div>
+<div class="ooda-s"><div class="on">A</div><h3>ACT</h3><p>Creates DB records, publishes events to agent bus, calls external services. Every action logged to AgentAction</p></div>
 </div>
 
-<div class="bn"><p>Auto-act @ confidence ≥ 85% &amp; value &lt; threshold · Escalate @ confidence &lt; 70% or novel pattern · Human sees: observation + reasoning + proposed action</p></div>
+<div class="bn"><p>Auto-act @ confidence ≥ 0.85 &amp; value &lt; threshold · Escalate @ confidence &lt; 0.70 or novel pattern · Human sees: observation + reasoning + proposed action → Accept / Modify / Reject</p></div>
 
-<!-- Agent Distribution Table -->
-<h3 style="margin-top:20px;color:var(--cyan)">35 Autonomous Agents by Suite</h3>
+<!-- Three Tiers -->
+<h3 style="margin-top:24px;color:var(--cyan)">Agent Tiers</h3>
+<div class="g g3">
+<div class="c"><h3>Tier A — 62 Full OODA</h3><p>All extend BaseOODAAgent, run autonomous cycles on configured intervals (5–60 min), persist every observation/decision/action to Aurora DB.</p></div>
+<div class="c bl"><h3>Tier B — 40 Specialist</h3><p>Purpose-built for specific workflow patterns. Invoked directly by services rather than running continuous loops. Domain-specific logic.</p></div>
+<div class="c tl"><h3>Tier C — 12 Audit Lifecycle</h3><p>Tier 1 orchestrators + sub-agents for the full audit-to-payment pipeline. Multi-step orchestration with SLA enforcement.</p></div>
+</div>
+
+<!-- Full Agent Distribution -->
+<h3 style="margin-top:24px;color:var(--gold)">62 Full OODA Agents by Domain</h3>
 <table class="cmp">
-<thead><tr><th>Suite</th><th>Count</th><th>Agents</th></tr></thead>
+<thead><tr><th>Domain File</th><th>Count</th><th>Agents</th></tr></thead>
 <tbody>
-<tr><td>Finance</td><td>7</td><td>APAging, ARCollection, BankRecon, ThreeWayMatch, PeriodClose, CashFlowForecast, BudgetVariance</td></tr>
-<tr><td>TMS</td><td>5</td><td>FreightBooking, ShipmentDelay, CarrierScorecard, CustomsCompliance, FreightCostVariance</td></tr>
-<tr><td>WMS</td><td>4</td><td>Replenishment, InboundDock, CycleCountScheduler, DeadStock</td></tr>
-<tr><td>Planning</td><td>4</td><td>ForecastRevision, DemandSensing, SalesOperationsBridge, SafetyStockRecalibration</td></tr>
-<tr><td>SCM</td><td>3</td><td>MRP, BOMChange, AssemblyScheduler</td></tr>
-<tr><td>Procurement</td><td>3</td><td>PurchaseOrder, VendorQualification, SpendAnalysis</td></tr>
-<tr><td>Trade Finance</td><td>3</td><td>LCMonitor, LCDocumentCompliance, FXExposure</td></tr>
-<tr><td>Audit</td><td>3</td><td>DocumentAuditAnomaly, ComplianceMonitor, AuditEscalation</td></tr>
-<tr><td>Tender</td><td>13</td><td>TenderOrchestrator + 12 specialist evaluation agents</td></tr>
+<tr><td>finance_agents.py</td><td>7</td><td>APAging, ARCollection, BankReconciliation, ThreeWayMatch, PeriodClose, CashFlowForecast, BudgetVariance</td></tr>
+<tr><td>planning_agents.py</td><td>4</td><td>ForecastRevision, DemandSensing, SalesOperationsBridge, SafetyStockRecalibration</td></tr>
+<tr><td>planning_ibp_agents.py</td><td>5</td><td>IBPReconciliation, ForecastAccuracy, BudgetReforecast, CapacityConstraint, ProcurementPlan</td></tr>
+<tr><td>scm_agents.py</td><td>3</td><td>MRP, BOMChange, AssemblyScheduler</td></tr>
+<tr><td>operations_agents.py</td><td>6</td><td>OrderFulfillment, RequisitionApproval, MRPException, VolumeTierCompliance, OrderPromise, ProductLifecycle</td></tr>
+<tr><td>wms_agents.py</td><td>4</td><td>Replenishment, InboundDock, CycleCountScheduler, DeadStock</td></tr>
+<tr><td>inventory_extended_agents.py</td><td>4</td><td>StockTransfer, LotExpiry, QualityHold, DemandSupplyMatch</td></tr>
+<tr><td>tms_agents.py</td><td>5</td><td>FreightBooking, ShipmentDelay, CarrierScorecard, CustomsCompliance, FreightCostVariance</td></tr>
+<tr><td>transport_agents.py</td><td>6</td><td>FreightRFQExpiry, SpotQuoteConversion, TrackingAnomaly, FreightContractRenewal, DemurrageDetection, MultiModalOptimisation</td></tr>
+<tr><td>procurement_agents.py</td><td>3</td><td>PurchaseOrder, VendorQualification, SpendAnalysis</td></tr>
+<tr><td>contract_pricing_agents.py</td><td>4</td><td>ContractExpiry, ContractPerformance, PricingConditionAudit, TenderAwardExpiry</td></tr>
+<tr><td>trade_finance_agents.py</td><td>3</td><td>LCMonitor, LCDocumentCompliance, FXExposure</td></tr>
+<tr><td>audit_agents.py</td><td>3</td><td>DocumentAuditAnomaly, ComplianceMonitor, AuditEscalation</td></tr>
+<tr><td>audit_extended_agents.py</td><td>5</td><td>InvoiceDiscrepancy, DocumentExpiry, AuditSessionTimeout, FinancialSettlement, PricingAuditMatch</td></tr>
 </tbody>
 </table>
 
-<!-- Agent DB Schema -->
-<h3 style="margin-top:20px;color:var(--teal)">Agent Database Tables (Aurora)</h3>
+<!-- Audit Lifecycle Agents (Tier C) -->
+<h3 style="margin-top:24px;color:var(--pink)">12 Audit Lifecycle Agents (Tier C)</h3>
+<div class="g g2">
+<div class="c pk"><h3>Tier 1 Orchestrators (4)</h3><ul><li><strong>AuditOrchestrationAgent</strong> — master pipeline SLA enforcement</li><li><strong>DiscrepancyResolutionAgent</strong> — routes unresolvable discrepancies</li><li><strong>AuditApprovalAgent</strong> — auto-approves clean sessions, gates posting</li><li><strong>PaymentAuthorisationAgent</strong> — final payment gate by value tier</li></ul></div>
+<div class="c or"><h3>Sub-Agents (8)</h3><ul><li><strong>MatchConfidenceAgent</strong> — low confidence → re-extract</li><li><strong>DiscrepancyClassifierAgent</strong> — PRICE/QTY/VAT/DUPLICATE</li><li><strong>EntityOutreachAgent</strong> — drafts vendor/customer emails</li><li><strong>CollaborationTaskAgent</strong> — creates team task</li><li><strong>ReAuditTriggerAgent</strong> — corrected doc → fresh session</li><li><strong>PostingReadinessAgent</strong> — validates GL + fiscal period</li><li><strong>PaymentBatchBuilderAgent</strong> — groups into batches</li><li><strong>ARReleaseAgent</strong> — releases to AR billing cycle</li></ul></div>
+</div>
+
+<!-- Agent Infrastructure -->
+<h3 style="margin-top:24px;color:var(--teal)">Agent Infrastructure</h3>
 <div class="g g4">
-<div class="c"><h3>agent_observation</h3><p>Every signal detected by agents</p></div>
-<div class="c bl"><h3>agent_decision</h3><p>Every decision (confidence, reasoning, params)</p></div>
-<div class="c tl"><h3>agent_action</h3><p>Every action executed (success/fail, result)</p></div>
-<div class="c pk"><h3>agent_config</h3><p>Per-tenant, per-agent config (thresholds, intervals)</p></div>
+<div class="c"><h3>agent_observation</h3><p>Every signal detected — logged before orient phase. signal_type + signal_data + severity.</p></div>
+<div class="c bl"><h3>agent_decision</h3><p>Every decision with confidence score, reasoning text, action_params, requires_human flag.</p></div>
+<div class="c tl"><h3>agent_action</h3><p>Every action executed — success/fail, result dict, action name, relevant IDs.</p></div>
+<div class="c pk"><h3>agent_config</h3><p>Per-tenant, per-agent: enabled, interval (5–60 min), confidence_threshold (0.70), auto_act_threshold (0.85), value_threshold, channels.</p></div>
+</div>
+
+<div class="g g2" style="margin-top:14px">
+<div class="c gn"><h3>Loop Manager (loop_manager.py)</h3><p>Runs each agent on configured interval. Async scheduling, running state tracking, exposes run_agent_once() for manual triggers from Agent Control Centre.</p></div>
+<div class="c cy"><h3>Agent Bus (agent_bus.py)</h3><p>Event-driven cross-module communication. Agents publish typed events (mrp.reorder_triggered, audit.session_approved, finance.payment_authorised). Other agents subscribe via handle_event().</p></div>
+</div>
+
+<!-- Human-in-the-Loop Design -->
+<div class="bn" style="border-color:var(--teal);margin-top:20px"><p style="color:var(--teal)">Human-in-the-Loop: ≥85% confidence + value &lt; threshold → auto-act · &lt;70% confidence or novel pattern → escalate structured recommendation · Human sees observation + reasoning + proposed action → Accept / Modify / Reject</p></div>
+</section><div class="dv"></div>
+
+<!-- FULL AUDIT PIPELINE -->
+<section class="rv">
+<h2>Document Audit — Full Autonomous Pipeline</h2>
+<p class="si">The most complex module — 20 agents orchestrating from GRN confirmation through AI extraction, audit, approval, posting, and payment authorisation. Zero manual steps on clean documents.</p>
+
+<div class="e2e">
+<div class="e2e-s"><div class="e2e-n">1</div><div class="e2e-c"><strong>GRN Confirmed Event</strong><p>grn.confirmed → AuditOrchestrator.handle_grn_confirmed() → creates DocumentAuditSession (PENDING or WAITING_DOCUMENT)</p></div></div>
+<div class="e2e-s"><div class="e2e-n">2</div><div class="e2e-c"><strong>Document Extraction</strong><p>extract_document_from_s3() → Textract OCR → Claude Opus 4.5 extraction → FieldMappingService normalisation (5000+ patterns)</p></div></div>
+<div class="e2e-s"><div class="e2e-n">3</div><div class="e2e-c"><strong>Audit Comparison</strong><p>Comparator runs (ThreeWayMatch / Freight / LC / Contract / Pricing / BOM) → tolerance check → risk level → auto_resolve flag → ComplianceMiddleware screening</p></div></div>
+<div class="e2e-s"><div class="e2e-n">4</div><div class="e2e-c"><strong>Approval Gate</strong><p>AuditApprovalAgent: 0 variances + clear compliance + value ≤ $10k → auto-approve. Else → human review queue</p></div></div>
+<div class="e2e-s"><div class="e2e-n">5</div><div class="e2e-c"><strong>Discrepancy Resolution</strong><p>DiscrepancyResolutionAgent → ClassifierAgent (PRICE/QTY/VAT/DUPLICATE) → CollaborationTaskAgent → EntityOutreachAgent (vendor email)</p></div></div>
+<div class="e2e-s"><div class="e2e-n">6</div><div class="e2e-c"><strong>Re-Audit Loop</strong><p>ReAuditTriggerAgent: corrected doc → fresh session · 48h no response → chase · 96h → escalate to dispute</p></div></div>
+<div class="e2e-s"><div class="e2e-n">7</div><div class="e2e-c"><strong>Posting Readiness</strong><p>PostingReadinessAgent validates fiscal period open + GL accounts valid → PostingGateService builds balanced journals → FinanceRecordBuilder creates APBill/ARInvoice/JournalEntry</p></div></div>
+<div class="e2e-s"><div class="e2e-n">8</div><div class="e2e-c"><strong>Payment Authorisation</strong><p>&lt;$25k auto-authorise → PaymentBatchBuilderAgent groups bills · $25k–$100k → finance approver · &gt;$100k → treasury</p></div></div>
+<div class="e2e-s"><div class="e2e-n">9</div><div class="e2e-c"><strong>AR Release</strong><p>ARReleaseAgent releases approved customer invoices into AR billing cycle → ARCollectionAgent monitors for collection</p></div></div>
+</div>
+
+<p style="color:var(--gold);font-size:0.82rem;font-weight:600;margin:12px 0">Concurrent Background Monitoring (always running):</p>
+<div style="display:flex;flex-wrap:wrap;gap:4px;margin:8px 0">
+<span class="agent-tag">AuditOrchestrationAgent</span><span class="agent-tag">MatchConfidenceAgent</span><span class="agent-tag">AuditSessionTimeoutAgent</span><span class="agent-tag">DocumentAuditAnomalyAgent</span><span class="agent-tag">InvoiceDiscrepancyAgent</span><span class="agent-tag">PricingAuditMatchAgent</span><span class="agent-tag">FinancialSettlementAgent</span><span class="agent-tag">DocumentExpiryAgent</span><span class="agent-tag">ComplianceMonitorAgent</span><span class="agent-tag">AuditEscalationAgent</span>
+</div>
+</section><div class="dv"></div>
+
+<!-- CROSS-MODULE EVENT FLOWS -->
+<section class="rv">
+<h2>Cross-Module Event Flows</h2>
+<p class="si">The agent bus creates a unified nervous system. A GRN confirmation in Warehouse automatically propagates through 8 agents across 4 modules before the AP bill is in a payment batch — without a human touching any step unless variance requires judgment.</p>
+
+<h3 style="color:var(--gold);margin-bottom:10px">Demand → Procurement → Payment (End-to-End)</h3>
+<div class="wf"><div class="s">Demand Plan Approved</div><div class="ar">→</div><div class="s hi">planning.demand_sensed</div><div class="ar">→</div><div class="s">ProcurementPlanAgent</div><div class="ar">→</div><div class="s hi">mrp.reorder_triggered</div><div class="ar">→</div><div class="s tl">PurchaseOrderAgent</div><div class="ar">→</div><div class="s gr">VPO Created</div></div>
+
+<h3 style="color:var(--gold);margin-bottom:10px;margin-top:16px">GRN → Audit → Finance → Payment (8 agents, 4 modules)</h3>
+<div class="wf"><div class="s">GRN Received</div><div class="ar">→</div><div class="s hi">grn.confirmed</div><div class="ar">→</div><div class="s">AuditOrchestrator</div><div class="ar">→</div><div class="s">3-Way Match</div><div class="ar">→</div><div class="s hi">audit.session_approved</div><div class="ar">→</div><div class="s tl">PostingReadiness</div><div class="ar">→</div><div class="s">APBill Created</div><div class="ar">→</div><div class="s hi">finance.payment_authorised</div><div class="ar">→</div><div class="s gr">Payment Batch</div></div>
+
+<h3 style="color:var(--gold);margin-bottom:10px;margin-top:16px">Shipment Delivered → AR Invoice → Collection</h3>
+<div class="wf"><div class="s">Shipment Delivered</div><div class="ar">→</div><div class="s">FinancialSettlementAgent</div><div class="ar">→</div><div class="s hi">finance.invoice_due</div><div class="ar">→</div><div class="s">AR Invoice Created</div><div class="ar">→</div><div class="s">Pricing Audit</div><div class="ar">→</div><div class="s hi">finance.ar_invoice_released</div><div class="ar">→</div><div class="s gr">ARCollectionAgent Monitors</div></div>
+
+<h3 style="color:var(--gold);margin-bottom:10px;margin-top:16px">Stock Below ROP → Auto-Reorder Cycle</h3>
+<div class="wf"><div class="s rd">Stock ≤ ROP</div><div class="ar">→</div><div class="s">MRPAgent</div><div class="ar">→</div><div class="s hi">mrp.reorder_triggered</div><div class="ar">→</div><div class="s tl">PurchaseOrderAgent</div><div class="ar">→</div><div class="s">VPC Lookup</div><div class="ar">→</div><div class="s gr">Draft VPO Created</div></div>
+
+<h3 style="color:var(--gold);margin-bottom:10px;margin-top:16px">Forecast vs Budget Divergence</h3>
+<div class="wf"><div class="s">Forecast ≠ Budget &gt;15%</div><div class="ar">→</div><div class="s">BudgetReforecastAgent</div><div class="ar">→</div><div class="s hi">finance.reforecast_triggered</div><div class="ar">→</div><div class="s">Finance Re-forecast</div><div class="ar">→</div><div class="s gr">BudgetVarianceAgent Monitors</div></div>
+</section><div class="dv"></div>
+
+<!-- AGENT CONTROL CENTRE -->
+<section class="rv">
+<h2>Agent Control Centre</h2>
+<p class="si">Full REST API (/api/agents/*) + live frontend dashboard. Every team member has a single place to see what agents are doing, review escalations, and override with a click.</p>
+
+<div class="g g3">
+<div class="c"><h3>Backend API</h3><ul><li>Status, decisions, actions, observations</li><li>Manual triggers (run_agent_once)</li><li>Human overrides (accept/reject/modify)</li><li>Per-agent config management</li><li>Event bus introspection</li><li>All endpoints tenant-scoped + authenticated</li></ul></div>
+<div class="c bl"><h3>Frontend Dashboard</h3><ul><li>KPI strip: active agents, pending review, actions today</li><li>Module grid: agents + status + manual trigger</li><li>Pending Human Review panel</li><li>Recent Actions feed</li><li>Polls: status/30s, decisions/15s</li><li>Path: /agents → AgentDashboard.tsx</li></ul></div>
+<div class="c tl"><h3>Human Override Flow</h3><ul><li>POST /api/agents/decisions/{id}/override</li><li>Actions: accept | reject | modify</li><li>Override reason required</li><li>Accept/modify → triggers action execution</li><li>Reject → marks decision rejected</li><li>Full audit trail on every decision</li></ul></div>
+</div>
+
+<div class="g g2" style="margin-top:14px">
+<div class="c or"><h3>Per-Agent Configuration</h3><ul><li><strong>enabled</strong> — agent on/off per tenant</li><li><strong>run_interval_minutes</strong> — 5 to 60 min</li><li><strong>confidence_threshold</strong> — default 0.70 (below = never auto-act)</li><li><strong>auto_act_threshold</strong> — default 0.85 (above = no human review)</li><li><strong>value_threshold</strong> — $ amount escalation regardless of confidence</li><li><strong>notification_channels</strong> — where alerts route</li></ul></div>
+<div class="c gn"><h3>What Makes This Different</h3><ul><li>Traditional ERP: modules store data, <em>humans</em> connect the dots</li><li>mcxOS: modules store data, the <em>agent network</em> connects the dots autonomously</li><li>GRN → 8 agents across 4 modules → payment batch, no human unless variance</li><li>Agents escalate <em>structured recommendations</em>, not raw data</li><li>Every action auditable, reversible, explainable</li></ul></div>
 </div>
 </section><div class="dv"></div>
 
@@ -401,7 +489,7 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 <tr><td>Architecture</td><td>Cloud-Native, N-Tier Multi-Tenant, RLS</td><td class="ng">Monolith (On-Prem → Cloud lift)</td><td>Cloud SaaS (acquired modules)</td><td>Cloud planning overlay</td><td class="ng">Legacy + Cloud hybrid</td><td>Cloud SaaS (procurement only)</td></tr>
 <tr><td>Multi-Tenancy</td><td>True N-Tier RLS at DB layer</td><td class="ng">Single-tenant or hosted</td><td>Multi-tenant (application layer)</td><td class="ng">Tenant per instance</td><td class="ng">Instance-based</td><td>Multi-tenant SaaS</td></tr>
 <tr><td>Domain Coverage</td><td>12 Suites, ~80 modules unified</td><td class="ng">Broad but fragmented (separate TM, EWM, IBP)</td><td class="ng">Separate clouds (SCM, ERP, HCM)</td><td class="ng">Planning only — no execution</td><td class="ng">Planning + WMS (no finance)</td><td class="ng">Procurement only</td></tr>
-<tr><td>AI / Autonomous</td><td>35 OODA Agents, continuous, human-in-loop</td><td class="ng">Joule (chatbot, limited automation)</td><td class="ng">ML features per module</td><td>ML-driven scenarios</td><td>ML forecasting</td><td class="ng">Spend intelligence only</td></tr>
+<tr><td>AI / Autonomous</td><td>74 Agents (62 OODA + 12 audit lifecycle), continuous, human-in-loop</td><td class="ng">Joule (chatbot, limited automation)</td><td class="ng">ML features per module</td><td>ML-driven scenarios</td><td>ML forecasting</td><td class="ng">Spend intelligence only</td></tr>
 <tr><td>TMS Built-In</td><td>Full TMS (6 modes, RFQ, booking, tracking)</td><td class="ng">Separate SAP TM module</td><td>OTM (separate product)</td><td class="ng">No TMS</td><td>TMS available</td><td class="ng">No TMS</td></tr>
 <tr><td>WMS Built-In</td><td>Full WMS (zones, pick, cross-dock)</td><td class="ng">Separate SAP EWM</td><td>WMS Cloud (separate)</td><td class="ng">No WMS</td><td>Luminate WMS</td><td class="ng">No WMS</td></tr>
 <tr><td>Trade Finance</td><td>LC lifecycle (UCP 600), bank guarantees, FX</td><td class="ng">Basic / separate module</td><td class="ng">Not core</td><td class="ng">None</td><td class="ng">None</td><td class="ng">AP/invoicing only</td></tr>
@@ -421,7 +509,7 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 <div class="g g3">
 <div class="c tl"><h3>vs SAP / Oracle</h3><ul><li>No $50M+ license fees</li><li>Deploy in months, not years</li><li>True multi-tenant from day 1</li><li>AI-native, not AI-bolted-on</li><li>Embrace &amp; Replace vs rip-and-replace</li></ul></div>
 <div class="c bl"><h3>vs Kinaxis / o9 / Blue Yonder</h3><ul><li>Full execution, not just planning</li><li>Built-in TMS, WMS, Finance</li><li>Trade Finance &amp; LC lifecycle</li><li>Not dependent on underlying ERP</li><li>Autonomous agents beyond ML forecasts</li></ul></div>
-<div class="c or"><h3>vs Coupa / GEP</h3><ul><li>Goes far beyond procurement</li><li>Full supply chain orchestration</li><li>Operational contracts (not just sourcing)</li><li>Warehouse + logistics included</li><li>35 autonomous agents vs spend analytics</li></ul></div>
+<div class="c or"><h3>vs Coupa / GEP</h3><ul><li>Goes far beyond procurement</li><li>Full supply chain orchestration</li><li>Operational contracts (not just sourcing)</li><li>Warehouse + logistics included</li><li>74 autonomous agents vs spend analytics</li></ul></div>
 </div>
 </section><div class="dv"></div>
 
@@ -446,13 +534,13 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 <div class="g g3" style="margin-top:20px">
 <div class="key-num"><div class="kv">12</div><div class="kl">Domain Suites</div></div>
 <div class="key-num"><div class="kv">~80</div><div class="kl">Modules across all suites</div></div>
-<div class="key-num"><div class="kv">35</div><div class="kl">Autonomous OODA Agents</div></div>
+<div class="key-num"><div class="kv">74</div><div class="kl">Total Autonomous Agents</div></div>
+<div class="key-num"><div class="kv">62</div><div class="kl">Full OODA Agents (BaseOODAAgent)</div></div>
 <div class="key-num"><div class="kv">26</div><div class="kl">Domain events routed by bus</div></div>
-<div class="key-num"><div class="kv">4</div><div class="kl">Agent DB tables (Aurora)</div></div>
 <div class="key-num"><div class="kv">324</div><div class="kl">Frontend pages (TSX)</div></div>
 <div class="key-num"><div class="kv">98.3%</div><div class="kl">Hardcoded data eliminated</div></div>
 <div class="key-num"><div class="kv">300+</div><div class="kl">Backend enum registry entries</div></div>
-<div class="key-num"><div class="kv">10</div><div class="kl">Industry verticals</div></div>
+<div class="key-num"><div class="kv">4</div><div class="kl">Agent DB tables (Aurora)</div></div>
 </div>
 </section><div class="dv"></div>
 
@@ -471,7 +559,7 @@ table.cmp td:nth-child(2){color:var(--gold);font-weight:600}table.cmp td.ng{colo
 <div style="max-width:700px;margin:28px auto;display:flex;flex-direction:column;gap:10px">
 <div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem">🌍 <strong style="color:var(--gold)">Multi-Tenant N-Tier</strong> with RLS + RBAC (SQLAlchemy ORM)</div>
 <div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem">🔄 <strong style="color:var(--gold)">12 Domain Suites</strong> ~80 modules, unified platform</div>
-<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem">🤖 <strong style="color:var(--gold)">35 Autonomous Agents</strong> OODA loop, human-in-the-loop</div>
+<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem">🤖 <strong style="color:var(--gold)">74 Autonomous Agents</strong> 62 full OODA + 12 audit lifecycle, human-in-the-loop</div>
 <div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem">🔗 <strong style="color:var(--gold)">Embrace &amp; Replace</strong> System of Record OR System of Engagement</div>
 <div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem">🏢 <strong style="color:var(--gold)">Backward Compatible</strong> integrates with SAP, Oracle, D365, NetSuite, any ERP</div>
 <div style="padding:8px 0;font-size:0.9rem">🏭 <strong style="color:var(--gold)">10 Industry Verticals</strong> deploy in months, not years</div>
