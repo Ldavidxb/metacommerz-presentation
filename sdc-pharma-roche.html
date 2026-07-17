@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgenticVaults — Sovereign Digital Custody for Pharmaceutical Enterprises</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06060B;--s1:#0E0E16;--s2:#16161F;--s3:#1E1E2A;--bd:#252535;--gold:#D4A853;--gold2:#A07D3A;--em:#34D399;--cy:#22D3EE;--bl:#3B82F6;--pu:#A78BFA;--rd:#F87171;--am:#FBBF24;--wh:#F0EDE6;--mu:#8E8EA3;--dm:#55556A;--fd:'Space Grotesk',sans-serif;--fb:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--wh);font-family:var(--fb);-webkit-font-smoothing:antialiased}
+a{color:var(--gold);text-decoration:none}
+.w{max-width:1200px;margin:0 auto;padding:0 48px}
+@media(max-width:768px){.w{padding:0 20px}.g2,.g3,.g4,.g5{grid-template-columns:1fr!important}.hero h1{font-size:36px!important}.hero .stats{gap:24px!important}}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+nav{position:sticky;top:0;z-index:100;background:rgba(6,6,11,0.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(37,37,53,0.5);padding:16px 48px;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-box{width:30px;height:30px;border:2px solid var(--gold);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.logo-dot{width:10px;height:10px;background:var(--gold);border-radius:3px}
+.logo span{font-size:15px;font-weight:600;color:var(--gold);letter-spacing:0.06em;font-family:var(--fd)}
+.cta-btn{padding:10px 22px;background:var(--gold);color:var(--bg);font-size:14px;font-weight:600;border-radius:8px;font-family:var(--fd);transition:background 0.2s}
+.cta-btn:hover{background:#E0B863}
+section{padding:100px 0;border-top:1px solid var(--bd)}
+.eyebrow{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.eyebrow-line{height:1px;width:36px}
+.eyebrow-text{font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;font-family:var(--fd)}
+h2{font-size:44px;font-weight:700;letter-spacing:-0.02em;font-family:var(--fd);line-height:1.12;margin-bottom:16px}
+.sub{font-size:17px;color:var(--mu);line-height:1.65;margin-bottom:48px;max-width:760px}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:28px;transition:all 0.3s}
+.card:hover{border-color:rgba(212,168,83,0.3);transform:translateY(-2px)}
+.card h4{font-size:16px;font-weight:600;margin-bottom:8px;font-family:var(--fd)}
+.card p{font-size:14px;color:var(--mu);line-height:1.6}
+.mono{font-family:var(--fm);font-size:13px;color:var(--gold);margin-top:12px;padding:10px 14px;background:rgba(212,168,83,0.06);border:1px solid rgba(212,168,83,0.12);border-radius:8px;display:block}
+.stat-row{display:flex;gap:48px;flex-wrap:wrap}
+.stat .v{font-size:36px;font-weight:700;font-family:var(--fm)}
+.stat .l{font-size:13px;color:var(--dm);margin-top:4px;letter-spacing:0.04em}
+.divider{width:1px;background:var(--bd)}
+.threat{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:32px 28px}
+.threat .num{font-size:56px;font-weight:700;line-height:1;font-family:var(--fm)}
+.threat h4{font-size:16px;font-weight:600;margin-top:12px;font-family:var(--fd)}
+.threat p{font-size:13px;color:var(--dm);margin-top:8px;line-height:1.5}
+.pillar{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:40px 32px;transition:all 0.3s}
+.pillar:hover{transform:translateY(-4px)}
+.pillar h3{font-size:36px;font-weight:700;margin-bottom:4px;font-family:var(--fd)}
+.pillar .tag{font-size:16px;font-weight:500;margin-bottom:14px;font-family:var(--fd)}
+.pillar p{font-size:14px;color:var(--mu);line-height:1.7}
+.domain{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:22px 24px;transition:all 0.2s}
+.domain:hover{border-color:rgba(52,211,153,0.3)}
+.domain-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:var(--fm)}
+.scenario{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:28px 32px}
+.scenario h4{font-size:17px;font-weight:600;margin-bottom:10px;font-family:var(--fd)}
+.scenario p{font-size:14px;color:var(--mu);line-height:1.65}
+.zk{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:22px 24px}
+.zk .label{font-size:11px;font-weight:600;font-family:var(--fm);letter-spacing:0.08em;margin-bottom:8px}
+.zk .claim{font-size:15px;font-weight:500;font-style:italic;line-height:1.4;margin-bottom:6px}
+.zk .note{font-size:12px;color:var(--dm);line-height:1.5}
+.stake{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:32px;transition:all 0.2s}
+.stake:hover{border-color:rgba(212,168,83,0.3)}
+.stake h4{font-size:24px;font-weight:700;margin-bottom:4px;font-family:var(--fd)}
+.stake .role{font-size:12px;font-weight:600;letter-spacing:0.04em;margin-bottom:18px}
+.stake .item{font-size:13px;color:var(--mu);line-height:1.6;padding:12px;background:var(--s2);border-radius:8px;margin-bottom:8px}
+.stake .item strong{color:var(--wh);font-weight:600}
+.badge{padding:10px 18px;border-radius:10px;font-size:13px;font-family:var(--fm);font-weight:500;color:var(--wh)}
+.perf{text-align:center;padding:18px;background:var(--s2);border-radius:10px}
+.perf .v{font-size:22px;font-weight:700;color:var(--cy);font-family:var(--fm)}
+.perf .l{font-size:12px;color:var(--dm);margin-top:4px}
+footer{padding:28px 48px;border-top:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-box"><div class="logo-dot"></div></div>
+    <span>agenticvaults</span>
+    <span style="font-size:12px;color:var(--dm);font-weight:500;margin-left:8px;padding-left:8px;border-left:1px solid var(--bd)">SENTINEL</span>
+  </div>
+  <a href="https://cal.com/agenticvaults" target="_blank" class="cta-btn">Schedule Briefing</a>
+</nav>
+
+<!-- HERO -->
+<section style="min-height:90vh;display:flex;align-items:center;border-top:none;position:relative;overflow:hidden">
+  <div style="position:absolute;top:-200px;right:-200px;width:800px;height:800px;background:radial-gradient(circle,rgba(212,168,83,0.07) 0%,transparent 65%);border-radius:50%;pointer-events:none"></div>
+  <div class="w hero">
+    <div class="eyebrow"><div class="eyebrow-line" style="background:var(--gold)"></div><span class="eyebrow-text" style="color:var(--gold)">Sovereign Digital Custody for Pharmaceutical Enterprises</span></div>
+    <h1 style="font-size:60px;font-weight:700;line-height:1.06;letter-spacing:-0.025em;font-family:var(--fd);margin-bottom:24px">Post-Quantum Security<br>for Genomic-Scale Data</h1>
+    <p style="font-size:19px;color:var(--mu);line-height:1.65;margin-bottom:48px;max-width:700px">Cryptographic custody, algorithmic governance, and privacy-preserving analytics for pharmaceutical intellectual property. Built on 11,700 lines of pure Rust with zero external dependencies. Sovereign by design.</p>
+    <div style="display:flex;gap:16px;margin-bottom:64px">
+      <a href="https://cal.com/agenticvaults" target="_blank" class="cta-btn" style="padding:16px 32px;font-size:16px;border-radius:10px">Schedule Executive Briefing</a>
+      <a href="mailto:ldavid@agenticvaults.ai?subject=SENTINEL Technical Deep-Dive" style="padding:16px 32px;background:transparent;border:1px solid var(--bd);color:var(--wh);font-size:16px;font-weight:600;border-radius:10px;font-family:var(--fd)">Request Technical Deep-Dive</a>
+    </div>
+    <div class="stat-row stats">
+      <div class="stat"><div class="v" style="color:var(--gold)">3.9 GB/s</div><div class="l">Encryption Throughput</div></div>
+      <div class="divider"></div>
+      <div class="stat"><div class="v" style="color:var(--gold)">0.21 µs</div><div class="l">Key Derivation</div></div>
+      <div class="divider"></div>
+      <div class="stat"><div class="v" style="color:var(--em)">100%</div><div class="l">Quantum-Safe</div></div>
+      <div class="divider"></div>
+      <div class="stat"><div class="v" style="color:var(--cy)">&lt;100ms</div><div class="l">Revocation Time</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCING INDEPENDENCE -->
+<section style="background:linear-gradient(180deg,var(--bg) 0%,var(--s1) 50%,var(--bg) 100%)">
+  <div class="w">
+    <div class="eyebrow"><div class="eyebrow-line" style="background:var(--cy)"></div><span class="eyebrow-text" style="color:var(--cy)">Sourcing Independence</span></div>
+    <h2 style="max-width:900px">Greater control over data and processes. Not subject to rigid provider structures or the laws of other jurisdictions.</h2>
+    <p class="sub">Pharmaceutical enterprises depend on cryptographic infrastructure they do not own, cannot audit, and cannot control. AWS KMS, Azure Key Vault, and Thales HSMs introduce vendor lock-in, jurisdictional exposure, and opaque supply chains. Indigenous SENTINEL eliminates all three.</p>
+    <div class="g3">
+      <div class="card" style="border-top:3px solid var(--rd)">
+        <h4 style="color:var(--rd)">The Problem: Vendor Lock-In</h4>
+        <p>Your encryption keys live in AWS KMS. Your HSM is manufactured by Thales (France) or Entrust (US). Your TLS terminates on Cloudflare. Each vendor is a jurisdictional exposure point — subject to CLOUD Act, foreign surveillance laws, and supply chain compromise. You cannot audit their code.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--am)">
+        <h4 style="color:var(--am)">The Risk: Quantum Harvest</h4>
+        <p>Nation-state actors are harvesting encrypted pharmaceutical data today, betting on quantum decryption within 5–10 years. Your drug formulations, genomic datasets, and clinical trial results — encrypted with RSA-2048 or ECDH — will be readable. Patent applications filed today must remain confidential for 20+ years.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--em)">
+        <h4 style="color:var(--em)">The Answer: Indigenous SENTINEL</h4>
+        <p>11,700 lines of pure Rust. Zero external cryptographic dependencies. No OpenSSL, no BoringSSL, no third-party crypto libraries. ML-KEM (FIPS 203) post-quantum key exchange. Every primitive hand-implemented and fully auditable. Sovereign cryptographic infrastructure you own completely.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THREAT LANDSCAPE -->
+<section>
+  <div class="w">
+    <div class="eyebrow"><div class="eyebrow-line" style="background:var(--rd)"></div><span class="eyebrow-text" style="color:var(--rd)">Threat Assessment</span></div>
+    <h2>Pharmaceutical IP faces an unprecedented convergence of threats</h2>
+    <p class="sub">Nation-state actors, quantum computing timelines, and regulatory fragmentation create a perfect storm for the world's most valuable intellectual property.</p>
+    <div class="g4">
+      <div class="threat"><div class="num" style="color:var(--rd)">68%</div><h4>of pharma breaches</h4><p>involve privileged insider access or compromised credentials</p></div>
+      <div class="threat"><div class="num" style="color:var(--am)">$4.8B</div><h4>average cost per breach</h4><p>including IP loss, regulatory fines, and pipeline disruption</p></div>
+      <div class="threat"><div class="num" style="color:var(--pu)">2029</div><h4>quantum threat horizon</h4><p>"harvest now, decrypt later" attacks already underway</p></div>
+      <div class="threat"><div class="num" style="color:var(--gold)">20+yr</div><h4>patent lifecycle</h4><p>formulation IP filed today must remain confidential past quantum era</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- THREE PILLARS -->
+<section style="background:linear-gradient(180deg,var(--bg) 0%,var(--s1) 50%,var(--bg) 100%)">
+  <div class="w" style="text-align:center">
+    <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:20px">
+      <div style="height:1px;width:36px;background:var(--gold)"></div>
+      <span class="eyebrow-text" style="color:var(--gold)">Platform Architecture</span>
+      <div style="height:1px;width:36px;background:var(--gold)"></div>
+    </div>
+    <h2 style="text-align:center">Three Pillars of Sovereign Security</h2>
+    <p class="sub" style="margin:0 auto 48px;text-align:center">Each pillar addresses a distinct pharmaceutical need — custody for IP, governance for operations, and clean room for collaborative analytics.</p>
+    <div class="g3" style="text-align:left">
+      <div class="pillar" style="border-top:3px solid var(--gold)"><h3 style="color:var(--gold)">SDC Vaulting</h3><div class="tag">Post-Quantum IP Custody</div><p>Cryptographic custody for drug formulations, genomic data, clinical trial datasets, and manufacturing records. ML-KEM-1024 ensures stolen ciphertext remains permanently unbreakable. 3.9 GB/s throughput handles genomic-scale files without pipeline bottleneck.</p><span class="mono">ML-KEM-1024 · AES-256-GCM · 3.9 GB/s</span></div>
+      <div class="pillar" style="border-top:3px solid var(--em)"><h3 style="color:var(--em)">GaaS</h3><div class="tag">Governance-as-a-Service</div><p>Cryptographically enforced policy orchestration across 9 authority domains. Shamir quorums replace fallible IT access rights across Basel HQ, subsidiary operations, and global diagnostics. No single authority can override.</p><span class="mono" style="color:var(--em);background:rgba(52,211,153,0.06);border-color:rgba(52,211,153,0.12)">9 Domains · <300ms · Shamir SSS</span></div>
+      <div class="pillar" style="border-top:3px solid var(--cy)"><h3 style="color:var(--cy)">Clean Room</h3><div class="tag">Zero-Knowledge Analytics</div><p>Privacy-preserving computation for multi-sponsor clinical trials, consortium drug interaction studies, and real-world evidence generation — without exposing raw patient records or proprietary formulation details.</p><span class="mono" style="color:var(--cy);background:rgba(34,211,238,0.06);border-color:rgba(34,211,238,0.12)">ZK Proofs · <5s · 1024-bit ARX</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SENTINEL TRANSFORMATION -->
+<section style="background:linear-gradient(180deg,var(--bg) 0%,#0D0C06 50%,var(--bg) 100%)">
+  <div class="w">
+    <div class="eyebrow"><div class="eyebrow-line" style="background:var(--gold)"></div><span class="eyebrow-text" style="color:var(--gold)">Cryptographic Transformation</span></div>
+    <h2>How Indigenous SENTINEL Transforms Pharmaceutical Operations</h2>
+    <p class="sub">Every cryptographic primitive maps to a specific pharmaceutical value driver. No abstract security claims — mathematical guarantees for operational outcomes.</p>
+    <div class="g2">
+      <div class="card"><div style="font-size:12px;font-weight:600;color:var(--gold);font-family:var(--fm);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px">ISKDE → Per-Molecule Domain Isolation</div><p>Each drug compound, formulation, and clinical program exists in a cryptographically independent domain. A breach in oncology pipeline data is mathematically contained — cardiovascular program data remains inaccessible. 9 security domains map to pharmaceutical functional areas.</p><span class="mono">9 domains · per-compound isolation</span></div>
+      <div class="card"><div style="font-size:12px;font-weight:600;color:var(--gold);font-family:var(--fm);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px">ML-KEM → Patent Lifecycle Protection</div><p>Drug formulation IP encrypted with post-quantum ML-KEM-768 (FIPS 203). Patent applications filed today must remain confidential for 20+ years. "Harvest now, decrypt later" attacks permanently neutralized. 123µs key exchange — zero performance impact.</p><span class="mono">20+ year patent protection · FIPS 203</span></div>
+      <div class="card"><div style="font-size:12px;font-weight:600;color:var(--gold);font-family:var(--fm);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px">Shamir SSS → Multi-Authority Formulation Access</div><p>Accessing drug formulation data requires k-of-n threshold approval: Head of R&D + Chief Patent Officer + VP Quality = 3-of-3. No single executive, no single administrator, no single compromised account can unilaterally access your most valuable IP.</p><span class="mono">3-of-3 threshold · information-theoretic</span></div>
+      <div class="card"><div style="font-size:12px;font-weight:600;color:var(--gold);font-family:var(--fm);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px">AES-256-GCM → Genomic-Scale Encryption</div><p>Sequencing files, batch records, and process parameters encrypted at 3.9 GB/s with hardware acceleration (AES-NI / ARM Crypto Extensions). Zero operational latency for genomic data pipelines. Every MES transaction cryptographically signed for 21 CFR Part 11.</p><span class="mono">3.9 GB/s · 21 CFR Part 11</span></div>
+      <div class="card"><div style="font-size:12px;font-weight:600;color:var(--gold);font-family:var(--fm);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px">Zero-FFI Architecture → GxP Data Integrity</div><p>Cryptographic operations execute in compiled Rust binaries. Key material never enters the Python/Java application layer. Eliminates the attack surface where pharmaceutical data breaches most commonly occur. ALCOA+ data integrity principles enforced architecturally.</p><span class="mono">9 binaries · keys never in app memory</span></div>
+      <div class="card"><div style="font-size:12px;font-weight:600;color:var(--gold);font-family:var(--fm);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px">Authority Pipeline → Pharma Role Mapping</div><p>17 independent authorities map to pharmaceutical organizational roles: CMO, VP Quality, Head of Regulatory, DPO, CCO, VP Manufacturing, Head of PV. Cross-domain delegation via ML-KEM encrypted channels. Authority revocation in O(1) when personnel change roles.</p><span class="mono">17 authorities · O(1) revocation</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- GaaS GOVERNANCE -->
+<section style="background:linear-gradient(180deg,var(--bg) 0%,#060D08 50%,var(--bg) 100%)">
+  <div class="w">
+    <div class="eyebrow"><div class="eyebrow-line" style="background:var(--em)"></div><span class="eyebrow-text" style="color:var(--em)">Governance-as-a-Service</span></div>
+    <h2 style="color:var(--em)">9 Governance Domains — Independent Cryptographic Keys</h2>
+    <p class="sub">Multi-subsidiary pharmaceutical governance enforced mathematically. Policy propagation from Basel HQ to subsidiary operations in &lt;300ms across 1,000+ nodes.</p>
+    <div class="g3" style="margin-bottom:40px">
+      <div class="domain"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="domain-icon" style="background:rgba(52,211,153,0.12);color:var(--em)">QA</div><span style="font-size:16px;font-weight:600;font-family:var(--fd)">Quality</span></div><p style="font-size:13px;color:var(--mu);line-height:1.6">GMP batch release, deviation management, CAPA closures</p></div>
+      <div class="domain"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="domain-icon" style="background:rgba(59,130,246,0.12);color:var(--bl)">RA</div><span style="font-size:16px;font-weight:600;font-family:var(--fd)">Regulatory Affairs</span></div><p style="font-size:13px;color:var(--mu);line-height:1.6">eCTD submission sign-off, labeling changes, commitments</p></div>
+      <div class="domain"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="domain-icon" style="background:rgba(167,139,250,0.12);color:var(--pu)">CL</div><span style="font-size:16px;font-weight:600;font-family:var(--fd)">Clinical Operations</span></div><p style="font-size:13px;color:var(--mu);line-height:1.6">Trial unblinding, DSMB recommendations, protocol amendments</p></div>
+      <div class="domain"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="domain-icon" style="background:rgba(34,211,238,0.12);color:var(--cy)">PV</div><span style="font-size:16px;font-weight:600;font-family:var(--fd)">Pharmacovigilance</span></div><p style="font-size:13px;color:var(--mu);line-height:1.6">Signal detection, ICSR processing, SUSAR reporting</p></div>
+      <div class="domain"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="domain-icon" style="background:rgba(248,113,113,0.12);color:var(--rd)">MF</div><span style="font-size:16px;font-weight:600;font-family:var(--fd)">Manufacturing</span></div><p style="font-size:13px;color:var(--mu);line-height:1.6">Production batch release, technology transfer, equipment qualification</p></div>
+      <div class="domain"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="domain-icon" style="background:rgba(251,191,36,0.12);color:var(--am)">SC</div><span style="font-size:16px;font-weight:600;font-family:var(--fd)">Supply Chain</span></div><p style="font-size:13px;color:var(--mu);line-height:1.6">API supplier qualification, serialization, cold chain validation</p></div>
+      <div class="domain"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="domain-icon" style="background:rgba(212,168,83,0.12);color:var(--gold)">CO</div><span style="font-size:16px;font-weight:600;font-family:var(--fd)">Compliance</span></div><p style="font-size:13px;color:var(--mu);line-height:1.6">FCPA attestation, Sunshine Act, anti-bribery governance</p></div>
+      <div class="domain"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="domain-icon" style="background:rgba(244,114,182,0.12);color:#F472B6">RD</div><span style="font-size:16px;font-weight:600;font-family:var(--fd)">R&D</span></div><p style="font-size:13px;color:var(--mu);line-height:1.6">Formulation access, IP disclosures, research collaboration</p></div>
+      <div class="domain"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="domain-icon" style="background:rgba(148,163,184,0.12);color:var(--mu)">EX</div><span style="font-size:16px;font-weight:600;font-family:var(--fd)">Executive</span></div><p style="font-size:13px;color:var(--mu);line-height:1.6">C-suite decisions, M&A due diligence, cross-functional escalation</p></div>
+    </div>
+    <h3 style="font-size:24px;font-weight:700;font-family:var(--fd);margin-bottom:24px">Pharmaceutical Governance Scenarios</h3>
+    <div class="g2">
+      <div class="scenario"><h4 style="color:var(--em)">GMP Batch Release</h4><p>Requires 3-of-3: QA Director + Production Head + Qualified Person. Cryptographically enforced — no IT administrator can bypass.</p></div>
+      <div class="scenario"><h4 style="color:var(--em)">Clinical Trial Unblinding</h4><p>Requires 2-of-3: DSMB Chair + Principal Investigator + Medical Monitor. Cannot be overridden by sponsor pressure.</p></div>
+      <div class="scenario"><h4 style="color:var(--em)">Cross-Subsidiary Data Sharing</h4><p>Basel → Genentech data access requires Shamir threshold from both entities. Policy propagation in &lt;300ms across subsidiary graph.</p></div>
+      <div class="scenario"><h4 style="color:var(--em)">Drug Recall Decision</h4><p>Requires 3-of-4: Quality + Pharmacovigilance + Regulatory + Executive. Immutable audit trail for SwissMedic review.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CLEAN ROOM -->
+<section style="background:linear-gradient(180deg,var(--bg) 0%,#060A10 50%,var(--bg) 100%)">
+  <div class="w">
+    <div class="eyebrow"><div class="eyebrow-line" style="background:var(--cy)"></div><span class="eyebrow-text" style="color:var(--cy)">Zero-Knowledge Clean Room</span></div>
+    <h2 style="color:var(--cy)">Prove Compliance Without Revealing Data</h2>
+    <p class="sub">Zero-knowledge proofs enable regulatory verification, consortium participation, and cross-sponsor analytics without exposing underlying datasets.</p>
+    <div class="g3">
+      <div class="zk"><div class="label" style="color:var(--cy)">GMP COMPLIANCE</div><div class="claim">"All 47 manufacturing sites passed GMP audit in Q4"</div><div class="note">Verifies 100% compliance without revealing site names, scores, or observations</div></div>
+      <div class="zk"><div class="label" style="color:var(--cy)">CLINICAL ENDPOINT</div><div class="claim">"Primary endpoint met with p &lt; 0.001"</div><div class="note">Statistical significance proven without exposing patient data or treatment arms</div></div>
+      <div class="zk"><div class="label" style="color:var(--cy)">VENDOR QUALIFICATION</div><div class="claim">"All API suppliers meet ICH Q7 requirements"</div><div class="note">Regulators verify compliance without accessing supply chain details</div></div>
+      <div class="zk"><div class="label" style="color:var(--cy)">PHARMACOVIGILANCE</div><div class="claim">"No new safety signals across 3 marketed products"</div><div class="note">Signal absence verified without exposing ICSR volumes or case narratives</div></div>
+      <div class="zk"><div class="label" style="color:var(--cy)">SUNSHINE ACT</div><div class="claim">"All HCP payments below threshold disclosed"</div><div class="note">Threshold compliance proven without revealing payment amounts</div></div>
+      <div class="zk"><div class="label" style="color:var(--cy)">DATA INTEGRITY</div><div class="claim">"Zero data integrity findings in 12 months"</div><div class="note">ALCOA+ compliance proven without revealing audit scope</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section>
+  <div class="w">
+    <div class="eyebrow"><div class="eyebrow-line" style="background:var(--gold)"></div><span class="eyebrow-text" style="color:var(--gold)">Technical Architecture</span></div>
+    <h2>Zero-FFI Architecture: Keys Never Leave Rust</h2>
+    <p class="sub">Complete cryptographic sovereignty. No external dependencies. No upstream supply chain risk. Fully auditable.</p>
+    <div class="g3" style="margin-bottom:24px">
+      <div class="threat" style="text-align:center"><div class="num" style="color:var(--gold)">11,700</div><h4>Lines of Pure Rust</h4><p>Fully auditable. Zero external dependencies.</p></div>
+      <div class="threat" style="text-align:center"><div class="num" style="color:var(--gold)">9</div><h4>Isolated Binaries</h4><p>Each binary handles one cryptographic function.</p></div>
+      <div class="threat" style="text-align:center"><div class="num" style="color:var(--gold)">0</div><h4>External Dependencies</h4><p>No OpenSSL. No BoringSSL. No third-party crypto.</p></div>
+    </div>
+    <div style="background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:28px">
+      <div style="font-size:16px;font-weight:700;font-family:var(--fd);margin-bottom:20px">Performance Specifications</div>
+      <div class="g5">
+        <div class="perf"><div class="v">3.9 GB/s</div><div class="l">Encryption</div></div>
+        <div class="perf"><div class="v">0.21 µs</div><div class="l">Key Derivation</div></div>
+        <div class="perf"><div class="v">&lt;100ms</div><div class="l">Revocation</div></div>
+        <div class="perf"><div class="v">60,000×</div><div class="l">vs Python crypto</div></div>
+        <div class="perf"><div class="v">&lt;300ms</div><div class="l">Policy Propagation</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPLIANCE -->
+<section>
+  <div class="w">
+    <div class="eyebrow"><div class="eyebrow-line" style="background:var(--gold)"></div><span class="eyebrow-text" style="color:var(--gold)">Regulatory Coverage</span></div>
+    <h2>Pharmaceutical Compliance Coverage</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:32px">
+      <span class="badge" style="background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.18)">FDA 21 CFR Part 11</span>
+      <span class="badge" style="background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.18)">EU GMP Annex 11</span>
+      <span class="badge" style="background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.18)">ICH Q10</span>
+      <span class="badge" style="background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.18)">ICH Q7</span>
+      <span class="badge" style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.18)">ICH E6(R3) GCP</span>
+      <span class="badge" style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.18)">EU CTR 536/2014</span>
+      <span class="badge" style="background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.18)">GDPR Art. 28</span>
+      <span class="badge" style="background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.18)">Swiss nDSG</span>
+      <span class="badge" style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.18)">HIPAA</span>
+      <span class="badge" style="background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.18)">DSCSA</span>
+      <span class="badge" style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.18)">FCPA</span>
+      <span class="badge" style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.18)">UK Bribery Act</span>
+      <span class="badge" style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.18)">Sunshine Act</span>
+      <span class="badge" style="background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.18)">SwissMedic</span>
+      <span class="badge" style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.18)">EU GDP</span>
+      <span class="badge" style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.18)">EU FMD</span>
+      <span class="badge" style="background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.18)">ISO 27001</span>
+      <span class="badge" style="background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.18)">SOC 2</span>
+      <span class="badge" style="background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.18)">NIST FIPS 203</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="position:relative;overflow:hidden">
+  <div style="position:absolute;top:-200px;right:-200px;width:700px;height:700px;background:radial-gradient(circle,rgba(212,168,83,0.06) 0%,transparent 65%);border-radius:50%;pointer-events:none"></div>
+  <div class="w" style="max-width:900px">
+    <div class="eyebrow"><div class="eyebrow-line" style="background:var(--gold);width:48px"></div><span class="eyebrow-text" style="color:var(--gold)">Next Steps</span></div>
+    <h2>Your intellectual property deserves mathematical certainty</h2>
+    <p style="font-size:17px;color:var(--mu);line-height:1.65;margin-bottom:40px">The quantum threat timeline is fixed. Competitors are already harvesting encrypted data. The question is not whether to adopt post-quantum security — it is whether you will be ready when the threshold is crossed.</p>
+    <div style="display:flex;gap:16px;margin-bottom:56px;flex-wrap:wrap">
+      <a href="https://cal.com/agenticvaults" target="_blank" class="cta-btn" style="padding:18px 36px;font-size:16px;border-radius:10px">Schedule Executive Briefing</a>
+      <a href="mailto:ldavid@agenticvaults.ai?subject=SENTINEL Technical Deep-Dive" style="padding:18px 36px;background:transparent;border:1px solid var(--bd);color:var(--wh);font-size:16px;font-weight:600;border-radius:10px;font-family:var(--fd)">Request Technical Deep-Dive</a>
+    </div>
+    <div style="display:flex;gap:48px;padding-top:36px;border-top:1px solid var(--bd);flex-wrap:wrap">
+      <div><div style="font-size:12px;color:var(--dm);margin-bottom:4px">Contact</div><span style="font-size:15px;font-weight:500">Leo David, Founder & CEO</span></div>
+      <div><div style="font-size:12px;color:var(--dm);margin-bottom:4px">Email</div><a href="mailto:ldavid@agenticvaults.ai" style="font-size:15px;font-weight:500">ldavid@agenticvaults.ai</a></div>
+      <div><div style="font-size:12px;color:var(--dm);margin-bottom:4px">Schedule</div><a href="https://cal.com/agenticvaults" target="_blank" style="font-size:15px;font-weight:500">cal.com/agenticvaults</a></div>
+      <div><div style="font-size:12px;color:var(--dm);margin-bottom:4px">Location</div><span style="font-size:15px;font-weight:500">Zurich, Switzerland</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo"><div class="logo-box" style="width:24px;height:24px;border-color:var(--gold2)"><div class="logo-dot" style="width:8px;height:8px;background:var(--gold2)"></div></div><span style="font-size:13px;color:var(--dm)">agenticvaults — SENTINEL — Sovereign Digital Custody</span></div>
+  <span style="font-size:12px;color:var(--dm)">Confidential — Executive Briefing — July 2026</span>
+</footer>
+
+</body>
+</html>
