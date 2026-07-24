@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>agenticvaults — SENTINEL for UBS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#060910; --panel:#0e1118; --panel-2:#0c0f16;
+    --line: rgba(16,185,129,0.08); --line-gold: rgba(201,178,124,0.16); --line-soft: rgba(226,228,222,0.06);
+    --text:#e2e4de; --text-hi:#f0efe9; --muted:#7a8a7e; --muted-2:#5a6a5e; --muted-3:#3a4a3e;
+    --emerald:#10B981; --emerald-soft: rgba(16,185,129,0.08);
+    --gold:#C9B27C; --gold-soft: rgba(201,178,124,0.10);
+    --red:#EF4444; --blue:#60A5FA; --purple:#A78BFA; --orange:#FB923C;
+    --serif:'Newsreader', Georgia, serif; --sans:'Inter', -apple-system, sans-serif; --mono:'JetBrains Mono', monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--ink); color:var(--text); font-family:var(--sans); -webkit-font-smoothing:antialiased;}
+  ::selection{background:rgba(16,185,129,0.3);}
+  ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:rgba(16,185,129,0.15); border-radius:10px;}
+  a{color:inherit; text-decoration:none;}
+
+  /* ===== Language toggle ===== */
+  body.lang-en [data-lang="de"]{display:none !important;}
+  body.lang-de [data-lang="en"]{display:none !important;}
+  .lang-switch{display:flex; gap:4px; padding:0 20px 16px;}
+  .lang-btn{flex:1; padding:7px 0; border-radius:5px; border:1px solid var(--line-soft); background:transparent; color:var(--muted); font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:0.05em; cursor:pointer; transition:all 0.15s;}
+  .lang-btn.active{background:var(--emerald-soft); border-color:rgba(16,185,129,0.3); color:var(--emerald);}
+  .lang-switch-mobile{display:none; gap:6px; padding:8px 14px 0;}
+  .lang-switch-mobile .lang-btn{flex:0 0 auto; padding:5px 14px;}
+
+  /* ===== Layout shell ===== */
+  .shell{display:flex; min-height:100vh; background:var(--ink);}
+  .sidebar{width:264px; position:fixed; left:0; top:0; bottom:0; background:linear-gradient(180deg,#080b12 0%,#060910 100%); border-right:1px solid var(--line); z-index:50; display:flex; flex-direction:column; overflow-y:auto;}
+  .sidebar-logo{padding:22px 20px 6px; display:flex; align-items:center; gap:9px;}
+  .sidebar-logo .dot{width:8px;height:8px;border-radius:2px;background:var(--emerald); box-shadow:0 0 10px rgba(16,185,129,0.6);}
+  .sidebar-logo .name{font-family:var(--mono); font-weight:700; font-size:13px; letter-spacing:-0.02em; color:var(--text-hi);}
+  .sidebar-sub{padding:0 20px 14px; font-size:10px; color:var(--gold); font-family:var(--mono); letter-spacing:0.08em; text-transform:uppercase;}
+  .sidebar-nav{flex:1; padding:6px 10px;}
+  .nav-section{margin-bottom:18px;}
+  .nav-label{font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted-3); padding:0 10px; margin-bottom:8px;}
+  .nav-item{display:flex; align-items:center; gap:9px; width:100%; padding:8px 10px; border-radius:6px; font-size:12px; font-weight:500; color:var(--muted); cursor:pointer; transition:all 0.15s; border:none; background:transparent; text-align:left; font-family:var(--sans);}
+  .nav-item:hover{background:rgba(16,185,129,0.05); color:var(--text);}
+  .nav-item.active{background:rgba(16,185,129,0.09); color:var(--emerald); font-weight:600;}
+  .nav-item .ic{width:14px; text-align:center; opacity:0.7; font-size:12px;}
+  .sidebar-footer{padding:16px 20px; border-top:1px solid var(--line); font-family:var(--mono); font-size:9.5px; color:var(--muted-3); line-height:1.7;}
+
+  .main{margin-left:264px; flex:1; min-height:100vh; overflow-y:auto; height:100vh;}
+  .mobile-nav{display:none;}
+  .content{padding:44px clamp(20px,4vw,56px) 64px; max-width:1140px;}
+
+  /* ===== Panels ===== */
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .p-eyebrow{font-family:var(--mono); font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; display:flex; align-items:center; gap:8px;}
+  .p-eyebrow::before{content:''; width:18px; height:1px; background:var(--gold); opacity:0.7;}
+  .panel h2{font-family:var(--serif); font-weight:500; font-size:clamp(24px,3vw,32px); letter-spacing:-0.01em; color:var(--text-hi); margin-bottom:8px;}
+  .panel .lede{font-size:14.5px; color:var(--muted); margin-bottom:26px; max-width:720px; line-height:1.7; font-weight:300;}
+  h3.sub{font-size:15px; font-weight:700; color:var(--text-hi); margin:28px 0 12px; font-family:var(--sans);}
+
+  /* ===== Grids & cards ===== */
+  .grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:24px;}
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px;}
+  .grid-2{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:24px;}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:20px;}
+  .card-title{font-size:14px; font-weight:600; color:var(--text); margin-bottom:6px;}
+  .card-desc{font-size:12px; color:var(--muted); line-height:1.6;}
+  .card-metric{font-family:var(--mono); font-size:11px; color:var(--emerald); margin-top:10px; padding-top:10px; border-top:1px solid var(--line-soft);}
+
+  .flow-card{border-radius:10px; padding:16px; text-align:center;}
+  .flow-phase{font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:4px;}
+  .flow-title{font-size:14px; font-weight:700; color:var(--text); margin-bottom:4px;}
+  .flow-desc{font-size:11px; color:var(--muted); line-height:1.4; margin-bottom:6px;}
+  .flow-metric{font-family:var(--mono); font-size:11px; font-weight:600;}
+
+  .pain-card{background:linear-gradient(135deg, rgba(239,68,68,0.06), rgba(239,68,68,0.02)); border:1px solid rgba(239,68,68,0.15); border-radius:10px; padding:20px;}
+  .pain-eyebrow{font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:rgba(239,68,68,0.7); margin-bottom:8px;}
+  .pain-title{font-size:15px; font-weight:700; color:var(--text); margin-bottom:6px;}
+  .pain-list{font-size:11px; color:#9a9a92; line-height:1.8;}
+
+  .solution-card{background:linear-gradient(135deg, rgba(16,185,129,0.06), rgba(16,185,129,0.02)); border:1px solid rgba(16,185,129,0.15); border-radius:10px; padding:20px;}
+  .solution-eyebrow{font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:rgba(16,185,129,0.7); margin-bottom:8px;}
+  .solution-title{font-size:15px; font-weight:700; color:var(--text); margin-bottom:6px;}
+  .solution-list{font-size:11px; color:#9a9a92; line-height:1.8;}
+
+  .use-case{border-left:2px solid rgba(16,185,129,0.3); padding-left:20px; margin-bottom:20px;}
+  .use-case-title{font-size:14px; font-weight:600; color:var(--text); margin-bottom:4px;}
+  .use-case-scenario{font-size:12px; color:var(--muted); margin-bottom:6px; line-height:1.55;}
+  .use-case-value{font-size:11px; color:var(--emerald); font-weight:500;}
+
+  .pricing-card{border-radius:10px; padding:24px; background:var(--panel); border:1px solid var(--line); text-align:center;}
+  .pricing-card.featured{border-color:rgba(16,185,129,0.3); background:linear-gradient(135deg, rgba(16,185,129,0.06), rgba(16,185,129,0.02));}
+  .pricing-tier{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:8px;}
+  .pricing-price{font-family:var(--mono); font-size:24px; font-weight:700; color:var(--text); margin-bottom:4px;}
+  .pricing-period{font-size:11px; color:var(--muted-2); margin-bottom:16px;}
+  .pricing-features{list-style:none; text-align:left;}
+  .pricing-features li{font-size:11px; color:var(--muted); padding:4px 0; border-bottom:1px solid var(--line-soft); display:flex; align-items:center; gap:6px;}
+  .pricing-features li::before{content:''; width:4px; height:4px; border-radius:50%; background:var(--emerald); flex-shrink:0;}
+
+  .stat-box{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:20px; text-align:center; flex:1;}
+  .stat-box .v{font-family:var(--mono); font-size:24px; font-weight:700; color:var(--emerald);}
+  .stat-box .l{font-size:11px; color:var(--muted-2); margin-top:4px;}
+
+  /* ===== Tables ===== */
+  .table-wrap{border-radius:10px; overflow:hidden; border:1px solid var(--line); margin-bottom:24px;}
+  table{width:100%; border-collapse:collapse; font-size:12px;}
+  thead{background:rgba(16,185,129,0.06);}
+  th{padding:12px 16px; text-align:left; font-weight:600; color:var(--text); font-size:10.5px; text-transform:uppercase; letter-spacing:0.05em; border-bottom:1px solid var(--line);}
+  td{padding:12px 16px; color:var(--muted); border-bottom:1px solid var(--line-soft);}
+  tr:last-child td{border-bottom:none;}
+  td:first-child{color:var(--text); font-weight:600;}
+  .td-hi{color:var(--emerald); font-family:var(--mono); font-weight:600;}
+  .td-gold{color:var(--gold); font-family:var(--mono); font-weight:600;}
+
+  /* ===== Tier / OODA visuals ===== */
+  .tiers{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:24px;}
+  .tier{border-radius:10px; padding:18px 14px; border:1px solid var(--line-soft); background:var(--panel); text-align:center;}
+  .tier .tlabel{font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted-2); margin-bottom:6px;}
+  .tier .tname{font-size:13px; font-weight:600; color:var(--text); margin-bottom:4px;}
+  .tier .tdesc{font-size:11px; color:var(--muted); line-height:1.45;}
+  .tier .tvis{font-family:var(--mono); font-size:12px; font-weight:700; margin-top:10px;}
+  .tier.t1{border-color:rgba(96,165,250,0.2);} .tier.t1 .tvis{color:var(--blue);}
+  .tier.t2{border-color:rgba(167,139,250,0.2);} .tier.t2 .tvis{color:var(--purple);}
+  .tier.t3{border-color:rgba(251,191,36,0.2);} .tier.t3 .tvis{color:#FBBF24;}
+  .tier.t4{border-color:rgba(16,185,129,0.3); background:linear-gradient(135deg, rgba(16,185,129,0.08), rgba(16,185,129,0.02));} .tier.t4 .tvis{color:var(--emerald);}
+
+  .badges{display:flex; gap:7px; flex-wrap:wrap; margin-top:8px;}
+  .badge{font-size:11px; font-weight:600; color:var(--emerald); background:var(--emerald-soft); border:1px solid rgba(16,185,129,0.22); padding:5px 11px; border-radius:5px;}
+
+  .pull{margin:32px 0; padding:22px 0 22px 26px; border-left:2px solid var(--gold); font-family:var(--serif); font-size:clamp(17px,2vw,21px); font-style:italic; color:var(--text-hi); max-width:720px; line-height:1.5;}
+  .pull .attr{margin-top:12px; font-family:var(--mono); font-size:10.5px; font-style:normal; color:var(--muted-2); text-transform:uppercase; letter-spacing:0.06em;}
+
+  .divider{height:1px; background:var(--line); margin:32px 0;}
+
+  /* ===== Hero (overview panel) ===== */
+  .hero-cover{position:relative; overflow:hidden; padding:8px 0 40px; margin-bottom:8px;}
+  .hero-glow{position:absolute; top:-30%; right:-8%; width:420px; height:420px; background:radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%); pointer-events:none;}
+  .hero-badge{display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:100px; background:var(--emerald-soft); border:1px solid rgba(16,185,129,0.16); margin-bottom:18px;}
+  .hero-badge .d{width:5px;height:5px;border-radius:50%;background:var(--emerald);}
+  .hero-badge span{font-size:10px; font-weight:600; color:var(--emerald); letter-spacing:0.1em; text-transform:uppercase;}
+  .hero-cover h1{font-family:var(--serif); font-weight:500; font-size:clamp(28px,4.2vw,44px); line-height:1.12; color:var(--text-hi); max-width:820px; position:relative; z-index:1;}
+  .hero-cover h1 em{font-style:italic; color:var(--emerald);}
+  .hero-cover .sub{font-size:clamp(14px,1.6vw,16px); color:var(--muted); margin-top:16px; max-width:660px; line-height:1.7; font-weight:300; position:relative; z-index:1;}
+  .hero-stats{display:flex; gap:clamp(20px,3vw,40px); margin-top:32px; flex-wrap:wrap; position:relative; z-index:1;}
+  .hero-stat .v{font-family:var(--mono); font-size:20px; font-weight:700; color:var(--emerald);}
+  .hero-stat .l{font-size:10.5px; color:var(--muted-2); margin-top:3px; text-transform:uppercase; letter-spacing:0.06em;}
+
+  .ask-box{margin-top:36px; border:1px solid var(--line-gold); border-radius:10px; padding:24px; background:var(--gold-soft); display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap; align-items:center;}
+  .ask-box .k{font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:var(--gold); margin-bottom:6px;}
+  .ask-box .v{font-size:15px; color:var(--text-hi); font-weight:500; max-width:560px;}
+
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:11px 22px; border-radius:6px; font-size:13px; font-weight:600; font-family:var(--sans); transition:all 0.15s;}
+  .btn-primary{background:linear-gradient(135deg,var(--emerald),#0B7D5F); color:#fff;}
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 10px 24px rgba(16,185,129,0.28);}
+  .btn-ghost{background:transparent; border:1px solid var(--line-gold); color:var(--gold);}
+  .btn-ghost:hover{border-color:var(--gold); background:var(--gold-soft);}
+
+  @media (max-width:960px){
+    .sidebar{display:none !important;}
+    .main{margin-left:0 !important;}
+    .mobile-nav{display:block !important; position:sticky; top:0; z-index:99; background:rgba(6,9,16,0.96); backdrop-filter:blur(12px); border-bottom:1px solid var(--line);}
+    .mobile-nav-tabs{padding:10px 14px; overflow-x:auto; white-space:nowrap;}
+    .mobile-nav-tabs button{background:transparent; border:1px solid var(--line-soft); color:var(--muted); font-size:11px; padding:7px 12px; border-radius:6px; margin-right:6px; font-family:var(--sans);}
+    .mobile-nav-tabs button.active{color:var(--emerald); border-color:rgba(16,185,129,0.3);}
+    .lang-switch-mobile{display:flex;}
+    .grid-4{grid-template-columns:1fr 1fr;} .grid-3{grid-template-columns:1fr;} .tiers{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:560px){
+    .grid-4, .grid-2, .tiers{grid-template-columns:1fr;}
+    .ask-box{flex-direction:column; align-items:flex-start;}
+  }
+</style>
+</head>
+<body class="lang-en">
+<div class="shell">
+
+  <!-- ============ SIDEBAR ============ -->
+  <div class="sidebar">
+    <div class="sidebar-logo"><div class="dot"></div><div class="name">agenticvaults</div></div>
+    <div class="sidebar-sub">SENTINEL · Prepared for UBS</div>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang-btn="en">EN</button>
+      <button class="lang-btn" data-lang-btn="de">DE</button>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-label"><span data-lang="en">Proposal</span><span data-lang="de">Vorschlag</span></div>
+        <button class="nav-item active" data-tab="overview"><span class="ic">◆</span><span data-lang="en">Overview &amp; The Ask</span><span data-lang="de">Überblick &amp; Anfrage</span></button>
+        <button class="nav-item" data-tab="pain"><span class="ic">!</span><span data-lang="en">Pain Points</span><span data-lang="de">Herausforderungen</span></button>
+        <button class="nav-item" data-tab="why"><span class="ic">?</span><span data-lang="en">Why Now — DORA &amp; Visibility</span><span data-lang="de">Warum jetzt — DORA &amp; Transparenz</span></button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label"><span data-lang="en">Architecture</span><span data-lang="de">Architektur</span></div>
+        <button class="nav-item" data-tab="ntier"><span class="ic">▤</span><span data-lang="en">N-Tier &amp; OODA</span><span data-lang="de">N-Tier &amp; OODA</span></button>
+        <button class="nav-item" data-tab="sentinel"><span class="ic">⬡</span><span data-lang="en">SENTINEL Cryptography</span><span data-lang="de">SENTINEL-Kryptografie</span></button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label"><span data-lang="en">Modules — Cards Division</span><span data-lang="de">Module — Kartengeschäft</span></div>
+        <button class="nav-item" data-tab="signing"><span class="ic">✎</span><span data-lang="en">Signing-as-a-Service</span><span data-lang="de">Signing-as-a-Service</span></button>
+        <button class="nav-item" data-tab="sbom"><span class="ic">▦</span><span data-lang="en">SBOM + CI/CD</span><span data-lang="de">SBOM + CI/CD</span></button>
+        <button class="nav-item" data-tab="certs"><span class="ic">◎</span><span data-lang="en">Certificate Lifecycle</span><span data-lang="de">Zertifikats-Lebenszyklus</span></button>
+        <button class="nav-item" data-tab="sdc"><span class="ic">▲</span><span data-lang="en">SDC Vaulting</span><span data-lang="de">SDC Vaulting</span></button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label"><span data-lang="en">Commercial</span><span data-lang="de">Kommerzielles</span></div>
+        <button class="nav-item" data-tab="differentiation"><span class="ic">✦</span><span data-lang="en">Differentiation</span><span data-lang="de">Differenzierung</span></button>
+        <button class="nav-item" data-tab="groupwide"><span class="ic">◇</span><span data-lang="en">Group-Wide Opportunity</span><span data-lang="de">Konzernweite Chance</span></button>
+        <button class="nav-item" data-tab="pricing"><span class="ic">$</span><span data-lang="en">Investment &amp; ROI</span><span data-lang="de">Investition &amp; ROI</span></button>
+        <button class="nav-item" data-tab="timeline"><span class="ic">→</span><span data-lang="en">Timeline &amp; Next Steps</span><span data-lang="de">Zeitplan &amp; nächste Schritte</span></button>
+      </div>
+    </div>
+    <div class="sidebar-footer">metacommerz, Inc. — agenticvaults.ai<br>
+      <span data-lang="en">Confidential · Prepared exclusively for UBS</span><span data-lang="de">Vertraulich · Ausschliesslich für UBS erstellt</span><br>
+      July 2026 · v3.1</div>
+  </div>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main" id="main">
+    <div class="mobile-nav">
+      <div class="lang-switch-mobile">
+        <button class="lang-btn active" data-lang-btn="en">EN</button>
+        <button class="lang-btn" data-lang-btn="de">DE</button>
+      </div>
+      <div class="mobile-nav-tabs" id="mobileNavTabs"></div>
+    </div>
+    <div class="content">
+
+      <!-- ================= OVERVIEW ================= -->
+      <div class="panel active" data-tab="overview">
+        <div data-lang="en">
+          <div class="hero-cover">
+            <div class="hero-glow"></div>
+            <div class="hero-badge"><div class="d"></div><span>Confidential — Prepared for UBS</span></div>
+            <h1>Your SOC sees the network. <em>Who proves isolation of every trading desk, card key, and client mandate?</em></h1>
+            <p class="sub">SENTINEL is agenticvaults' post-quantum cryptographic governance layer — the foundation beneath a 100+ agent, OODA-driven risk platform. This briefing covers two things: the Group-level case for SENTINEL across UBS's risk and compliance functions, and a scoped, priced proposal for the Cards Division to replace HashiCorp, Oracle HSM, and Venafi at 65% lower cost.</p>
+            <div class="hero-stats">
+              <div class="hero-stat"><div class="v">44ms</div><div class="l">OODA threat cycle</div></div>
+              <div class="hero-stat"><div class="v">9</div><div class="l">Cryptographic domains</div></div>
+              <div class="hero-stat"><div class="v">65%</div><div class="l">Cost reduction, Cards</div></div>
+              <div class="hero-stat"><div class="v">4 hrs</div><div class="l">DORA report readiness</div></div>
+              <div class="hero-stat"><div class="v">4 mo</div><div class="l">Full Cards deployment</div></div>
+            </div>
+          </div>
+          <h3 class="sub">What agenticvaults is, in one page</h3>
+          <div class="grid-2">
+            <div>
+              <p class="card-desc" style="font-size:13px; line-height:1.8;">agenticvaults is the risk and security platform built by <strong style="color:var(--text)">metacommerz Inc.</strong> for organizations whose exposure runs deeper than their own network perimeter — across suppliers, counterparties, and infrastructure they can't directly instrument.</p>
+              <p class="card-desc" style="font-size:13px; line-height:1.8; margin-top:12px;">For UBS specifically, that exposure spans client mandates and deal-room data behind a Reg FD wall, proprietary trading models, AML/KYC data, and — in Cards — card encryption keys, fraud models, and PCI-scoped cardholder data, all currently governed by access policy rather than mathematical proof of separation.</p>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; padding:11px 0; border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);"><span style="font-size:11px; color:var(--muted-2); text-transform:uppercase; letter-spacing:0.05em;">Platform</span><span style="font-family:var(--mono); font-size:12.5px;">agenticvaults / SENTINEL</span></div>
+              <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--line-soft);"><span style="font-size:11px; color:var(--muted-2); text-transform:uppercase; letter-spacing:0.05em;">Parent entity</span><span style="font-family:var(--mono); font-size:12.5px;">metacommerz Inc.</span></div>
+              <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--line-soft);"><span style="font-size:11px; color:var(--muted-2); text-transform:uppercase; letter-spacing:0.05em;">Production status</span><span style="font-family:var(--mono); font-size:12.5px;">Live, Feb 2026</span></div>
+              <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--line-soft);"><span style="font-size:11px; color:var(--muted-2); text-transform:uppercase; letter-spacing:0.05em;">This proposal — scope</span><span style="font-family:var(--mono); font-size:12.5px;">UBS Zurich Cards Division</span></div>
+              <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--line-soft);"><span style="font-size:11px; color:var(--muted-2); text-transform:uppercase; letter-spacing:0.05em;">Cards — indicative spend</span><span style="font-family:var(--mono); font-size:12.5px; color:var(--emerald);">$674K / yr</span></div>
+              <div style="display:flex; justify-content:space-between; padding:11px 0;"><span style="font-size:11px; color:var(--muted-2); text-transform:uppercase; letter-spacing:0.05em;">Group-wide potential (G-SIB tier)</span><span style="font-family:var(--mono); font-size:12.5px; color:var(--gold);">$1M – $3M / yr</span></div>
+            </div>
+          </div>
+          <div class="ask-box">
+            <div><div class="k">The ask</div><div class="v">A 4-week, no-commitment POC for the Cards Division: SBOM monitoring on 1–3 repos, 10 certificates on F5 with auto-rotation, and a CISO architecture review — while we scope the Group-wide opportunity in parallel.</div></div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <a class="btn btn-primary" href="https://cal.com/agenticvaults">Book working session →</a>
+              <a class="btn btn-ghost" href="mailto:ldavid@agenticvaults.ai">Email founder</a>
+            </div>
+          </div>
+        </div>
+        <div data-lang="de">
+          <div class="hero-cover">
+            <div class="hero-glow"></div>
+            <div class="hero-badge"><div class="d"></div><span>Vertraulich — Erstellt für UBS</span></div>
+            <h1>Ihr SOC sieht das Netzwerk. <em>Wer beweist die Isolation jedes Handelstischs, jedes Kartenschlüssels, jedes Kundenmandats?</em></h1>
+            <p class="sub">SENTINEL ist die post-quantenfähige kryptografische Governance-Schicht von agenticvaults — das Fundament unter einer Risikoplattform mit über 100 Agenten und OODA-Steuerung. Dieses Briefing behandelt zwei Themen: den konzernweiten Nutzen von SENTINEL für die Risiko- und Compliance-Funktionen der UBS sowie einen konkret bepreisten Vorschlag für das Kartengeschäft, um HashiCorp, Oracle HSM und Venafi bei 65% geringeren Kosten zu ersetzen.</p>
+            <div class="hero-stats">
+              <div class="hero-stat"><div class="v">44ms</div><div class="l">OODA-Bedrohungszyklus</div></div>
+              <div class="hero-stat"><div class="v">9</div><div class="l">Kryptografische Domänen</div></div>
+              <div class="hero-stat"><div class="v">65%</div><div class="l">Kostensenkung, Karten</div></div>
+              <div class="hero-stat"><div class="v">4 Std.</div><div class="l">DORA-Meldebereitschaft</div></div>
+              <div class="hero-stat"><div class="v">4 Mon.</div><div class="l">Vollständige Einführung Karten</div></div>
+            </div>
+          </div>
+          <h3 class="sub">Was agenticvaults ist, auf einer Seite</h3>
+          <div class="grid-2">
+            <div>
+              <p class="card-desc" style="font-size:13px; line-height:1.8;">agenticvaults ist die Risiko- und Sicherheitsplattform von <strong style="color:var(--text)">metacommerz Inc.</strong> für Organisationen, deren Risikoexposition über den eigenen Netzwerkperimeter hinausreicht — über Lieferanten, Gegenparteien und Infrastruktur, die sie nicht direkt instrumentieren können.</p>
+              <p class="card-desc" style="font-size:13px; line-height:1.8; margin-top:12px;">Bei der UBS betrifft dies konkret Kundenmandate und Deal-Room-Daten hinter einer Reg-FD-Mauer, proprietäre Handelsmodelle, AML/KYC-Daten sowie — im Kartengeschäft — Kartenverschlüsselungsschlüssel, Betrugsmodelle und PCI-relevante Karteninhaberdaten. All dies wird heute durch Zugriffsrichtlinien geregelt, nicht durch mathematisch nachweisbare Trennung.</p>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; padding:11px 0; border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);"><span style="font-size:11px; color:var(--muted-2); text-transform:uppercase; letter-spacing:0.05em;">Plattform</span><span style="font-family:var(--mono); font-size:12.5px;">agenticvaults / SENTINEL</span></div>
+              <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--line-soft);"><span style="font-size:11px; color:var(--muted-2); text-transform:uppercase; letter-spacing:0.05em;">Muttergesellschaft</span><span style="font-family:var(--mono); font-size:12.5px;">metacommerz Inc.</span></div>
+              <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--line-soft);"><span style="font-size:11px; color:var(--muted-2); text-transform:uppercase; letter-spacing:0.05em;">Produktionsstatus</span><span style="font-family:var(--mono); font-size:12.5px;">Live seit Feb. 2026</span></div>
+              <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--line-soft);"><span style="font-size:11px; color:var(--muted-2); text-transform:uppercase; letter-spacing:0.05em;">Umfang dieses Vorschlags</span><span style="font-family:var(--mono); font-size:12.5px;">UBS Zürich, Kartengeschäft</span></div>
+              <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--line-soft);"><span style="font-size:11px; color:var(--muted-2); text-transform:uppercase; letter-spacing:0.05em;">Karten — indikative Kosten</span><span style="font-family:var(--mono); font-size:12.5px; color:var(--emerald);">USD 674K / Jahr</span></div>
+              <div style="display:flex; justify-content:space-between; padding:11px 0;"><span style="font-size:11px; color:var(--muted-2); text-transform:uppercase; letter-spacing:0.05em;">Konzernweites Potenzial (G-SIB-Stufe)</span><span style="font-family:var(--mono); font-size:12.5px; color:var(--gold);">USD 1–3 Mio. / Jahr</span></div>
+            </div>
+          </div>
+          <div class="ask-box">
+            <div><div class="k">Unsere Bitte</div><div class="v">Ein 4-wöchiger, unverbindlicher POC für das Kartengeschäft: SBOM-Monitoring für 1–3 Repositories, 10 Zertifikate auf F5 mit automatischer Rotation und ein Architektur-Review mit dem CISO-Team — während wir parallel die konzernweite Chance ausloten.</div></div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <a class="btn btn-primary" href="https://cal.com/agenticvaults">Termin vereinbaren →</a>
+              <a class="btn btn-ghost" href="mailto:ldavid@agenticvaults.ai">Gründer kontaktieren</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= PAIN POINTS ================= -->
+      <div class="panel" data-tab="pain">
+        <div data-lang="en">
+          <div class="p-eyebrow">The case for change</div>
+          <h2>Current pain points</h2>
+          <p class="lede">UBS Cards Division manages critical cryptographic infrastructure across multiple vendors with no unified governance, no post-quantum readiness, and significant operational overhead.</p>
+          <div class="grid-2">
+            <div class="pain-card"><div class="pain-eyebrow">Operational</div><div class="pain-title">Fragmented Key Management</div><div class="pain-list">→ HashiCorp Vault + Oracle HSM = two failure modes<br>→ PKCS#11 bridge is fragile (Go → C FFI boundary)<br>→ $50K per physical key ceremony × 4/year = $200K<br>→ No threshold governance — any admin can extract<br>→ IBM acquired HashiCorp (2025) — roadmap uncertain</div></div>
+            <div class="pain-card"><div class="pain-eyebrow">Certificate Rotation</div><div class="pain-title">60-Day F5 Fire Drill</div><div class="pain-list">→ Manual cert rotation across hundreds of F5 appliances<br>→ F5 has NO built-in cert lifecycle automation<br>→ Miss one cert = TLS outage on card processing<br>→ No OCSP — revoked certs may still be trusted<br>→ Venafi alternative is expensive + complex</div></div>
+            <div class="pain-card"><div class="pain-eyebrow">Compliance</div><div class="pain-title">Audit Evidence Gap</div><div class="pain-list">→ PCI-DSS 4.0 requires continuous monitoring (not annual)<br>→ No signed audit trail — "we have a policy" insufficient<br>→ DORA crypto-agility requirement unmet<br>→ No provable evidence for FINMA data sovereignty<br>→ Scramble before every audit cycle</div></div>
+            <div class="pain-card"><div class="pain-eyebrow">Security</div><div class="pain-title">No Post-Quantum Readiness</div><div class="pain-list">→ Keys cross FFI boundary — architectural vulnerability<br>→ RSA/AES only — harvest-now-decrypt-later risk<br>→ FINMA PQC mandate approaching — no migration path<br>→ No way to prove WHO authorized card key access<br>→ Supply chain blind spots between pen tests</div></div>
+          </div>
+        </div>
+        <div data-lang="de">
+          <div class="p-eyebrow">Warum Handlungsbedarf besteht</div>
+          <h2>Aktuelle Herausforderungen</h2>
+          <p class="lede">Das Kartengeschäft der UBS betreibt kritische kryptografische Infrastruktur über mehrere Anbieter hinweg — ohne einheitliche Governance, ohne Post-Quanten-Bereitschaft und mit erheblichem operativem Aufwand.</p>
+          <div class="grid-2">
+            <div class="pain-card"><div class="pain-eyebrow">Operativ</div><div class="pain-title">Fragmentiertes Schlüsselmanagement</div><div class="pain-list">→ HashiCorp Vault + Oracle HSM = zwei Fehlerquellen<br>→ PKCS#11-Bridge ist fragil (Go → C FFI-Grenze)<br>→ 50.000 $ pro physischer Key-Zeremonie × 4/Jahr = 200.000 $<br>→ Keine Schwellenwert-Governance — jeder Admin kann extrahieren<br>→ IBM übernahm HashiCorp (2025) — Roadmap unklar</div></div>
+            <div class="pain-card"><div class="pain-eyebrow">Zertifikatsrotation</div><div class="pain-title">60-Tage-F5-Feuerwehrübung</div><div class="pain-list">→ Manuelle Zertifikatsrotation über Hunderte F5-Appliances<br>→ F5 bietet KEINE integrierte Zertifikatsautomatisierung<br>→ Ein verpasstes Zertifikat = TLS-Ausfall bei der Kartenverarbeitung<br>→ Kein OCSP — widerrufene Zertifikate können weiter vertraut werden<br>→ Venafi als Alternative ist teuer und komplex</div></div>
+            <div class="pain-card"><div class="pain-eyebrow">Compliance</div><div class="pain-title">Lücke bei Prüfnachweisen</div><div class="pain-list">→ PCI-DSS 4.0 verlangt kontinuierliches Monitoring (nicht jährlich)<br>→ Kein signierter Audit-Trail — "wir haben eine Richtlinie" genügt nicht<br>→ DORA-Anforderung zur Krypto-Agilität nicht erfüllt<br>→ Kein belastbarer Nachweis für FINMA-Datensouveränität<br>→ Hektik vor jedem Prüfzyklus</div></div>
+            <div class="pain-card"><div class="pain-eyebrow">Sicherheit</div><div class="pain-title">Keine Post-Quanten-Bereitschaft</div><div class="pain-list">→ Schlüssel überschreiten FFI-Grenze — architektonische Schwachstelle<br>→ Nur RSA/AES — Risiko "Harvest now, decrypt later"<br>→ FINMA-PQC-Vorgabe rückt näher — kein Migrationspfad<br>→ Kein Nachweis, WER Zugriff auf Kartenschlüssel autorisiert hat<br>→ Blinde Flecken in der Lieferkette zwischen Pentests</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= WHY NOW ================= -->
+      <div class="panel" data-tab="why">
+        <div data-lang="en">
+          <div class="p-eyebrow">Group-level framing</div>
+          <h2>DORA gives you four hours to report. Most SOCs take seventy-two.</h2>
+          <p class="lede">Beyond Cards, this is the structural problem across UBS's ICT estate: European regulators now demand continuous risk monitoring and rapid incident classification — evidence, not assurances. Three gaps determine whether that evidence exists when an examiner asks for it.</p>
+          <div class="grid-3">
+            <div class="card"><div class="card-title">Gap 01 · Alert volume outruns capacity</div><div class="card-desc">Roughly 11,000 alerts per day across a Tier-1 bank's ICT estate, with the majority resolving as noise — the real signal buried in triage backlog.</div></div>
+            <div class="card"><div class="card-title">Gap 02 · Isolation is policy, not proof</div><div class="card-desc">Client A's deal data and Client B's are separated by access control lists on shared infrastructure — not by anything that survives a credential compromise.</div></div>
+            <div class="card"><div class="card-title">Gap 03 · Visibility stops at Tier 1</div><div class="card-desc">Core banking, custody, and payment dependencies extend several tiers into fintech and infrastructure vendors — where most disruption and breach sources originate.</div></div>
+          </div>
+          <div class="pull">"Folder permissions are not security. Mathematical isolation is."<div class="attr">agenticvaults — SENTINEL design principle</div></div>
+        </div>
+        <div data-lang="de">
+          <div class="p-eyebrow">Konzernweite Einordnung</div>
+          <h2>DORA gibt Ihnen vier Stunden zur Meldung. Die meisten SOCs brauchen zweiundsiebzig.</h2>
+          <p class="lede">Über das Kartengeschäft hinaus ist dies das strukturelle Problem der gesamten IKT-Landschaft der UBS: Europäische Regulatoren verlangen heute kontinuierliches Risikomonitoring und schnelle Vorfallsklassifizierung — Nachweise, keine Zusicherungen. Drei Lücken entscheiden darüber, ob dieser Nachweis vorliegt, wenn ein Prüfer danach fragt.</p>
+          <div class="grid-3">
+            <div class="card"><div class="card-title">Lücke 01 · Alarmvolumen übersteigt Kapazität</div><div class="card-desc">Rund 11.000 Alarme pro Tag in der IKT-Landschaft einer Tier-1-Bank, wobei die meisten sich als Rauschen erweisen — das eigentliche Signal verschwindet im Triage-Rückstand.</div></div>
+            <div class="card"><div class="card-title">Lücke 02 · Isolation ist Richtlinie, kein Beweis</div><div class="card-desc">Die Deal-Daten von Kunde A und Kunde B werden durch Zugriffskontrolllisten auf gemeinsam genutzter Infrastruktur getrennt — nicht durch etwas, das eine kompromittierte Zugangsberechtigung übersteht.</div></div>
+            <div class="card"><div class="card-title">Lücke 03 · Transparenz endet bei Tier 1</div><div class="card-desc">Abhängigkeiten im Kernbanking, in der Verwahrung und im Zahlungsverkehr reichen über mehrere Stufen zu Fintech- und Infrastrukturanbietern — dort, wo die meisten Störungen und Sicherheitsvorfälle ihren Ursprung haben.</div></div>
+          </div>
+          <div class="pull">"Ordnerberechtigungen sind keine Sicherheit. Mathematische Isolation schon."<div class="attr">agenticvaults — SENTINEL-Designprinzip</div></div>
+        </div>
+      </div>
+
+      <!-- ================= N-TIER + OODA ================= -->
+      <div class="panel" data-tab="ntier">
+        <div data-lang="en">
+          <div class="p-eyebrow">Architecture — 01</div>
+          <h2>Seeing past your direct counterparties</h2>
+          <p class="lede">Modern financial infrastructure spans five or more tiers of dependency — core banking vendors, their sub-processors, and the infrastructure beneath them. A failure or compromise at Tier 3 cascades upward. Most institutions monitor Tier 1 only.</p>
+          <div class="tiers">
+            <div class="tier t1"><div class="tlabel">Tier 1</div><div class="tname">Direct Vendors</div><div class="tdesc">Core banking, custody platforms, direct contracts.</div><div class="tvis">100% visibility</div></div>
+            <div class="tier t2"><div class="tlabel">Tier 2–3</div><div class="tname">Sub-Processors</div><div class="tdesc">Payment processors, data centers, component providers.</div><div class="tvis">~30% visibility</div></div>
+            <div class="tier t3"><div class="tlabel">Tier 4–5</div><div class="tname">Deep Infrastructure</div><div class="tdesc">Where most disruption and breach sources originate.</div><div class="tvis">~5% visibility</div></div>
+            <div class="tier t4"><div class="tlabel">agenticvaults</div><div class="tname">Full Depth</div><div class="tdesc">OODA agents monitor all tiers. SENTINEL encrypts cross-tier flows.</div><div class="tvis">Tier 1–5 coverage</div></div>
+          </div>
+          <h3 class="sub">Three pillars of transformation</h3>
+          <div class="grid-3">
+            <div class="card" style="border-color:rgba(251,146,60,0.15); background:linear-gradient(135deg, rgba(251,146,60,0.06), rgba(251,146,60,0.02));"><div class="pain-eyebrow" style="color:var(--orange);">Decision Architecture</div><div class="card-title">OODA Loop</div><div class="card-desc">Continuous autonomous decision cycle at machine speed.<br>→ 24/7 monitoring across all domains<br>→ Real-time multi-dimensional correlation<br>→ Autonomous escalation on score drops</div><div class="card-metric">44ms average cycle time</div></div>
+            <div class="card" style="border-color:rgba(96,165,250,0.15); background:linear-gradient(135deg, rgba(96,165,250,0.06), rgba(96,165,250,0.02));"><div class="pain-eyebrow" style="color:var(--blue);">Autonomous Intelligence</div><div class="card-title">100+ Agentic AI</div><div class="card-desc">Agents that assess, monitor, correlate, and remediate around the clock.<br>→ Assessment: 48-hr full analysis<br>→ Monitoring: 9 threat sources<br>→ Remediation: auto-generate plans</div><div class="card-metric">98.8% correlation accuracy</div></div>
+            <div class="card" style="border-color:rgba(139,92,246,0.15); background:linear-gradient(135deg, rgba(139,92,246,0.06), rgba(139,92,246,0.02));"><div class="pain-eyebrow" style="color:var(--purple);">Cryptographic Foundation</div><div class="card-title">Indigenous SENTINEL</div><div class="card-desc">Mathematical proof of isolation — not folder permissions.<br>→ ISKDE: 9-domain isolation<br>→ Shamir SSS: k-of-n governance<br>→ ML-KEM: post-quantum (FIPS 203)</div><div class="card-metric">Zero-FFI · keys never touch Python</div></div>
+          </div>
+          <h3 class="sub">OODA applied to an incident</h3>
+          <div class="grid-4">
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(30,58,138,0.15), rgba(30,58,138,0.05)); border:1px solid rgba(96,165,250,0.2);"><div class="flow-phase" style="color:rgba(96,165,250,0.6);">Phase 1</div><div class="flow-title">Observe</div><div class="flow-desc">9 threat sources scanned 24/7</div><div class="flow-metric" style="color:var(--blue);">9 sources</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(126,34,206,0.12), rgba(126,34,206,0.04)); border:1px solid rgba(167,139,250,0.2);"><div class="flow-phase" style="color:rgba(167,139,250,0.6);">Phase 2</div><div class="flow-title">Orient</div><div class="flow-desc">AI correlates across all dimensions</div><div class="flow-metric" style="color:var(--purple);">98.8% accuracy</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(180,83,9,0.15), rgba(217,119,6,0.06)); border:1px solid rgba(251,191,36,0.2);"><div class="flow-phase" style="color:rgba(251,191,36,0.6);">Phase 3</div><div class="flow-title">Decide</div><div class="flow-desc">Composite scoring, threshold escalation</div><div class="flow-metric" style="color:#FBBF24;">A–F grading</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(6,95,70,0.2), rgba(4,120,87,0.08)); border:1px solid rgba(16,185,129,0.2);"><div class="flow-phase" style="color:rgba(16,185,129,0.6);">Phase 4</div><div class="flow-title">Act</div><div class="flow-desc">Auto-remediate, revoke, alert</div><div class="flow-metric" style="color:var(--emerald);">100+ agents</div></div>
+          </div>
+        </div>
+        <div data-lang="de">
+          <div class="p-eyebrow">Architektur — 01</div>
+          <h2>Über die direkten Gegenparteien hinaussehen</h2>
+          <p class="lede">Moderne Finanzinfrastruktur umfasst fünf oder mehr Abhängigkeitsstufen — Kernbanking-Anbieter, deren Subunternehmer und die darunterliegende Infrastruktur. Ein Ausfall oder eine Kompromittierung auf Stufe 3 wirkt sich kaskadenartig nach oben aus. Die meisten Institute überwachen nur Stufe 1.</p>
+          <div class="tiers">
+            <div class="tier t1"><div class="tlabel">Stufe 1</div><div class="tname">Direkte Anbieter</div><div class="tdesc">Kernbanking, Verwahrungsplattformen, direkte Verträge.</div><div class="tvis">100% Transparenz</div></div>
+            <div class="tier t2"><div class="tlabel">Stufe 2–3</div><div class="tname">Subunternehmer</div><div class="tdesc">Zahlungsdienstleister, Rechenzentren, Komponentenlieferanten.</div><div class="tvis">~30% Transparenz</div></div>
+            <div class="tier t3"><div class="tlabel">Stufe 4–5</div><div class="tname">Tiefe Infrastruktur</div><div class="tdesc">Wo die meisten Störungen und Sicherheitsvorfälle entstehen.</div><div class="tvis">~5% Transparenz</div></div>
+            <div class="tier t4"><div class="tlabel">agenticvaults</div><div class="tname">Volle Tiefe</div><div class="tdesc">OODA-Agenten überwachen alle Stufen. SENTINEL verschlüsselt stufenübergreifende Datenflüsse.</div><div class="tvis">Abdeckung Stufe 1–5</div></div>
+          </div>
+          <h3 class="sub">Drei Säulen der Transformation</h3>
+          <div class="grid-3">
+            <div class="card" style="border-color:rgba(251,146,60,0.15); background:linear-gradient(135deg, rgba(251,146,60,0.06), rgba(251,146,60,0.02));"><div class="pain-eyebrow" style="color:var(--orange);">Entscheidungsarchitektur</div><div class="card-title">OODA-Zyklus</div><div class="card-desc">Kontinuierlicher, autonomer Entscheidungszyklus in Maschinengeschwindigkeit.<br>→ 24/7-Überwachung über alle Domänen<br>→ Echtzeit-Korrelation über mehrere Dimensionen<br>→ Autonome Eskalation bei Score-Abfall</div><div class="card-metric">44ms durchschnittliche Zyklusdauer</div></div>
+            <div class="card" style="border-color:rgba(96,165,250,0.15); background:linear-gradient(135deg, rgba(96,165,250,0.06), rgba(96,165,250,0.02));"><div class="pain-eyebrow" style="color:var(--blue);">Autonome Intelligenz</div><div class="card-title">100+ agentenbasierte KI</div><div class="card-desc">Agenten, die rund um die Uhr bewerten, überwachen, korrelieren und beheben.<br>→ Bewertung: vollständige Analyse in 48 Std.<br>→ Überwachung: 9 Bedrohungsquellen<br>→ Behebung: automatisch generierte Pläne</div><div class="card-metric">98,8% Korrelationsgenauigkeit</div></div>
+            <div class="card" style="border-color:rgba(139,92,246,0.15); background:linear-gradient(135deg, rgba(139,92,246,0.06), rgba(139,92,246,0.02));"><div class="pain-eyebrow" style="color:var(--purple);">Kryptografisches Fundament</div><div class="card-title">Indigenes SENTINEL</div><div class="card-desc">Mathematischer Isolationsnachweis — keine Ordnerberechtigungen.<br>→ ISKDE: Isolation über 9 Domänen<br>→ Shamir SSS: k-von-n-Governance<br>→ ML-KEM: post-quanten (FIPS 203)</div><div class="card-metric">Zero-FFI · Schlüssel berühren Python nie</div></div>
+          </div>
+          <h3 class="sub">OODA angewendet auf einen Vorfall</h3>
+          <div class="grid-4">
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(30,58,138,0.15), rgba(30,58,138,0.05)); border:1px solid rgba(96,165,250,0.2);"><div class="flow-phase" style="color:rgba(96,165,250,0.6);">Phase 1</div><div class="flow-title">Beobachten</div><div class="flow-desc">9 Bedrohungsquellen rund um die Uhr gescannt</div><div class="flow-metric" style="color:var(--blue);">9 Quellen</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(126,34,206,0.12), rgba(126,34,206,0.04)); border:1px solid rgba(167,139,250,0.2);"><div class="flow-phase" style="color:rgba(167,139,250,0.6);">Phase 2</div><div class="flow-title">Einordnen</div><div class="flow-desc">KI korreliert über alle Dimensionen</div><div class="flow-metric" style="color:var(--purple);">98,8% Genauigkeit</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(180,83,9,0.15), rgba(217,119,6,0.06)); border:1px solid rgba(251,191,36,0.2);"><div class="flow-phase" style="color:rgba(251,191,36,0.6);">Phase 3</div><div class="flow-title">Entscheiden</div><div class="flow-desc">Zusammengesetztes Scoring, Schwellenwert-Eskalation</div><div class="flow-metric" style="color:#FBBF24;">Bewertung A–F</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(6,95,70,0.2), rgba(4,120,87,0.08)); border:1px solid rgba(16,185,129,0.2);"><div class="flow-phase" style="color:rgba(16,185,129,0.6);">Phase 4</div><div class="flow-title">Handeln</div><div class="flow-desc">Automatische Behebung, Widerruf, Alarm</div><div class="flow-metric" style="color:var(--emerald);">100+ Agenten</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SENTINEL CRYPTO ================= -->
+      <div class="panel" data-tab="sentinel">
+        <div data-lang="en">
+          <div class="p-eyebrow">Architecture — 02</div>
+          <h2>The cryptographic primitives behind the claim</h2>
+          <p class="lede">Every primitive is purpose-built in Rust with zero external cryptography dependencies; key material is zeroized after use. This is the layer a crypto review team would actually diligence.</p>
+          <div class="grid-3">
+            <div class="card"><div class="card-title" style="color:var(--purple);">ISKDE</div><div class="card-desc">Indigenous subkey derivation engine — 9 cryptographically isolated domains from a single master key.</div><div class="card-metric">4.7M derivations / sec</div></div>
+            <div class="card"><div class="card-title" style="color:var(--blue);">ML-KEM-768 / 1024</div><div class="card-desc">FIPS 203 compliant post-quantum key exchange. 768 for general use, 1024 (NIST Level 5) for vaulted custody.</div><div class="card-metric">123µs key exchange</div></div>
+            <div class="card"><div class="card-title" style="color:var(--emerald);">AES-256-GCM</div><div class="card-desc">Hardware-accelerated via AES-NI and ARM Crypto Extensions.</div><div class="card-metric">3.9 GB/s throughput</div></div>
+            <div class="card"><div class="card-title" style="color:var(--gold);">Shamir SSS</div><div class="card-desc">k-of-n threshold approval — no single authority, including a compromised admin, can unilaterally grant access.</div><div class="card-metric">O(1) revocation</div></div>
+            <div class="card"><div class="card-title" style="color:var(--gold);">17 Authorities × 9 Domains</div><div class="card-desc">CRO, CISO, Compliance, Engineering, DPO, Incident Response, Audit and operational authorities each govern their own domain.</div><div class="card-metric">Zero single trust point</div></div>
+            <div class="card"><div class="card-title" style="color:var(--red);">Zero-FFI Architecture</div><div class="card-desc">Nine compiled Rust binaries called via subprocess — key material never enters the application's Python address space.</div><div class="card-metric">9 binaries · 100+ tests</div></div>
+          </div>
+          <div class="badges">
+            <span class="badge">DORA</span><span class="badge">Basel III / FRTB</span><span class="badge">MiFID II / MiFIR</span><span class="badge">PCI-DSS 4.0</span>
+            <span class="badge">SOX §404</span><span class="badge">GDPR Art. 9(2)(b)</span><span class="badge">NIST FIPS 203</span><span class="badge">FINMA</span><span class="badge">Swiss nDSG</span>
+          </div>
+        </div>
+        <div data-lang="de">
+          <div class="p-eyebrow">Architektur — 02</div>
+          <h2>Die kryptografischen Grundbausteine hinter dem Versprechen</h2>
+          <p class="lede">Jeder Grundbaustein ist eigens in Rust entwickelt, ganz ohne externe Krypto-Abhängigkeiten; Schlüsselmaterial wird nach Gebrauch gelöscht (zeroized). Genau diese Ebene würde ein Krypto-Review-Team der UBS tatsächlich prüfen.</p>
+          <div class="grid-3">
+            <div class="card"><div class="card-title" style="color:var(--purple);">ISKDE</div><div class="card-desc">Indigene Subkey-Ableitungs-Engine — 9 kryptografisch isolierte Domänen aus einem einzigen Master-Schlüssel.</div><div class="card-metric">4,7 Mio. Ableitungen/Sek.</div></div>
+            <div class="card"><div class="card-title" style="color:var(--blue);">ML-KEM-768 / 1024</div><div class="card-desc">FIPS-203-konformer post-quanten Schlüsselaustausch. 768 für allgemeine Nutzung, 1024 (NIST-Stufe 5) für verwahrte Custody-Daten.</div><div class="card-metric">123µs Schlüsselaustausch</div></div>
+            <div class="card"><div class="card-title" style="color:var(--emerald);">AES-256-GCM</div><div class="card-desc">Hardwarebeschleunigt über AES-NI und ARM Crypto Extensions.</div><div class="card-metric">3,9 GB/s Durchsatz</div></div>
+            <div class="card"><div class="card-title" style="color:var(--gold);">Shamir SSS</div><div class="card-desc">k-von-n-Schwellenwertfreigabe — keine einzelne Instanz, auch nicht ein kompromittierter Admin, kann Zugriff im Alleingang gewähren.</div><div class="card-metric">O(1)-Widerruf</div></div>
+            <div class="card"><div class="card-title" style="color:var(--gold);">17 Instanzen × 9 Domänen</div><div class="card-desc">CRO, CISO, Compliance, Engineering, DPO, Incident Response, Audit sowie operative Instanzen verwalten jeweils ihre eigene Domäne.</div><div class="card-metric">Kein einzelner Vertrauenspunkt</div></div>
+            <div class="card"><div class="card-title" style="color:var(--red);">Zero-FFI-Architektur</div><div class="card-desc">Neun kompilierte Rust-Binärdateien, aufgerufen via Subprozess — Schlüsselmaterial gelangt nie in den Python-Adressraum der Anwendung.</div><div class="card-metric">9 Binärdateien · 100+ Tests</div></div>
+          </div>
+          <div class="badges">
+            <span class="badge">DORA</span><span class="badge">Basel III / FRTB</span><span class="badge">MiFID II / MiFIR</span><span class="badge">PCI-DSS 4.0</span>
+            <span class="badge">SOX §404</span><span class="badge">DSGVO Art. 9(2)(b)</span><span class="badge">NIST FIPS 203</span><span class="badge">FINMA</span><span class="badge">Schweizer nDSG</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SIGNING ================= -->
+      <div class="panel" data-tab="signing">
+        <div data-lang="en">
+          <div class="p-eyebrow">Module — Cards Division</div>
+          <h2>Signing-as-a-Service</h2>
+          <p class="lede">Post-quantum digital signatures for audit trails, documents, and transactions. The system picks the right algorithm for the right regulation — your teams don't need to understand cryptography.</p>
+          <h3 class="sub">How it works</h3>
+          <div class="grid-4">
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(30,58,138,0.15), rgba(30,58,138,0.05)); border:1px solid rgba(96,165,250,0.2);"><div class="flow-phase" style="color:rgba(96,165,250,0.6);">Step 1</div><div class="flow-title">API Call</div><div class="flow-desc">System sends payload to signing endpoint (REST or domain-specific)</div><div class="flow-metric" style="color:var(--blue);">REST API</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(126,34,206,0.12), rgba(126,34,206,0.04)); border:1px solid rgba(167,139,250,0.2);"><div class="flow-phase" style="color:rgba(167,139,250,0.6);">Step 2</div><div class="flow-title">Policy Resolve</div><div class="flow-desc">44 compliance frameworks checked. Algorithm auto-selected.</div><div class="flow-metric" style="color:var(--purple);">Auto-select</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(251,146,60,0.08), rgba(251,146,60,0.02)); border:1px solid rgba(251,146,60,0.2);"><div class="flow-phase" style="color:rgba(251,146,60,0.6);">Step 3</div><div class="flow-title">Rust Execute</div><div class="flow-desc">Signature computed in pure Rust. Key never leaves process memory.</div><div class="flow-metric" style="color:var(--orange);">Zero-FFI</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04)); border:1px solid rgba(16,185,129,0.25);"><div class="flow-phase" style="color:rgba(16,185,129,0.7);">Step 4</div><div class="flow-title">Signed Response</div><div class="flow-desc">Signature + public key + compliance metadata. Verifiable by any 3rd party.</div><div class="flow-metric" style="color:var(--emerald);">Non-repudiable</div></div>
+          </div>
+          <h3 class="sub">Features &amp; functionality</h3>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Feature</th><th>Detail</th><th>UBS Value</th></tr></thead>
+            <tbody>
+              <tr><td>Algorithms</td><td>Ed25519, ML-DSA-44/65/87, Hybrid (Ed25519+ML-DSA)</td><td class="td-hi">NIST ACVP validated</td></tr>
+              <tr><td>Performance</td><td>15,000 Ed25519/sec · 2,000 ML-DSA-65/sec</td><td class="td-hi">Production-grade</td></tr>
+              <tr><td>Domain Endpoints</td><td>8 industry-specific: pharma, finance, auto, defense, SBOM, healthcare, aerospace, clinical</td><td class="td-hi">Financial/audit ready</td></tr>
+              <tr><td>Threshold Signing</td><td>k-of-n Shamir — requires multiple approvers before signature is produced</td><td class="td-hi">PCI-DSS 3.6.1</td></tr>
+              <tr><td>Domain-Bound Keys</td><td>10 ISKDE security domains — CyberSec key cannot sign Financial data</td><td class="td-hi">Isolation enforced</td></tr>
+              <tr><td>Governance</td><td>Multi-authority voting workflows with signed decisions</td><td class="td-hi">Multi-party control</td></tr>
+              <tr><td>OODA Monitor</td><td>Anomalous volume, cross-domain, after-hours, revoked key — all auto-detected</td><td class="td-hi">&lt;50ms response</td></tr>
+              <tr><td>Audit Trail</td><td>7-year, ML-DSA-65 signed, tamper-evident hash chain</td><td class="td-hi">PCI/SOX/DORA</td></tr>
+            </tbody>
+          </table></div>
+          <h3 class="sub">Benefits &amp; value creation</h3>
+          <div class="grid-3">
+            <div class="solution-card"><div class="solution-eyebrow">Risk Reduction</div><div class="solution-title">Non-Repudiable Evidence</div><div class="solution-list">→ Every audit entry cryptographically bound to approver<br>→ No more "who authorized this?" gaps<br>→ Post-quantum protection for 7+ year evidence<br>→ Independent verification by regulators</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Compliance Automation</div><div class="solution-title">Zero Audit Prep</div><div class="solution-list">→ Evidence generates continuously, not before audit<br>→ 44 frameworks auto-mapped to algorithms<br>→ Auditors verify independently with public key<br>→ ~30-40% reduction in QSA engagement</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Strategic</div><div class="solution-title">FINMA Ready Today</div><div class="solution-list">→ Hybrid mode satisfies DORA crypto-agility<br>→ Post-quantum before mandate deadline<br>→ First-mover advantage in Swiss banking<br>→ Smooth transition when regulation arrives</div></div>
+          </div>
+        </div>
+        <div data-lang="de">
+          <div class="p-eyebrow">Modul — Kartengeschäft</div>
+          <h2>Signing-as-a-Service</h2>
+          <p class="lede">Post-quanten digitale Signaturen für Audit-Trails, Dokumente und Transaktionen. Das System wählt automatisch den passenden Algorithmus für die jeweilige Regulierung — Ihre Teams müssen Kryptografie nicht selbst verstehen.</p>
+          <h3 class="sub">Funktionsweise</h3>
+          <div class="grid-4">
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(30,58,138,0.15), rgba(30,58,138,0.05)); border:1px solid rgba(96,165,250,0.2);"><div class="flow-phase" style="color:rgba(96,165,250,0.6);">Schritt 1</div><div class="flow-title">API-Aufruf</div><div class="flow-desc">System sendet Payload an den Signatur-Endpunkt (REST oder domänenspezifisch)</div><div class="flow-metric" style="color:var(--blue);">REST-API</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(126,34,206,0.12), rgba(126,34,206,0.04)); border:1px solid rgba(167,139,250,0.2);"><div class="flow-phase" style="color:rgba(167,139,250,0.6);">Schritt 2</div><div class="flow-title">Richtlinienprüfung</div><div class="flow-desc">44 Compliance-Rahmenwerke geprüft. Algorithmus automatisch gewählt.</div><div class="flow-metric" style="color:var(--purple);">Auto-Auswahl</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(251,146,60,0.08), rgba(251,146,60,0.02)); border:1px solid rgba(251,146,60,0.2);"><div class="flow-phase" style="color:rgba(251,146,60,0.6);">Schritt 3</div><div class="flow-title">Rust-Ausführung</div><div class="flow-desc">Signatur in reinem Rust berechnet. Schlüssel verlässt nie den Prozessspeicher.</div><div class="flow-metric" style="color:var(--orange);">Zero-FFI</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04)); border:1px solid rgba(16,185,129,0.25);"><div class="flow-phase" style="color:rgba(16,185,129,0.7);">Schritt 4</div><div class="flow-title">Signierte Antwort</div><div class="flow-desc">Signatur + öffentlicher Schlüssel + Compliance-Metadaten. Von Dritten überprüfbar.</div><div class="flow-metric" style="color:var(--emerald);">Nicht abstreitbar</div></div>
+          </div>
+          <h3 class="sub">Funktionen &amp; Merkmale</h3>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Funktion</th><th>Detail</th><th>Nutzen für UBS</th></tr></thead>
+            <tbody>
+              <tr><td>Algorithmen</td><td>Ed25519, ML-DSA-44/65/87, Hybrid (Ed25519+ML-DSA)</td><td class="td-hi">NIST-ACVP-validiert</td></tr>
+              <tr><td>Leistung</td><td>15.000 Ed25519/Sek. · 2.000 ML-DSA-65/Sek.</td><td class="td-hi">Produktionsreif</td></tr>
+              <tr><td>Domänen-Endpunkte</td><td>8 branchenspezifisch: Pharma, Finanzen, Automotive, Verteidigung, SBOM, Gesundheitswesen, Luftfahrt, Klinik</td><td class="td-hi">Finanz-/Audit-tauglich</td></tr>
+              <tr><td>Schwellenwert-Signierung</td><td>k-von-n Shamir — erfordert mehrere Genehmiger vor Signaturerstellung</td><td class="td-hi">PCI-DSS 3.6.1</td></tr>
+              <tr><td>Domänengebundene Schlüssel</td><td>10 ISKDE-Sicherheitsdomänen — CyberSec-Schlüssel kann keine Finanzdaten signieren</td><td class="td-hi">Isolation durchgesetzt</td></tr>
+              <tr><td>Governance</td><td>Mehrinstanzen-Abstimmungsworkflows mit signierten Entscheidungen</td><td class="td-hi">Mehrparteienkontrolle</td></tr>
+              <tr><td>OODA-Monitor</td><td>Anomales Volumen, domänenübergreifend, ausserhalb der Geschäftszeiten, widerrufener Schlüssel — alles automatisch erkannt</td><td class="td-hi">&lt;50ms Reaktion</td></tr>
+              <tr><td>Audit-Trail</td><td>7 Jahre, ML-DSA-65-signiert, manipulationssichere Hash-Kette</td><td class="td-hi">PCI/SOX/DORA</td></tr>
+            </tbody>
+          </table></div>
+          <h3 class="sub">Nutzen &amp; Wertschöpfung</h3>
+          <div class="grid-3">
+            <div class="solution-card"><div class="solution-eyebrow">Risikoreduktion</div><div class="solution-title">Nicht abstreitbare Nachweise</div><div class="solution-list">→ Jeder Audit-Eintrag kryptografisch an den Genehmiger gebunden<br>→ Keine "Wer hat das autorisiert?"-Lücken mehr<br>→ Post-quanten Schutz für Nachweise über 7+ Jahre<br>→ Unabhängige Verifikation durch Regulatoren</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Compliance-Automatisierung</div><div class="solution-title">Keine Audit-Vorbereitung nötig</div><div class="solution-list">→ Nachweise entstehen kontinuierlich, nicht erst vor dem Audit<br>→ 44 Rahmenwerke automatisch Algorithmen zugeordnet<br>→ Prüfer verifizieren unabhängig mit öffentlichem Schlüssel<br>→ ~30–40% weniger QSA-Aufwand</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Strategisch</div><div class="solution-title">FINMA-bereit schon heute</div><div class="solution-list">→ Hybrid-Modus erfüllt DORA-Krypto-Agilität<br>→ Post-quanten vor Ablauf der Vorgabefrist<br>→ First-Mover-Vorteil im Schweizer Bankwesen<br>→ Reibungsloser Übergang, sobald Regulierung greift</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SBOM ================= -->
+      <div class="panel" data-tab="sbom">
+        <div data-lang="en">
+          <div class="p-eyebrow">Module — Cards Division</div>
+          <h2>SBOM + CI/CD Integration</h2>
+          <p class="lede">Continuous software supply chain security. Connect to your GitHub/GitLab repos in 5 minutes. Get instant CVE detection, signed SBOM evidence, and policy enforcement — without changing developer workflow.</p>
+          <h3 class="sub">How it works</h3>
+          <div class="grid-4">
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(30,58,138,0.15), rgba(30,58,138,0.05)); border:1px solid rgba(96,165,250,0.2);"><div class="flow-phase" style="color:rgba(96,165,250,0.6);">Connect</div><div class="flow-title">OAuth Link</div><div class="flow-desc">One-click GitHub/GitLab connect. Webhook auto-installs.</div><div class="flow-metric" style="color:var(--blue);">5 min setup</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(126,34,206,0.12), rgba(126,34,206,0.04)); border:1px solid rgba(167,139,250,0.2);"><div class="flow-phase" style="color:rgba(167,139,250,0.6);">Scan</div><div class="flow-title">CVE Detection</div><div class="flow-desc">Grype + NVD + OSV — 3 databases simultaneously on every push.</div><div class="flow-metric" style="color:var(--purple);">Real-time</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(251,146,60,0.08), rgba(251,146,60,0.02)); border:1px solid rgba(251,146,60,0.2);"><div class="flow-phase" style="color:rgba(251,146,60,0.6);">Enforce</div><div class="flow-title">Policy-as-Code</div><div class="flow-desc">Block critical CVEs. Ban licenses. Enforce PCI-DSS rules.</div><div class="flow-metric" style="color:var(--orange);">Auto-block</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04)); border:1px solid rgba(16,185,129,0.25);"><div class="flow-phase" style="color:rgba(16,185,129,0.7);">Sign</div><div class="flow-title">Signed SBOM</div><div class="flow-desc">Ed25519 signature on every SBOM. Verifiable by any auditor.</div><div class="flow-metric" style="color:var(--emerald);">Sigstore format</div></div>
+          </div>
+          <h3 class="sub">Features &amp; functionality</h3>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Feature</th><th>Detail</th><th>UBS Value</th></tr></thead>
+            <tbody>
+              <tr><td>SBOM Formats</td><td>CycloneDX 1.5 + SPDX 2.3</td><td class="td-hi">Industry standard</td></tr>
+              <tr><td>CVE Databases</td><td>Grype, NVD (NIST), OSV (Google) — simultaneous scan</td><td class="td-hi">3x coverage</td></tr>
+              <tr><td>GitHub Integration</td><td>OAuth connect + App install + webhook auto-config</td><td class="td-hi">Zero pipeline changes</td></tr>
+              <tr><td>GitLab CI</td><td>Native YAML template + webhook receiver</td><td class="td-hi">GitLab native</td></tr>
+              <tr><td>Policy Engine</td><td>CVE severity block, license restrict, CISA KEV, age check, custom rules</td><td class="td-hi">PCI-DSS template</td></tr>
+              <tr><td>Continuous Monitor</td><td>Watch production SBOMs 24/7 for new CVEs — alert after deployment too</td><td class="td-hi">364-day coverage</td></tr>
+              <tr><td>OODA Response</td><td>Critical CVE → auto-ticket + assign dev + block deploy pipeline</td><td class="td-hi">&lt;50ms detect-to-act</td></tr>
+              <tr><td>Signature Verify</td><td>Public API for third-party SBOM integrity verification</td><td class="td-hi">Auditor self-service</td></tr>
+            </tbody>
+          </table></div>
+          <h3 class="sub">Benefits &amp; value creation</h3>
+          <div class="grid-3">
+            <div class="solution-card"><div class="solution-eyebrow">Audit Cost Reduction</div><div class="solution-title">Instant PCI-DSS Evidence</div><div class="solution-list">→ 6.3.1: Software inventory (SBOM auto-generates)<br>→ 6.3.2: Vulnerability management (Grype 24/7)<br>→ 11.4.6: Script integrity (signed SBOM proof)<br>→ 12.3.4: Hardware/software list (every build)</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Breach Prevention</div><div class="solution-title">Minutes, Not Weeks</div><div class="solution-list">→ Log4Shell-type events detected in minutes<br>→ Pipeline blocked before vulnerable code deploys<br>→ CISA KEV auto-check on every dependency<br>→ Mean-time-to-remediate drops to hours</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Developer Velocity</div><div class="solution-title">Zero Workflow Change</div><div class="solution-list">→ Runs silently on every commit — no dev action<br>→ Only interrupts when something is wrong<br>→ Clear, actionable alerts with assignment<br>→ Accept-risk flow with signed justification</div></div>
+          </div>
+        </div>
+        <div data-lang="de">
+          <div class="p-eyebrow">Modul — Kartengeschäft</div>
+          <h2>SBOM + CI/CD-Integration</h2>
+          <p class="lede">Kontinuierliche Sicherheit der Software-Lieferkette. Verbindung zu GitHub/GitLab-Repositories in 5 Minuten. Sofortige CVE-Erkennung, signierte SBOM-Nachweise und Richtliniendurchsetzung — ohne den Entwickler-Workflow zu verändern.</p>
+          <h3 class="sub">Funktionsweise</h3>
+          <div class="grid-4">
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(30,58,138,0.15), rgba(30,58,138,0.05)); border:1px solid rgba(96,165,250,0.2);"><div class="flow-phase" style="color:rgba(96,165,250,0.6);">Verbinden</div><div class="flow-title">OAuth-Verknüpfung</div><div class="flow-desc">Ein-Klick-Verbindung zu GitHub/GitLab. Webhook installiert sich automatisch.</div><div class="flow-metric" style="color:var(--blue);">5 Min. Einrichtung</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(126,34,206,0.12), rgba(126,34,206,0.04)); border:1px solid rgba(167,139,250,0.2);"><div class="flow-phase" style="color:rgba(167,139,250,0.6);">Scannen</div><div class="flow-title">CVE-Erkennung</div><div class="flow-desc">Grype + NVD + OSV — 3 Datenbanken gleichzeitig bei jedem Push.</div><div class="flow-metric" style="color:var(--purple);">Echtzeit</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(251,146,60,0.08), rgba(251,146,60,0.02)); border:1px solid rgba(251,146,60,0.2);"><div class="flow-phase" style="color:rgba(251,146,60,0.6);">Durchsetzen</div><div class="flow-title">Policy-as-Code</div><div class="flow-desc">Kritische CVEs blockieren. Lizenzen sperren. PCI-DSS-Regeln durchsetzen.</div><div class="flow-metric" style="color:var(--orange);">Auto-Blockierung</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04)); border:1px solid rgba(16,185,129,0.25);"><div class="flow-phase" style="color:rgba(16,185,129,0.7);">Signieren</div><div class="flow-title">Signiertes SBOM</div><div class="flow-desc">Ed25519-Signatur auf jedem SBOM. Von jedem Prüfer überprüfbar.</div><div class="flow-metric" style="color:var(--emerald);">Sigstore-Format</div></div>
+          </div>
+          <h3 class="sub">Funktionen &amp; Merkmale</h3>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Funktion</th><th>Detail</th><th>Nutzen für UBS</th></tr></thead>
+            <tbody>
+              <tr><td>SBOM-Formate</td><td>CycloneDX 1.5 + SPDX 2.3</td><td class="td-hi">Industriestandard</td></tr>
+              <tr><td>CVE-Datenbanken</td><td>Grype, NVD (NIST), OSV (Google) — gleichzeitiger Scan</td><td class="td-hi">3-fache Abdeckung</td></tr>
+              <tr><td>GitHub-Integration</td><td>OAuth-Verbindung + App-Installation + automatische Webhook-Konfiguration</td><td class="td-hi">Keine Pipeline-Änderungen</td></tr>
+              <tr><td>GitLab CI</td><td>Natives YAML-Template + Webhook-Empfänger</td><td class="td-hi">GitLab-nativ</td></tr>
+              <tr><td>Policy-Engine</td><td>CVE-Schweregrad-Blockierung, Lizenzbeschränkung, CISA KEV, Alterprüfung, individuelle Regeln</td><td class="td-hi">PCI-DSS-Vorlage</td></tr>
+              <tr><td>Kontinuierliches Monitoring</td><td>Produktions-SBOMs 24/7 auf neue CVEs überwacht — auch nach Deployment</td><td class="td-hi">364-Tage-Abdeckung</td></tr>
+              <tr><td>OODA-Reaktion</td><td>Kritische CVE → automatisches Ticket + Zuweisung an Entwickler + Deployment-Pipeline blockiert</td><td class="td-hi">&lt;50ms von Erkennung zu Aktion</td></tr>
+              <tr><td>Signaturprüfung</td><td>Öffentliche API zur SBOM-Integritätsprüfung durch Dritte</td><td class="td-hi">Self-Service für Prüfer</td></tr>
+            </tbody>
+          </table></div>
+          <h3 class="sub">Nutzen &amp; Wertschöpfung</h3>
+          <div class="grid-3">
+            <div class="solution-card"><div class="solution-eyebrow">Geringere Audit-Kosten</div><div class="solution-title">Sofortige PCI-DSS-Nachweise</div><div class="solution-list">→ 6.3.1: Software-Inventar (SBOM automatisch erzeugt)<br>→ 6.3.2: Schwachstellenmanagement (Grype 24/7)<br>→ 11.4.6: Skript-Integrität (signierter SBOM-Nachweis)<br>→ 12.3.4: Hardware-/Software-Liste (bei jedem Build)</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Vorfallprävention</div><div class="solution-title">Minuten statt Wochen</div><div class="solution-list">→ Log4Shell-artige Vorfälle in Minuten erkannt<br>→ Pipeline blockiert, bevor verwundbarer Code deployt wird<br>→ CISA-KEV-Prüfung automatisch bei jeder Abhängigkeit<br>→ Mittlere Behebungszeit sinkt auf Stunden</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Entwicklergeschwindigkeit</div><div class="solution-title">Keine Workflow-Änderung</div><div class="solution-list">→ Läuft unauffällig bei jedem Commit — keine Entwickleraktion nötig<br>→ Unterbricht nur, wenn etwas nicht stimmt<br>→ Klare, umsetzbare Alarme mit Zuweisung<br>→ Risikoakzeptanz-Workflow mit signierter Begründung</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= CERTS ================= -->
+      <div class="panel" data-tab="certs">
+        <div data-lang="en">
+          <div class="p-eyebrow">Module — Cards Division</div>
+          <h2>Certificate Lifecycle Management</h2>
+          <p class="lede">Private CA, 60-day auto-rotation, F5 BIG-IP deployment — fully automated. Set it once, certificates rotate forever without human intervention. OODA monitors everything.</p>
+          <h3 class="sub">How it works</h3>
+          <div class="grid-4">
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(30,58,138,0.15), rgba(30,58,138,0.05)); border:1px solid rgba(96,165,250,0.2);"><div class="flow-phase" style="color:rgba(96,165,250,0.6);">Setup</div><div class="flow-title">Create CA</div><div class="flow-desc">Ed25519 or ML-DSA-65 CA. Key stored in SDC Vault (3-of-5).</div><div class="flow-metric" style="color:var(--blue);">One-time</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(126,34,206,0.12), rgba(126,34,206,0.04)); border:1px solid rgba(167,139,250,0.2);"><div class="flow-phase" style="color:rgba(167,139,250,0.6);">Issue</div><div class="flow-title">Certificate</div><div class="flow-desc">X.509 with SAN. Private key in Rust. Auto-deploy to F5.</div><div class="flow-metric" style="color:var(--purple);">iControl REST</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(251,146,60,0.08), rgba(251,146,60,0.02)); border:1px solid rgba(251,146,60,0.2);"><div class="flow-phase" style="color:rgba(251,146,60,0.6);">Rotate</div><div class="flow-title">Auto-Renew</div><div class="flow-desc">Scheduler fires 14 days before expiry. New cert deployed, old revoked.</div><div class="flow-metric" style="color:var(--orange);">Zero-touch</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04)); border:1px solid rgba(16,185,129,0.25);"><div class="flow-phase" style="color:rgba(16,185,129,0.7);">Monitor</div><div class="flow-title">OODA Watch</div><div class="flow-desc">Failed deploy? Auto-retry + escalate. Missed rotation? Alert cascade.</div><div class="flow-metric" style="color:var(--emerald);">0 outages</div></div>
+          </div>
+          <h3 class="sub">Features &amp; functionality</h3>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Feature</th><th>Detail</th><th>UBS Value</th></tr></thead>
+            <tbody>
+              <tr><td>Private CA</td><td>Ed25519 (FIPS 186-5) or ML-DSA-65 (FIPS 204). CA key in SDC Vault.</td><td class="td-hi">No single admin access</td></tr>
+              <tr><td>F5 BIG-IP Deploy</td><td>Direct push via iControl REST API. Health check before deploy.</td><td class="td-hi">Zero manual SSH</td></tr>
+              <tr><td>Auto-Rotation</td><td>Configurable schedule (60-day default). Renew 14 days before expiry.</td><td class="td-hi">Never miss renewal</td></tr>
+              <tr><td>CRL + OCSP</td><td>CA-signed revocation list + real-time OCSP responder.</td><td class="td-hi">Instant revocation</td></tr>
+              <tr><td>Post-Quantum</td><td>ML-DSA-65 signed X.509 certs for internal mTLS.</td><td class="td-hi">First in Swiss banking</td></tr>
+              <tr><td>Edge + Origin</td><td>Separate cert types for CDN/WAF edge and origin servers.</td><td class="td-hi">Full coverage</td></tr>
+              <tr><td>CAA Verification</td><td>DNS CAA record check before issuance.</td><td class="td-hi">Domain validation</td></tr>
+              <tr><td>Signed Audit</td><td>Every issuance, rotation, revocation — ML-DSA-65 signed, 7 years.</td><td class="td-hi">Complete evidence</td></tr>
+            </tbody>
+          </table></div>
+          <h3 class="sub">Benefits &amp; value creation</h3>
+          <div class="grid-3">
+            <div class="solution-card"><div class="solution-eyebrow">Eliminate Outages</div><div class="solution-title">Auto-Rotation = Zero Missed</div><div class="solution-list">→ Expired certs are #1 preventable outage cause<br>→ 14-day buffer makes expiry impossible<br>→ OODA catches failed deploys, retries + escalates<br>→ One dashboard: all certs, all F5s, all expiry dates</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Remove Venafi</div><div class="solution-title">One Less Vendor</div><div class="solution-list">→ Certificate lifecycle built into SENTINEL<br>→ F5 integration included, not separate product<br>→ Same governance as signing + vaulting<br>→ One audit trail across all security operations</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Future-Proof</div><div class="solution-title">PQC Certs Today</div><div class="solution-list">→ ML-DSA-65 certs for internal service-to-service<br>→ Protects against harvest-now-decrypt-later<br>→ Seamless transition when browser PQC arrives<br>→ Ahead of FINMA mandate</div></div>
+          </div>
+        </div>
+        <div data-lang="de">
+          <div class="p-eyebrow">Modul — Kartengeschäft</div>
+          <h2>Zertifikats-Lebenszyklusmanagement</h2>
+          <p class="lede">Private CA, 60-tägige automatische Rotation, F5-BIG-IP-Deployment — vollständig automatisiert. Einmal einrichten, Zertifikate rotieren für immer ohne manuellen Eingriff. OODA überwacht alles.</p>
+          <h3 class="sub">Funktionsweise</h3>
+          <div class="grid-4">
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(30,58,138,0.15), rgba(30,58,138,0.05)); border:1px solid rgba(96,165,250,0.2);"><div class="flow-phase" style="color:rgba(96,165,250,0.6);">Einrichtung</div><div class="flow-title">CA erstellen</div><div class="flow-desc">Ed25519- oder ML-DSA-65-CA. Schlüssel im SDC Vault gespeichert (3-von-5).</div><div class="flow-metric" style="color:var(--blue);">Einmalig</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(126,34,206,0.12), rgba(126,34,206,0.04)); border:1px solid rgba(167,139,250,0.2);"><div class="flow-phase" style="color:rgba(167,139,250,0.6);">Ausstellen</div><div class="flow-title">Zertifikat</div><div class="flow-desc">X.509 mit SAN. Privater Schlüssel in Rust. Automatisches Deployment auf F5.</div><div class="flow-metric" style="color:var(--purple);">iControl REST</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(251,146,60,0.08), rgba(251,146,60,0.02)); border:1px solid rgba(251,146,60,0.2);"><div class="flow-phase" style="color:rgba(251,146,60,0.6);">Rotieren</div><div class="flow-title">Automatische Erneuerung</div><div class="flow-desc">Zeitplan startet 14 Tage vor Ablauf. Neues Zertifikat deployt, altes widerrufen.</div><div class="flow-metric" style="color:var(--orange);">Ohne manuellen Eingriff</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04)); border:1px solid rgba(16,185,129,0.25);"><div class="flow-phase" style="color:rgba(16,185,129,0.7);">Überwachen</div><div class="flow-title">OODA-Wache</div><div class="flow-desc">Deployment fehlgeschlagen? Automatischer Neuversuch + Eskalation. Rotation verpasst? Alarmkaskade.</div><div class="flow-metric" style="color:var(--emerald);">0 Ausfälle</div></div>
+          </div>
+          <h3 class="sub">Funktionen &amp; Merkmale</h3>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Funktion</th><th>Detail</th><th>Nutzen für UBS</th></tr></thead>
+            <tbody>
+              <tr><td>Private CA</td><td>Ed25519 (FIPS 186-5) oder ML-DSA-65 (FIPS 204). CA-Schlüssel im SDC Vault.</td><td class="td-hi">Kein Einzel-Admin-Zugriff</td></tr>
+              <tr><td>F5-BIG-IP-Deployment</td><td>Direkte Übertragung via iControl-REST-API. Health-Check vor Deployment.</td><td class="td-hi">Kein manuelles SSH</td></tr>
+              <tr><td>Automatische Rotation</td><td>Konfigurierbarer Zeitplan (Standard 60 Tage). Erneuerung 14 Tage vor Ablauf.</td><td class="td-hi">Erneuerung nie verpasst</td></tr>
+              <tr><td>CRL + OCSP</td><td>CA-signierte Sperrliste + Echtzeit-OCSP-Responder.</td><td class="td-hi">Sofortiger Widerruf</td></tr>
+              <tr><td>Post-Quanten</td><td>ML-DSA-65-signierte X.509-Zertifikate für internes mTLS.</td><td class="td-hi">Erste im Schweizer Bankwesen</td></tr>
+              <tr><td>Edge + Origin</td><td>Separate Zertifikatstypen für CDN/WAF-Edge und Origin-Server.</td><td class="td-hi">Vollständige Abdeckung</td></tr>
+              <tr><td>CAA-Prüfung</td><td>DNS-CAA-Eintrag wird vor Ausstellung geprüft.</td><td class="td-hi">Domänenvalidierung</td></tr>
+              <tr><td>Signierter Audit</td><td>Jede Ausstellung, Rotation, jeder Widerruf — ML-DSA-65-signiert, 7 Jahre.</td><td class="td-hi">Vollständiger Nachweis</td></tr>
+            </tbody>
+          </table></div>
+          <h3 class="sub">Nutzen &amp; Wertschöpfung</h3>
+          <div class="grid-3">
+            <div class="solution-card"><div class="solution-eyebrow">Ausfälle eliminieren</div><div class="solution-title">Auto-Rotation = keine verpasst</div><div class="solution-list">→ Abgelaufene Zertifikate sind Ursache Nr. 1 vermeidbarer Ausfälle<br>→ 14-Tage-Puffer macht Ablauf unmöglich<br>→ OODA erkennt fehlgeschlagene Deployments, wiederholt + eskaliert<br>→ Ein Dashboard: alle Zertifikate, alle F5s, alle Ablaufdaten</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Venafi ablösen</div><div class="solution-title">Ein Anbieter weniger</div><div class="solution-list">→ Zertifikats-Lebenszyklus in SENTINEL integriert<br>→ F5-Integration inbegriffen, kein separates Produkt<br>→ Gleiche Governance wie Signing + Vaulting<br>→ Ein Audit-Trail für alle Sicherheitsvorgänge</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Zukunftssicher</div><div class="solution-title">PQC-Zertifikate schon heute</div><div class="solution-list">→ ML-DSA-65-Zertifikate für interne Service-zu-Service-Kommunikation<br>→ Schutz vor "Harvest now, decrypt later"<br>→ Nahtloser Übergang, sobald Browser-PQC verfügbar ist<br>→ Vor der FINMA-Vorgabe</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SDC VAULTING ================= -->
+      <div class="panel" data-tab="sdc">
+        <div data-lang="en">
+          <div class="p-eyebrow">Module — Cards Division</div>
+          <h2>SDC Vaulting (Sovereign Digital Custody)</h2>
+          <p class="lede">Replace HashiCorp Vault + Oracle HSM with one quantum-safe system. Keys never leave the Rust process. No FFI. No PKCS#11 bridge. Threshold governance and temporal decay built in.</p>
+          <h3 class="sub">How it works</h3>
+          <div class="grid-4">
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(30,58,138,0.15), rgba(30,58,138,0.05)); border:1px solid rgba(96,165,250,0.2);"><div class="flow-phase" style="color:rgba(96,165,250,0.6);">Create</div><div class="flow-title">Vault</div><div class="flow-desc">Choose template (Card Keys, Fraud Models, PCI Data). Set k-of-n threshold.</div><div class="flow-metric" style="color:var(--blue);">3-of-5 typical</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(126,34,206,0.12), rgba(126,34,206,0.04)); border:1px solid rgba(167,139,250,0.2);"><div class="flow-phase" style="color:rgba(167,139,250,0.6);">Store</div><div class="flow-title">Encrypt</div><div class="flow-desc">Upload items encrypted with ML-KEM-1024 (NIST Level 5, highest).</div><div class="flow-metric" style="color:var(--purple);">Quantum-safe</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(251,146,60,0.08), rgba(251,146,60,0.02)); border:1px solid rgba(251,146,60,0.2);"><div class="flow-phase" style="color:rgba(251,146,60,0.6);">Access</div><div class="flow-title">Threshold</div><div class="flow-desc">3-of-5 custodians must approve. Access auto-expires (temporal decay).</div><div class="flow-metric" style="color:var(--orange);">No single admin</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04)); border:1px solid rgba(16,185,129,0.25);"><div class="flow-phase" style="color:rgba(16,185,129,0.7);">Ceremony</div><div class="flow-title">Key Rotation</div><div class="flow-desc">Remote custodians provide Shamir shares. 15 min total. $15K vs $50K.</div><div class="flow-metric" style="color:var(--emerald);">70% savings</div></div>
+          </div>
+          <h3 class="sub">Features &amp; functionality</h3>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Feature</th><th>Detail</th><th>UBS Value</th></tr></thead>
+            <tbody>
+              <tr><td>Encryption</td><td>ML-KEM-1024 (NIST Level 5 — highest security level)</td><td class="td-hi">Quantum-resistant</td></tr>
+              <tr><td>Key Derivation</td><td>ISKDE — 4.7M keys/sec across 10 security domains</td><td class="td-hi">Domain isolation</td></tr>
+              <tr><td>Threshold</td><td>Any k-of-n configurable (1-of-1 to 10-of-10). Shamir Secret Sharing.</td><td class="td-hi">No single-person access</td></tr>
+              <tr><td>Temporal Decay</td><td>Access tokens auto-expire after configurable window (e.g., 4 hours)</td><td class="td-hi">No stale permissions</td></tr>
+              <tr><td>Templates</td><td>Card Encryption Keys, Fraud Models, PCI Data, Trading Algos, KYC/AML</td><td class="td-hi">Card-specific ready</td></tr>
+              <tr><td>Key Ceremonies</td><td>$15K digital (vs $50K physical). 15 min remote. Hybrid signature witness.</td><td class="td-hi">$140K/year savings</td></tr>
+              <tr><td>Zero-FFI</td><td>Keys never cross process boundary. Pure Rust. No PKCS#11.</td><td class="td-hi">Architectural security</td></tr>
+              <tr><td>RBAC</td><td>Users from entity roles — not manually typed. Real permissions.</td><td class="td-hi">Actual governance</td></tr>
+            </tbody>
+          </table></div>
+          <h3 class="sub">Benefits &amp; value creation</h3>
+          <div class="grid-3">
+            <div class="solution-card"><div class="solution-eyebrow">Security</div><div class="solution-title">Eliminates FFI Attack Surface</div><div class="solution-list">→ No PKCS#11 bridge — vulnerability removed<br>→ Compromised admin cannot access vault alone<br>→ Card keys protected by threshold governance<br>→ Temporal decay = no forgotten access</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Financial</div><div class="solution-title">$140K Annual Savings</div><div class="solution-list">→ 4 × $15K digital = $60K vs 4 × $50K physical = $200K<br>→ Eliminate Oracle HSM licensing<br>→ Eliminate HashiCorp Enterprise license<br>→ One system to maintain instead of two</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Vendor Consolidation</div><div class="solution-title">One Platform</div><div class="solution-list">→ HashiCorp + Oracle + Venafi → SENTINEL<br>→ Reduce vendor risk and integration complexity<br>→ Single audit trail for all operations<br>→ IBM acquisition uncertainty eliminated</div></div>
+          </div>
+          <h3 class="sub">UBS Cards Division — five scenarios</h3>
+          <div class="use-case"><div class="use-case-title">Scenario 1: Card Encryption Key Custody</div><div class="use-case-scenario">Vault: "UBS-Cards-HSM-Master-Keys" — Card issuance master key, PIN derivation, CVV generation. Threshold: 3-of-5 (Head of Cards, CISO, Head Ops, Compliance, Auditor). Tokens expire after 4 hours.</div><div class="use-case-value">Result: No single person — including compromised admin — can extract keys</div></div>
+          <div class="use-case"><div class="use-case-title">Scenario 2: Fraud Model Sharing (ZK Proofs)</div><div class="use-case-scenario">UBS encrypts fraud model in Clean Room. Visa queries: "Does this transaction match your model?" ZK proof returns YES/NO — model never exposed. Neither party sees the other's data.</div><div class="use-case-value">Result: Collaborative fraud detection without IP leakage</div></div>
+          <div class="use-case"><div class="use-case-title">Scenario 3: PCI-DSS 4.0 Compliance Evidence</div><div class="use-case-scenario">5 GaaS domains (Risk, Compliance, Ops, Security, Audit). Policy: PAN/CVV access requires Security + Compliance approval. Every approval signed with ML-DSA-65 (7-year retention).</div><div class="use-case-value">Result: Auditor independently verifies every access was authorized — non-repudiable</div></div>
+          <div class="use-case"><div class="use-case-title">Scenario 4: Digital Key Ceremony (Quarterly)</div><div class="use-case-scenario">5 remote custodians provide Shamir shares. Reconstruct → Rotate → Re-encrypt → Zeroize. 15 minutes total. Hybrid signature (Ed25519 + ML-DSA) as cryptographic witness on the entire transcript.</div><div class="use-case-value">Result: $15K ceremony (vs $50K physical) = 70% savings + stronger audit evidence</div></div>
+          <div class="use-case"><div class="use-case-title">Scenario 5: Cross-Border Data Sovereignty</div><div class="use-case-scenario">"Switzerland" domain: full cardholder PII. "EU Processing" domain: tokenized only. US office attempts Swiss data access → OODA DENY + FINMA compliance alert (&lt;50ms).</div><div class="use-case-value">Result: Data sovereignty enforced by cryptography, not by policy document</div></div>
+        </div>
+        <div data-lang="de">
+          <div class="p-eyebrow">Modul — Kartengeschäft</div>
+          <h2>SDC Vaulting (Sovereign Digital Custody)</h2>
+          <p class="lede">Ersetzt HashiCorp Vault + Oracle HSM durch ein einziges quantensicheres System. Schlüssel verlassen den Rust-Prozess nie. Kein FFI. Keine PKCS#11-Bridge. Schwellenwert-Governance und zeitlich begrenzter Zugriff integriert.</p>
+          <h3 class="sub">Funktionsweise</h3>
+          <div class="grid-4">
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(30,58,138,0.15), rgba(30,58,138,0.05)); border:1px solid rgba(96,165,250,0.2);"><div class="flow-phase" style="color:rgba(96,165,250,0.6);">Erstellen</div><div class="flow-title">Vault</div><div class="flow-desc">Vorlage wählen (Kartenschlüssel, Betrugsmodelle, PCI-Daten). k-von-n-Schwellenwert festlegen.</div><div class="flow-metric" style="color:var(--blue);">Typisch 3-von-5</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(126,34,206,0.12), rgba(126,34,206,0.04)); border:1px solid rgba(167,139,250,0.2);"><div class="flow-phase" style="color:rgba(167,139,250,0.6);">Speichern</div><div class="flow-title">Verschlüsseln</div><div class="flow-desc">Hochgeladene Daten mit ML-KEM-1024 verschlüsselt (NIST-Stufe 5, höchste).</div><div class="flow-metric" style="color:var(--purple);">Quantensicher</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(251,146,60,0.08), rgba(251,146,60,0.02)); border:1px solid rgba(251,146,60,0.2);"><div class="flow-phase" style="color:rgba(251,146,60,0.6);">Zugriff</div><div class="flow-title">Schwellenwert</div><div class="flow-desc">3-von-5 Verwahrer müssen zustimmen. Zugriff läuft automatisch ab (Temporal Decay).</div><div class="flow-metric" style="color:var(--orange);">Kein Einzel-Admin</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04)); border:1px solid rgba(16,185,129,0.25);"><div class="flow-phase" style="color:rgba(16,185,129,0.7);">Zeremonie</div><div class="flow-title">Schlüsselrotation</div><div class="flow-desc">Verwahrer liefern remote Shamir-Anteile. 15 Min. insgesamt. 15.000 $ statt 50.000 $.</div><div class="flow-metric" style="color:var(--emerald);">70% Einsparung</div></div>
+          </div>
+          <h3 class="sub">Funktionen &amp; Merkmale</h3>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Funktion</th><th>Detail</th><th>Nutzen für UBS</th></tr></thead>
+            <tbody>
+              <tr><td>Verschlüsselung</td><td>ML-KEM-1024 (NIST-Stufe 5 — höchste Sicherheitsstufe)</td><td class="td-hi">Quantenresistent</td></tr>
+              <tr><td>Schlüsselableitung</td><td>ISKDE — 4,7 Mio. Schlüssel/Sek. über 10 Sicherheitsdomänen</td><td class="td-hi">Domänenisolation</td></tr>
+              <tr><td>Schwellenwert</td><td>Beliebig konfigurierbares k-von-n (1-von-1 bis 10-von-10). Shamir Secret Sharing.</td><td class="td-hi">Kein Einzelzugriff</td></tr>
+              <tr><td>Temporal Decay</td><td>Zugriffstoken laufen automatisch nach konfigurierbarem Zeitfenster ab (z. B. 4 Std.)</td><td class="td-hi">Keine veralteten Berechtigungen</td></tr>
+              <tr><td>Vorlagen</td><td>Kartenverschlüsselungsschlüssel, Betrugsmodelle, PCI-Daten, Handelsalgorithmen, KYC/AML</td><td class="td-hi">Kartenspezifisch einsatzbereit</td></tr>
+              <tr><td>Key-Zeremonien</td><td>15.000 $ digital (vs. 50.000 $ physisch). 15 Min. remote. Hybrid-Signatur als Zeuge.</td><td class="td-hi">140.000 $/Jahr Einsparung</td></tr>
+              <tr><td>Zero-FFI</td><td>Schlüssel überschreiten nie die Prozessgrenze. Reines Rust. Kein PKCS#11.</td><td class="td-hi">Architektonische Sicherheit</td></tr>
+              <tr><td>RBAC</td><td>Nutzer aus Entitätsrollen — nicht manuell eingegeben. Echte Berechtigungen.</td><td class="td-hi">Tatsächliche Governance</td></tr>
+            </tbody>
+          </table></div>
+          <h3 class="sub">Nutzen &amp; Wertschöpfung</h3>
+          <div class="grid-3">
+            <div class="solution-card"><div class="solution-eyebrow">Sicherheit</div><div class="solution-title">Eliminiert FFI-Angriffsfläche</div><div class="solution-list">→ Keine PKCS#11-Bridge — Schwachstelle entfernt<br>→ Kompromittierter Admin kann Vault nicht allein öffnen<br>→ Kartenschlüssel durch Schwellenwert-Governance geschützt<br>→ Temporal Decay = keine vergessenen Zugriffe</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Finanziell</div><div class="solution-title">140.000 $ jährliche Einsparung</div><div class="solution-list">→ 4 × 15.000 $ digital = 60.000 $ vs. 4 × 50.000 $ physisch = 200.000 $<br>→ Oracle-HSM-Lizenzierung entfällt<br>→ HashiCorp-Enterprise-Lizenz entfällt<br>→ Ein System statt zwei zu pflegen</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">Anbieterkonsolidierung</div><div class="solution-title">Eine Plattform</div><div class="solution-list">→ HashiCorp + Oracle + Venafi → SENTINEL<br>→ Weniger Anbieterrisiko und Integrationskomplexität<br>→ Ein Audit-Trail für alle Vorgänge<br>→ IBM-Übernahme-Unsicherheit beseitigt</div></div>
+          </div>
+          <h3 class="sub">UBS Kartengeschäft — fünf Szenarien</h3>
+          <div class="use-case"><div class="use-case-title">Szenario 1: Verwahrung der Kartenverschlüsselungsschlüssel</div><div class="use-case-scenario">Vault: "UBS-Cards-HSM-Master-Keys" — Master-Schlüssel für Kartenausgabe, PIN-Ableitung, CVV-Generierung. Schwellenwert: 3-von-5 (Head of Cards, CISO, Head Ops, Compliance, Auditor). Token laufen nach 4 Stunden ab.</div><div class="use-case-value">Ergebnis: Keine einzelne Person — auch kein kompromittierter Admin — kann Schlüssel extrahieren</div></div>
+          <div class="use-case"><div class="use-case-title">Szenario 2: Gemeinsame Nutzung von Betrugsmodellen (ZK-Beweise)</div><div class="use-case-scenario">UBS verschlüsselt Betrugsmodell im Clean Room. Visa fragt: "Passt diese Transaktion zu Ihrem Modell?" ZK-Beweis liefert JA/NEIN — Modell wird nie offengelegt. Keine Partei sieht die Daten der anderen.</div><div class="use-case-value">Ergebnis: Gemeinsame Betrugserkennung ohne IP-Leck</div></div>
+          <div class="use-case"><div class="use-case-title">Szenario 3: PCI-DSS-4.0-Compliance-Nachweis</div><div class="use-case-scenario">5 GaaS-Domänen (Risiko, Compliance, Betrieb, Sicherheit, Audit). Richtlinie: PAN/CVV-Zugriff erfordert Freigabe durch Sicherheit + Compliance. Jede Freigabe mit ML-DSA-65 signiert (7 Jahre Aufbewahrung).</div><div class="use-case-value">Ergebnis: Prüfer verifiziert unabhängig, dass jeder Zugriff autorisiert war — nicht abstreitbar</div></div>
+          <div class="use-case"><div class="use-case-title">Szenario 4: Digitale Key-Zeremonie (vierteljährlich)</div><div class="use-case-scenario">5 remote Verwahrer liefern Shamir-Anteile. Rekonstruieren → Rotieren → Neu verschlüsseln → Löschen. 15 Minuten insgesamt. Hybrid-Signatur (Ed25519 + ML-DSA) als kryptografischer Zeuge über das gesamte Protokoll.</div><div class="use-case-value">Ergebnis: 15.000 $ Zeremonie (vs. 50.000 $ physisch) = 70% Einsparung + stärkerer Prüfnachweis</div></div>
+          <div class="use-case"><div class="use-case-title">Szenario 5: Grenzüberschreitende Datensouveränität</div><div class="use-case-scenario">Domäne "Schweiz": vollständige Karteninhaber-PII. Domäne "EU-Verarbeitung": nur tokenisiert. US-Niederlassung versucht Zugriff auf Schweizer Daten → OODA VERWEIGERT + FINMA-Compliance-Alarm (&lt;50ms).</div><div class="use-case-value">Ergebnis: Datensouveränität kryptografisch durchgesetzt, nicht per Richtliniendokument</div></div>
+        </div>
+      </div>
+
+      <!-- ================= DIFFERENTIATION ================= -->
+      <div class="panel" data-tab="differentiation">
+        <div data-lang="en">
+          <div class="p-eyebrow">Commercial</div>
+          <h2>Competitive differentiation</h2>
+          <p class="lede">"Everyone will have ML-DSA by 2027. Only SENTINEL has ML-DSA + governance + compliance intelligence + certificate lifecycle + SBOM — in one platform."</p>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Capability</th><th>AWS KMS</th><th>Google Cloud KMS</th><th>HashiCorp Vault</th><th>SENTINEL</th></tr></thead>
+            <tbody>
+              <tr><td>Hybrid (Ed25519 + ML-DSA)</td><td>Not available</td><td>Not available</td><td>Not available</td><td class="td-hi">✓ Production</td></tr>
+              <tr><td>44-framework compliance auto-select</td><td>Manual choice</td><td>Manual choice</td><td>Manual choice</td><td class="td-hi">✓ Automatic</td></tr>
+              <tr><td>Domain-bound key isolation (ISKDE)</td><td>Flat IAM</td><td>Flat IAM</td><td>Namespace only</td><td class="td-hi">✓ 10 crypto domains</td></tr>
+              <tr><td>Threshold k-of-n signing</td><td>Not available</td><td>Not available</td><td>Not available</td><td class="td-hi">✓ Shamir + ML-DSA</td></tr>
+              <tr><td>Zero-FFI (Pure Rust, no C/C++/CGo)</td><td>FFI to C</td><td>FFI to C++</td><td>CGo to C</td><td class="td-hi">✓ Zero dependencies</td></tr>
+              <tr><td>Certificate lifecycle + F5 deploy</td><td>Not available</td><td>Not available</td><td>Not available</td><td class="td-hi">✓ Auto-rotation</td></tr>
+              <tr><td>SBOM CI/CD + signed evidence</td><td>Not available</td><td>Not available</td><td>Not available</td><td class="td-hi">✓ GitHub + GitLab</td></tr>
+              <tr><td>OODA autonomous response (&lt;50ms)</td><td>CloudWatch rules</td><td>Alert only</td><td>Alert only</td><td class="td-hi">✓ Observe→Act</td></tr>
+              <tr><td>Governance-as-a-Service (9 domains)</td><td>Flat IAM</td><td>Flat IAM</td><td>Not available</td><td class="td-hi">✓ Hierarchical PQC</td></tr>
+              <tr><td>On-premise / air-gapped deploy</td><td>Cloud only</td><td>Cloud only</td><td>Available</td><td class="td-hi">✓ Available</td></tr>
+            </tbody>
+          </table></div>
+          <h3 class="sub">Compliance frameworks satisfied</h3>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Framework</th><th>How SENTINEL Satisfies</th><th>Modules</th></tr></thead>
+            <tbody>
+              <tr><td>PCI-DSS 4.0</td><td>3.6.1 (key custody), 6.3.1 (SBOM), 10.x (signed audit), 11.4 (continuous), 11.4.6 (script integrity)</td><td class="td-hi">All modules</td></tr>
+              <tr><td>FINMA</td><td>Swiss data sovereignty via cryptographic domain isolation. ML-KEM-1024. PQC readiness.</td><td class="td-hi">SDC + Signing</td></tr>
+              <tr><td>DORA</td><td>Crypto-agility (Hybrid Ed25519+ML-DSA). ICT risk documentation. Third-party governance.</td><td class="td-hi">Signing + Certs</td></tr>
+              <tr><td>SOX</td><td>Financial controls signed with ML-DSA. 7-year immutable retention. Multi-authority.</td><td class="td-hi">Signing + GaaS</td></tr>
+              <tr><td>GDPR Art. 32</td><td>Encryption (ML-KEM-1024), access control (threshold), provably enforced.</td><td class="td-hi">SDC + Certs</td></tr>
+              <tr><td>Swiss nDSG</td><td>Transfer impact assessments signed. Data residency enforced by ISKDE domains.</td><td class="td-hi">SDC + OODA</td></tr>
+              <tr><td>ISO 27001</td><td>Risk assessments signed. Continuous monitoring. Policy enforcement proof.</td><td class="td-hi">All modules</td></tr>
+              <tr><td>NIST 800-171</td><td>CUI protection with domain isolation + post-quantum signatures. CMMC 2.0.</td><td class="td-hi">SDC + Signing</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div data-lang="de">
+          <div class="p-eyebrow">Kommerzielles</div>
+          <h2>Wettbewerbsdifferenzierung</h2>
+          <p class="lede">"Bis 2027 wird jeder ML-DSA haben. Nur SENTINEL bietet ML-DSA + Governance + Compliance-Intelligenz + Zertifikats-Lebenszyklus + SBOM — in einer Plattform."</p>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Fähigkeit</th><th>AWS KMS</th><th>Google Cloud KMS</th><th>HashiCorp Vault</th><th>SENTINEL</th></tr></thead>
+            <tbody>
+              <tr><td>Hybrid (Ed25519 + ML-DSA)</td><td>Nicht verfügbar</td><td>Nicht verfügbar</td><td>Nicht verfügbar</td><td class="td-hi">✓ Produktiv</td></tr>
+              <tr><td>Automatische Auswahl aus 44 Rahmenwerken</td><td>Manuelle Wahl</td><td>Manuelle Wahl</td><td>Manuelle Wahl</td><td class="td-hi">✓ Automatisch</td></tr>
+              <tr><td>Domänengebundene Schlüsselisolation (ISKDE)</td><td>Flaches IAM</td><td>Flaches IAM</td><td>Nur Namespace</td><td class="td-hi">✓ 10 Krypto-Domänen</td></tr>
+              <tr><td>Schwellenwert-Signierung k-von-n</td><td>Nicht verfügbar</td><td>Nicht verfügbar</td><td>Nicht verfügbar</td><td class="td-hi">✓ Shamir + ML-DSA</td></tr>
+              <tr><td>Zero-FFI (reines Rust, kein C/C++/CGo)</td><td>FFI zu C</td><td>FFI zu C++</td><td>CGo zu C</td><td class="td-hi">✓ Keine Abhängigkeiten</td></tr>
+              <tr><td>Zertifikats-Lebenszyklus + F5-Deployment</td><td>Nicht verfügbar</td><td>Nicht verfügbar</td><td>Nicht verfügbar</td><td class="td-hi">✓ Automatische Rotation</td></tr>
+              <tr><td>SBOM-CI/CD + signierte Nachweise</td><td>Nicht verfügbar</td><td>Nicht verfügbar</td><td>Nicht verfügbar</td><td class="td-hi">✓ GitHub + GitLab</td></tr>
+              <tr><td>Autonome OODA-Reaktion (&lt;50ms)</td><td>CloudWatch-Regeln</td><td>Nur Alarm</td><td>Nur Alarm</td><td class="td-hi">✓ Beobachten→Handeln</td></tr>
+              <tr><td>Governance-as-a-Service (9 Domänen)</td><td>Flaches IAM</td><td>Flaches IAM</td><td>Nicht verfügbar</td><td class="td-hi">✓ Hierarchisches PQC</td></tr>
+              <tr><td>On-Premise/Air-Gapped-Deployment</td><td>Nur Cloud</td><td>Nur Cloud</td><td>Verfügbar</td><td class="td-hi">✓ Verfügbar</td></tr>
+            </tbody>
+          </table></div>
+          <h3 class="sub">Erfüllte Compliance-Rahmenwerke</h3>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Rahmenwerk</th><th>Wie SENTINEL es erfüllt</th><th>Module</th></tr></thead>
+            <tbody>
+              <tr><td>PCI-DSS 4.0</td><td>3.6.1 (Schlüsselverwahrung), 6.3.1 (SBOM), 10.x (signierter Audit), 11.4 (kontinuierlich), 11.4.6 (Skript-Integrität)</td><td class="td-hi">Alle Module</td></tr>
+              <tr><td>FINMA</td><td>Schweizer Datensouveränität durch kryptografische Domänenisolation. ML-KEM-1024. PQC-Bereitschaft.</td><td class="td-hi">SDC + Signing</td></tr>
+              <tr><td>DORA</td><td>Krypto-Agilität (Hybrid Ed25519+ML-DSA). IKT-Risikodokumentation. Drittanbieter-Governance.</td><td class="td-hi">Signing + Zertifikate</td></tr>
+              <tr><td>SOX</td><td>Finanzkontrollen mit ML-DSA signiert. 7-jährige unveränderliche Aufbewahrung. Mehrinstanzenprinzip.</td><td class="td-hi">Signing + GaaS</td></tr>
+              <tr><td>DSGVO Art. 32</td><td>Verschlüsselung (ML-KEM-1024), Zugriffskontrolle (Schwellenwert), nachweisbar durchgesetzt.</td><td class="td-hi">SDC + Zertifikate</td></tr>
+              <tr><td>Schweizer nDSG</td><td>Signierte Datenschutz-Folgenabschätzungen bei Übermittlung. Datenresidenz durch ISKDE-Domänen erzwungen.</td><td class="td-hi">SDC + OODA</td></tr>
+              <tr><td>ISO 27001</td><td>Signierte Risikobewertungen. Kontinuierliches Monitoring. Nachweis der Richtliniendurchsetzung.</td><td class="td-hi">Alle Module</td></tr>
+              <tr><td>NIST 800-171</td><td>CUI-Schutz durch Domänenisolation + post-quanten Signaturen. CMMC 2.0.</td><td class="td-hi">SDC + Signing</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- ================= GROUP-WIDE OPPORTUNITY ================= -->
+      <div class="panel" data-tab="groupwide">
+        <div data-lang="en">
+          <div class="p-eyebrow">Commercial — beyond Cards</div>
+          <h2>What this looks like Group-wide, at G-SIB scale</h2>
+          <p class="lede">Cards is the entry point. The same SENTINEL foundation scopes directly to UBS's broader risk and compliance surface — proprietary trading, M&amp;A deal rooms, and treasury — where the assets under protection and the ACV both scale up materially.</p>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Consideration</th><th>What SENTINEL provides</th></tr></thead>
+            <tbody>
+              <tr><td>Regulatory drivers</td><td>EU DORA (ICT risk), Basel III / FRTB, MiFID II / MiFIR, PCI-DSS v4.0, SOX §404, GDPR Art. 9(2)(b)</td></tr>
+              <tr><td>What sits in the vault</td><td>Proprietary trading algorithm source, pending M&amp;A deal-room data behind a Reg FD wall, client financial models, AML/KYC data, stress-test models pre-disclosure</td></tr>
+              <tr><td>Services engaged</td><td>SDC Vaulting, GaaS, Key Ceremony, Clean Room — all four, typical for this tier</td></tr>
+              <tr><td>Incident reporting</td><td>Auto-classified severity within the OODA cycle; DORA-ready incident report drafted well inside the 4-hour window</td></tr>
+              <tr><td>Cross-desk isolation</td><td>ISKDE domain separation between desks, deal teams, and client engagements — mathematically enforced</td></tr>
+              <tr><td>Indicative ACV — this tier</td><td class="td-gold">$1M – $3M / yr</td></tr>
+            </tbody>
+          </table></div>
+          <div class="badges">
+            <span class="badge">DORA</span><span class="badge">Basel III / FRTB</span><span class="badge">MiFID II / MiFIR</span>
+            <span class="badge">PCI-DSS 4.0</span><span class="badge">SOX §404</span><span class="badge">GDPR Art. 9(2)(b)</span>
+            <span class="badge">NIST FIPS 203</span><span class="badge">ISO 27001</span>
+          </div>
+          <div class="pull" style="margin-top:32px;">A successful Cards Division POC is the reference case that opens the Group-level conversation — same architecture, same evidence, materially larger scope.<div class="attr">Suggested sequencing</div></div>
+        </div>
+        <div data-lang="de">
+          <div class="p-eyebrow">Kommerzielles — über das Kartengeschäft hinaus</div>
+          <h2>Wie das konzernweit aussieht, auf G-SIB-Ebene</h2>
+          <p class="lede">Karten ist der Einstiegspunkt. Dasselbe SENTINEL-Fundament lässt sich direkt auf die breitere Risiko- und Compliance-Landschaft der UBS übertragen — Eigenhandel, M&amp;A-Deal-Rooms und Treasury — wo sowohl die zu schützenden Werte als auch der ACV deutlich grösser ausfallen.</p>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Aspekt</th><th>Was SENTINEL bietet</th></tr></thead>
+            <tbody>
+              <tr><td>Regulatorische Treiber</td><td>EU DORA (IKT-Risiko), Basel III / FRTB, MiFID II / MiFIR, PCI-DSS v4.0, SOX §404, DSGVO Art. 9(2)(b)</td></tr>
+              <tr><td>Was im Vault liegt</td><td>Quellcode proprietärer Handelsalgorithmen, ausstehende M&amp;A-Deal-Room-Daten hinter einer Reg-FD-Mauer, Kundenfinanzmodelle, AML/KYC-Daten, Stresstest-Modelle vor Offenlegung</td></tr>
+              <tr><td>Genutzte Services</td><td>SDC Vaulting, GaaS, Key Ceremony, Clean Room — alle vier, typisch für diese Stufe</td></tr>
+              <tr><td>Vorfallsmeldung</td><td>Automatisch klassifizierter Schweregrad innerhalb des OODA-Zyklus; DORA-konformer Vorfallsbericht deutlich innerhalb des 4-Stunden-Fensters erstellt</td></tr>
+              <tr><td>Isolation zwischen Handelstischen</td><td>ISKDE-Domänentrennung zwischen Handelstischen, Deal-Teams und Kundenmandaten — mathematisch durchgesetzt</td></tr>
+              <tr><td>Indikativer ACV — diese Stufe</td><td class="td-gold">USD 1–3 Mio. / Jahr</td></tr>
+            </tbody>
+          </table></div>
+          <div class="badges">
+            <span class="badge">DORA</span><span class="badge">Basel III / FRTB</span><span class="badge">MiFID II / MiFIR</span>
+            <span class="badge">PCI-DSS 4.0</span><span class="badge">SOX §404</span><span class="badge">DSGVO Art. 9(2)(b)</span>
+            <span class="badge">NIST FIPS 203</span><span class="badge">ISO 27001</span>
+          </div>
+          <div class="pull" style="margin-top:32px;">Ein erfolgreicher POC im Kartengeschäft ist der Referenzfall, der das konzernweite Gespräch eröffnet — gleiche Architektur, gleiche Nachweise, deutlich grösserer Umfang.<div class="attr">Empfohlene Reihenfolge</div></div>
+        </div>
+      </div>
+
+      <!-- ================= PRICING ================= -->
+      <div class="panel" data-tab="pricing">
+        <div data-lang="en">
+          <div class="p-eyebrow">Commercial</div>
+          <h2>Investment &amp; ROI — Cards Division</h2>
+          <p class="lede">Total annual investment: ~$674K. Replaces $2M+ in legacy tools and labor. 65% cost reduction, with stronger security and continuous compliance as a bonus.</p>
+          <div class="grid-3">
+            <div class="pricing-card featured"><div class="pricing-tier">SDC Vaulting Enterprise</div><div class="pricing-price">$30,000</div><div class="pricing-period">/month · $360K/year</div><ul class="pricing-features"><li>Unlimited vaults, ML-KEM-1024</li><li>k-of-n threshold governance</li><li>Temporal decay auto-revoke</li><li>Industry templates (Card Keys, PCI)</li><li>7-year ML-DSA-65 signed audit</li><li>RBAC integration</li></ul></div>
+            <div class="pricing-card"><div class="pricing-tier">Certificate Lifecycle</div><div class="pricing-price">$12,500</div><div class="pricing-period">/month · $150K/year</div><ul class="pricing-features"><li>Private CA (Ed25519 or ML-DSA-65)</li><li>Unlimited cert issuance</li><li>60-day auto-rotation scheduler</li><li>F5 BIG-IP iControl deployment</li><li>CRL + OCSP responder</li><li>OODA expiry monitoring</li></ul></div>
+            <div class="pricing-card"><div class="pricing-tier">Signing Enterprise</div><div class="pricing-price">$2,499</div><div class="pricing-period">/month · $30K/year</div><ul class="pricing-features"><li>1M signatures/month</li><li>All algorithms incl. Hybrid</li><li>8 domain-specific endpoints</li><li>Threshold + governance</li><li>Document vault</li><li>OODA security monitor</li></ul></div>
+          </div>
+          <div class="grid-3">
+            <div class="pricing-card"><div class="pricing-tier">GaaS — 5 Domains</div><div class="pricing-price">$4,500</div><div class="pricing-period">/month · $54K/year</div><ul class="pricing-features"><li>Risk, Compliance, Ops, Security, Audit</li><li>Policy graph + cascade</li><li>k-of-n signed approvals</li></ul></div>
+            <div class="pricing-card"><div class="pricing-tier">Key Ceremonies</div><div class="pricing-price">$15,000</div><div class="pricing-period">/event · $60K/year (4×)</div><ul class="pricing-features"><li>Remote Shamir share collection</li><li>Hybrid signature witness</li><li>Complete transcript archive</li></ul></div>
+            <div class="pricing-card"><div class="pricing-tier">Clean Room</div><div class="pricing-price">Usage</div><div class="pricing-period">$5/query · $1.20/ZK · ~$20K/yr</div><ul class="pricing-features"><li>Isolated compute, no network</li><li>Multi-org consortium mode</li><li>ZK proofs (Visa fraud use case)</li></ul></div>
+          </div>
+          <h3 class="sub">Cost comparison</h3>
+          <div class="grid-2">
+            <div class="pain-card"><div class="pain-eyebrow">Current annual spend</div><div class="pain-title">~$2M+ / year</div><div class="pain-list">→ HashiCorp Enterprise: ~$400K<br>→ Oracle HSM licensing: ~$300K<br>→ Venafi cert management: ~$200K<br>→ Physical ceremonies (4×$50K): $200K<br>→ Manual cert rotation labor: ~$150K<br>→ Compliance prep + pen test: ~$300K<br>→ SCA tools (Snyk/Sonatype): ~$100K<br>→ Integration maintenance: ~$150K</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">SENTINEL annual spend</div><div class="solution-title">$674K / year</div><div class="solution-list">→ SDC Vaulting (replaces Vault + HSM): $360K<br>→ Certificate Lifecycle (replaces Venafi): $150K<br>→ Key Ceremonies (digital): $60K<br>→ Governance (GaaS): $54K<br>→ Signing Service: $30K<br>→ Clean Room: $20K<br>→ Manual cert rotation labor: $0<br>→ Separate SCA tool: $0 (SBOM built-in)</div></div>
+          </div>
+          <div style="display:flex; gap:12px; margin-top:8px;">
+            <div class="stat-box"><div class="v">$1.3M+</div><div class="l">Annual net savings</div></div>
+            <div class="stat-box"><div class="v">65%</div><div class="l">Cost reduction</div></div>
+            <div class="stat-box"><div class="v">&lt;8 mo</div><div class="l">Payback period</div></div>
+          </div>
+        </div>
+        <div data-lang="de">
+          <div class="p-eyebrow">Kommerzielles</div>
+          <h2>Investition &amp; ROI — Kartengeschäft</h2>
+          <p class="lede">Gesamte jährliche Investition: ~674.000 $. Ersetzt über 2 Mio. $ an bestehenden Tools und Arbeitsaufwand. 65% Kostensenkung, mit stärkerer Sicherheit und kontinuierlicher Compliance als Zusatznutzen.</p>
+          <div class="grid-3">
+            <div class="pricing-card featured"><div class="pricing-tier">SDC Vaulting Enterprise</div><div class="pricing-price">$30.000</div><div class="pricing-period">/Monat · 360.000 $/Jahr</div><ul class="pricing-features"><li>Unbegrenzte Vaults, ML-KEM-1024</li><li>k-von-n-Schwellenwert-Governance</li><li>Automatischer Widerruf (Temporal Decay)</li><li>Branchenvorlagen (Kartenschlüssel, PCI)</li><li>7 Jahre ML-DSA-65-signierter Audit</li><li>RBAC-Integration</li></ul></div>
+            <div class="pricing-card"><div class="pricing-tier">Zertifikats-Lebenszyklus</div><div class="pricing-price">$12.500</div><div class="pricing-period">/Monat · 150.000 $/Jahr</div><ul class="pricing-features"><li>Private CA (Ed25519 oder ML-DSA-65)</li><li>Unbegrenzte Zertifikatsausstellung</li><li>60-Tage-Zeitplan für automatische Rotation</li><li>F5-BIG-IP-iControl-Deployment</li><li>CRL + OCSP-Responder</li><li>OODA-Ablaufüberwachung</li></ul></div>
+            <div class="pricing-card"><div class="pricing-tier">Signing Enterprise</div><div class="pricing-price">$2.499</div><div class="pricing-period">/Monat · 30.000 $/Jahr</div><ul class="pricing-features"><li>1 Mio. Signaturen/Monat</li><li>Alle Algorithmen inkl. Hybrid</li><li>8 domänenspezifische Endpunkte</li><li>Schwellenwert + Governance</li><li>Dokumenten-Vault</li><li>OODA-Sicherheitsmonitor</li></ul></div>
+          </div>
+          <div class="grid-3">
+            <div class="pricing-card"><div class="pricing-tier">GaaS — 5 Domänen</div><div class="pricing-price">$4.500</div><div class="pricing-period">/Monat · 54.000 $/Jahr</div><ul class="pricing-features"><li>Risiko, Compliance, Betrieb, Sicherheit, Audit</li><li>Richtliniengraph + Kaskadierung</li><li>k-von-n signierte Freigaben</li></ul></div>
+            <div class="pricing-card"><div class="pricing-tier">Key-Zeremonien</div><div class="pricing-price">$15.000</div><div class="pricing-period">/Ereignis · 60.000 $/Jahr (4×)</div><ul class="pricing-features"><li>Remote-Sammlung von Shamir-Anteilen</li><li>Hybrid-Signatur als Zeuge</li><li>Vollständiges Protokollarchiv</li></ul></div>
+            <div class="pricing-card"><div class="pricing-tier">Clean Room</div><div class="pricing-price">Nutzung</div><div class="pricing-period">5 $/Abfrage · 1,20 $/ZK · ~20.000 $/Jahr</div><ul class="pricing-features"><li>Isolierte Rechenleistung, kein Netzwerk</li><li>Konsortialmodus für mehrere Organisationen</li><li>ZK-Beweise (Anwendungsfall Visa-Betrug)</li></ul></div>
+          </div>
+          <h3 class="sub">Kostenvergleich</h3>
+          <div class="grid-2">
+            <div class="pain-card"><div class="pain-eyebrow">Aktuelle Jahreskosten</div><div class="pain-title">~2 Mio. $+ / Jahr</div><div class="pain-list">→ HashiCorp Enterprise: ~400.000 $<br>→ Oracle-HSM-Lizenzierung: ~300.000 $<br>→ Venafi-Zertifikatsmanagement: ~200.000 $<br>→ Physische Zeremonien (4×50.000 $): 200.000 $<br>→ Manuelle Zertifikatsrotation (Arbeitsaufwand): ~150.000 $<br>→ Compliance-Vorbereitung + Pentest: ~300.000 $<br>→ SCA-Tools (Snyk/Sonatype): ~100.000 $<br>→ Integrationspflege: ~150.000 $</div></div>
+            <div class="solution-card"><div class="solution-eyebrow">SENTINEL-Jahreskosten</div><div class="solution-title">674.000 $ / Jahr</div><div class="solution-list">→ SDC Vaulting (ersetzt Vault + HSM): 360.000 $<br>→ Zertifikats-Lebenszyklus (ersetzt Venafi): 150.000 $<br>→ Key-Zeremonien (digital): 60.000 $<br>→ Governance (GaaS): 54.000 $<br>→ Signing Service: 30.000 $<br>→ Clean Room: 20.000 $<br>→ Manuelle Zertifikatsrotation: 0 $<br>→ Separates SCA-Tool: 0 $ (SBOM integriert)</div></div>
+          </div>
+          <div style="display:flex; gap:12px; margin-top:8px;">
+            <div class="stat-box"><div class="v">1,3 Mio. $+</div><div class="l">Jährliche Nettoeinsparung</div></div>
+            <div class="stat-box"><div class="v">65%</div><div class="l">Kostensenkung</div></div>
+            <div class="stat-box"><div class="v">&lt;8 Mon.</div><div class="l">Amortisationszeit</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TIMELINE ================= -->
+      <div class="panel" data-tab="timeline">
+        <div data-lang="en">
+          <div class="p-eyebrow">Commercial</div>
+          <h2>Implementation timeline</h2>
+          <p class="lede">4-month phased deployment. Value from Month 1. No big-bang cutover. Run parallel with existing systems until confident.</p>
+          <div class="grid-4">
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04)); border:1px solid rgba(16,185,129,0.25);"><div class="flow-phase" style="color:rgba(16,185,129,0.7);">Month 1</div><div class="flow-title">SBOM + CI/CD</div><div class="flow-desc">Connect repos. CVE monitoring live. Signed SBOM evidence for PCI-DSS.</div><div class="flow-metric" style="color:var(--emerald);">30 min to value</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(96,165,250,0.12), rgba(96,165,250,0.04)); border:1px solid rgba(96,165,250,0.2);"><div class="flow-phase" style="color:rgba(96,165,250,0.6);">Month 2</div><div class="flow-title">Certificates</div><div class="flow-desc">Private CA + 10 certs on F5. Auto-rotation configured. OODA monitoring.</div><div class="flow-metric" style="color:var(--blue);">60-day pain solved</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(167,139,250,0.12), rgba(167,139,250,0.04)); border:1px solid rgba(167,139,250,0.2);"><div class="flow-phase" style="color:rgba(167,139,250,0.6);">Month 3</div><div class="flow-title">SDC Vaulting</div><div class="flow-desc">Migrate card keys. 3-of-5 threshold. First digital ceremony ($15K).</div><div class="flow-metric" style="color:var(--purple);">Replace HashiCorp</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(251,146,60,0.08), rgba(251,146,60,0.02)); border:1px solid rgba(251,146,60,0.2);"><div class="flow-phase" style="color:rgba(251,146,60,0.6);">Month 4</div><div class="flow-title">Full Integration</div><div class="flow-desc">Clean Room pilot. Full audit trail. Signing in approval workflows.</div><div class="flow-metric" style="color:var(--orange);">Complete platform</div></div>
+          </div>
+          <h3 class="sub">Proposed POC (4-week pilot)</h3>
+          <div class="grid-2">
+            <div class="card"><div class="card-title">POC Scope</div><div class="card-desc" style="line-height:1.8;">→ 1 GitHub/GitLab repo for SBOM monitoring<br>→ 10 certificates issued + deployed to F5<br>→ 60-day rotation configured and scheduled<br>→ PCI-DSS 4.0 policy template active<br>→ OODA monitoring on both modules<br>→ Post-quantum cert issued (ML-DSA-65)</div><div class="card-metric">Effort from UBS: 30 min OAuth + F5 API access</div></div>
+            <div class="card"><div class="card-title">Success Criteria</div><div class="card-desc" style="line-height:1.8;">→ CVE detected within 5 minutes of commit push<br>→ SBOM signed and verifiable by security team<br>→ F5 cert deployed without human intervention<br>→ Expiry alert fires at 14-day threshold<br>→ All operations have ML-DSA-65 signed audit<br>→ CISO team satisfied with architecture review</div><div class="card-metric">Timeline: 4 weeks to full POC completion</div></div>
+          </div>
+          <h3 class="sub">Next steps</h3>
+          <div class="grid-2">
+            <div class="card"><div class="card-title">From agenticvaults</div><div class="card-desc" style="line-height:1.8;">1. Dedicated POC environment for UBS<br>2. PCI-DSS 4.0 policy template configured<br>3. F5 integration documentation delivered<br>4. Architecture review with CISO team (2 hours)<br>5. Commercial proposal (Year 1 agreement)</div></div>
+            <div class="card"><div class="card-title">From UBS</div><div class="card-desc" style="line-height:1.8;">1. Identify 1-3 repos for SBOM pilot<br>2. Provide F5 iControl API access<br>3. Assign 5 custodians for SDC threshold<br>4. Schedule CISO architecture review<br>5. Define governance policies for card ops</div></div>
+          </div>
+          <div class="ask-box" style="margin-top:32px;">
+            <div><div class="k">Ready to start</div><div class="v">Schedule a technical deep-dive. SBOM running on your first repo within the hour.</div></div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <a class="btn btn-primary" href="https://cal.com/agenticvaults">Schedule →</a>
+              <a class="btn btn-ghost" href="mailto:ldavid@agenticvaults.ai">Email founder</a>
+            </div>
+          </div>
+        </div>
+        <div data-lang="de">
+          <div class="p-eyebrow">Kommerzielles</div>
+          <h2>Umsetzungszeitplan</h2>
+          <p class="lede">4-monatige, phasenweise Einführung. Wertschöpfung ab Monat 1. Keine Big-Bang-Umstellung. Paralleler Betrieb mit bestehenden Systemen, bis Vertrauen aufgebaut ist.</p>
+          <div class="grid-4">
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04)); border:1px solid rgba(16,185,129,0.25);"><div class="flow-phase" style="color:rgba(16,185,129,0.7);">Monat 1</div><div class="flow-title">SBOM + CI/CD</div><div class="flow-desc">Repositories verbinden. CVE-Monitoring live. Signierte SBOM-Nachweise für PCI-DSS.</div><div class="flow-metric" style="color:var(--emerald);">30 Min. bis Wertschöpfung</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(96,165,250,0.12), rgba(96,165,250,0.04)); border:1px solid rgba(96,165,250,0.2);"><div class="flow-phase" style="color:rgba(96,165,250,0.6);">Monat 2</div><div class="flow-title">Zertifikate</div><div class="flow-desc">Private CA + 10 Zertifikate auf F5. Automatische Rotation konfiguriert. OODA-Monitoring.</div><div class="flow-metric" style="color:var(--blue);">60-Tage-Problem gelöst</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(167,139,250,0.12), rgba(167,139,250,0.04)); border:1px solid rgba(167,139,250,0.2);"><div class="flow-phase" style="color:rgba(167,139,250,0.6);">Monat 3</div><div class="flow-title">SDC Vaulting</div><div class="flow-desc">Migration der Kartenschlüssel. 3-von-5-Schwellenwert. Erste digitale Zeremonie (15.000 $).</div><div class="flow-metric" style="color:var(--purple);">HashiCorp ablösen</div></div>
+            <div class="flow-card" style="background:linear-gradient(135deg, rgba(251,146,60,0.08), rgba(251,146,60,0.02)); border:1px solid rgba(251,146,60,0.2);"><div class="flow-phase" style="color:rgba(251,146,60,0.6);">Monat 4</div><div class="flow-title">Vollständige Integration</div><div class="flow-desc">Clean-Room-Pilot. Vollständiger Audit-Trail. Signing in Freigabeworkflows.</div><div class="flow-metric" style="color:var(--orange);">Vollständige Plattform</div></div>
+          </div>
+          <h3 class="sub">Vorgeschlagener POC (4-wöchiger Pilot)</h3>
+          <div class="grid-2">
+            <div class="card"><div class="card-title">Umfang des POC</div><div class="card-desc" style="line-height:1.8;">→ 1 GitHub/GitLab-Repository für SBOM-Monitoring<br>→ 10 Zertifikate ausgestellt + auf F5 deployt<br>→ 60-Tage-Rotation konfiguriert und terminiert<br>→ PCI-DSS-4.0-Richtlinienvorlage aktiv<br>→ OODA-Monitoring für beide Module<br>→ Post-quanten Zertifikat ausgestellt (ML-DSA-65)</div><div class="card-metric">Aufwand für UBS: 30 Min. OAuth + F5-API-Zugriff</div></div>
+            <div class="card"><div class="card-title">Erfolgskriterien</div><div class="card-desc" style="line-height:1.8;">→ CVE innerhalb von 5 Minuten nach Commit-Push erkannt<br>→ SBOM signiert und vom Sicherheitsteam verifizierbar<br>→ F5-Zertifikat ohne manuellen Eingriff deployt<br>→ Ablaufalarm bei 14-Tage-Schwelle ausgelöst<br>→ Alle Vorgänge mit ML-DSA-65-signiertem Audit<br>→ CISO-Team zufrieden mit Architektur-Review</div><div class="card-metric">Zeitplan: 4 Wochen bis vollständigem POC-Abschluss</div></div>
+          </div>
+          <h3 class="sub">Nächste Schritte</h3>
+          <div class="grid-2">
+            <div class="card"><div class="card-title">Von agenticvaults</div><div class="card-desc" style="line-height:1.8;">1. Dedizierte POC-Umgebung für UBS<br>2. PCI-DSS-4.0-Richtlinienvorlage konfiguriert<br>3. F5-Integrationsdokumentation geliefert<br>4. Architektur-Review mit CISO-Team (2 Stunden)<br>5. Kommerzieller Vorschlag (Jahr-1-Vereinbarung)</div></div>
+            <div class="card"><div class="card-title">Von UBS</div><div class="card-desc" style="line-height:1.8;">1. 1–3 Repositories für SBOM-Pilot identifizieren<br>2. F5-iControl-API-Zugriff bereitstellen<br>3. 5 Verwahrer für SDC-Schwellenwert benennen<br>4. CISO-Architektur-Review terminieren<br>5. Governance-Richtlinien für den Kartenbetrieb festlegen</div></div>
+          </div>
+          <div class="ask-box" style="margin-top:32px;">
+            <div><div class="k">Bereit zum Start</div><div class="v">Vereinbaren Sie einen technischen Deep-Dive. SBOM läuft innerhalb einer Stunde auf Ihrem ersten Repository.</div></div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <a class="btn btn-primary" href="https://cal.com/agenticvaults">Termin vereinbaren →</a>
+              <a class="btn btn-ghost" href="mailto:ldavid@agenticvaults.ai">Gründer kontaktieren</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+  const tabs = [
+    {id:'overview', en:'Overview', de:'Überblick'}, {id:'pain', en:'Pain Points', de:'Herausforderungen'}, {id:'why', en:'Why Now', de:'Warum jetzt'},
+    {id:'ntier', en:'N-Tier/OODA', de:'N-Tier/OODA'}, {id:'sentinel', en:'SENTINEL', de:'SENTINEL'},
+    {id:'signing', en:'Signing', de:'Signing'}, {id:'sbom', en:'SBOM', de:'SBOM'}, {id:'certs', en:'Certs', de:'Zertifikate'}, {id:'sdc', en:'SDC Vault', de:'SDC Vault'},
+    {id:'differentiation', en:'Differentiation', de:'Differenzierung'}, {id:'groupwide', en:'Group-Wide', de:'Konzernweit'}, {id:'pricing', en:'Pricing', de:'Preise'}, {id:'timeline', en:'Timeline', de:'Zeitplan'}
+  ];
+
+  let currentLang = 'en';
+
+  const mobileNavTabs = document.getElementById('mobileNavTabs');
+  function renderMobileNav(){
+    mobileNavTabs.innerHTML = '';
+    tabs.forEach(t=>{
+      const b = document.createElement('button');
+      b.textContent = t[currentLang]; b.dataset.tab = t.id;
+      if(document.querySelector('.panel[data-tab="'+t.id+'"]').classList.contains('active')) b.classList.add('active');
+      b.addEventListener('click', ()=>switchTab(t.id));
+      mobileNavTabs.appendChild(b);
+    });
+  }
+  renderMobileNav();
+
+  function switchTab(id){
+    document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.dataset.tab===id));
+    document.querySelectorAll('.sidebar .nav-item').forEach(n=>n.classList.toggle('active', n.dataset.tab===id));
+    document.getElementById('main').scrollTo({top:0});
+    renderMobileNav();
+  }
+  document.querySelectorAll('.sidebar .nav-item').forEach(el=>{
+    el.addEventListener('click', ()=>switchTab(el.dataset.tab));
+  });
+
+  function setLang(lang){
+    currentLang = lang;
+    document.body.className = 'lang-' + lang;
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.dataset.langBtn===lang));
+    renderMobileNav();
+  }
+  document.querySelectorAll('[data-lang-btn]').forEach(b=>{
+    b.addEventListener('click', ()=>setLang(b.dataset.langBtn));
+  });
+</script>
+</body>
+</html>
