@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SENTINEL — Pharma Cold Chain Integrity for Logistics Partners · AgenticVaults</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #06060B; --surface: #0E0E16; --surface2: #16161F; --surface3: #1C1C28;
+    --border: #252535; --border-light: #2E2E40;
+    --emerald: #34D399; --emerald-dim: rgba(52,211,153,0.12);
+    --red: #F87171; --red-dim: rgba(248,113,113,0.12);
+    --amber: #FBBF24; --amber-dim: rgba(251,191,36,0.12);
+    --cyan: #22D3EE; --cyan-dim: rgba(34,211,238,0.12);
+    --blue: #60A5FA; --blue-dim: rgba(96,165,250,0.12);
+    --purple: #A78BFA; --purple-dim: rgba(167,139,250,0.12);
+    --white: #F0EDE6; --muted: #8E8EA3; --dim: #55556A;
+    --fd: 'Space Grotesk', sans-serif; --fb: 'DM Sans', sans-serif; --fm: 'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--white); font-family: var(--fb); overflow-x: hidden; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+  .fade-in { animation: fadeIn 0.4s ease-out both; }
+  .app { display: flex; min-height: 100vh; }
+
+  .sidebar { width: 280px; background: var(--surface); border-right: 1px solid var(--border); flex-shrink: 0; display: flex; flex-direction: column; position: fixed; top:0; bottom:0; left:0; overflow-y:auto; }
+  .brand { padding: 22px 22px 18px; border-bottom: 1px solid var(--border); }
+  .brand-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .brand-mark { width: 26px; height: 26px; border: 2px solid var(--emerald); border-radius: 7px; display:flex; align-items:center; justify-content:center; }
+  .brand-mark div { width: 9px; height: 9px; background: var(--emerald); border-radius: 2px; }
+  .brand-name { font-family: var(--fd); font-weight: 700; font-size: 14.5px; color: var(--emerald); letter-spacing: 0.03em; }
+  .brand-sub { font-size: 10.5px; color: var(--dim); margin-left: 36px; }
+  .context-box { margin: 16px 18px; padding: 12px 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; }
+  .context-label { font-size: 9.5px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .context-val { font-size: 12.5px; color: var(--white); font-weight: 600; line-height: 1.4; }
+
+  .steps { padding: 8px 12px; flex: 1; }
+  .step { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 9px; cursor: pointer; margin-bottom: 2px; transition: background 0.15s; }
+  .step:hover { background: var(--surface2); }
+  .step.active { background: var(--cyan-dim); }
+  .step-num { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 700; font-family: var(--fm); flex-shrink: 0; border: 1.5px solid var(--border-light); color: var(--dim); }
+  .step.done .step-num { background: var(--emerald); border-color: var(--emerald); color: #04140d; }
+  .step.active .step-num { border-color: var(--cyan); color: var(--cyan); }
+  .step-label { font-size: 12.5px; color: var(--muted); font-weight: 500; line-height: 1.3; }
+  .step.active .step-label, .step.done .step-label { color: var(--white); }
+  .step.locked { opacity: 0.35; pointer-events: none; }
+
+  .checklist-mini { margin: 10px 18px 20px; padding: 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; }
+  .checklist-mini-title { font-size: 9.5px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; display:flex; justify-content:space-between; }
+  .mini-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 11px; color: var(--muted); }
+  .mini-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); flex-shrink: 0; transition: background 0.4s; }
+  .mini-dot.on { background: var(--emerald); }
+  .mini-row.on { color: var(--white); }
+
+  .main { margin-left: 280px; flex: 1; min-height: 100vh; }
+  .topbar { position: sticky; top: 0; z-index: 10; background: rgba(6,6,11,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 40px; display:flex; align-items:center; justify-content: space-between; }
+  .topbar-title { font-family: var(--fd); font-weight: 700; font-size: 17px; }
+  .topbar-badge { font-family: var(--fm); font-size: 11px; color: var(--cyan); background: var(--cyan-dim); padding: 5px 12px; border-radius: 100px; border: 1px solid rgba(34,211,238,0.25); }
+  .content { padding: 40px; max-width: 1100px; }
+
+  h1.screen-title { font-family: var(--fd); font-size: 30px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .screen-sub { color: var(--muted); font-size: 15px; margin-bottom: 32px; line-height: 1.6; max-width: 700px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 26px; margin-bottom: 20px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; }
+
+  .kv-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+  .kv-row:last-child { border-bottom: none; }
+  .kv-key { color: var(--dim); }
+  .kv-val { font-family: var(--fm); color: var(--white); font-weight: 500; }
+
+  .btn { font-family: var(--fd); font-weight: 600; font-size: 14.5px; padding: 13px 26px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary { background: var(--cyan); color: #041014; }
+  .btn-primary:hover { background: #4fe3f0; transform: translateY(-1px); }
+  .btn-primary:disabled { background: var(--surface3); color: var(--dim); cursor: not-allowed; transform: none; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border-light); color: var(--white); }
+  .btn-ghost:hover { border-color: var(--cyan); }
+
+  .callout { padding: 14px 18px; border-radius: 10px; border-left: 3px solid var(--emerald); background: rgba(52,211,153,0.06); font-size: 13.5px; color: var(--white); line-height: 1.6; margin: 18px 0; }
+  .callout.cyan { border-left-color: var(--cyan); background: rgba(34,211,238,0.06); }
+  .callout.red { border-left-color: var(--red); background: rgba(248,113,113,0.06); }
+  .callout strong { color: var(--emerald); }
+  .callout.cyan strong { color: var(--cyan); }
+  .callout.red strong { color: var(--red); }
+
+  .fleet-stat { text-align: center; padding: 22px; background: var(--surface2); border-radius: 12px; border: 1px solid var(--border); }
+  .fleet-num { font-family: var(--fm); font-size: 27px; font-weight: 700; }
+  .fleet-label { font-size: 11.5px; color: var(--dim); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .spinner { width: 15px; height: 15px; border: 2px solid rgba(4,16,20,0.3); border-top-color: #041014; border-radius: 50%; animation: spin 0.7s linear infinite; }
+  .banner-done { display: flex; align-items: center; gap: 10px; padding: 16px 20px; background: var(--emerald-dim); border: 1px solid rgba(52,211,153,0.3); border-radius: 12px; margin-top: 24px; font-size: 14px; font-weight: 600; color: var(--emerald); }
+
+  .row-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--surface2); border-radius: 10px; margin-bottom: 10px; border: 1px solid var(--border); }
+  .row-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .row-info { flex: 1; }
+  .row-title { font-size: 13.5px; font-weight: 600; }
+  .row-desc { font-size: 11.5px; color: var(--dim); }
+  .row-status { font-family: var(--fm); font-size: 11px; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+
+  .vis-row { display: flex; gap: 4px; align-items: center; margin: 6px 0; }
+  .vis-cell { padding: 6px 10px; border-radius: 6px; font-size: 11px; font-family: var(--fm); }
+  .vis-see { background: var(--emerald-dim); color: var(--emerald); border: 1px solid rgba(52,211,153,0.2); }
+  .vis-no { background: var(--surface3); color: var(--dim); border: 1px solid var(--border); text-decoration: line-through; opacity: 0.6; }
+
+  .handoff-arrow { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; color: var(--cyan); font-size: 12px; font-family: var(--fm); }
+
+  .chart-area { position: relative; width: 100%; height: 160px; margin: 16px 0; }
+  .chart-area canvas { width: 100%; height: 100%; }
+  .chart-tooltip { position: absolute; background: var(--surface); border: 1px solid var(--border-light); border-radius: 8px; padding: 8px 12px; font-size: 11px; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 5; }
+  .chart-tooltip .tt-time { color: var(--dim); font-family: var(--fm); }
+  .chart-tooltip .tt-temp { font-family: var(--fm); font-weight: 600; font-size: 13px; }
+
+  .cta-strip { margin-top: 40px; padding: 28px; background: linear-gradient(135deg, rgba(34,211,238,0.06), rgba(52,211,153,0.06)); border: 1px solid var(--border-light); border-radius: 14px; text-align: center; }
+  .cta-strip h3 { font-family: var(--fd); font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .cta-strip p { color: var(--muted); font-size: 13.5px; margin-bottom: 18px; }
+  .cta-strip .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .cta-strip a { text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-row">
+        <div class="brand-mark"><div></div></div>
+        <span class="brand-name">agenticvaults</span>
+      </div>
+      <div class="brand-sub">SENTINEL · Logistics Integrity</div>
+    </div>
+    <div class="context-box">
+      <div class="context-label">Partner Demonstration</div>
+      <div class="context-val">Pharma Cold Chain — Zero-Knowledge Custody Proofs for Logistics Partners</div>
+    </div>
+    <div class="steps" id="steps"></div>
+    <div class="checklist-mini">
+      <div class="checklist-mini-title"><span>Partner Benefits</span><span id="miniCount">0/6</span></div>
+      <div id="miniList"></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topTitle">The Problem</div>
+      <div class="topbar-badge" id="topBadge">Pharma Logistics · GDP-Compliant</div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<script>
+const REQS = [
+  {code: '1', label: 'Cold chain proof without cargo data'},
+  {code: '2', label: 'Cryptographic custody receipt'},
+  {code: '3', label: 'Zero breach liability'},
+  {code: '4', label: 'False excursion protection'},
+  {code: '5', label: 'Provider-agnostic handoff'},
+  {code: '6', label: 'Competitive differentiation'},
+];
+const STEP_LABELS = [
+  'The Trust Problem Today',
+  'What You See vs. What You Don\'t',
+  'Shipment Custody Handoff',
+  'Cold Chain Proof (Your Sensors)',
+  'Dispute Resolution (ZK Receipt)',
+  'Multi-Pharma Scalability',
+  'Breach Liability Elimination',
+  'Your Competitive Advantage',
+];
+
+let state = { screen: 1, maxUnlocked: 1, reqStatus: [false,false,false,false,false,false] };
+function setReq(idx, val) { state.reqStatus[idx] = val; renderSidebar(); }
+function goTo(n) { if (n > state.maxUnlocked) return; state.screen = n; render(); }
+function unlockNext() { state.maxUnlocked = Math.max(state.maxUnlocked, state.screen + 1); }
+
+function renderSidebar() {
+  const stepsEl = document.getElementById('steps');
+  stepsEl.innerHTML = STEP_LABELS.map((label, i) => {
+    const n = i + 1;
+    const cls = ['step'];
+    if (n === state.screen) cls.push('active');
+    else if (n < state.screen) cls.push('done');
+    if (n > state.maxUnlocked) cls.push('locked');
+    return `<div class="${cls.join(' ')}" onclick="goTo(${n})">
+      <div class="step-num">${n < state.screen ? '✓' : n}</div>
+      <div class="step-label">${label}</div>
+    </div>`;
+  }).join('');
+  const doneCount = state.reqStatus.filter(Boolean).length;
+  document.getElementById('miniCount').textContent = doneCount + '/6';
+  document.getElementById('miniList').innerHTML = REQS.map((r, i) => {
+    const on = state.reqStatus[i];
+    return `<div class="mini-row ${on ? 'on' : ''}"><div class="mini-dot ${on ? 'on' : ''}"></div>${r.label}</div>`;
+  }).join('');
+}
+
+function screen1() {
+  return `
+  <h1 class="screen-title">The Trust Problem in Pharma Logistics</h1>
+  <p class="screen-sub">You transport the world's most valuable biological products. You prove compliance every day. But the current model puts you in an impossible position.</p>
+  <div class="grid-4" style="margin-bottom:24px;">
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--cyan);">$1.8M</div><div class="fleet-label">Value Per Plasma Pool</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">38 hrs</div><div class="fleet-label">Avg Transit (US)</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--red);">$47M</div><div class="fleet-label">Annual Excursion Losses</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">0</div><div class="fleet-label">Tolerance for Error</div></div>
+  </div>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px; color:var(--red);">Today's Problems for Logistics Partners</div>
+    <div class="row-item" style="border-color: rgba(248,113,113,0.3);">
+      <div class="row-icon" style="background:var(--red-dim);">1</div>
+      <div class="row-info"><div class="row-title" style="color:var(--red);">You're exposed to data you shouldn't hold</div><div class="row-desc">Shipping manifests reveal donor pool composition, product lot assignments, patient destinations. If your systems are breached, YOUR company is liable for HIPAA/GDPR violations on data you never needed.</div></div>
+    </div>
+    <div class="row-item" style="border-color: rgba(248,113,113,0.3);">
+      <div class="row-icon" style="background:var(--red-dim);">2</div>
+      <div class="row-info"><div class="row-title" style="color:var(--red);">No cryptographic proof you did your job</div><div class="row-desc">If a pharma client claims a temperature excursion, your paper-based temperature logs are disputable. PDF exports from data loggers can be questioned in court. You have no mathematically unforgeable proof of compliance.</div></div>
+    </div>
+    <div class="row-item" style="border-color: rgba(248,113,113,0.3);">
+      <div class="row-icon" style="background:var(--red-dim);">3</div>
+      <div class="row-info"><div class="row-title" style="color:var(--red);">Switching costs lock clients to you (and vice versa)</div><div class="row-desc">Every pharma client has a different data integration, different handoff protocol, different documentation format. Onboarding a new client takes months. Losing one is catastrophic because the integration cost is sunk.</div></div>
+    </div>
+  </div>
+  <div class="callout red">
+    <strong>The core issue:</strong> You're carrying $1.8M pools of human plasma. You need to prove temperature compliance. But you do NOT need to know which donors contributed, which patients will receive the product, or what the fractionation plan is. Today's systems force you to hold that data anyway — creating liability without benefit.
+  </div>
+  <div style="margin-top:16px;">
+    <button class="btn btn-primary" onclick="unlockNext(); goTo(2)">See the Solution →</button>
+  </div>`;
+}
+
+function screen2() {
+  return `
+  <h1 class="screen-title">What You See vs. What You Don't</h1>
+  <p class="screen-sub">SENTINEL creates a clean separation: you see everything you need for your job. You never see anything that creates liability.</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:18px;">Data Visibility Matrix</div>
+    <div style="margin-bottom:12px; font-size:12px; font-weight:600; color:var(--cyan);">✓ YOU SEE (operational data for your job):</div>
+    <div class="vis-row"><div class="vis-cell vis-see">Container count: 3</div><div class="vis-cell vis-see">Required temp: -25°C to -30°C</div><div class="vis-cell vis-see">Route: Indianapolis → LA</div></div>
+    <div class="vis-row"><div class="vis-cell vis-see">Transit window: 38 hours max</div><div class="vis-cell vis-see">Pickup: BioLife Center #47</div><div class="vis-cell vis-see">Delivery: Frax Plant Gate 4</div></div>
+    <div class="vis-row"><div class="vis-cell vis-see">GPS tracking: continuous</div><div class="vis-cell vis-see">Sensor logging: every 30s</div><div class="vis-cell vis-see">Alert threshold: -24.5°C</div></div>
+    <div style="margin:18px 0 12px; font-size:12px; font-weight:600; color:var(--red);">✗ YOU NEVER SEE (protected by cryptography):</div>
+    <div class="vis-row"><div class="vis-cell vis-no">Donor identities</div><div class="vis-cell vis-no">Pool composition</div><div class="vis-cell vis-no">Patient assignments</div></div>
+    <div class="vis-row"><div class="vis-cell vis-no">Product lot numbers</div><div class="vis-cell vis-no">Traceability chain</div><div class="vis-cell vis-no">Clinical test results</div></div>
+    <div class="vis-row"><div class="vis-cell vis-no">BioLife center donor data</div><div class="vis-cell vis-no">Fractionation parameters</div><div class="vis-cell vis-no">Batch record links</div></div>
+  </div>
+  <div class="callout cyan">
+    <strong>Why this protects YOU:</strong> If your systems are breached tomorrow, the attacker gets temperature logs and GPS coordinates. They do NOT get donor health records, patient data, or proprietary product information. Your HIPAA/GDPR liability drops to zero for the pharma cargo. You cannot leak what you never held.
+  </div>
+  <div style="margin-top:16px;">
+    <button class="btn btn-primary" onclick="setReq(2,true); unlockNext(); goTo(3)">See the Custody Handoff →</button>
+  </div>`;
+}
+
+function screen3() {
+  return `
+  <h1 class="screen-title">Cryptographic Custody Handoff</h1>
+  <p class="screen-sub">At each transfer point, SENTINEL generates a zero-knowledge custody proof. You confirm receipt. The pharma client confirms delivery. Neither party can later dispute what happened.</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Shipment: Plasma Pool → Fractionation</div>
+    <div class="row-item" style="border-color: rgba(34,211,238,0.3);">
+      <div class="row-icon" style="background:var(--cyan-dim);">🩸</div>
+      <div class="row-info"><div class="row-title">Pickup — BioLife Center #47, Indianapolis</div><div class="row-desc">You scan containers. System confirms: 3 containers, -27.4°C at handoff, seals intact.</div></div>
+      <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">SEALED</div>
+    </div>
+    <div class="handoff-arrow">━━━ YOUR CUSTODY ━━━ sensors logging every 30s ━━━</div>
+    <div class="row-item" style="border-color: rgba(34,211,238,0.3);">
+      <div class="row-icon" style="background:var(--cyan-dim);">🚛</div>
+      <div class="row-info"><div class="row-title">In Transit — 38 hours</div><div class="row-desc">Your sensors generate 4,560 temperature readings. GPS confirms validated route. SENTINEL cryptographically seals each reading as it occurs — tamper-proof from the moment of capture.</div></div>
+      <div class="row-status" style="background:var(--cyan-dim); color:var(--cyan);">ACTIVE</div>
+    </div>
+    <div class="handoff-arrow">━━━ DELIVERY ━━━ custody transfer ━━━</div>
+    <div class="row-item" style="border-color: rgba(34,211,238,0.3);">
+      <div class="row-icon" style="background:var(--cyan-dim);">🏭</div>
+      <div class="row-info"><div class="row-title">Delivery — Fractionation Plant, Los Angeles</div><div class="row-desc">Plant operator scans containers. System confirms: 3 containers, -27.1°C at delivery, seals intact. Custody transfers from you to plant.</div></div>
+      <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">SEALED</div>
+    </div>
+  </div>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px;">What the Cryptographic Receipt Contains</div>
+    <div class="kv-row"><span class="kv-key">Your proof</span><span class="kv-val" style="color:var(--emerald);">"3 containers maintained -25°C to -30°C for 38 hours"</span></div>
+    <div class="kv-row"><span class="kv-key">Sealed by</span><span class="kv-val">Your sensor hardware + SENTINEL attestation (ML-DSA-65)</span></div>
+    <div class="kv-row"><span class="kv-key">Verifiable by</span><span class="kv-val">Pharma client, regulators, insurers — without your involvement</span></div>
+    <div class="kv-row"><span class="kv-key">Forgeable?</span><span class="kv-val" style="color:var(--emerald);">Mathematically impossible (post-quantum signatures)</span></div>
+    <div class="kv-row"><span class="kv-key">What it does NOT contain</span><span class="kv-val" style="color:var(--dim);">Donor IDs, pool composition, product assignments, patient data</span></div>
+  </div>
+  <div style="margin-top:16px;" id="handoffArea">
+    <button class="btn btn-primary" id="handoffBtn" onclick="runHandoff()">Simulate Custody Handoff</button>
+  </div>
+  <div id="s3done" style="display:none;">
+    <div class="banner-done">✓ Cryptographic custody receipt generated — unforgeable proof of your compliance</div>
+    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(1,true); unlockNext(); goTo(4)">See Cold Chain Proof →</button></div>
+  </div>`;
+}
+function runHandoff() {
+  document.getElementById('handoffBtn').innerHTML = '<span class="spinner"></span> Sealing custody transfer…';
+  document.getElementById('handoffBtn').disabled = true;
+  setTimeout(() => {
+    document.getElementById('handoffArea').style.display = 'none';
+    document.getElementById('s3done').style.display = 'block';
+  }, 1400);
+}
+
+function screen4() {
+  return `
+  <h1 class="screen-title">Cold Chain Proof — Your Sensors, Your Proof</h1>
+  <p class="screen-sub">Your sensors generate the temperature data. SENTINEL cryptographically seals it in real-time. The result: an unforgeable proof that you maintained -25°C to -30°C for the entire transit.</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Live Temperature Log — Your Hardware</div>
+    <div class="kv-row"><span class="kv-key">Sensors</span><span class="kv-val">6 per container · your existing hardware</span></div>
+    <div class="kv-row"><span class="kv-key">Logging interval</span><span class="kv-val">Every 30 seconds · 4,560 readings per transit</span></div>
+    <div class="kv-row"><span class="kv-key">Seal method</span><span class="kv-val">Each reading cryptographically signed at source (edge attestation)</span></div>
+    <div class="kv-row"><span class="kv-key">Tamper detection</span><span class="kv-val">Any modified reading invalidates entire proof chain</span></div>
+    <div class="chart-area" id="coldChartWrap">
+      <canvas id="coldChart"></canvas>
+      <div class="chart-tooltip" id="coldTooltip">
+        <div class="tt-time"></div>
+        <div class="tt-temp"></div>
+      </div>
+    </div>
+    <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--dim); font-family:var(--fm);">
+      <span>Hour 0 (Pickup)</span><span style="color:var(--emerald);">avg -27.4°C · all readings in spec</span><span>Hour 38 (Delivery)</span>
+    </div>
+    <div style="display:flex; gap:12px; margin-top:14px;">
+      <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
+        <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--emerald);">4,560</div>
+        <div style="font-size:10px; color:var(--dim); margin-top:4px;">SEALED READINGS</div>
+      </div>
+      <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
+        <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--emerald);">0</div>
+        <div style="font-size:10px; color:var(--dim); margin-top:4px;">EXCURSIONS</div>
+      </div>
+      <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
+        <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--cyan);">ML-DSA-65</div>
+        <div style="font-size:10px; color:var(--dim); margin-top:4px;">SIGNATURE ALGO</div>
+      </div>
+      <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
+        <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--emerald);">2070+</div>
+        <div style="font-size:10px; color:var(--dim); margin-top:4px;">PROOF VALIDITY</div>
+      </div>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>Key insight:</strong> This proof is generated by YOUR sensors, sealed by SENTINEL, and verifiable by ANYONE (pharma client, regulator, insurer). You don't need the pharma client's cooperation to prove you did your job. The proof stands on its own — mathematically.
+  </div>
+  <div style="margin-top:16px;" id="sealArea">
+    <button class="btn btn-primary" id="sealBtn" onclick="runSeal()">Generate Cold Chain Proof</button>
+  </div>
+  <div id="s4done" style="display:none;">
+    <div class="banner-done">✓ Cold chain proof sealed — 4,560 readings, all in spec, mathematically unforgeable</div>
+    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(0,true); unlockNext(); goTo(5)">See Dispute Resolution →</button></div>
+  </div>`;
+}
+function runSeal() {
+  document.getElementById('sealBtn').innerHTML = '<span class="spinner"></span> Sealing 4,560 sensor readings…';
+  document.getElementById('sealBtn').disabled = true;
+  setTimeout(() => {
+    document.getElementById('sealArea').style.display = 'none';
+    document.getElementById('s4done').style.display = 'block';
+  }, 1600);
+}
+
+function screen5() {
+  return `
+  <h1 class="screen-title">Dispute Resolution — Your ZK Receipt</h1>
+  <p class="screen-sub">A pharma client claims a temperature excursion caused product loss. Previously: your word against theirs. Now: mathematically unforgeable proof settles it instantly.</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px; color:var(--amber);">Dispute Scenario — Simulated</div>
+    <div class="kv-row"><span class="kv-key">Claim</span><span class="kv-val" style="color:var(--red);">"Pool FRX-0847 showed temperature excursion. $1.8M loss. Logistics partner liable."</span></div>
+    <div class="kv-row"><span class="kv-key">Claimant</span><span class="kv-val">Pharma client's QA team</span></div>
+    <div class="kv-row"><span class="kv-key">Without SENTINEL</span><span class="kv-val" style="color:var(--red);">6-12 months arbitration · $200K legal fees · reputation damage</span></div>
+    <div class="kv-row"><span class="kv-key">With SENTINEL</span><span class="kv-val" style="color:var(--emerald);">30-second proof verification · dispute resolved instantly</span></div>
+  </div>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px;">Your Cryptographic Defense</div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">1</div>
+      <div class="row-info"><div class="row-title">Present sealed cold chain proof</div><div class="row-desc">4,560 readings, each individually signed at capture time by your sensor hardware. Timestamp provenance anchored to NIST time source.</div></div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">2</div>
+      <div class="row-info"><div class="row-title">Third party verifies (no cooperation needed)</div><div class="row-desc">Insurer, arbitrator, or regulator independently verifies every signature. If even ONE reading were altered, the entire chain would fail verification.</div></div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">3</div>
+      <div class="row-info"><div class="row-title">Custody transfer receipts confirm handoff state</div><div class="row-desc">Cryptographic proof: containers were -27.4°C at pickup AND -27.1°C at delivery. If excursion occurred AFTER delivery, that's provable.</div></div>
+    </div>
+  </div>
+  <div style="margin-top:16px;" id="disputeArea">
+    <button class="btn btn-primary" id="disputeBtn" onclick="runDispute()">Resolve Dispute</button>
+  </div>
+  <div id="s5done" style="display:none;">
+    <div class="callout"><strong>Dispute resolved in 30 seconds.</strong> Your cryptographic proof is mathematically unforgeable. The pharma client's claim is refuted by 4,560 individually-signed sensor readings. No arbitration needed. No legal fees. No reputation damage. The proof speaks for itself.</div>
+    <div class="banner-done">✓ False excursion claim refuted — your proof is mathematically irrefutable</div>
+    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(3,true); unlockNext(); goTo(6)">See Multi-Client Scale →</button></div>
+  </div>`;
+}
+function runDispute() {
+  document.getElementById('disputeBtn').innerHTML = '<span class="spinner"></span> Verifying proof chain…';
+  document.getElementById('disputeBtn').disabled = true;
+  setTimeout(() => {
+    document.getElementById('disputeArea').style.display = 'none';
+    document.getElementById('s5done').style.display = 'block';
+  }, 1200);
+}
+
+function screen6() {
+  return `
+  <h1 class="screen-title">Multi-Pharma Scalability</h1>
+  <p class="screen-sub">One SENTINEL integration works across ALL your pharma clients. No per-client data integration. No custom handoff protocols. Provider-agnostic proofs.</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Same Infrastructure, Multiple Clients</div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--cyan-dim);">T</div>
+      <div class="row-info"><div class="row-title">Takeda (Plasma-derived therapies)</div><div class="row-desc">BioLife centers → Fractionation plants · -25°C to -30°C · GDP/HIPAA/GDPR</div></div>
+      <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">Active</div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--blue-dim);">N</div>
+      <div class="row-info"><div class="row-title">Novo Nordisk (Insulin, GLP-1)</div><div class="row-desc">Manufacturing → Distribution centers · 2°C to 8°C · GDP/EU Annex 15</div></div>
+      <div class="row-status" style="background:var(--cyan-dim); color:var(--cyan);">Same system</div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--purple-dim);">M</div>
+      <div class="row-info"><div class="row-title">Moderna (mRNA vaccines)</div><div class="row-desc">Ultra-cold chain · -70°C to -80°C · CDC/EUA compliance</div></div>
+      <div class="row-status" style="background:var(--cyan-dim); color:var(--cyan);">Same system</div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--amber-dim);">R</div>
+      <div class="row-info"><div class="row-title">Roche (Oncology biologics)</div><div class="row-desc">Hospital last-mile · 2°C to 8°C · Patient-level traceability</div></div>
+      <div class="row-status" style="background:var(--cyan-dim); color:var(--cyan);">Same system</div>
+    </div>
+  </div>
+  <div class="callout cyan">
+    <strong>Zero per-client integration cost.</strong> Each pharma client gets their own cryptographic proofs from the same sensor data stream. Onboarding a new pharma client = configuring their temperature spec and handoff points. Not building a new data pipeline. Not negotiating a new DTA. Days, not months.
+  </div>
+  <div style="margin-top:16px;">
+    <button class="btn btn-primary" onclick="setReq(4,true); unlockNext(); goTo(7)">See Liability Elimination →</button>
+  </div>`;
+}
+
+function screen7() {
+  return `
+  <h1 class="screen-title">Breach Liability Elimination</h1>
+  <p class="screen-sub">If your systems are breached today, you're potentially liable for HIPAA violations on data you never needed. SENTINEL eliminates this risk architecturally.</p>
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card" style="border-color: rgba(248,113,113,0.3);">
+      <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px; color:var(--red);">Today (Without SENTINEL)</div>
+      <div class="kv-row"><span class="kv-key">Your systems hold</span><span class="kv-val" style="color:var(--red);">Shipping manifests with lot numbers, product types, destination hospitals</span></div>
+      <div class="kv-row"><span class="kv-key">If breached</span><span class="kv-val" style="color:var(--red);">Donor pool composition exposed. HIPAA/GDPR notification mandatory.</span></div>
+      <div class="kv-row"><span class="kv-key">Regulatory penalty</span><span class="kv-val" style="color:var(--red);">Up to $1.9M per HIPAA violation category</span></div>
+      <div class="kv-row"><span class="kv-key">Client impact</span><span class="kv-val" style="color:var(--red);">Contract termination, loss of future business</span></div>
+    </div>
+    <div class="card" style="border-color: rgba(52,211,153,0.3);">
+      <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px; color:var(--emerald);">With SENTINEL</div>
+      <div class="kv-row"><span class="kv-key">Your systems hold</span><span class="kv-val" style="color:var(--emerald);">Temperature data, GPS logs, container counts. Zero PHI.</span></div>
+      <div class="kv-row"><span class="kv-key">If breached</span><span class="kv-val" style="color:var(--emerald);">Attacker gets: "3 containers, -27°C, Route A." That's it.</span></div>
+      <div class="kv-row"><span class="kv-key">Regulatory penalty</span><span class="kv-val" style="color:var(--emerald);">$0 — no PHI to expose = no HIPAA notification</span></div>
+      <div class="kv-row"><span class="kv-key">Client impact</span><span class="kv-val" style="color:var(--emerald);">Zero — their data was never in your system</span></div>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>Architectural guarantee:</strong> It's not that you PROMISE not to look at donor data. It's that you CANNOT — the data is cryptographically sealed before it reaches your systems. This is a fundamentally different security posture. You can prove to insurers, to regulators, and to your pharma clients that you are architecturally incapable of exposing their sensitive data.
+  </div>
+  <div style="margin-top:16px;">
+    <button class="btn btn-primary" onclick="setReq(2,true); unlockNext(); goTo(8)">See Your Competitive Advantage →</button>
+  </div>`;
+}
+
+function screen8() {
+  return `
+  <h1 class="screen-title">Your Competitive Advantage</h1>
+  <p class="screen-sub">SENTINEL doesn't just protect you — it makes you the preferred logistics partner for every pharma company that cares about data sovereignty, regulatory compliance, and supply chain integrity.</p>
+  <div class="grid-3" style="margin-bottom:24px;">
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">Zero</div><div class="fleet-label">Data Breach Liability</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">30s</div><div class="fleet-label">Dispute Resolution</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">Days</div><div class="fleet-label">New Client Onboarding</div></div>
+  </div>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">What You Tell Your Pharma Clients</div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">✓</div>
+      <div class="row-info"><div class="row-title">"We prove cold chain integrity with post-quantum cryptographic proofs"</div><div class="row-desc">Not PDF exports. Not Excel logs. Mathematically unforgeable, independently verifiable, valid for 50+ years.</div></div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">✓</div>
+      <div class="row-info"><div class="row-title">"Your donor/patient data never touches our systems — architecturally impossible"</div><div class="row-desc">We cannot be the source of a HIPAA breach because we never hold PHI. Zero liability for you AND for us.</div></div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">✓</div>
+      <div class="row-info"><div class="row-title">"Switch to us in days, not months — zero data migration required"</div><div class="row-desc">Our proofs are provider-agnostic. Your previous logistics partner's proofs remain valid. Our proofs start immediately. No transition gap.</div></div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">✓</div>
+      <div class="row-info"><div class="row-title">"If there's ever a dispute, our cryptographic receipt resolves it in 30 seconds"</div><div class="row-desc">No arbitration. No legal fees. No 6-month back-and-forth. The math is the proof.</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Revenue Impact</div>
+    <div class="kv-row"><span class="kv-key">Win rate increase</span><span class="kv-val" style="color:var(--emerald);">Differentiation vs. competitors still using paper-based GDP proofs</span></div>
+    <div class="kv-row"><span class="kv-key">Client retention</span><span class="kv-val" style="color:var(--emerald);">Pharma clients stay because your proofs are portable (not locked to your system)</span></div>
+    <div class="kv-row"><span class="kv-key">Insurance premiums</span><span class="kv-val" style="color:var(--emerald);">Lower — demonstrably zero PHI exposure = reduced cyber coverage requirement</span></div>
+    <div class="kv-row"><span class="kv-key">New client onboarding</span><span class="kv-val" style="color:var(--emerald);">Days not months → faster revenue ramp per new contract</span></div>
+    <div class="kv-row"><span class="kv-key">Regulatory audits</span><span class="kv-val" style="color:var(--emerald);">Instant compliance demonstration — no 2-week audit prep cycle</span></div>
+  </div>
+  <div class="banner-done" style="margin-top:24px;">✓ Complete: Zero data liability + Unforgeable compliance proofs + Instant dispute resolution + Multi-pharma scalability + Competitive differentiation. All 8 screens complete.</div>
+  <div style="margin-top:20px;">
+    <button class="btn btn-primary" onclick="setReq(5,true); renderSidebar();">Complete ✓</button>
+  </div>`;
+}
+
+// Cold chain area chart
+const CC_DATA = [];
+(function(){
+  let temp = -27.8;
+  for (let i = 0; i < 76; i++) {
+    const drift = (Math.sin(i*0.3)*0.6) + (Math.cos(i*0.13)*0.4);
+    temp = Math.max(-30, Math.min(-25, -27.4 + drift + (i===54 ? 2.3 : 0)));
+    CC_DATA.push({ hour: (i*0.5).toFixed(1), temp: +temp.toFixed(2) });
+  }
+})();
+
+function drawColdChart() {
+  const canvas = document.getElementById('coldChart');
+  if (!canvas) return;
+  const wrap = document.getElementById('coldChartWrap');
+  const tooltip = document.getElementById('coldTooltip');
+  const dpr = window.devicePixelRatio || 1;
+  const w = wrap.clientWidth, h = wrap.clientHeight;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const pad = { top: 16, bottom: 24, left: 44, right: 16 };
+  const cw = w - pad.left - pad.right, ch = h - pad.top - pad.bottom;
+  const minT = -30.5, maxT = -24.5;
+  const toX = i => pad.left + (i / (CC_DATA.length - 1)) * cw;
+  const toY = t => pad.top + ((maxT - t) / (maxT - minT)) * ch;
+
+  ctx.strokeStyle = 'rgba(37,37,53,0.7)'; ctx.lineWidth = 0.5;
+  [-25, -26, -27, -28, -29, -30].forEach(t => {
+    const y = toY(t);
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(w - pad.right, y); ctx.stroke();
+    ctx.fillStyle = '#55556A'; ctx.font = '10px JetBrains Mono';
+    ctx.fillText(t + '°C', 4, y + 3);
+  });
+
+  ctx.fillStyle = 'rgba(248,113,113,0.04)';
+  ctx.fillRect(pad.left, pad.top, cw, toY(-25) - pad.top);
+  ctx.fillStyle = 'rgba(52,211,153,0.04)';
+  ctx.fillRect(pad.left, toY(-25), cw, toY(-30) - toY(-25));
+
+  ctx.setLineDash([4,4]); ctx.strokeStyle = 'rgba(248,113,113,0.4)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad.left, toY(-25)); ctx.lineTo(w-pad.right, toY(-25)); ctx.stroke();
+  ctx.strokeStyle = 'rgba(96,165,250,0.3)';
+  ctx.beginPath(); ctx.moveTo(pad.left, toY(-30)); ctx.lineTo(w-pad.right, toY(-30)); ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.beginPath();
+  ctx.moveTo(toX(0), toY(CC_DATA[0].temp));
+  CC_DATA.forEach((d, i) => { if(i>0) ctx.lineTo(toX(i), toY(d.temp)); });
+  ctx.lineTo(toX(CC_DATA.length-1), toY(-30));
+  ctx.lineTo(toX(0), toY(-30));
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0, toY(-25), 0, toY(-30));
+  grad.addColorStop(0, 'rgba(34,211,238,0.25)');
+  grad.addColorStop(1, 'rgba(34,211,238,0.02)');
+  ctx.fillStyle = grad; ctx.fill();
+
+  ctx.beginPath();
+  CC_DATA.forEach((d, i) => { i === 0 ? ctx.moveTo(toX(i), toY(d.temp)) : ctx.lineTo(toX(i), toY(d.temp)); });
+  ctx.strokeStyle = 'var(--cyan)'; ctx.lineWidth = 2; ctx.stroke();
+
+  canvas.onmousemove = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const idx = Math.round(((mx - pad.left) / cw) * (CC_DATA.length - 1));
+    if (idx < 0 || idx >= CC_DATA.length) { tooltip.style.opacity = '0'; return; }
+    const d = CC_DATA[idx];
+    tooltip.querySelector('.tt-time').textContent = 'Hour ' + d.hour;
+    const color = d.temp > -25.5 ? 'var(--amber)' : 'var(--cyan)';
+    tooltip.querySelector('.tt-temp').innerHTML = `<span style="color:${color}">${d.temp.toFixed(1)}°C</span>`;
+    tooltip.style.opacity = '1';
+    tooltip.style.left = Math.min(mx + 12, w - 120) + 'px';
+    tooltip.style.top = (toY(d.temp) - 40) + 'px';
+  };
+  canvas.onmouseleave = () => { tooltip.style.opacity = '0'; };
+}
+
+function ctaStrip() {
+  return `
+  <div class="cta-strip">
+    <h3>Ready to eliminate data liability and prove compliance cryptographically?</h3>
+    <p>Book a 30-minute technical briefing. We'll show SENTINEL configured for your fleet operations and specific pharma client requirements.</p>
+    <div class="cta-btns">
+      <a href="https://cal.com/agenticvaults" target="_blank"><button class="btn btn-primary">Schedule Meeting →</button></a>
+      <a href="mailto:ldavid@agenticvaults.ai"><button class="btn btn-ghost">ldavid@agenticvaults.ai</button></a>
+    </div>
+  </div>`;
+}
+
+const SCREEN_FNS = {1:screen1,2:screen2,3:screen3,4:screen4,5:screen5,6:screen6,7:screen7,8:screen8};
+function render() {
+  document.getElementById('content').innerHTML = `<div class="fade-in">${SCREEN_FNS[state.screen]()}${state.screen === 8 ? ctaStrip() : ''}</div>`;
+  document.getElementById('topTitle').textContent = STEP_LABELS[state.screen - 1];
+  renderSidebar();
+  window.scrollTo(0,0);
+  if (state.screen === 4) setTimeout(drawColdChart, 50);
+}
+render();
+</script>
+</body>
+</html>
