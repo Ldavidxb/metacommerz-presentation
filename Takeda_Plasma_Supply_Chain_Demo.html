@@ -128,6 +128,11 @@
   .chart-tooltip { position: absolute; background: var(--surface); border: 1px solid var(--border-light); border-radius: 8px; padding: 8px 12px; font-size: 11px; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 5; }
   .chart-tooltip .tt-time { color: var(--dim); font-family: var(--fm); }
   .chart-tooltip .tt-temp { font-family: var(--fm); font-weight: 600; font-size: 13px; }
+
+  .lang-picker { display: flex; align-items: center; gap: 0; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; margin-left: 12px; flex-shrink: 0; }
+  .lang-btn { font-family: var(--fm); font-size: 11px; padding: 5px 10px; background: transparent; border: none; color: var(--dim); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .lang-btn.active { background: var(--emerald-dim); color: var(--emerald); }
+  .lang-btn:hover:not(.active) { color: var(--white); }
 </style>
 </head>
 <body>
@@ -155,14 +160,28 @@
   <div class="main">
     <div class="topbar">
       <div class="topbar-title" id="topTitle">Plasma Network</div>
-      <div class="topbar-badge" id="topBadge">BioLife · PDT Division</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="topbar-badge" id="topBadge">BioLife · PDT Division</div>
+        <div class="lang-picker">
+          <button class="lang-btn active" id="langEn" onclick="setLang('en')">EN</button>
+          <button class="lang-btn" id="langJa" onclick="setLang('ja')">日本語</button>
+        </div>
+      </div>
     </div>
     <div class="content" id="content"></div>
   </div>
 </div>
 
 <script>
-const REQS = [
+let lang = 'en';
+function setLang(l) {
+  lang = l;
+  document.getElementById('langEn').classList.toggle('active', l === 'en');
+  document.getElementById('langJa').classList.toggle('active', l === 'ja');
+  render();
+}
+
+const REQS_EN = [
   {code: '1', label: 'Donor-to-patient traceability'},
   {code: '2', label: 'Donor privacy protected'},
   {code: '3', label: 'Cold chain verified'},
@@ -170,7 +189,17 @@ const REQS = [
   {code: '5', label: 'Cross-border compliance'},
   {code: '6', label: 'Lookback capability active'},
 ];
-const STEP_LABELS = [
+const REQS_JA = [
+  {code: '1', label: 'ドナーから患者への追跡性'},
+  {code: '2', label: 'ドナープライバシー保護'},
+  {code: '3', label: 'コールドチェーン検証済'},
+  {code: '4', label: '分画工程の完全性'},
+  {code: '5', label: '越境データコンプライアンス'},
+  {code: '6', label: 'ルックバック機能有効'},
+];
+function getREQS() { return lang === 'ja' ? REQS_JA : REQS_EN; }
+
+const STEP_LABELS_EN = [
   'Plasma Collection Network',
   'Donor Privacy & Traceability',
   'Cold Chain Verification',
@@ -180,6 +209,17 @@ const STEP_LABELS = [
   'Lookback & Recall Capability',
   'Regulatory Submission',
 ];
+const STEP_LABELS_JA = [
+  '血漿採取ネットワーク',
+  'ドナープライバシーと追跡性',
+  'コールドチェーン検証',
+  '分画工程の完全性',
+  '越境データコンプライアンス',
+  '希少疾患レジストリ（プライバシー）',
+  'ルックバック・リコール機能',
+  '規制当局への提出',
+];
+function getSTEP_LABELS() { return lang === 'ja' ? STEP_LABELS_JA : STEP_LABELS_EN; }
 
 let state = { screen: 1, maxUnlocked: 1, reqStatus: [false,false,false,false,false,false], region: 'us' };
 function setReq(idx, val) { state.reqStatus[idx] = val; renderSidebar(); }
@@ -187,8 +227,11 @@ function goTo(n) { if (n > state.maxUnlocked) return; state.screen = n; render()
 function unlockNext() { state.maxUnlocked = Math.max(state.maxUnlocked, state.screen + 1); }
 
 function renderSidebar() {
+  const ja = lang === 'ja';
+  const labels = getSTEP_LABELS();
+  const reqs = getREQS();
   const stepsEl = document.getElementById('steps');
-  stepsEl.innerHTML = STEP_LABELS.map((label, i) => {
+  stepsEl.innerHTML = labels.map((label, i) => {
     const n = i + 1;
     const cls = ['step'];
     if (n === state.screen) cls.push('active');
@@ -199,46 +242,53 @@ function renderSidebar() {
       <div class="step-label">${label}</div>
     </div>`;
   }).join('');
+  const ctxLabel = document.querySelector('.context-label');
+  const ctxVal = document.querySelector('.context-val');
+  if (ctxLabel) ctxLabel.textContent = ja ? '見込み客向けデモ' : 'Prospect Walkthrough';
+  if (ctxVal) ctxVal.textContent = ja ? '武田薬品 — 血漿由来治療薬の追跡性とドナープライバシー' : 'Takeda — Plasma-Derived Therapy Traceability & Donor Privacy';
+  const miniTitle = document.querySelector('.checklist-mini-title span:first-child');
+  if (miniTitle) miniTitle.textContent = ja ? 'コンプライアンス' : 'Compliance';
   const doneCount = state.reqStatus.filter(Boolean).length;
   document.getElementById('miniCount').textContent = doneCount + '/6';
-  document.getElementById('miniList').innerHTML = REQS.map((r, i) => {
+  document.getElementById('miniList').innerHTML = reqs.map((r, i) => {
     const on = state.reqStatus[i];
     return `<div class="mini-row ${on ? 'on' : ''}"><div class="mini-dot ${on ? 'on' : ''}"></div>${r.label}</div>`;
   }).join('');
 }
 
 function screen1() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Plasma Collection Network</h1>
-  <p class="screen-sub">Takeda's BioLife operates 200+ plasma collection centers across 4 countries. Millions of donations per year become life-saving therapies — immunoglobulins, albumin, clotting factors.</p>
+  <h1 class="screen-title">${ja ? '血漿採取ネットワーク' : 'Plasma Collection Network'}</h1>
+  <p class="screen-sub">${ja ? '武田薬品のBioLifeは4カ国で200以上の血漿採取センターを運営しています。年間数百万件の献血が、免疫グロブリン、アルブミン、凝固因子など、命を救う治療薬になります。' : "Takeda's BioLife operates 200+ plasma collection centers across 4 countries. Millions of donations per year become life-saving therapies — immunoglobulins, albumin, clotting factors."}</p>
   <div class="grid-4" style="margin-bottom:24px;">
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--rose);">230</div><div class="fleet-label">BioLife Centers</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--blue);">12M+</div><div class="fleet-label">Donations / Year</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">6</div><div class="fleet-label">Fractionation Plants</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">40+</div><div class="fleet-label">Countries Served</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--rose);">230</div><div class="fleet-label">${ja ? 'BioLifeセンター' : 'BioLife Centers'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--blue);">12M+</div><div class="fleet-label">${ja ? '年間献血数' : 'Donations / Year'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">6</div><div class="fleet-label">${ja ? '分画工場' : 'Fractionation Plants'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">40+</div><div class="fleet-label">${ja ? '供給先国数' : 'Countries Served'}</div></div>
   </div>
   <div class="grid-3" style="margin-bottom:20px;">
     <div class="site-card" onclick="state.region='us'; unlockNext(); goTo(2)">
-      <div class="site-name">US Network</div>
+      <div class="site-name">${ja ? '米国ネットワーク' : 'US Network'}</div>
       <div class="site-meta">180 CENTERS · MIDWEST + SOUTH</div>
-      <div class="site-stat" style="color:var(--rose);">9.2M donations/yr</div>
-      <div style="font-size:11px; color:var(--emerald); margin-top:8px; font-weight:600;">→ Click to begin traceability demo</div>
+      <div class="site-stat" style="color:var(--rose);">${ja ? '年間920万件' : '9.2M donations/yr'}</div>
+      <div style="font-size:11px; color:var(--emerald); margin-top:8px; font-weight:600;">${ja ? '→ クリックして追跡性デモを開始' : '→ Click to begin traceability demo'}</div>
     </div>
     <div class="site-card" onclick="state.region='eu'; unlockNext(); goTo(2)">
-      <div class="site-name">EU Network</div>
+      <div class="site-name">${ja ? 'EUネットワーク' : 'EU Network'}</div>
       <div class="site-meta">38 CENTERS · AT + DE + CZ + HU</div>
-      <div class="site-stat" style="color:var(--rose);">2.1M donations/yr</div>
-      <div style="font-size:11px; color:var(--emerald); margin-top:8px; font-weight:600;">→ Click to begin traceability demo</div>
+      <div class="site-stat" style="color:var(--rose);">${ja ? '年間210万件' : '2.1M donations/yr'}</div>
+      <div style="font-size:11px; color:var(--emerald); margin-top:8px; font-weight:600;">${ja ? '→ クリックして追跡性デモを開始' : '→ Click to begin traceability demo'}</div>
     </div>
     <div class="site-card" onclick="state.region='frax'; state.maxUnlocked=Math.max(state.maxUnlocked,4); state.screen=4; render();">
-      <div class="site-name">Fractionation</div>
-      <div class="site-meta">6 PLANTS GLOBALLY</div>
-      <div class="site-stat" style="color:var(--rose);">14 PDT products</div>
-      <div style="font-size:11px; color:var(--emerald); margin-top:8px; font-weight:600;">→ Jump to fractionation integrity</div>
+      <div class="site-name">${ja ? '分画工場' : 'Fractionation'}</div>
+      <div class="site-meta">${ja ? '世界6工場' : '6 PLANTS GLOBALLY'}</div>
+      <div class="site-stat" style="color:var(--rose);">${ja ? '14のPDT製品' : '14 PDT products'}</div>
+      <div style="font-size:11px; color:var(--emerald); margin-top:8px; font-weight:600;">${ja ? '→ 分画工程の完全性へ移動' : '→ Jump to fractionation integrity'}</div>
     </div>
   </div>
   <div class="callout rose">
-    <strong>The dual mandate:</strong> Regulators (FDA, EMA) require complete donor-to-patient traceability — if a donor later tests positive for a pathogen, every product derived from their plasma must be recalled within hours. But HIPAA/GDPR require that donor identity is protected. These two requirements are in direct tension. Today's solution: siloed databases with manual lookback procedures (takes days). One delay = patient harm.
+    <strong>${ja ? '二律背反の要求：' : 'The dual mandate:'}</strong> ${ja ? '規制当局（FDA、EMA）はドナーから患者への完全な追跡性を要求しています。ドナーが後に病原体陽性と判明した場合、そのドナーの血漿から派生したすべての製品を数時間以内に回収しなければなりません。しかし、HIPAA/GDPRはドナーの身元保護を要求しています。この2つの要件は直接的に矛盾します。現在の解決策：サイロ化されたデータベースと手動ルックバック手順（数日かかる）。遅延は患者の被害に直結します。' : "Regulators (FDA, EMA) require complete donor-to-patient traceability — if a donor later tests positive for a pathogen, every product derived from their plasma must be recalled within hours. But HIPAA/GDPR require that donor identity is protected. These two requirements are in direct tension. Today's solution: siloed databases with manual lookback procedures (takes days). One delay = patient harm."}
   </div>`;
 }
 
