@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SENTINEL — GxP Signature Integrity & CRO Quantum Risk · Takeda</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #06060B; --surface: #0E0E16; --surface2: #16161F; --surface3: #1C1C28;
+    --border: #252535; --border-light: #2E2E40;
+    --emerald: #34D399; --emerald-dim: rgba(52,211,153,0.12);
+    --red: #F87171; --red-dim: rgba(248,113,113,0.12);
+    --amber: #FBBF24; --amber-dim: rgba(251,191,36,0.12);
+    --cyan: #22D3EE; --cyan-dim: rgba(34,211,238,0.12);
+    --blue: #60A5FA; --blue-dim: rgba(96,165,250,0.12);
+    --purple: #A78BFA; --sky: #38BDF8; --sky-dim: rgba(56,189,248,0.12);
+    --white: #F0EDE6; --muted: #8E8EA3; --dim: #55556A;
+    --fd: 'Space Grotesk', sans-serif; --fb: 'DM Sans', sans-serif; --fm: 'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--white); font-family: var(--fb); overflow-x: hidden; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .fade-in { animation: fadeIn 0.4s ease-out both; }
+  .app { display: flex; min-height: 100vh; }
+
+  .sidebar { width: 280px; background: var(--surface); border-right: 1px solid var(--border); flex-shrink: 0; display: flex; flex-direction: column; position: fixed; top:0; bottom:0; left:0; overflow-y:auto; }
+  .brand { padding: 22px 22px 18px; border-bottom: 1px solid var(--border); }
+  .brand-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .brand-mark { width: 26px; height: 26px; border: 2px solid var(--emerald); border-radius: 7px; display:flex; align-items:center; justify-content:center; }
+  .brand-mark div { width: 9px; height: 9px; background: var(--emerald); border-radius: 2px; }
+  .brand-name { font-family: var(--fd); font-weight: 700; font-size: 14.5px; color: var(--emerald); letter-spacing: 0.03em; }
+  .brand-sub { font-size: 10.5px; color: var(--dim); margin-left: 36px; }
+  .context-box { margin: 16px 18px; padding: 12px 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; }
+  .context-label { font-size: 9.5px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .context-val { font-size: 12.5px; color: var(--white); font-weight: 600; line-height: 1.4; }
+
+  .steps { padding: 8px 12px; flex: 1; }
+  .step { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 9px; cursor: pointer; margin-bottom: 2px; transition: background 0.15s; }
+  .step:hover { background: var(--surface2); }
+  .step.active { background: var(--emerald-dim); }
+  .step-num { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 700; font-family: var(--fm); flex-shrink: 0; border: 1.5px solid var(--border-light); color: var(--dim); }
+  .step.done .step-num { background: var(--emerald); border-color: var(--emerald); color: #04140d; }
+  .step.active .step-num { border-color: var(--emerald); color: var(--emerald); }
+  .step-label { font-size: 12.5px; color: var(--muted); font-weight: 500; line-height: 1.3; }
+  .step.active .step-label, .step.done .step-label { color: var(--white); }
+  .step.locked { opacity: 0.35; pointer-events: none; }
+
+  .checklist-mini { margin: 10px 18px 20px; padding: 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; }
+  .checklist-mini-title { font-size: 9.5px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; display:flex; justify-content:space-between; }
+  .mini-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 11px; color: var(--muted); }
+  .mini-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); flex-shrink: 0; transition: background 0.4s; }
+  .mini-dot.on { background: var(--emerald); }
+  .mini-row.on { color: var(--white); }
+
+  .main { margin-left: 280px; flex: 1; min-height: 100vh; }
+  .topbar { position: sticky; top: 0; z-index: 10; background: rgba(6,6,11,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 40px; display:flex; align-items:center; justify-content: space-between; }
+  .topbar-title { font-family: var(--fd); font-weight: 700; font-size: 17px; }
+  .topbar-badge { font-family: var(--fm); font-size: 11px; color: var(--sky); background: var(--sky-dim); padding: 5px 12px; border-radius: 100px; border: 1px solid rgba(56,189,248,0.25); }
+  .content { padding: 40px; max-width: 1100px; }
+
+  h1.screen-title { font-family: var(--fd); font-size: 30px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .screen-sub { color: var(--muted); font-size: 15px; margin-bottom: 32px; line-height: 1.6; max-width: 700px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 26px; margin-bottom: 20px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; }
+
+  .kv-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+  .kv-row:last-child { border-bottom: none; }
+  .kv-key { color: var(--dim); }
+  .kv-val { font-family: var(--fm); color: var(--white); font-weight: 500; }
+
+  .progress-track { height: 8px; background: var(--surface3); border-radius: 100px; overflow: hidden; margin: 14px 0; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--sky), var(--emerald)); border-radius: 100px; width: 0%; transition: width 2s cubic-bezier(.2,.8,.2,1); }
+
+  .btn { font-family: var(--fd); font-weight: 600; font-size: 14.5px; padding: 13px 26px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary { background: var(--emerald); color: #04140d; }
+  .btn-primary:hover { background: #4fe3ab; transform: translateY(-1px); }
+  .btn-primary:disabled { background: var(--surface3); color: var(--dim); cursor: not-allowed; transform: none; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border-light); color: var(--white); }
+  .btn-ghost:hover { border-color: var(--emerald); }
+
+  .callout { padding: 14px 18px; border-radius: 10px; border-left: 3px solid var(--emerald); background: rgba(52,211,153,0.06); font-size: 13.5px; color: var(--white); line-height: 1.6; margin: 18px 0; }
+  .callout.sky { border-left-color: var(--sky); background: rgba(56,189,248,0.06); }
+  .callout.red { border-left-color: var(--red); background: rgba(248,113,113,0.06); }
+  .callout strong { color: var(--emerald); }
+  .callout.sky strong { color: var(--sky); }
+  .callout.red strong { color: var(--red); }
+
+  .fleet-stat { text-align: center; padding: 22px; background: var(--surface2); border-radius: 12px; border: 1px solid var(--border); }
+  .fleet-num { font-family: var(--fm); font-size: 27px; font-weight: 700; }
+  .fleet-label { font-size: 11.5px; color: var(--dim); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .spinner { width: 15px; height: 15px; border: 2px solid rgba(4,20,13,0.3); border-top-color: #04140d; border-radius: 50%; animation: spin 0.7s linear infinite; }
+  .banner-done { display: flex; align-items: center; gap: 10px; padding: 16px 20px; background: var(--emerald-dim); border: 1px solid rgba(52,211,153,0.3); border-radius: 12px; margin-top: 24px; font-size: 14px; font-weight: 600; color: var(--emerald); }
+
+  .row-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--surface2); border-radius: 10px; margin-bottom: 10px; border: 1px solid var(--border); }
+  .row-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .row-info { flex: 1; }
+  .row-title { font-size: 13.5px; font-weight: 600; }
+  .row-desc { font-size: 11.5px; color: var(--dim); }
+  .row-status { font-family: var(--fm); font-size: 11px; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+
+  .risk-bar { height: 10px; border-radius: 100px; overflow: hidden; margin: 8px 0; display:flex; }
+  .risk-bar div { height: 100%; }
+
+  .zip-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: var(--surface2); border-radius: 9px; margin-bottom: 8px; border: 1px solid var(--border); font-size: 13.5px; }
+  .zip-icon { color: var(--emerald); font-family: var(--fm); font-size: 15px; }
+
+  .cta-strip { margin-top: 40px; padding: 28px; background: linear-gradient(135deg, rgba(56,189,248,0.06), rgba(52,211,153,0.06)); border: 1px solid var(--border-light); border-radius: 14px; text-align: center; }
+  .cta-strip h3 { font-family: var(--fd); font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .cta-strip p { color: var(--muted); font-size: 13.5px; margin-bottom: 18px; }
+  .cta-strip .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .cta-strip a { text-decoration: none; }
+
+  .lang-picker { display: flex; align-items: center; gap: 0; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; margin-left: 12px; flex-shrink: 0; }
+  .lang-btn { font-family: var(--fm); font-size: 11px; padding: 5px 10px; background: transparent; border: none; color: var(--dim); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .lang-btn.active { background: var(--emerald-dim); color: var(--emerald); }
+  .lang-btn:hover:not(.active) { color: var(--white); }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-row">
+        <div class="brand-mark"><div></div></div>
+        <span class="brand-name">agenticvaults</span>
+      </div>
+      <div class="brand-sub">SENTINEL · Signature Integrity</div>
+    </div>
+    <div class="context-box">
+      <div class="context-label">Prospect Walkthrough</div>
+      <div class="context-val">Takeda — GxP Signature Integrity & CRO Quantum Risk</div>
+    </div>
+    <div class="steps" id="steps"></div>
+    <div class="checklist-mini">
+      <div class="checklist-mini-title"><span>PQC Migration</span><span id="miniCount">0/6</span></div>
+      <div id="miniList"></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topTitle">Cryptographic Asset Discovery</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="topbar-badge" id="topBadge">Enterprise · 34 Sites</div>
+        <div class="lang-picker">
+          <button class="lang-btn active" id="langEn" onclick="setLang('en')">EN</button>
+          <button class="lang-btn" id="langJa" onclick="setLang('ja')">日本語</button>
+        </div>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<script>
+const REQS = [
+  {code: '1', label: 'Crypto inventory complete'},
+  {code: '2', label: 'CRO risk assessed'},
+  {code: '3', label: 'Active records PQ-signed'},
+  {code: '4', label: 'Multi-jurisdiction signing live'},
+  {code: '5', label: 'Certificate lifecycle managed'},
+  {code: '6', label: 'Legacy integrity restored'},
+];
+const STEP_LABELS = [
+  'Cryptographic Asset Discovery',
+  'Third-Party / CRO Risk Dashboard',
+  'PQC Migration Planning',
+  'Sign-as-Service (Batch Release)',
+  'Certificate Lifecycle Automation',
+  'Sentinel: Integrity Monitoring',
+  'Regulatory Submission Signing',
+  'CISO Executive Dashboard',
+];
+
+let state = { screen: 1, maxUnlocked: 1, reqStatus: [false,false,false,false,false,false] };
+function setReq(idx, val) { state.reqStatus[idx] = val; renderSidebar(); }
+function goTo(n) { if (n > state.maxUnlocked) return; state.screen = n; render(); }
+function unlockNext() { state.maxUnlocked = Math.max(state.maxUnlocked, state.screen + 1); }
+
+function renderSidebar() {
+  const stepsEl = document.getElementById('steps');
+  stepsEl.innerHTML = STEP_LABELS.map((label, i) => {
+    const n = i + 1;
+    const cls = ['step'];
+    if (n === state.screen) cls.push('active');
+    else if (n < state.screen) cls.push('done');
+    if (n > state.maxUnlocked) cls.push('locked');
+    return `<div class="${cls.join(' ')}" onclick="goTo(${n})">
+      <div class="step-num">${n < state.screen ? '✓' : n}</div>
+      <div class="step-label">${label}</div>
+    </div>`;
+  }).join('');
+  const doneCount = state.reqStatus.filter(Boolean).length;
+  document.getElementById('miniCount').textContent = doneCount + '/6';
+  document.getElementById('miniList').innerHTML = REQS.map((r, i) => {
+    const on = state.reqStatus[i];
+    return `<div class="mini-row ${on ? 'on' : ''}"><div class="mini-dot ${on ? 'on' : ''}"></div>${r.label}</div>`;
+  }).join('');
+}
+
+function screen1() {
+  return `
+  <h1 class="screen-title">Cryptographic Asset Discovery</h1>
+  <p class="screen-sub">SBOM module has scanned Takeda's entire GxP landscape — 34 manufacturing sites, 4 inherited PKIs (Baxter + Shire + Nycomed + Takeda-legacy), 2.3 million signed records.</p>
+  <div class="grid-4" style="margin-bottom:24px;">
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--sky);">34</div><div class="fleet-label">Manufacturing Sites</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">2.3M</div><div class="fleet-label">Signed GxP Records</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--red);">47K</div><div class="fleet-label">Operator Certificates</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--purple);">4</div><div class="fleet-label">Inherited PKI Systems</div></div>
+  </div>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Signature Algorithm Distribution</div>
+    <div class="risk-bar">
+      <div style="width:78%; background:var(--red); border-radius:100px 0 0 100px;"></div>
+      <div style="width:19%; background:var(--amber);"></div>
+      <div style="width:3%; background:var(--emerald); border-radius:0 100px 100px 0;"></div>
+    </div>
+    <div style="display:flex; justify-content:space-between; font-size:11px; margin-top:6px;">
+      <span style="color:var(--red);">RSA-2048 — 78% (quantum-vulnerable by 2033)</span>
+      <span style="color:var(--amber);">ECDSA P-256 — 19%</span>
+      <span style="color:var(--emerald);">ML-DSA — 3%</span>
+    </div>
+    <div class="kv-row" style="margin-top:16px;"><span class="kv-key">Estimated exposure</span><span class="kv-val" style="color:var(--red);">$4.2B in product value on vulnerable signatures</span></div>
+    <div class="kv-row"><span class="kv-key">PKI sources</span><span class="kv-val">Baxter (2004) + Shire (2008) + Nycomed (2011) + Takeda (2014)</span></div>
+    <div class="kv-row"><span class="kv-key">Fragmentation risk</span><span class="kv-val" style="color:var(--red);">4,500 employees laid off May 2026 — PKI knowledge walking out</span></div>
+  </div>
+  <div class="callout red">
+    <strong>The threat model:</strong> A nation-state adversary captures signed batch records today (RSA-2048). In 2033, they forge a signature on a counterfeit batch record — inserting a fake ENTYVIO lot into the supply chain. The forged record is indistinguishable from a genuine one. No classical signature algorithm prevents this within the product's patent life.
+  </div>
+  <div style="margin-top:16px;" id="scanArea">
+    <button class="btn btn-primary" id="scanBtn" onclick="runScan()">Complete Discovery Scan</button>
+  </div>
+  <div id="s1done" style="display:none;">
+    <div class="banner-done">✓ Full cryptographic inventory — 2.3M records mapped, 4 PKIs cataloged, risk quantified</div>
+    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(0,true); unlockNext(); goTo(2)">View CRO Risk Dashboard →</button></div>
+  </div>`;
+}
+function runScan() {
+  document.getElementById('scanBtn').innerHTML = '<span class="spinner"></span> Scanning 34 sites…';
+  document.getElementById('scanBtn').disabled = true;
+  setTimeout(() => {
+    document.getElementById('scanArea').style.display = 'none';
+    document.getElementById('s1done').style.display = 'block';
+  }, 1600);
+}
+
+function screen2() {
+  return `
+  <h1 class="screen-title">Third-Party / CRO Risk Dashboard</h1>
+  <p class="screen-sub">Takeda relies on CROs who hold signed clinical study reports. Their PKI is outside Takeda's control. If their keys are quantum-broken, every CSR they signed for Takeda becomes suspect.</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Top CRO/CMO Partners — Cryptographic Risk</div>
+    <div class="row-item" style="border-color: rgba(248,113,113,0.3);">
+      <div class="row-icon" style="background:var(--red-dim);">⚠️</div>
+      <div class="row-info"><div class="row-title">IQVIA — 340 signed clinical study reports</div><div class="row-desc">PKI: RSA-2048 · Cert expiry: 2028 · No PQC migration plan disclosed</div></div>
+      <div class="row-status" style="background:var(--red-dim); color:var(--red);">HIGH RISK</div>
+    </div>
+    <div class="row-item" style="border-color: rgba(251,191,36,0.3);">
+      <div class="row-icon" style="background:var(--amber-dim);">⚡</div>
+      <div class="row-info"><div class="row-title">Covance / LabCorp — 180 signed bioanalytical reports</div><div class="row-desc">PKI: ECDSA P-256 · PQC migration planned Q3 2027 · Gap: 18 months exposed</div></div>
+      <div class="row-status" style="background:var(--amber-dim); color:var(--amber);">MEDIUM</div>
+    </div>
+    <div class="row-item" style="border-color: rgba(248,113,113,0.3);">
+      <div class="row-icon" style="background:var(--red-dim);">⚠️</div>
+      <div class="row-info"><div class="row-title">Neuchatel CMO (clotting factor fill-finish) — 45 batch records</div><div class="row-desc">PKI: RSA-2048 · No PQC awareness · Single point of failure for ADYNOVATE</div></div>
+      <div class="row-status" style="background:var(--red-dim); color:var(--red);">CRITICAL</div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">✓</div>
+      <div class="row-info"><div class="row-title">PPD / Thermo Fisher — 95 signed protocols</div><div class="row-desc">PKI: ML-DSA-65 (migrated Q1 2026) · Fully compliant</div></div>
+      <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">LOW</div>
+    </div>
+  </div>
+  <div class="callout sky">
+    <strong>Action required:</strong> IQVIA holds 340 clinical study reports for TAKHZYRO, ENTYVIO, and ELAPRASE. If their RSA-2048 signing key is quantum-broken, every one of those CSRs becomes unverifiable — FDA could question the integrity of the data supporting three blockbuster products ($8.7B combined revenue).
+  </div>
+  <div style="margin-top:16px;">
+    <button class="btn btn-primary" onclick="setReq(1,true); unlockNext(); goTo(3)">Plan PQC Migration →</button>
+  </div>`;
+}
+
+function screen3() {
+  return `
+  <h1 class="screen-title">PQC Migration Planning</h1>
+  <p class="screen-sub">Lessines fractionation facility selected. 340,000 signed batch records (2004-2026). Migration wraps originals with PQC envelope — preserving regulatory continuity.</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Migration Plan — Lessines, Belgium</div>
+    <div class="kv-row"><span class="kv-key">Total signed records</span><span class="kv-val">340,000 batch records + 12,000 deviations + 5,600 equipment quals</span></div>
+    <div class="kv-row"><span class="kv-key">Original algorithm</span><span class="kv-val">RSA-2048 (Baxter-era PKI, 2004-2019) + ECDSA (2019-present)</span></div>
+    <div class="kv-row"><span class="kv-key">Target algorithm</span><span class="kv-val">ML-DSA-65 envelope (original signature preserved inside)</span></div>
+    <div class="kv-row"><span class="kv-key">Method</span><span class="kv-val">PQC envelope wrapping — original record + signature remain intact for audit</span></div>
+    <div class="kv-row"><span class="kv-key">Estimated time</span><span class="kv-val">14 weeks · zero production downtime</span></div>
+    <div style="margin-top:18px; font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px;">Migration Phases</div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--sky-dim);">P1</div>
+      <div class="row-info"><div class="row-title">Active products (last 5 years) — GAMMAGARD, HYQVIA</div><div class="row-desc">Re-sign with ML-DSA-65. PQC signature envelope wraps original RSA signature.</div></div>
+      <div class="row-status" style="background:var(--sky-dim); color:var(--sky);">Weeks 1-6</div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--sky-dim);">P2</div>
+      <div class="row-info"><div class="row-title">Archived records (2004-2019) — Baxter-era</div><div class="row-desc">Hash-chain anchoring with PQC timestamps. Proves existence and integrity at original signing time.</div></div>
+      <div class="row-status" style="background:var(--sky-dim); color:var(--sky);">Weeks 7-14</div>
+    </div>
+  </div>
+  <div style="margin-top:16px;" id="migArea">
+    <button class="btn btn-primary" id="migBtn" onclick="runMig()">Begin Migration (Phase 1)</button>
+  </div>
+  <div id="s3done" style="display:none;">
+    <div class="progress-track"><div class="progress-fill" style="width:100%;"></div></div>
+    <div style="font-size:13px; color:var(--emerald); font-family:var(--fm);">357,600 records wrapped · ML-DSA-65 · zero downtime</div>
+    <div class="callout"><strong>Migration complete.</strong> Every batch record at Lessines now carries a PQC signature envelope. If a quantum computer breaks the original RSA signature in 2033, the ML-DSA envelope proves the record existed and was valid in 2026. Regulatory continuity preserved.</div>
+    <div class="banner-done">✓ Lessines PQC migration complete — 340K+ records quantum-safe</div>
+    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(2,true); unlockNext(); goTo(4)">Continue to Sign-as-Service →</button></div>
+  </div>`;
+}
+function runMig() {
+  document.getElementById('migBtn').innerHTML = '<span class="spinner"></span> Wrapping records with PQC envelopes…';
+  document.getElementById('migBtn').disabled = true;
+  setTimeout(() => {
+    document.getElementById('migArea').style.display = 'none';
+    document.getElementById('s3done').style.display = 'block';
+  }, 2200);
+}
+
+function screen4() {
+  return `
+  <h1 class="screen-title">Sign-as-Service — Batch Release</h1>
+  <p class="screen-sub">ENTYVIO batch ready for release at Hikari, Japan. One batch. Three jurisdictions (PMDA + EU Annex 11 + 21 CFR Part 11). One unified signing workflow.</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Batch: TK-HKR-2026-ENT-0294 — ENTYVIO 300mg</div>
+    <div class="kv-row"><span class="kv-key">Site</span><span class="kv-val">Hikari, Japan — Biologics Manufacturing</span></div>
+    <div class="kv-row"><span class="kv-key">Product</span><span class="kv-val">ENTYVIO® (vedolizumab) 300mg IV</span></div>
+    <div class="kv-row"><span class="kv-key">Markets</span><span class="kv-val">Japan (PMDA), EU (EMA), US (FDA)</span></div>
+    <div style="margin-top:18px;">
+      <div class="row-item">
+        <div class="row-icon" style="background:var(--emerald-dim);">QC</div>
+        <div class="row-info"><div class="row-title">QC Lab Manager — analytical results signed</div><div class="row-desc">ML-DSA-65 · PMDA-compliant · Hardware-bound key (JP Sovereign KMS)</div></div>
+        <div class="row-status" id="bs0" style="background:var(--red-dim); color:var(--red);">Pending</div>
+      </div>
+      <div class="row-item">
+        <div class="row-icon" style="background:var(--emerald-dim);">PM</div>
+        <div class="row-info"><div class="row-title">Production Manager — batch record completion</div><div class="row-desc">ML-DSA-65 · PMDA-compliant · Hardware-bound key (JP Sovereign KMS)</div></div>
+        <div class="row-status" id="bs1" style="background:var(--red-dim); color:var(--red);">Pending</div>
+      </div>
+      <div class="row-item">
+        <div class="row-icon" style="background:var(--emerald-dim);">QA</div>
+        <div class="row-info"><div class="row-title">QA Director — final release authorization</div><div class="row-desc">ML-DSA-65 · Threshold: all 3 required for biologics release</div></div>
+        <div class="row-status" id="bs2" style="background:var(--red-dim); color:var(--red);">Pending</div>
+      </div>
+    </div>
+    <div style="margin-top:20px;" id="bsArea">
+      <button class="btn btn-primary" id="bsBtn" onclick="runBatchSign()">Collect Signatures</button>
+    </div>
+    <div id="s4done" style="display:none;">
+      <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin:18px 0 12px;">Multi-Jurisdiction Counter-Signatures (Automatic)</div>
+      <div class="row-item">
+        <div class="row-icon" style="background:var(--sky-dim);">🇯🇵</div>
+        <div class="row-info"><div class="row-title">PMDA release — JP format, JP Sovereign KMS</div></div>
+        <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">✓ Signed</div>
+      </div>
+      <div class="row-item">
+        <div class="row-icon" style="background:var(--sky-dim);">🇪🇺</div>
+        <div class="row-info"><div class="row-title">EU Annex 11 release — QP counter-signature, EU KMS</div></div>
+        <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">✓ Signed</div>
+      </div>
+      <div class="row-item">
+        <div class="row-icon" style="background:var(--sky-dim);">🇺🇸</div>
+        <div class="row-info"><div class="row-title">21 CFR Part 11 release — US format, US KMS</div></div>
+        <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">✓ Signed</div>
+      </div>
+      <div class="callout"><strong>One batch, three jurisdictions, one workflow.</strong> Previously: 3 separate signing ceremonies, 3 different systems, days of coordination. Now: single approval cascade auto-generates jurisdiction-specific counter-signatures.</div>
+      <div class="banner-done">✓ ENTYVIO batch released — PMDA + EMA + FDA signatures in single workflow</div>
+      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(3,true); unlockNext(); goTo(5)">Continue to Certificate Lifecycle →</button></div>
+    </div>
+  </div>`;
+}
+function runBatchSign() {
+  document.getElementById('bsBtn').innerHTML = '<span class="spinner"></span> Collecting signatures…';
+  document.getElementById('bsBtn').disabled = true;
+  ['bs0','bs1','bs2'].forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      el.textContent = '✓ Signed'; el.style.background = 'var(--emerald-dim)'; el.style.color = 'var(--emerald)';
+    }, 600 * (i + 1));
+  });
+  setTimeout(() => {
+    document.getElementById('bsArea').style.display = 'none';
+    document.getElementById('s4done').style.display = 'block';
+  }, 2600);
+}
+
+function screen5() {
+  return `
+  <h1 class="screen-title">Certificate Lifecycle Automation</h1>
+  <p class="screen-sub">47,000 operator signing certificates across 34 sites. Previously managed in spreadsheets. Expired certificate = production halt. Now: automated lifecycle with zero manual tracking.</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px; color:var(--amber);">Alert: Neuchatel — 47 Certificates Expiring in 30 Days</div>
+    <div class="kv-row"><span class="kv-key">Site</span><span class="kv-val">Neuchatel, Switzerland — Recombinant clotting factors</span></div>
+    <div class="kv-row"><span class="kv-key">Affected operators</span><span class="kv-val">47 (QC analysts, production operators, QA reviewers)</span></div>
+    <div class="kv-row"><span class="kv-key">Risk if expired</span><span class="kv-val" style="color:var(--red);">Operators cannot sign batch records → production halt → ADYNOVATE shortage</span></div>
+    <div class="kv-row"><span class="kv-key">Legacy process</span><span class="kv-val" style="color:var(--amber);">Manual tracking in Excel, 3-5 days per renewal, frequent misses</span></div>
+  </div>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Automated Resolution</div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">1</div>
+      <div class="row-info"><div class="row-title">Employment & training validation</div><div class="row-desc">Auto-verified: all 47 operators still employed + GxP training current</div></div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">2</div>
+      <div class="row-info"><div class="row-title">New PQC certificates generated</div><div class="row-desc">ML-DSA-65 · Hardware-bound · Swiss Sovereign KMS</div></div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">3</div>
+      <div class="row-info"><div class="row-title">QA Manager batch approval</div><div class="row-desc">Single threshold-authenticated action renews all 47 simultaneously</div></div>
+    </div>
+    <div style="margin-top:16px;" id="certArea">
+      <button class="btn btn-primary" id="certBtn" onclick="runCert()">Approve Batch Renewal</button>
+    </div>
+    <div id="s5done" style="display:none;">
+      <div class="callout"><strong>47 certificates renewed in one action.</strong> Legacy process: 47 individual requests × 3-5 days each = 2-3 weeks of admin work + constant risk of expiry. Now: automated detection → validation → renewal → approval. Zero production disruption.</div>
+      <div class="banner-done">✓ Certificate lifecycle automated — zero expired certs, zero production halts</div>
+      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(4,true); unlockNext(); goTo(6)">Continue to Integrity Monitoring →</button></div>
+    </div>
+  </div>`;
+}
+function runCert() {
+  document.getElementById('certBtn').innerHTML = '<span class="spinner"></span> Renewing 47 certificates…';
+  document.getElementById('certBtn').disabled = true;
+  setTimeout(() => {
+    document.getElementById('certArea').style.display = 'none';
+    document.getElementById('s5done').style.display = 'block';
+  }, 1300);
+}
+
+function screen6() {
+  return `
+  <h1 class="screen-title">Sentinel: Integrity Monitoring</h1>
+  <p class="screen-sub">Continuous verification of ALL signed GxP records across all 34 sites. Detects tampering, certificate chain breaks, and post-acquisition integration gaps — automatically.</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Anomaly Detected</div>
+    <div class="row-item" style="border-color: rgba(251,191,36,0.3); background: rgba(251,191,36,0.04);">
+      <div class="row-icon" style="background:var(--amber-dim);">⚡</div>
+      <div class="row-info"><div class="row-title" style="color:var(--amber);">Batch record GARD-2024-7891 — Signature verification failed</div><div class="row-desc">GAMMAGARD LIQUID, Covington GA. Certificate chain incomplete: intermediate CA cert from Shire-era PKI expired 2025-12-31. Not renewed during post-acquisition integration.</div></div>
+    </div>
+    <div style="margin-top:16px;">
+      <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:10px;">Root Cause Analysis</div>
+      <div class="kv-row"><span class="kv-key">Type</span><span class="kv-val">Certificate lifecycle gap (NOT tampering)</span></div>
+      <div class="kv-row"><span class="kv-key">Origin</span><span class="kv-val">Shire PKI → Takeda integration. Intermediate CA not migrated.</span></div>
+      <div class="kv-row"><span class="kv-key">Impact</span><span class="kv-val">FDA inspector cannot validate 2024 batch records at Covington</span></div>
+      <div class="kv-row"><span class="kv-key">Legacy fix</span><span class="kv-val" style="color:var(--red);">3-6 months of forensic PKI work + external consultant ($200K+)</span></div>
+    </div>
+    <div style="margin-top:16px;" id="fixArea">
+      <button class="btn btn-primary" id="fixBtn" onclick="runFix()">Auto-Remediate</button>
+    </div>
+    <div id="s6done" style="display:none;">
+      <div class="callout"><strong>Auto-remediated:</strong> Re-anchored the signature to a valid trust chain using the archived Shire CA certificate (recovered from backup). Added PQC timestamp proving the record existed and was validly signed at original signing time. FDA inspector can now verify. Total time: 4 seconds (was 3-6 months).</div>
+      <div class="banner-done">✓ Legacy integrity restored — Shire-era records re-anchored + PQC timestamped</div>
+      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(5,true); unlockNext(); goTo(7)">Continue to Regulatory Submission →</button></div>
+    </div>
+  </div>`;
+}
+function runFix() {
+  document.getElementById('fixBtn').innerHTML = '<span class="spinner"></span> Re-anchoring trust chain…';
+  document.getElementById('fixBtn').disabled = true;
+  setTimeout(() => {
+    document.getElementById('fixArea').style.display = 'none';
+    document.getElementById('s6done').style.display = 'block';
+  }, 1400);
+}
+
+function screen7() {
+  return `
+  <h1 class="screen-title">Regulatory Submission Signing</h1>
+  <p class="screen-sub">TAKHZYRO supplemental NDA to FDA. 47,000 pages. 500+ documents. Post-quantum signatures that remain valid for the 20-year retention obligation.</p>
+  <div class="card">
+    <div class="kv-row"><span class="kv-key">Submission</span><span class="kv-val">TAKHZYRO sNDA — new pediatric indication (ages 2-6)</span></div>
+    <div class="kv-row"><span class="kv-key">Format</span><span class="kv-val">eCTD (electronic Common Technical Document)</span></div>
+    <div class="kv-row"><span class="kv-key">Documents</span><span class="kv-val">500+ modules · 47,000 pages</span></div>
+    <div class="kv-row"><span class="kv-key">Signature</span><span class="kv-val">ML-DSA-87 (NIST Level 5 — highest security)</span></div>
+    <div class="kv-row"><span class="kv-key">Governance</span><span class="kv-val">Global Reg Affairs VP + TA Head + Medical Director (3-of-3)</span></div>
+    <div style="margin-top:20px;">
+      <div class="row-item">
+        <div class="row-icon" style="background:var(--emerald-dim);">RA</div>
+        <div class="row-info"><div class="row-title">Global Regulatory Affairs VP — Glattpark</div></div>
+        <div class="row-status" id="rs0" style="background:var(--red-dim); color:var(--red);">Pending</div>
+      </div>
+      <div class="row-item">
+        <div class="row-icon" style="background:var(--emerald-dim);">TA</div>
+        <div class="row-info"><div class="row-title">Therapeutic Area Head, Rare Diseases — Cambridge</div></div>
+        <div class="row-status" id="rs1" style="background:var(--red-dim); color:var(--red);">Pending</div>
+      </div>
+      <div class="row-item">
+        <div class="row-icon" style="background:var(--emerald-dim);">MD</div>
+        <div class="row-info"><div class="row-title">Medical Director, TAKHZYRO — Tokyo</div></div>
+        <div class="row-status" id="rs2" style="background:var(--red-dim); color:var(--red);">Pending</div>
+      </div>
+    </div>
+    <div style="margin-top:20px;" id="rsArea">
+      <button class="btn btn-primary" id="rsBtn" onclick="runRegSub()">Sign & Submit to FDA</button>
+    </div>
+    <div id="s7done" style="display:none;">
+      <div class="callout"><strong>Submitted.</strong> 47,000 pages, 500+ documents, each individually signed ML-DSA-87. FDA can verify using NIST-standardized PQC algorithms. In 2046, when this submission is still in the regulatory record, the signatures remain unforgeable — unlike today's RSA-2048 submissions which will be breakable by then.</div>
+      <div style="margin-top:14px; display:flex; gap:10px;">
+        <button class="btn btn-ghost">⬇ Submission Manifest</button>
+        <button class="btn btn-ghost">⬇ Signature Certificate Chain</button>
+      </div>
+      <div class="banner-done">✓ eCTD submitted — PQC signatures, 20-year validity guaranteed</div>
+      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="unlockNext(); goTo(8)">View CISO Dashboard →</button></div>
+    </div>
+  </div>`;
+}
+function runRegSub() {
+  document.getElementById('rsBtn').innerHTML = '<span class="spinner"></span> Signing 500+ documents…';
+  document.getElementById('rsBtn').disabled = true;
+  ['rs0','rs1','rs2'].forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      el.textContent = '✓ Signed'; el.style.background = 'var(--emerald-dim)'; el.style.color = 'var(--emerald)';
+    }, 600 * (i + 1));
+  });
+  setTimeout(() => {
+    document.getElementById('rsArea').style.display = 'none';
+    document.getElementById('s7done').style.display = 'block';
+  }, 2600);
+}
+
+function screen8() {
+  return `
+  <h1 class="screen-title">CISO Executive Dashboard</h1>
+  <p class="screen-sub">The view from Takeda International AG, Glattpark. Enterprise-wide cryptographic posture — one screen.</p>
+  <div class="grid-4" style="margin-bottom:24px;">
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">67%</div><div class="fleet-label">PQC Migration Progress</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">99.7%</div><div class="fleet-label">Cert Health (47K certs)</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">0</div><div class="fleet-label">Audit Findings (18mo)</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">CHF 12M</div><div class="fleet-label">Annual Savings</div></div>
+  </div>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Regulatory Readiness by Agency</div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">🇺🇸</div>
+      <div class="row-info"><div class="row-title">FDA — PQC signatures accepted (2025 guidance)</div></div>
+      <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">GREEN</div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">🇪🇺</div>
+      <div class="row-info"><div class="row-title">EMA — eIDAS 2.0 PQC-compatible</div></div>
+      <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">GREEN</div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--amber-dim);">🇯🇵</div>
+      <div class="row-info"><div class="row-title">PMDA — Awaiting Japanese PQC standard finalization</div></div>
+      <div class="row-status" style="background:var(--amber-dim); color:var(--amber);">AMBER</div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">🇨🇭</div>
+      <div class="row-info"><div class="row-title">Swissmedic — accepts ML-DSA</div></div>
+      <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">GREEN</div>
+    </div>
+  </div>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">CRO Remediation Status</div>
+    <div class="kv-row"><span class="kv-key">IQVIA — contractual PQC deadline</span><span class="kv-val" style="color:var(--amber);">Q2 2027 (in progress)</span></div>
+    <div class="kv-row"><span class="kv-key">Covance — PQC migration</span><span class="kv-val" style="color:var(--emerald);">Q3 2027 (on track)</span></div>
+    <div class="kv-row"><span class="kv-key">Neuchatel CMO — urgent remediation</span><span class="kv-val" style="color:var(--amber);">Q4 2026 (escalated)</span></div>
+    <div class="kv-row"><span class="kv-key">PPD/Thermo Fisher</span><span class="kv-val" style="color:var(--emerald);">Complete ✓</span></div>
+  </div>
+  <div class="grid-2" style="margin-top:20px;">
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--red);">Before</div><div class="fleet-label">14 audit findings / 2yr · €50M+ PKI program · 4,500 lay-offs = knowledge loss</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">After</div><div class="fleet-label">0 findings / 18mo · CHF 12M/yr savings · automated lifecycle · quantum-safe</div></div>
+  </div>
+  <div class="banner-done" style="margin-top:24px;">✓ Complete: $4.2B product value quantum-protected → CRO risk surfaced & remediated → Multi-jurisdiction signing unified → Certificate lifecycle automated → Legacy integrity restored. All 8 screens complete.</div>`;
+}
+
+function ctaStrip() {
+  return `
+  <div class="cta-strip">
+    <h3>Ready to protect $4.2B in product value?</h3>
+    <p>Book a 30-minute technical walkthrough. We'll show the full SENTINEL PQC migration plan configured for your GxP landscape.</p>
+    <div class="cta-btns">
+      <a href="https://cal.com/agenticvaults" target="_blank"><button class="btn btn-primary">Schedule Meeting →</button></a>
+      <a href="mailto:ldavid@agenticvaults.ai"><button class="btn btn-ghost">ldavid@agenticvaults.ai</button></a>
+    </div>
+  </div>`;
+}
+
+const SCREEN_FNS = {1:screen1,2:screen2,3:screen3,4:screen4,5:screen5,6:screen6,7:screen7,8:screen8};
+function render() {
+  document.getElementById('content').innerHTML = `<div class="fade-in">${SCREEN_FNS[state.screen]()}${state.screen === 8 ? ctaStrip() : ''}</div>`;
+  document.getElementById('topTitle').textContent = STEP_LABELS[state.screen - 1];
+  renderSidebar();
+  window.scrollTo(0,0);
+}
+render();
+</script>
+</body>
+</html>
