@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SENTINEL — Rare Disease Registry Privacy & Cross-Border RWE · Takeda</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #06060B; --surface: #0E0E16; --surface2: #16161F; --surface3: #1C1C28;
+    --border: #252535; --border-light: #2E2E40;
+    --emerald: #34D399; --emerald-dim: rgba(52,211,153,0.12);
+    --red: #F87171; --red-dim: rgba(248,113,113,0.12);
+    --amber: #FBBF24; --amber-dim: rgba(251,191,36,0.12);
+    --cyan: #22D3EE; --cyan-dim: rgba(34,211,238,0.12);
+    --blue: #60A5FA; --blue-dim: rgba(96,165,250,0.12);
+    --purple: #A78BFA; --purple-dim: rgba(167,139,250,0.12);
+    --violet: #8B5CF6; --violet-dim: rgba(139,92,246,0.12);
+    --white: #F0EDE6; --muted: #8E8EA3; --dim: #55556A;
+    --fd: 'Space Grotesk', sans-serif; --fb: 'DM Sans', sans-serif; --fm: 'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--white); font-family: var(--fb); overflow-x: hidden; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .fade-in { animation: fadeIn 0.4s ease-out both; }
+  .app { display: flex; min-height: 100vh; }
+
+  .sidebar { width: 280px; background: var(--surface); border-right: 1px solid var(--border); flex-shrink: 0; display: flex; flex-direction: column; position: fixed; top:0; bottom:0; left:0; overflow-y:auto; }
+  .brand { padding: 22px 22px 18px; border-bottom: 1px solid var(--border); }
+  .brand-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .brand-mark { width: 26px; height: 26px; border: 2px solid var(--emerald); border-radius: 7px; display:flex; align-items:center; justify-content:center; }
+  .brand-mark div { width: 9px; height: 9px; background: var(--emerald); border-radius: 2px; }
+  .brand-name { font-family: var(--fd); font-weight: 700; font-size: 14.5px; color: var(--emerald); letter-spacing: 0.03em; }
+  .brand-sub { font-size: 10.5px; color: var(--dim); margin-left: 36px; }
+  .context-box { margin: 16px 18px; padding: 12px 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; }
+  .context-label { font-size: 9.5px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .context-val { font-size: 12.5px; color: var(--white); font-weight: 600; line-height: 1.4; }
+
+  .steps { padding: 8px 12px; flex: 1; }
+  .step { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 9px; cursor: pointer; margin-bottom: 2px; transition: background 0.15s; }
+  .step:hover { background: var(--surface2); }
+  .step.active { background: var(--emerald-dim); }
+  .step-num { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 700; font-family: var(--fm); flex-shrink: 0; border: 1.5px solid var(--border-light); color: var(--dim); }
+  .step.done .step-num { background: var(--emerald); border-color: var(--emerald); color: #04140d; }
+  .step.active .step-num { border-color: var(--emerald); color: var(--emerald); }
+  .step-label { font-size: 12.5px; color: var(--muted); font-weight: 500; line-height: 1.3; }
+  .step.active .step-label, .step.done .step-label { color: var(--white); }
+  .step.locked { opacity: 0.35; pointer-events: none; }
+
+  .checklist-mini { margin: 10px 18px 20px; padding: 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; }
+  .checklist-mini-title { font-size: 9.5px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; display:flex; justify-content:space-between; }
+  .mini-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 11px; color: var(--muted); }
+  .mini-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); flex-shrink: 0; transition: background 0.4s; }
+  .mini-dot.on { background: var(--emerald); }
+  .mini-row.on { color: var(--white); }
+
+  .main { margin-left: 280px; flex: 1; min-height: 100vh; }
+  .topbar { position: sticky; top: 0; z-index: 10; background: rgba(6,6,11,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 40px; display:flex; align-items:center; justify-content: space-between; }
+  .topbar-title { font-family: var(--fd); font-weight: 700; font-size: 17px; }
+  .topbar-badge { font-family: var(--fm); font-size: 11px; color: var(--violet); background: var(--violet-dim); padding: 5px 12px; border-radius: 100px; border: 1px solid rgba(139,92,246,0.25); }
+  .content { padding: 40px; max-width: 1100px; }
+
+  h1.screen-title { font-family: var(--fd); font-size: 30px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .screen-sub { color: var(--muted); font-size: 15px; margin-bottom: 32px; line-height: 1.6; max-width: 700px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 26px; margin-bottom: 20px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; }
+
+  .kv-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+  .kv-row:last-child { border-bottom: none; }
+  .kv-key { color: var(--dim); }
+  .kv-val { font-family: var(--fm); color: var(--white); font-weight: 500; }
+
+  .progress-track { height: 8px; background: var(--surface3); border-radius: 100px; overflow: hidden; margin: 14px 0; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--violet), var(--emerald)); border-radius: 100px; width: 0%; transition: width 1.8s cubic-bezier(.2,.8,.2,1); }
+
+  .btn { font-family: var(--fd); font-weight: 600; font-size: 14.5px; padding: 13px 26px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary { background: var(--emerald); color: #04140d; }
+  .btn-primary:hover { background: #4fe3ab; transform: translateY(-1px); }
+  .btn-primary:disabled { background: var(--surface3); color: var(--dim); cursor: not-allowed; transform: none; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border-light); color: var(--white); }
+  .btn-ghost:hover { border-color: var(--emerald); }
+  .btn-violet { background: var(--violet); color: #0f0520; }
+  .btn-violet:hover { background: #a17afc; transform: translateY(-1px); }
+
+  .callout { padding: 14px 18px; border-radius: 10px; border-left: 3px solid var(--emerald); background: rgba(52,211,153,0.06); font-size: 13.5px; color: var(--white); line-height: 1.6; margin: 18px 0; }
+  .callout.violet { border-left-color: var(--violet); background: rgba(139,92,246,0.06); }
+  .callout.red { border-left-color: var(--red); background: rgba(248,113,113,0.06); }
+  .callout strong { color: var(--emerald); }
+  .callout.violet strong { color: var(--violet); }
+  .callout.red strong { color: var(--red); }
+
+  .fleet-stat { text-align: center; padding: 22px; background: var(--surface2); border-radius: 12px; border: 1px solid var(--border); }
+  .fleet-num { font-family: var(--fm); font-size: 27px; font-weight: 700; }
+  .fleet-label { font-size: 11.5px; color: var(--dim); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .spinner { width: 15px; height: 15px; border: 2px solid rgba(4,20,13,0.3); border-top-color: #04140d; border-radius: 50%; animation: spin 0.7s linear infinite; }
+  .banner-done { display: flex; align-items: center; gap: 10px; padding: 16px 20px; background: var(--emerald-dim); border: 1px solid rgba(52,211,153,0.3); border-radius: 12px; margin-top: 24px; font-size: 14px; font-weight: 600; color: var(--emerald); }
+
+  .row-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--surface2); border-radius: 10px; margin-bottom: 10px; border: 1px solid var(--border); }
+  .row-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .row-info { flex: 1; }
+  .row-title { font-size: 13.5px; font-weight: 600; }
+  .row-desc { font-size: 11.5px; color: var(--dim); }
+  .row-status { font-family: var(--fm); font-size: 11px; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+
+  .zip-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: var(--surface2); border-radius: 9px; margin-bottom: 8px; border: 1px solid var(--border); font-size: 13.5px; }
+  .zip-icon { color: var(--emerald); font-family: var(--fm); font-size: 15px; }
+
+  .registry-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 18px; cursor: pointer; transition: all 0.2s; }
+  .registry-card:hover { border-color: var(--violet); transform: translateY(-1px); }
+  .registry-name { font-family: var(--fd); font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+  .registry-meta { font-size: 11px; color: var(--dim); font-family: var(--fm); }
+  .registry-stat { font-family: var(--fm); font-size: 18px; font-weight: 700; margin-top: 10px; }
+
+  .query-box { background: var(--surface3); border: 1px solid var(--border-light); border-radius: 10px; padding: 16px; font-family: var(--fm); font-size: 12.5px; color: var(--cyan); line-height: 1.6; margin: 14px 0; }
+  .result-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin: 14px 0; }
+  .result-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .result-value { font-family: var(--fm); font-size: 22px; font-weight: 700; color: var(--emerald); }
+  .result-note { font-size: 11.5px; color: var(--dim); margin-top: 4px; }
+
+  .cta-strip { margin-top: 40px; padding: 28px; background: linear-gradient(135deg, rgba(139,92,246,0.06), rgba(52,211,153,0.06)); border: 1px solid var(--border-light); border-radius: 14px; text-align: center; }
+  .cta-strip h3 { font-family: var(--fd); font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .cta-strip p { color: var(--muted); font-size: 13.5px; margin-bottom: 18px; }
+  .cta-strip .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .cta-strip a { text-decoration: none; }
+  .lang-picker { display: flex; align-items: center; gap: 0; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; margin-left: 12px; flex-shrink: 0; }
+  .lang-btn { font-family: var(--fm); font-size: 11px; padding: 5px 10px; background: transparent; border: none; color: var(--dim); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .lang-btn.active { background: var(--emerald-dim); color: var(--emerald); }
+  .lang-btn:hover:not(.active) { color: var(--white); }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-row">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" width="26" height="26"><circle cx="24" cy="24" r="22" stroke="#34D399" stroke-width="1.5" fill="none" opacity="0.9"/><line x1="24" y1="4" x2="24" y2="44" stroke="#34D399" stroke-width="1.2" opacity="0.85"/><line x1="4" y1="24" x2="44" y2="24" stroke="#34D399" stroke-width="1.2" opacity="0.85"/><line x1="9.86" y1="9.86" x2="38.14" y2="38.14" stroke="#34D399" stroke-width="1" opacity="0.75"/><line x1="38.14" y1="9.86" x2="9.86" y2="38.14" stroke="#34D399" stroke-width="1" opacity="0.75"/><polygon points="24,6 30,18 24,14 18,18" fill="#34D399" opacity="0.9"/><polygon points="24,42 30,30 24,34 18,30" fill="#34D399" opacity="0.9"/><polygon points="6,24 18,18 14,24 18,30" fill="#34D399" opacity="0.9"/><polygon points="42,24 30,18 34,24 30,30" fill="#34D399" opacity="0.9"/><circle cx="24" cy="24" r="4" fill="#34D399" opacity="0.9"/><circle cx="24" cy="24" r="10" stroke="#34D399" stroke-width="0.8" fill="none" opacity="0.5"/></svg>
+        <span class="brand-name">agenticvaults</span>
+      </div>
+      <div class="brand-sub">SENTINEL · Registry Intelligence</div>
+    </div>
+    <div class="context-box">
+      <div class="context-label">Prospect Walkthrough</div>
+      <div class="context-val">Takeda — Rare Disease Registry Privacy & Cross-Border RWE</div>
+    </div>
+    <div class="steps" id="steps"></div>
+    <div class="checklist-mini">
+      <div class="checklist-mini-title"><span>Compliance</span><span id="miniCount">0/6</span></div>
+      <div id="miniList"></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topTitle">Registry Portfolio</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="topbar-badge" id="topBadge">Rare Diseases · Global</div>
+        <div class="lang-picker">
+          <button class="lang-btn active" id="langEn" onclick="setLang('en')">EN</button>
+          <button class="lang-btn" id="langJa" onclick="setLang('ja')">日本語</button>
+        </div>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<script>
+let lang = 'en';
+function setLang(l) {
+  lang = l;
+  document.getElementById('langEn').classList.toggle('active', l === 'en');
+  document.getElementById('langJa').classList.toggle('active', l === 'ja');
+  render();
+}
+
+const REQS_EN = [
+  {code: '1', label: 'Re-identification risk eliminated'},
+  {code: '2', label: 'Cross-border RWE enabled'},
+  {code: '3', label: 'Governance threshold active'},
+  {code: '4', label: 'Pharmacovigilance compliant'},
+  {code: '5', label: 'Right-to-erasure reconciled'},
+  {code: '6', label: 'PQ data protection (30yr)'},
+];
+const REQS_JA = [
+  {code: '1', label: '再識別リスク排除'},
+  {code: '2', label: '越境RWE有効化'},
+  {code: '3', label: 'ガバナンス閾値適用'},
+  {code: '4', label: 'ファーマコビジランス準拠'},
+  {code: '5', label: '消去権と安全性の両立'},
+  {code: '6', label: 'PQデータ保護（30年）'},
+];
+function getReqs() { return lang === 'ja' ? REQS_JA : REQS_EN; }
+
+const STEP_LABELS_EN = [
+  'Registry Portfolio Overview',
+  'The Re-Identification Problem',
+  'Patient Enrollment (ZK Sovereign Token)',
+  'Cross-Border Research Query',
+  'Governance Approval Flow',
+  'Privacy-Preserving Computation',
+  'Right-to-Erasure vs. PV Conflict',
+  '30-Year Data Integrity',
+];
+const STEP_LABELS_JA = [
+  'レジストリ全体概要',
+  '再識別の課題',
+  '患者登録（ZKソブリントークン）',
+  '越境研究クエリ',
+  'ガバナンス承認フロー',
+  'プライバシー保護型計算',
+  '消去権 vs. PV 義務',
+  '30年間のデータ保全',
+];
+function getStepLabels() { return lang === 'ja' ? STEP_LABELS_JA : STEP_LABELS_EN; }
+
+let state = { screen: 1, maxUnlocked: 1, reqStatus: [false,false,false,false,false,false] };
+function setReq(idx, val) { state.reqStatus[idx] = val; renderSidebar(); }
+function goTo(n) { if (n > state.maxUnlocked) return; state.screen = n; render(); }
+function unlockNext() { state.maxUnlocked = Math.max(state.maxUnlocked, state.screen + 1); }
+
+function renderSidebar() {
+  const ja = lang === 'ja';
+  const labels = getStepLabels();
+  const reqs = getReqs();
+  const stepsEl = document.getElementById('steps');
+  stepsEl.innerHTML = labels.map((label, i) => {
+    const n = i + 1;
+    const cls = ['step'];
+    if (n === state.screen) cls.push('active');
+    else if (n < state.screen) cls.push('done');
+    if (n > state.maxUnlocked) cls.push('locked');
+    return `<div class="${cls.join(' ')}" onclick="goTo(${n})">
+      <div class="step-num">${n < state.screen ? '✓' : n}</div>
+      <div class="step-label">${label}</div>
+    </div>`;
+  }).join('');
+  const doneCount = state.reqStatus.filter(Boolean).length;
+  document.getElementById('miniCount').textContent = doneCount + '/6';
+  document.querySelector('.checklist-mini-title span').textContent = ja ? 'コンプライアンス' : 'Compliance';
+  document.getElementById('miniList').innerHTML = reqs.map((r, i) => {
+    const on = state.reqStatus[i];
+    return `<div class="mini-row ${on ? 'on' : ''}"><div class="mini-dot ${on ? 'on' : ''}"></div>${r.label}</div>`;
+  }).join('');
+}
+
+function screen1() {
+  const ja = lang === 'ja';
+  return `
+  <h1 class="screen-title">${ja ? 'レジストリ全体概要' : 'Registry Portfolio Overview'}</h1>
+  <p class="screen-sub">${ja ? '武田薬品は市販後承認条件として患者レジストリを運用しています。超希少疾患。生涯にわたるフォローアップ。グローバル規模。' : 'Takeda maintains post-marketing patient registries as a condition of marketing authorization. Ultra-rare populations. Lifelong follow-up. Global reach.'}</p>
+  <div class="grid-2" style="margin-bottom:24px;">
+    <div class="registry-card" onclick="unlockNext(); goTo(2)">
+      <div class="registry-name">ELAPRASE Registry (MPS II)</div>
+      <div class="registry-meta">HUNTER SYNDROME · 80+ ${ja ? 'カ国' : 'COUNTRIES'}</div>
+      <div class="registry-stat" style="color:var(--violet);">${ja ? '全世界で約2,000名' : '~2,000 patients globally'}</div>
+      <div style="font-size:11px; color:var(--emerald); margin-top:8px; font-weight:600;">${ja ? '→ クリックしてプライバシーの課題を確認' : '→ Click to explore privacy challenge'}</div>
+    </div>
+    <div class="registry-card" style="opacity:0.8;">
+      <div class="registry-name">TAKHZYRO Registry (HAE)</div>
+      <div class="registry-meta">HEREDITARY ANGIOEDEMA · 40+ ${ja ? 'カ国' : 'COUNTRIES'}</div>
+      <div class="registry-stat" style="color:var(--violet);">${ja ? '全世界で約8,000名' : '~8,000 patients globally'}</div>
+    </div>
+    <div class="registry-card" style="opacity:0.8;">
+      <div class="registry-name">VPRIV Registry (Gaucher)</div>
+      <div class="registry-meta">GAUCHER DISEASE · 30+ ${ja ? 'カ国' : 'COUNTRIES'}</div>
+      <div class="registry-stat" style="color:var(--violet);">${ja ? '全世界で約6,000名' : '~6,000 patients globally'}</div>
+    </div>
+    <div class="registry-card" style="opacity:0.8;">
+      <div class="registry-name">LIVTENCITY Registry</div>
+      <div class="registry-meta">CMV POST-TRANSPLANT · 25+ ${ja ? 'カ国' : 'COUNTRIES'}</div>
+      <div class="registry-stat" style="color:var(--violet);">${ja ? '全世界で約1,200名' : '~1,200 patients globally'}</div>
+    </div>
+  </div>
+  <div class="grid-3">
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--violet);">~17,200</div><div class="fleet-label">${ja ? '登録患者総数' : 'Total Registry Patients'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">$567K</div><div class="fleet-label">${ja ? 'ELAPRASE 年間治療費/患者' : 'ELAPRASE Cost / Patient / Yr'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--red);">${ja ? '2〜3年' : '2-3 yrs'}</div><div class="fleet-label">${ja ? '現行の越境研究所要期間' : 'Current Cross-Border Study Time'}</div></div>
+  </div>
+  <div class="callout violet" style="margin-top:20px;">
+    <strong>${ja ? '規制上の義務：' : 'The regulatory mandate:'}</strong> ${ja ? 'EMAおよびFDAは市販後承認条件としてこれらのレジストリを義務付けています。適切なプライバシー保護を維持できなければ、承認自体が危機に瀕します。ELAPRASEの承認喪失＝年間12億ドルの売上喪失。' : 'EMA and FDA require these registries as a condition of marketing authorization. If Takeda cannot maintain them with adequate privacy protections, the marketing authorization itself is at risk. Loss of authorization for ELAPRASE = loss of $1.2B annual revenue.'}
+  </div>`;
+}
+
+function screen2() {
+  const ja = lang === 'ja';
+  return `
+  <h1 class="screen-title">${ja ? '再識別の課題' : 'The Re-Identification Problem'}</h1>
+  <p class="screen-sub">${ja ? '世界でわずか約2,000名のMPS II患者では、従来の匿名化は数学的に不可能です。基本的な属性だけで個人が特定されます。' : 'With only ~2,000 MPS II patients worldwide, traditional anonymization is mathematically impossible. Even basic attributes re-identify individuals.'}</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px; color:var(--red);">${ja ? '希少疾患でK匿名性が破綻する理由' : 'Why K-Anonymity Fails for Rare Diseases'}</div>
+    <div class="row-item" style="border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.04);">
+      <div class="row-icon" style="background:var(--red-dim);">⚠️</div>
+      <div class="row-info"><div class="row-title" style="color:var(--red);">${ja ? 'MPS II：男性、7歳、スイス → 該当3〜5名' : 'MPS II: Male, age 7, Switzerland → 3-5 patients match'}</div><div class="row-desc">${ja ? 'スイス全土でMPS II患者はわずか約15名。年齢を加えるとほぼ確実に特定可能' : 'With only ~15 MPS II patients in all of Switzerland, adding age narrows to near-certainty of identification'}</div></div>
+    </div>
+    <div class="row-item" style="border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.04);">
+      <div class="row-icon" style="background:var(--red-dim);">⚠️</div>
+      <div class="row-info"><div class="row-title" style="color:var(--red);">${ja ? 'HAE：女性、4歳、日本、2024年診断 → 該当おそらく1名' : 'HAE: Female, age 4, Japan, diagnosed 2024 → likely 1 patient'}</div><div class="row-desc">${ja ? '日本の小児HAE：患者総数約40名。2〜6歳に絞ると一桁。診断年＝一意。' : 'Pediatric HAE in Japan: ~40 patients total. Age 2-6 narrows to single digits. Diagnosis year = unique.'}</div></div>
+    </div>
+    <div class="row-item" style="border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.04);">
+      <div class="row-icon" style="background:var(--red-dim);">⚠️</div>
+      <div class="row-info"><div class="row-title" style="color:var(--red);">${ja ? 'Gaucher：アシュケナージ系ユダヤ人、男性、12歳、英国 → 該当1〜2名' : 'Gaucher: Ashkenazi Jewish, male, age 12, UK → 1-2 patients'}</div><div class="row-desc">${ja ? '民族集中＋希少疾患＋小国＝再識別が確実' : 'Ethnic concentration + rare disease + small country = guaranteed re-identification'}</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? 'その結果' : 'The Consequence'}</div>
+    <div class="kv-row"><span class="kv-key">${ja ? '「匿名化」データを研究者と共有' : 'Sharing "anonymized" data with researchers'}</span><span class="kv-val" style="color:var(--red);">${ja ? 'GDPR第26条違反（依然として識別可能）' : 'Violates GDPR Article 26 (still identifiable)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'データを共有しない' : 'Not sharing data'}</span><span class="kv-val" style="color:var(--red);">${ja ? 'EMA承認条件違反' : 'Violates EMA marketing auth conditions'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '現行の回避策' : 'Current workaround'}</span><span class="kv-val" style="color:var(--amber);">${ja ? '研究ごとに2〜3年のDTA交渉' : '2-3 year DTA negotiations per study'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '実質的コスト' : 'Real cost'}</span><span class="kv-val" style="color:var(--red);">${ja ? '適応拡大の遅延、競合他社が先行' : 'Label expansions delayed, competitors advance'}</span></div>
+  </div>
+  <div class="callout red">
+    <strong>${ja ? '結論：' : 'Bottom line:'}</strong> ${ja ? '患者数2,000名の集団では、(a)有用な研究データと(b)真の匿名性を同時に実現するデータ抑制・一般化のレベルは存在しません。唯一の解決策は、個別レコードを「匿名化」したものですら一切公開しない計算手法です。' : 'At populations of 2,000, there is NO level of data suppression or generalization that produces both (a) useful research data AND (b) genuine anonymity. The only solution is computation that NEVER exposes individual records — not even "anonymized" ones.'}
+  </div>
+  <div style="margin-top:16px;">
+    <button class="btn btn-primary" onclick="unlockNext(); goTo(3)">${ja ? '解決策を見る →' : 'See the Solution →'}</button>
+  </div>`;
+}
+
+function screen3() {
+  const ja = lang === 'ja';
+  return `
+  <h1 class="screen-title">${ja ? '患者登録 — ソブリントークン' : 'Patient Enrollment — Sovereign Token'}</h1>
+  <p class="screen-sub">${ja ? 'チューリッヒ大学病院。MPS IIと診断された4歳の男児 — スイス全土で約15名のうちの1名。担当医がELAPRASE国際レジストリに登録します。' : 'University Hospital Zurich. A 4-year-old boy diagnosed with MPS II — one of ~15 such patients in Switzerland. His physician enrolls him in the ELAPRASE International Registry.'}</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? '登録時の処理' : 'What happens at enrollment'}</div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">1</div>
+      <div class="row-info"><div class="row-title">${ja ? '医師が診断を確認' : 'Physician confirms diagnosis'}</div><div class="row-desc">${ja ? 'イズロン酸-2-スルファターゼ酵素アッセイ＋遺伝子検査によりMPS II確定' : 'MPS II confirmed via iduronate-2-sulfatase enzyme assay + genetic testing'}</div></div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">2</div>
+      <div class="row-info"><div class="row-title">${ja ? 'プラットフォームがソブリン患者トークンを生成' : 'Platform generates Sovereign Patient Token'}</div><div class="row-desc">${ja ? '暗号コミットメント：診断確定(ZKP)、年齢区分(小児)、治療開始、臨床測定値 — 患者に紐付くが身元情報を含まない' : 'Cryptographic commitment: diagnosis confirmed (ZKP), age bracket (pediatric), treatment start, clinical measurements — bound to patient but never containing identity'}</div></div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">3</div>
+      <div class="row-info"><div class="row-title">${ja ? 'スイスソブリンKMSで身元情報を暗号化' : 'Identity encrypted under Swiss Sovereign KMS'}</div><div class="row-desc">${ja ? '氏名、病院ID、スイスAHV番号 — 管轄域固定鍵で暗号化。スイス国外には一切出ません。' : 'Name, hospital ID, Swiss AHV number — encrypted with jurisdiction-locked key. NEVER leaves Switzerland.'}</div></div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">4</div>
+      <div class="row-info"><div class="row-title">${ja ? '臨床データがZKP封印レコードとしてレジストリに登録' : 'Clinical data enters registry as ZKP-sealed record'}</div><div class="row-desc">${ja ? 'FVC測定値、関節可動域、成長速度 — 計算アクセス可能、個別には不可視' : 'FVC measurements, joint mobility, growth velocity — computationally accessible, individually invisible'}</div></div>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>${ja ? '重要な特性：' : 'Key property:'}</strong> ${ja ? 'この瞬間以降、いかなるシステム — 武田東京も、武田チューリッヒも、研究者も、規制当局も —「患者名＋臨床データ」を同時に閲覧することはできません。児の身元は臨床記録から暗号的に分離されます。ただし臨床記録はプライバシー保護型計算に利用可能です。' : 'From this moment, NO system — not Takeda Tokyo, not Takeda Zurich, not any researcher, not any regulator — can see "Patient Name + Clinical Data" together. The child\'s identity is cryptographically separated from their clinical record. But the clinical record IS available for privacy-preserving computation.'}
+  </div>
+  <div style="margin-top:16px;" id="enrollArea">
+    <button class="btn btn-primary" id="enrollBtn" onclick="runEnroll()">${ja ? '患者を登録（ソブリントークン生成）' : 'Enroll Patient (Generate Sovereign Token)'}</button>
+  </div>
+  <div id="s3done" style="display:none;">
+    <div class="banner-done">${ja ? '✓ 患者登録完了 — 身元はスイス主権下、臨床データは計算アクセス可能' : '✓ Patient enrolled — identity sovereign to Switzerland, clinical data computationally accessible'}</div>
+    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(0,true); unlockNext(); goTo(4)">${ja ? '研究クエリへ進む →' : 'Continue to Research Query →'}</button></div>
+  </div>`;
+}
+function runEnroll() {
+  const ja = lang === 'ja';
+  document.getElementById('enrollBtn').innerHTML = `<span class="spinner"></span> ${ja ? 'ソブリントークン生成中…' : 'Generating sovereign token…'}`;
+  document.getElementById('enrollBtn').disabled = true;
+  setTimeout(() => {
+    document.getElementById('enrollArea').style.display = 'none';
+    document.getElementById('s3done').style.display = 'block';
+  }, 1300);
+}
+
+function screen4() {
+  const ja = lang === 'ja';
+  return `
+  <h1 class="screen-title">${ja ? '越境研究クエリ' : 'Cross-Border Research Query'}</h1>
+  <p class="screen-sub">${ja ? '武田の東京在籍研究者がELAPRASEの長期アウトカムを研究したいと考えています。従来なら2〜3年の法的交渉が必要でした。本プラットフォームでは48時間。' : 'A Takeda researcher in Tokyo wants to study ELAPRASE long-term outcomes. This query would traditionally require 2-3 years of legal negotiations. Today: 48 hours.'}</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? '研究クエリ提出' : 'Research Query Submitted'}</div>
+    <div class="kv-row"><span class="kv-key">${ja ? '研究者' : 'Researcher'}</span><span class="kv-val">${ja ? '田中博士 — 武田R&D、東京' : 'Dr. Tanaka — Takeda R&D, Tokyo'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '研究課題' : 'Question'}</span><span class="kv-val">${ja ? '「6歳未満でELAPRASE投与を開始したMPS II患者の5年間FVC推移は？」' : '"Among MPS II patients who started ELAPRASE before age 6, what is the 5-year FVC trajectory?"'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '必要なデータソース' : 'Data sources needed'}</span><span class="kv-val">${ja ? '12カ国・小児患者約200名' : '12 countries · ~200 pediatric patients'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '従来の所要期間' : 'Traditional timeline'}</span><span class="kv-val" style="color:var(--red);">${ja ? '2〜3年（DTA＋倫理＋DPIA＋APPI＋再同意）' : '2-3 years (DTA + ethics + DPIA + APPI + re-consent)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '本プラットフォーム' : 'With platform'}</span><span class="kv-val" style="color:var(--emerald);">${ja ? '48時間（ガバナンス承認→計算→結果）' : '48 hours (governance approval → computation → results)'}</span></div>
+  </div>
+  <div class="query-box">
+    SELECT aggregate_fvc_trajectory<br>
+    FROM elaprase_registry<br>
+    WHERE age_at_start &lt; 6<br>
+    AND treatment_duration &gt;= 60_months<br>
+    GROUP BY year_on_treatment<br>
+    -- ${ja ? '出力：集団曲線のみ' : 'Output: population curve only'}<br>
+    -- ${ja ? '制約：最小コホートサイズ = 5' : 'Constraint: min cohort size = 5'}<br>
+    -- ${ja ? '個別軌跡は公開しない' : 'No individual trajectories exposed'}
+  </div>
+  <div class="callout violet">
+    <strong>${ja ? '2〜3年が48時間になる理由：' : 'Why 2-3 years becomes 48 hours:'}</strong> ${ja ? '二国間DTAは不要（データは移動しない）。GDPR DPIAは不要（管轄外での個人データ処理なし）。再同意は不要（同意済み臨床データ上で計算し身元を公開しない）。必要なのはガバナンス承認のみ。' : 'No bilateral DTA needed (data never moves). No GDPR DPIA needed (no personal data processed outside jurisdiction). No re-consent needed (computation happens on already-consented clinical data, never exposing identity). Only governance approval required.'}
+  </div>
+  <div style="margin-top:16px;">
+    <button class="btn btn-primary" onclick="unlockNext(); goTo(5)">${ja ? 'ガバナンス承認へ提出 →' : 'Submit for Governance Approval →'}</button>
+  </div>`;
+}
+
+function screen5() {
+  const ja = lang === 'ja';
+  return `
+  <h1 class="screen-title">${ja ? 'ガバナンス承認フロー' : 'Governance Approval Flow'}</h1>
+  <p class="screen-sub">${ja ? 'クエリが閾値ガバナンスを起動します。計算実行前に4者の承認が必要です。各承認者はクエリの目的のみを確認し、患者データは一切閲覧しません。' : 'The query triggers threshold governance. Four parties must approve before any computation runs. Each sees the query purpose — never the underlying patient data.'}</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? '閾値：4者中3者の承認が必要' : 'Threshold: 3-of-4 Required'}</div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">MD</div>
+      <div class="row-info"><div class="row-title">${ja ? 'グローバル希少疾患メディカルディレクター — ケンブリッジ' : 'Global Rare Disease Medical Director — Cambridge'}</div><div class="row-desc">${ja ? '「クエリは科学的に妥当。出力仕様は集団サイズに適切。」' : '"Query scientifically valid. Output specification appropriate for population size."'}</div></div>
+      <div class="row-status" id="gov0" style="background:var(--red-dim); color:var(--red);">${ja ? '承認待ち' : 'Pending'}</div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">EB</div>
+      <div class="row-info"><div class="row-title">${ja ? '独立倫理委員会代表' : 'Independent Ethics Board Representative'}</div><div class="row-desc">${ja ? '「再識別リスクなし。k≥5の集計出力は倫理的に許容可能。」' : '"No re-identification risk. Aggregate output with k≥5 is ethically acceptable."'}</div></div>
+      <div class="row-status" id="gov1" style="background:var(--red-dim); color:var(--red);">${ja ? '承認待ち' : 'Pending'}</div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">PA</div>
+      <div class="row-info"><div class="row-title">${ja ? 'MPS協会 — 患者アドボカシー代表' : 'MPS Society — Patient Advocacy Delegate'}</div><div class="row-desc">${ja ? '「研究はMPS IIコミュニティに利益。プライバシー保護を確認。承認。」' : '"Research benefits MPS II community. Privacy protections verified. Approved."'}</div></div>
+      <div class="row-status" id="gov2" style="background:var(--red-dim); color:var(--red);">${ja ? '承認待ち' : 'Pending'}</div>
+    </div>
+    <div class="row-item" style="opacity:0.5;">
+      <div class="row-icon" style="background:var(--surface3);">DP</div>
+      <div class="row-info"><div class="row-title">${ja ? 'EUデータ保護責任者 — グラットパーク' : 'EU Data Protection Officer — Glattpark'}</div><div class="row-desc">${ja ? '不要（3/4閾値達成）' : 'Not required (3/4 threshold met)'}</div></div>
+      <div class="row-status" style="background:var(--surface3); color:var(--dim);">—</div>
+    </div>
+    <div style="margin-top:20px;" id="govArea">
+      <button class="btn btn-primary" id="govBtn" onclick="runGov()">${ja ? '承認を収集' : 'Collect Approvals'}</button>
+    </div>
+    <div id="s5done" style="display:none;">
+      <div class="callout"><strong>${ja ? '閾値達成（3/4）。' : 'Threshold met (3/4).'}</strong> ${ja ? '計算が承認されました。各承認はポスト量子署名済み。目的制限が適用：出力は「集計統計、最小コホートサイズ5、個別軌跡なし」に制限。' : 'Computation authorized. Each approval is post-quantum signed. Purpose limitation enforced: output restricted to "aggregate statistics, minimum cohort size 5, no individual trajectories."'}</div>
+      <div class="banner-done">${ja ? '✓ ガバナンス承認完了 — 出力制約付きで計算承認' : '✓ Governance approval complete — computation authorized with output constraints'}</div>
+      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(2,true); unlockNext(); goTo(6)">${ja ? '計算を実行 →' : 'Execute Computation →'}</button></div>
+    </div>
+  </div>`;
+}
+function runGov() {
+  const ja = lang === 'ja';
+  document.getElementById('govBtn').innerHTML = `<span class="spinner"></span> ${ja ? '承認を収集中…' : 'Collecting approvals…'}`;
+  document.getElementById('govBtn').disabled = true;
+  const ids = ['gov0','gov1','gov2'];
+  ids.forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      el.textContent = ja ? '✓ 承認済み' : '✓ Approved'; el.style.background = 'var(--emerald-dim)'; el.style.color = 'var(--emerald)';
+    }, 700 * (i + 1));
+  });
+  setTimeout(() => {
+    document.getElementById('govArea').style.display = 'none';
+    document.getElementById('s5done').style.display = 'block';
+  }, 2800);
+}
+
+function screen6() {
+  const ja = lang === 'ja';
+  return `
+  <h1 class="screen-title">${ja ? 'プライバシー保護型計算' : 'Privacy-Preserving Computation'}</h1>
+  <p class="screen-sub">${ja ? '12カ国のソブリンデータストアで同時に計算を実行します。患者データは管轄域を一切離れません。集計結果のみが東京に送られます。' : 'The computation executes across sovereign data stores in 12 countries simultaneously. Patient data NEVER leaves its jurisdiction. Only aggregate results flow to Tokyo.'}</p>
+  <div class="card">
+    <div class="kv-row"><span class="kv-key">${ja ? '計算方式' : 'Computation type'}</span><span class="kv-val">${ja ? '12管轄域にまたがるセキュアマルチパーティ計算' : 'Secure multi-party computation across 12 jurisdictions'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '処理対象患者レコード' : 'Patient records processed'}</span><span class="kv-val">${ja ? '187件（12カ国）' : '187 (across 12 countries)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'データ移動' : 'Data movement'}</span><span class="kv-val">${ja ? 'ゼロ — 計算がデータのもとへ行く、データが移動するのではない' : 'ZERO — computation goes to data, not data to computation'}</span></div>
+    <div class="progress-track"><div class="progress-fill" id="compBar"></div></div>
+    <div id="compStatus" style="font-size:13px; color:var(--muted); font-family:var(--fm);">${ja ? '実行準備完了' : 'Ready to execute'}</div>
+    <div style="margin-top:16px;" id="compArea">
+      <button class="btn btn-primary" id="compBtn" onclick="runComp()">${ja ? '連合計算を実行' : 'Execute Federated Computation'}</button>
+    </div>
+    <div id="compResults" style="display:none;">
+      <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin:20px 0 12px;">${ja ? '結果 — 田中博士（東京）に配信' : 'Results — Delivered to Dr. Tanaka (Tokyo)'}</div>
+      <div class="grid-2">
+        <div class="result-box">
+          <div class="result-title">${ja ? '5年間FVC推移（予測値%）' : '5-Year FVC Trajectory (% predicted)'}</div>
+          <div class="result-value">${ja ? '+12.4%改善' : '+12.4% improvement'}</div>
+          <div class="result-note">${ja ? '187名・12カ国・CI: [9.8%, 15.1%]' : '187 patients · 12 countries · CI: [9.8%, 15.1%]'}</div>
+        </div>
+        <div class="result-box">
+          <div class="result-title">${ja ? '安定化までの中央値' : 'Median Time to Stabilization'}</div>
+          <div class="result-value">${ja ? '18カ月' : '18 months'}</div>
+          <div class="result-note">${ja ? 'IQR: 12〜26カ月・k=5未満のサブグループは非公開' : 'IQR: 12-26 months · No subgroup below k=5 exposed'}</div>
+        </div>
+      </div>
+      <div class="callout" style="margin-top:16px;">
+        <strong>${ja ? '田中博士が受け取るもの：' : 'What Dr. Tanaka receives:'}</strong> ${ja ? '12カ国187名の実患者から計算された集団レベルFVC成長曲線と信頼区間。' : 'A population-level FVC growth curve with confidence intervals, computed from 187 real patients across 12 countries.'} <br><br><strong>${ja ? '田中博士が特定できないもの：' : 'What Dr. Tanaka cannot determine:'}</strong> ${ja ? 'どの患者が寄与したか、どの国のアウトカムが良かったか、個別の軌跡、個人を特定し得る属性の組み合わせ。プラットフォームが数学的に再識別を不可能にします。' : 'Which patients contributed, which countries had better outcomes, any individual trajectory, or any combination of attributes that could identify a person. The platform mathematically guarantees that no output allows re-identification.'}
+      </div>
+      <div class="banner-done">${ja ? '✓ 越境RWE配信完了 — 48時間 vs. 従来2〜3年。患者データの国境越えはゼロ。' : '✓ Cross-border RWE delivered — 48 hours vs. 2-3 years. Zero patient data crossed a border.'}</div>
+      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(1,true); unlockNext(); goTo(7)">${ja ? '消去権の課題へ →' : 'Continue to Erasure Conflict →'}</button></div>
+    </div>
+  </div>`;
+}
+function runComp() {
+  const ja = lang === 'ja';
+  document.getElementById('compBtn').innerHTML = `<span class="spinner"></span> ${ja ? '12管轄域で計算中…' : 'Computing across 12 jurisdictions…'}`;
+  document.getElementById('compBtn').disabled = true;
+  document.getElementById('compStatus').textContent = ja ? '実行中：CH → US → DE → JP → UK → FR → IT → AU → CA → NL → KR → BR…' : 'Executing at CH → US → DE → JP → UK → FR → IT → AU → CA → NL → KR → BR…';
+  setTimeout(() => { document.getElementById('compBar').style.width = '100%'; }, 100);
+  setTimeout(() => {
+    document.getElementById('compStatus').textContent = ja ? '12/12管轄域完了・187名・K匿名性保証' : '12 / 12 jurisdictions complete · 187 patients · k-anonymity guaranteed';
+    document.getElementById('compArea').style.display = 'none';
+    document.getElementById('compResults').style.display = 'block';
+  }, 2400);
+}
+
+function screen7() {
+  const ja = lang === 'ja';
+  return `
+  <h1 class="screen-title">${ja ? '消去権 vs. ファーマコビジランス' : 'Right-to-Erasure vs. Pharmacovigilance'}</h1>
+  <p class="screen-sub">${ja ? 'ドイツの保護者がGDPR第17条 — 消去権を行使します。しかしファーマコビジランス法は安全性データの無期限保持を義務付けています。両者は直接矛盾します。' : 'A parent in Germany exercises GDPR Article 17 — right to erasure. But pharmacovigilance law requires indefinite retention of safety data. These directly conflict.'}</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px; color:var(--amber);">${ja ? '矛盾：消去要求を受信' : 'Conflict: Erasure Request Received'}</div>
+    <div class="kv-row"><span class="kv-key">${ja ? '患者' : 'Patient'}</span><span class="kv-val">[ELAPRASE Registry, Germany, MPS II]</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '要求' : 'Request'}</span><span class="kv-val">${ja ? '保護者がGDPR第17条を行使 —「子供のデータを全て削除してください」' : 'Parent exercises GDPR Art. 17 — "Delete all my child\'s data"'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'GDPRの規定' : 'GDPR says'}</span><span class="kv-val" style="color:var(--emerald);">${ja ? '消去（基本的権利）' : 'Erase (fundamental right)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'PV法の規定' : 'PV law says'}</span><span class="kv-val" style="color:var(--red);">${ja ? '無期限保持（患者安全義務）' : 'Retain indefinitely (patient safety obligation)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '現行の対応' : "Today's solution"}</span><span class="kv-val" style="color:var(--amber);">${ja ? '高額な法的意見書＋手動データ分離（1件あたり約€15K）' : 'Expensive legal opinion + manual data segregation (~€15K per case)'}</span></div>
+  </div>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? 'プラットフォームによる解決' : 'Platform Resolution'}</div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">1</div>
+      <div class="row-info"><div class="row-title">${ja ? 'データ要素を分類' : 'Classify data elements'}</div><div class="row-desc">${ja ? '安全性関連（有害事象、因果関係評価）vs. 非安全性（人口統計、連絡先、同意記録）' : 'Safety-relevant (adverse events, causality assessments) vs. non-safety (demographics, contact info, consent records)'}</div></div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">2</div>
+      <div class="row-info"><div class="row-title">${ja ? '非安全性データ：暗号的消去' : 'Non-safety data: cryptographic erasure'}</div><div class="row-desc">${ja ? '鍵破壊。データは数学的に復元不可能に。GDPR第17条を完全に充足。' : 'Key destruction. Data becomes mathematically unrecoverable. GDPR Art. 17 fully satisfied.'}</div></div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">3</div>
+      <div class="row-info"><div class="row-title">${ja ? '安全性データ：受託者鍵で再暗号化' : 'Safety data: re-encrypted under trustee key'}</div><div class="row-desc">${ja ? 'GDPR第17条(3)(c)（公衆衛生）に基づき保持。追加暗号化レイヤー — 鍵はドイツDPA承認受託者が管理。受託者＋裁判所命令なしに武田はアクセス不可。' : 'Retained per GDPR Art. 17(3)(c) (public health). Additional encryption layer — key held by German DPA-approved trustee. Takeda cannot access without trustee + court order.'}</div></div>
+    </div>
+    <div class="row-item">
+      <div class="row-icon" style="background:var(--emerald-dim);">4</div>
+      <div class="row-info"><div class="row-title">${ja ? '監査証跡を生成' : 'Audit trail generated'}</div><div class="row-desc">${ja ? '証明内容：非安全性データの消去実行、保持安全性データの法的根拠記録、受託者鍵適用。' : 'Proves: erasure executed for non-safety data, legal basis documented for retained safety data, trustee key applied.'}</div></div>
+    </div>
+  </div>
+  <div style="margin-top:16px;" id="eraseArea">
+    <button class="btn btn-primary" id="eraseBtn" onclick="runErase()">${ja ? '消去プロトコルを実行' : 'Execute Erasure Protocol'}</button>
+  </div>
+  <div id="s7done" style="display:none;">
+    <div class="callout"><strong>${ja ? '両方の法律を同時に充足。' : 'Both laws satisfied simultaneously.'}</strong> ${ja ? '保護者の消去権は尊重されます（非安全性データ消去済み）。患者安全は保護されます（安全性データは独立受託者管理下で保持）。監査証跡が両方への準拠を証明 — 従来は1件あたり€15Kの法的意見書が必要で、なお規制上の不確実性が残っていました。' : 'The parent\'s right to erasure is respected (non-safety data gone). Patient safety is protected (safety data retained under independent trustee control). The audit trail proves compliance with BOTH — something that previously required €15K in legal opinions per case and still left regulatory uncertainty.'}</div>
+    <div class="banner-done">${ja ? '✓ GDPR第17条＋PV保持義務 — 両立を暗号的に証明' : '✓ GDPR Art. 17 + Pharmacovigilance retention — both satisfied, cryptographically provable'}</div>
+    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(3,true); setReq(4,true); unlockNext(); goTo(8)">${ja ? '30年間保護へ →' : 'Continue to 30-Year Protection →'}</button></div>
+  </div>`;
+}
+function runErase() {
+  const ja = lang === 'ja';
+  document.getElementById('eraseBtn').innerHTML = `<span class="spinner"></span> ${ja ? '消去プロトコル実行中…' : 'Executing erasure protocol…'}`;
+  document.getElementById('eraseBtn').disabled = true;
+  setTimeout(() => {
+    document.getElementById('eraseArea').style.display = 'none';
+    document.getElementById('s7done').style.display = 'block';
+  }, 1500);
+}
+
+function screen8() {
+  const ja = lang === 'ja';
+  return `
+  <h1 class="screen-title">${ja ? '30年間のデータ保全' : '30-Year Data Integrity'}</h1>
+  <p class="screen-sub">${ja ? 'ELAPRASEは2006年に承認されました。レジストリデータは2056年以降も存続する必要があります。RSA-2048はそれまで持ちません。これらのレコードには今すぐポスト量子保護が必要です。' : 'ELAPRASE was approved in 2006. Registry data must survive through 2056+. RSA-2048 won\'t last that long. These records need post-quantum protection NOW.'}</p>
+  <div class="card">
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div class="fleet-stat"><div class="fleet-num" style="color:var(--red);">2033</div><div class="fleet-label">${ja ? 'RSA-2048 想定破綻年' : 'RSA-2048 Expected Break'}</div></div>
+      <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">2070+</div><div class="fleet-label">${ja ? 'ML-KEM-1024 安全保証期間' : 'ML-KEM-1024 Security Horizon'}</div></div>
+    </div>
+    <div class="kv-row"><span class="kv-key">${ja ? '移行済みレコード' : 'Records migrated'}</span><span class="kv-val">${ja ? '47,000患者レコード・4レジストリ' : '47,000 patient records · 4 registries'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '移行方式' : 'Migration method'}</span><span class="kv-val">${ja ? 'PQCエンベロープラッピング（元レコードはそのまま保持）' : 'PQC envelope wrapping (original records preserved intact)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '鍵ローテーション' : 'Key rotation'}</span><span class="kv-val">${ja ? '90日ごとに自動・手動介入ゼロ' : 'Automated every 90 days · zero manual intervention'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '参加病院資格情報' : 'Hospital credentials'}</span><span class="kv-val">${ja ? '340施設・証明書はPQCネイティブ' : '340 participating sites · certificates PQC-native'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'Harvest-now対策' : 'Harvest-now protection'}</span><span class="kv-val">${ja ? '有効 — 本日レジストリ通信を傍受しても2035年に復号不可' : 'Active — adversaries capturing registry traffic today cannot decrypt in 2035'}</span></div>
+  </div>
+  <div class="callout">
+    <strong>${ja ? '希少疾患にとって重要な理由：' : 'Why this matters for rare disease specifically:'}</strong> ${ja ? '2026年に4歳で登録されたMPS II患者は生涯ELAPRASEを投与されます。そのレジストリデータは2080年以降まで機密性、計算アクセス可能性、規制監査可能性を維持する必要があります。古典暗号ではこの保証は不可能です。ポスト量子暗号なら可能です。' : 'A MPS II patient enrolled at age 4 in 2026 will be on ELAPRASE for LIFE. Their registry data must remain confidential, computationally accessible, and regulatory-auditable through 2080+. No classical encryption system provides that guarantee. Post-quantum does.'}
+  </div>
+  <div class="grid-4" style="margin-top:20px;">
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">47K</div><div class="fleet-label">${ja ? '保護済みレコード' : 'Records Protected'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">0</div><div class="fleet-label">${ja ? '再識別インシデント' : 'Re-ID Events'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">48h</div><div class="fleet-label">${ja ? '越境RWE所要時間' : 'Cross-Border RWE'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">2070+</div><div class="fleet-label">${ja ? '安全保証期間' : 'Security Horizon'}</div></div>
+  </div>
+  <div class="banner-done" style="margin-top:24px;">${ja ? '✓ 完了：再識別排除 → 越境RWE 48時間（従来2〜3年）→ 消去権/PV矛盾解決 → 30年間ポスト量子保護。全8画面完了。' : '✓ Complete: Re-identification eliminated → Cross-border RWE in 48 hours (was 2-3 years) → Erasure/PV conflict resolved → 30-year post-quantum protection. All 8 screens complete.'}</div>`;
+}
+
+function ctaStrip() {
+  const ja = lang === 'ja';
+  return `
+  <div class="cta-strip">
+    <h3>${ja ? '越境RWEを48時間で実現する準備はできていますか？' : 'Ready to unlock cross-border RWE in 48 hours?'}</h3>
+    <p>${ja ? '30分間の技術ウォークスルーをご予約ください。SENTINELが希少疾患レジストリ患者を保護しながらグローバル規模のリアルワールドエビデンスを実現する方法をご紹介します。' : "Book a 30-minute technical walkthrough. We'll show how SENTINEL protects your rare disease registry patients while enabling real-world evidence at global scale."}</p>
+    <div class="cta-btns">
+      <a href="https://cal.com/agenticvaults" target="_blank"><button class="btn btn-primary">${ja ? 'ミーティングを予約 →' : 'Schedule Meeting →'}</button></a>
+      <a href="mailto:ldavid@agenticvaults.ai"><button class="btn btn-ghost">ldavid@agenticvaults.ai</button></a>
+    </div>
+  </div>`;
+}
+
+const SCREEN_FNS = {1:screen1,2:screen2,3:screen3,4:screen4,5:screen5,6:screen6,7:screen7,8:screen8};
+function render() {
+  const ja = lang === 'ja';
+  document.getElementById('content').innerHTML = `<div class="fade-in">${SCREEN_FNS[state.screen]()}${state.screen === 8 ? ctaStrip() : ''}</div>`;
+  document.getElementById('topTitle').textContent = getStepLabels()[state.screen - 1];
+  document.getElementById('topBadge').textContent = ja ? '希少疾患・グローバル' : 'Rare Diseases · Global';
+  renderSidebar();
+  window.scrollTo(0,0);
+}
+render();
+</script>
+</body>
+</html>

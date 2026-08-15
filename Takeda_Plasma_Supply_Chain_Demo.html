@@ -141,7 +141,7 @@
   <div class="sidebar">
     <div class="brand">
       <div class="brand-row">
-        <div class="brand-mark"><div></div></div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" width="26" height="26"><circle cx="24" cy="24" r="22" stroke="#34D399" stroke-width="1.5" fill="none" opacity="0.9"/><line x1="24" y1="4" x2="24" y2="44" stroke="#34D399" stroke-width="1.2" opacity="0.85"/><line x1="4" y1="24" x2="44" y2="24" stroke="#34D399" stroke-width="1.2" opacity="0.85"/><line x1="9.86" y1="9.86" x2="38.14" y2="38.14" stroke="#34D399" stroke-width="1" opacity="0.75"/><line x1="38.14" y1="9.86" x2="9.86" y2="38.14" stroke="#34D399" stroke-width="1" opacity="0.75"/><polygon points="24,6 30,18 24,14 18,18" fill="#34D399" opacity="0.9"/><polygon points="24,42 30,30 24,34 18,30" fill="#34D399" opacity="0.9"/><polygon points="6,24 18,18 14,24 18,30" fill="#34D399" opacity="0.9"/><polygon points="42,24 30,18 34,24 30,30" fill="#34D399" opacity="0.9"/><circle cx="24" cy="24" r="4" fill="#34D399" opacity="0.9"/><circle cx="24" cy="24" r="10" stroke="#34D399" stroke-width="0.8" fill="none" opacity="0.5"/></svg>
         <span class="brand-name">agenticvaults</span>
       </div>
       <div class="brand-sub">SENTINEL · Supply Chain Integrity</div>
@@ -293,53 +293,57 @@ function screen1() {
 }
 
 function screen2() {
+  const ja = lang === 'ja';
   const isEU = state.region === 'eu';
   const center = isEU ? 'BioLife Center #12, Vienna (Austria)' : 'BioLife Center #47, Indianapolis';
   const fraxPlant = isEU ? 'Lessines, Belgium' : 'Los Angeles';
-  const centerCount = isEU ? '38 EU centers' : '230 centers';
+  const centerCount = isEU ? (ja ? '38のEUセンター' : '38 EU centers') : (ja ? '230センター' : '230 centers');
   const regulation = isEU ? 'EU Tissue & Cells Directive 2004/23/EC + GDPR Art. 9 (health data)' : 'HIPAA + FDA 21 CFR 606/610';
   const donorExample = isEU ? 'Donor Hans M.' : 'Donor John Smith';
   return `
-  <h1 class="screen-title">Donor Privacy & Traceability</h1>
-  <p class="screen-sub">The impossible requirement solved: full donor-to-patient traceability WITHOUT any single system holding donor identity + product assignment together in cleartext.${isEU ? ' <strong style="color:var(--cyan);">EU GDPR Art. 9</strong> makes this even more stringent — health data is a "special category" requiring explicit consent OR public health exception.' : ''}</p>
-  ${isEU ? `<div class="callout rose" style="margin-bottom:20px;"><strong>EU-specific challenge:</strong> Under ${regulation}, donor traceability data must be retained for 30 years (Directive 2006/17/EC Art. 10) while GDPR demands data minimisation and purpose limitation. The Tissue Establishments in AT, DE, CZ, HU must comply with BOTH — simultaneously.</div>` : ''}
+  <h1 class="screen-title">${ja ? 'ドナープライバシーと追跡性' : 'Donor Privacy & Traceability'}</h1>
+  <p class="screen-sub">${ja ? '不可能な要件の解決：単一のシステムがドナーの身元と製品の割り当てを平文で同時に保持することなく、ドナーから患者への完全な追跡性を実現。' : 'The impossible requirement solved: full donor-to-patient traceability WITHOUT any single system holding donor identity + product assignment together in cleartext.'}${isEU ? (ja ? ' <strong style="color:var(--cyan);">EU GDPR Art. 9</strong>はこれをさらに厳格にし、健康データは明示的な同意または公衆衛生上の例外を必要とする「特別カテゴリ」となっています。' : ' <strong style="color:var(--cyan);">EU GDPR Art. 9</strong> makes this even more stringent — health data is a "special category" requiring explicit consent OR public health exception.') : ''}</p>
+  ${isEU ? `<div class="callout rose" style="margin-bottom:20px;"><strong>${ja ? 'EU固有の課題：' : 'EU-specific challenge:'}</strong> ${ja ? `${regulation}の下、ドナー追跡データは30年間保持する必要があります（Directive 2006/17/EC Art. 10）。一方でGDPRはデータ最小化と目的制限を要求しています。AT、DE、CZ、HUのTissue Establishmentsはその両方に同時に準拠しなければなりません。` : `Under ${regulation}, donor traceability data must be retained for 30 years (Directive 2006/17/EC Art. 10) while GDPR demands data minimisation and purpose limitation. The Tissue Establishments in AT, DE, CZ, HU must comply with BOTH — simultaneously.`}</div>` : ''}
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">How It Works ${isEU ? '(EU Regulatory Context)' : ''}</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? '仕組み' : 'How It Works'} ${isEU ? (ja ? '（EU規制の文脈）' : '(EU Regulatory Context)') : ''}</div>
     <div class="chain-row">
       <div class="chain-icon" style="background:var(--rose-dim);">🩸</div>
-      <div class="chain-info"><div class="chain-title">Donation Event — ${center}</div><div class="chain-desc">Donor identity verified locally. System assigns a cryptographic commitment (not the donor ID itself) to the plasma unit.${isEU ? ' <strong>GDPR-compliant: no cross-border transfer of donor PII.</strong>' : ''}</div></div>
-      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Privacy ✓</div>
+      <div class="chain-info"><div class="chain-title">${ja ? '献血イベント' : 'Donation Event'} — ${center}</div><div class="chain-desc">${ja ? 'ドナーの身元は現地で確認。システムは血漿ユニットに暗号コミットメント（ドナーIDそのものではない）を割り当てます。' : 'Donor identity verified locally. System assigns a cryptographic commitment (not the donor ID itself) to the plasma unit.'}${isEU ? (ja ? ' <strong>GDPR準拠：ドナーPIIの越境転送はなし。</strong>' : ' <strong>GDPR-compliant: no cross-border transfer of donor PII.</strong>') : ''}</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">${ja ? 'プライバシー ✓' : 'Privacy ✓'}</div>
     </div>
     <div class="chain-row">
       <div class="chain-icon" style="background:var(--rose-dim);">🧪</div>
-      <div class="chain-info"><div class="chain-title">Testing & Pooling — ${isEU ? 'EU Quality Lab (Vienna)' : 'Quality Lab'}</div><div class="chain-desc">Plasma tested for pathogens. Cryptographic commitment travels with the unit — lab never sees donor name.</div></div>
-      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Privacy ✓</div>
+      <div class="chain-info"><div class="chain-title">${ja ? '検査とプーリング' : 'Testing & Pooling'} — ${isEU ? (ja ? 'EU品質検査室（ウィーン）' : 'EU Quality Lab (Vienna)') : (ja ? '品質検査室' : 'Quality Lab')}</div><div class="chain-desc">${ja ? '血漿の病原体検査を実施。暗号コミットメントがユニットと共に移動し、検査室はドナー名を閲覧できません。' : 'Plasma tested for pathogens. Cryptographic commitment travels with the unit — lab never sees donor name.'}</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">${ja ? 'プライバシー ✓' : 'Privacy ✓'}</div>
     </div>
     <div class="chain-row">
       <div class="chain-icon" style="background:var(--rose-dim);">🏭</div>
-      <div class="chain-info"><div class="chain-title">Fractionation — ${fraxPlant} Plant</div><div class="chain-desc">${isEU ? '800' : '1,200'} units pooled. Each unit's commitment is recorded in the pool manifest. Plant never sees any donor identity.</div></div>
-      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Privacy ✓</div>
+      <div class="chain-info"><div class="chain-title">${ja ? '分画工程' : 'Fractionation'} — ${fraxPlant} ${ja ? '工場' : 'Plant'}</div><div class="chain-desc">${ja ? `${isEU ? '800' : '1,200'}ユニットをプール。各ユニットのコミットメントはプールマニフェストに記録。工場はドナーの身元を一切確認できません。` : `${isEU ? '800' : '1,200'} units pooled. Each unit's commitment is recorded in the pool manifest. Plant never sees any donor identity.`}</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">${ja ? 'プライバシー ✓' : 'Privacy ✓'}</div>
     </div>
     <div class="chain-row">
       <div class="chain-icon" style="background:var(--rose-dim);">💊</div>
-      <div class="chain-info"><div class="chain-title">Final Product — ${isEU ? 'HYQVIA (subcutaneous IgG)' : 'GAMMAGARD LIQUID'}</div><div class="chain-desc">Finished vial carries a cryptographic proof: "Derived from units that ALL passed pathogen screening." No donor IDs attached.</div></div>
-      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Privacy ✓</div>
+      <div class="chain-info"><div class="chain-title">${ja ? '最終製品' : 'Final Product'} — ${isEU ? 'HYQVIA (subcutaneous IgG)' : 'GAMMAGARD LIQUID'}</div><div class="chain-desc">${ja ? '完成バイアルは暗号証明を保持：「すべての原料ユニットが病原体スクリーニングに合格した原料から派生」。ドナーIDは付与されません。' : 'Finished vial carries a cryptographic proof: "Derived from units that ALL passed pathogen screening." No donor IDs attached.'}</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">${ja ? 'プライバシー ✓' : 'Privacy ✓'}</div>
     </div>
   </div>
   <div class="callout">
-    <strong>The key property:</strong> At NO point does any single system hold both "${donorExample}" AND "Product Lot #XYZ" together in cleartext. But if a lookback is needed — the cryptographic commitment can be opened (with threshold approval) to trace every product derived from that donor. Privacy by default. Traceability when needed.
+    <strong>${ja ? '重要な特性：' : 'The key property:'}</strong> ${ja ? `どの時点でも、単一のシステムが「${donorExample}」と「Product Lot #XYZ」の両方を平文で保持することはありません。しかし、ルックバックが必要な場合は、暗号コミットメントを（閾値承認で）開示し、そのドナーから派生したすべての製品を追跡できます。デフォルトはプライバシー保護。必要時に追跡可能。` : `At NO point does any single system hold both "${donorExample}" AND "Product Lot #XYZ" together in cleartext. But if a lookback is needed — the cryptographic commitment can be opened (with threshold approval) to trace every product derived from that donor. Privacy by default. Traceability when needed.`}
   </div>
   <div style="margin-top:16px;" id="traceArea">
-    <button class="btn btn-primary" id="traceBtn" onclick="runTrace()">Activate Cryptographic Traceability (${centerCount})</button>
+    <button class="btn btn-primary" id="traceBtn" onclick="runTrace()">${ja ? `暗号追跡性を有効化（${centerCount}）` : `Activate Cryptographic Traceability (${centerCount})`}</button>
   </div>
   <div id="s2done" style="display:none;">
-    <div class="banner-done">✓ Donor-to-patient traceability active — privacy maintained at every handoff</div>
-    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="unlockNext(); goTo(3)">Continue to Cold Chain →</button></div>
+    <div class="banner-done">${ja ? '✓ ドナーから患者への追跡性有効 — すべての受け渡しでプライバシー維持' : '✓ Donor-to-patient traceability active — privacy maintained at every handoff'}</div>
+    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="unlockNext(); goTo(3)">${ja ? 'コールドチェーンへ進む →' : 'Continue to Cold Chain →'}</button></div>
   </div>`;
 }
 function runTrace() {
-  const count = state.region === 'eu' ? '38 EU centers' : '230 centers';
-  document.getElementById('traceBtn').innerHTML = `<span class="spinner"></span> Provisioning commitments across ${count}…`;
+  const ja = lang === 'ja';
+  const count = state.region === 'eu' ? (ja ? '38のEUセンター' : '38 EU centers') : (ja ? '230センター' : '230 centers');
+  document.getElementById('traceBtn').innerHTML = ja
+    ? `<span class="spinner"></span> ${count}全体にコミットメントを展開中…`
+    : `<span class="spinner"></span> Provisioning commitments across ${count}…`;
   document.getElementById('traceBtn').disabled = true;
   setTimeout(() => {
     document.getElementById('traceArea').style.display = 'none';
@@ -350,23 +354,25 @@ function runTrace() {
 }
 
 function screen3() {
+  const ja = lang === 'ja';
+  const isEU = state.region === 'eu';
   return `
-  <h1 class="screen-title">Cold Chain Verification</h1>
-  <p class="screen-sub">Plasma must remain frozen (-25°C to -30°C) from collection through fractionation. A single excursion can render an entire pool (1,200 units, $1.8M) unusable.</p>
+  <h1 class="screen-title">${ja ? 'コールドチェーン検証' : 'Cold Chain Verification'}</h1>
+  <p class="screen-sub">${ja ? '血漿は採取から分画まで凍結状態（-25°Cから-30°C）を維持する必要があります。一度でも逸脱すると、プール全体（1,200ユニット、180万ドル相当）が使用不能になります。' : 'Plasma must remain frozen (-25°C to -30°C) from collection through fractionation. A single excursion can render an entire pool (1,200 units, $1.8M) unusable.'}</p>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${state.region === 'eu' ? 'Shipment: BL12-2026-08-0187 (Vienna → Lessines, Belgium)' : 'Shipment: BL47-2026-08-0294 (Indianapolis → Los Angeles)'}</div>
-    <div class="kv-row"><span class="kv-key">Units</span><span class="kv-val">${state.region === 'eu' ? '320 plasma units (2 containers)' : '480 plasma units (3 containers)'}</span></div>
-    <div class="kv-row"><span class="kv-key">Required temp</span><span class="kv-val">-25°C to -30°C (continuous)</span></div>
-    <div class="kv-row"><span class="kv-key">Transit time</span><span class="kv-val">${state.region === 'eu' ? '14 hours (road freight, AT → BE, EU GDP-compliant route)' : '38 hours (road freight, validated route)'}</span></div>
-    <div class="kv-row"><span class="kv-key">Sensors</span><span class="kv-val">6 per container · logging every 30 seconds</span></div>
-    ${state.region === 'eu' ? '<div class="kv-row"><span class="kv-key">Cross-border</span><span class="kv-val" style="color:var(--cyan);">AT → DE → BE · EU GDP Annex 5 (cold chain) + PIC/S Guide</span></div>' : ''}
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${isEU ? (ja ? '出荷: BL12-2026-08-0187 (Vienna → Lessines, Belgium)' : 'Shipment: BL12-2026-08-0187 (Vienna → Lessines, Belgium)') : (ja ? '出荷: BL47-2026-08-0294 (Indianapolis → Los Angeles)' : 'Shipment: BL47-2026-08-0294 (Indianapolis → Los Angeles)')}</div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'ユニット数' : 'Units'}</span><span class="kv-val">${isEU ? (ja ? '320血漿ユニット（コンテナ2基）' : '320 plasma units (2 containers)') : (ja ? '480血漿ユニット（コンテナ3基）' : '480 plasma units (3 containers)')}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '要求温度' : 'Required temp'}</span><span class="kv-val">${ja ? '-25°C～-30°C（連続）' : '-25°C to -30°C (continuous)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '輸送時間' : 'Transit time'}</span><span class="kv-val">${isEU ? (ja ? '14時間（陸送、AT → BE、EU GDP準拠ルート）' : '14 hours (road freight, AT → BE, EU GDP-compliant route)') : (ja ? '38時間（陸送、認定ルート）' : '38 hours (road freight, validated route)')}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'センサー' : 'Sensors'}</span><span class="kv-val">${ja ? 'コンテナあたり6個・30秒ごとに記録' : '6 per container · logging every 30 seconds'}</span></div>
+    ${isEU ? `<div class="kv-row"><span class="kv-key">${ja ? '越境' : 'Cross-border'}</span><span class="kv-val" style="color:var(--cyan);">AT → DE → BE · EU GDP Annex 5 (cold chain) + PIC/S Guide</span></div>` : ''}
     <div style="margin-top:20px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-        <div style="font-family:var(--fd); font-weight:600; font-size:14px;">Temperature Log — Container 1</div>
+        <div style="font-family:var(--fd); font-weight:600; font-size:14px;">${ja ? '温度記録 — コンテナ1' : 'Temperature Log — Container 1'}</div>
         <div style="display:flex; gap:14px; font-size:10px;">
-          <span style="color:var(--emerald);">● Normal (-25°C to -30°C)</span>
-          <span style="color:var(--amber);">● Near-threshold</span>
-          <span style="color:var(--red);">● Excursion (&gt; -25°C)</span>
+          <span style="color:var(--emerald);">${ja ? '● 正常 (-25°C～-30°C)' : '● Normal (-25°C to -30°C)'}</span>
+          <span style="color:var(--amber);">${ja ? '● 閾値付近' : '● Near-threshold'}</span>
+          <span style="color:var(--red);">${ja ? '● 逸脱 (> -25°C)' : '● Excursion (&gt; -25°C)'}</span>
         </div>
       </div>
       <div class="chart-area" id="coldChartWrap">
@@ -377,39 +383,42 @@ function screen3() {
         </div>
       </div>
       <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--dim); font-family:var(--fm);">
-        <span>Hour 0 (Departure)</span><span style="color:var(--emerald);">avg -27.4°C</span><span>Hour 38 (Arrival)</span>
+        <span>${ja ? '0時間目（出発）' : 'Hour 0 (Departure)'}</span><span style="color:var(--emerald);">${ja ? '平均 -27.4°C' : 'avg -27.4°C'}</span><span>${ja ? '38時間目（到着）' : 'Hour 38 (Arrival)'}</span>
       </div>
       <div style="display:flex; gap:12px; margin-top:14px;">
         <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
           <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--emerald);">-27.4°C</div>
-          <div style="font-size:10px; color:var(--dim); margin-top:4px;">AVG TEMP</div>
+          <div style="font-size:10px; color:var(--dim); margin-top:4px;">${ja ? '平均温度' : 'AVG TEMP'}</div>
         </div>
         <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
           <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--emerald);">-25.1°C</div>
-          <div style="font-size:10px; color:var(--dim); margin-top:4px;">MAX (WARMEST)</div>
+          <div style="font-size:10px; color:var(--dim); margin-top:4px;">${ja ? '最高（最も温暖）' : 'MAX (WARMEST)'}</div>
         </div>
         <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
           <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--emerald);">-29.8°C</div>
-          <div style="font-size:10px; color:var(--dim); margin-top:4px;">MIN (COLDEST)</div>
+          <div style="font-size:10px; color:var(--dim); margin-top:4px;">${ja ? '最低（最も低温）' : 'MIN (COLDEST)'}</div>
         </div>
         <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
           <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--emerald);">4,560</div>
-          <div style="font-size:10px; color:var(--dim); margin-top:4px;">DATA POINTS</div>
+          <div style="font-size:10px; color:var(--dim); margin-top:4px;">${ja ? 'データポイント' : 'DATA POINTS'}</div>
         </div>
       </div>
     </div>
     <div style="margin-top:20px;" id="ccArea">
-      <button class="btn btn-primary" id="ccBtn" onclick="runCC()">Seal Cold Chain Proof</button>
+      <button class="btn btn-primary" id="ccBtn" onclick="runCC()">${ja ? 'コールドチェーン証明を封印' : 'Seal Cold Chain Proof'}</button>
     </div>
     <div id="s3done" style="display:none;">
-      <div class="callout"><strong>Cold chain verified.</strong> Continuous temperature log cryptographically sealed. ${state.region === 'eu' ? '1,680 sensor readings over 14 hours' : '4,560 sensor readings over 38 hours'} — every one within specification. Proof states: "All ${state.region === 'eu' ? '320' : '480'} units remained within -25°C to -30°C for entire ${state.region === 'eu' ? '14-hour cross-border' : '38-hour'} transit." The logistics partner does NOT see which donor contributed which unit. They verify temperature — nothing else.${state.region === 'eu' ? ' <strong>EU GDP Annex 5 compliance proven across 3 member states (AT→DE→BE).</strong>' : ''}</div>
-      <div class="banner-done">✓ Cold chain integrity proven — ${state.region === 'eu' ? '€1.2M' : '$1.8M'} pool validated</div>
-      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="unlockNext(); goTo(4)">Continue to Fractionation →</button></div>
+      <div class="callout"><strong>${ja ? 'コールドチェーン検証完了。' : 'Cold chain verified.'}</strong> ${ja ? `連続温度記録を暗号的に封印。${isEU ? '14時間で1,680件のセンサー読み取り' : '38時間で4,560件のセンサー読み取り'} — すべて仕様範囲内。証明内容：「すべての${isEU ? '320' : '480'}ユニットが${isEU ? '14時間の越境' : '38時間の'}輸送全体を通じて-25°Cから-30°Cの範囲内を維持」。物流パートナーはどのドナーがどのユニットに貢献したかを確認できません。温度検証のみを行います。` : `Continuous temperature log cryptographically sealed. ${isEU ? '1,680 sensor readings over 14 hours' : '4,560 sensor readings over 38 hours'} — every one within specification. Proof states: "All ${isEU ? '320' : '480'} units remained within -25°C to -30°C for entire ${isEU ? '14-hour cross-border' : '38-hour'} transit." The logistics partner does NOT see which donor contributed which unit. They verify temperature — nothing else.`}${isEU ? (ja ? ' <strong>3つの加盟国（AT→DE→BE）にわたるEU GDP Annex 5準拠を証明。</strong>' : ' <strong>EU GDP Annex 5 compliance proven across 3 member states (AT→DE→BE).</strong>') : ''}</div>
+      <div class="banner-done">${ja ? `✓ コールドチェーンの完全性を証明 — ${isEU ? '120万ユーロ' : '180万ドル'}のプール検証済` : `✓ Cold chain integrity proven — ${isEU ? '€1.2M' : '$1.8M'} pool validated`}</div>
+      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="unlockNext(); goTo(4)">${ja ? '分画工程へ進む →' : 'Continue to Fractionation →'}</button></div>
     </div>
   </div>`;
 }
 function runCC() {
-  document.getElementById('ccBtn').innerHTML = '<span class="spinner"></span> Sealing temperature log…';
+  const ja = lang === 'ja';
+  document.getElementById('ccBtn').innerHTML = ja
+    ? '<span class="spinner"></span> 温度記録を封印中…'
+    : '<span class="spinner"></span> Sealing temperature log…';
   document.getElementById('ccBtn').disabled = true;
   setTimeout(() => {
     document.getElementById('ccArea').style.display = 'none';
@@ -419,156 +428,163 @@ function runCC() {
 }
 
 function screen4() {
+  const ja = lang === 'ja';
   const isEU = state.region === 'eu' || state.region === 'frax';
   const poolId = isEU ? 'FRX-LES-2026-0412' : 'FRX-LA-2026-0847';
   const plantName = isEU ? 'Lessines, Belgium' : 'Los Angeles, USA';
   const inputUnits = isEU ? '800' : '1,200';
-  const centerCount = isEU ? '8 EU BioLife centers (AT/DE/CZ/HU)' : '14 BioLife centers';
+  const centerCount = isEU ? (ja ? '8つのEU BioLifeセンター (AT/DE/CZ/HU)' : '8 EU BioLife centers (AT/DE/CZ/HU)') : (ja ? '14のBioLifeセンター' : '14 BioLife centers');
   return `
-  <h1 class="screen-title">Fractionation Integrity</h1>
-  <p class="screen-sub">${inputUnits} plasma units pooled and fractionated into 5 protein products at ${plantName}. The pool manifest must maintain traceability — but the fractionation process parameters are trade secrets.</p>
+  <h1 class="screen-title">${ja ? '分画工程の完全性' : 'Fractionation Integrity'}</h1>
+  <p class="screen-sub">${ja ? `${inputUnits}の血漿ユニットをプールし、${plantName}で5つのタンパク質製品に分画。プールマニフェストは追跡性を維持する必要がありますが、分画工程のパラメータは企業秘密です。` : `${inputUnits} plasma units pooled and fractionated into 5 protein products at ${plantName}. The pool manifest must maintain traceability — but the fractionation process parameters are trade secrets.`}</p>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Pool: ${poolId} — ${plantName}</div>
-    <div class="kv-row"><span class="kv-key">Input</span><span class="kv-val">${inputUnits} plasma units (from ${centerCount})</span></div>
-    <div class="kv-row"><span class="kv-key">Fractionation method</span><span class="kv-val">[TRADE SECRET — protected by ZK attestation]</span></div>
-    <div class="kv-row"><span class="kv-key">Output products</span><span class="kv-val">5 (IgG, Albumin, Factor VIII, vWF, Alpha-1)</span></div>
-    ${isEU ? '<div class="kv-row"><span class="kv-key">EMA compliance</span><span class="kv-val" style="color:var(--cyan);">Directive 2002/98/EC + EU GMP Annex 14 (blood derivatives)</span></div>' : ''}
-    <div style="margin-top:18px; font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px;">Output Products from Pool</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? 'プール' : 'Pool'}: ${poolId} — ${plantName}</div>
+    <div class="kv-row"><span class="kv-key">${ja ? '入力' : 'Input'}</span><span class="kv-val">${ja ? `${inputUnits}血漿ユニット（${centerCount}から）` : `${inputUnits} plasma units (from ${centerCount})`}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '分画方法' : 'Fractionation method'}</span><span class="kv-val">${ja ? '[企業秘密 — ZK attestationで保護]' : '[TRADE SECRET — protected by ZK attestation]'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '出力製品' : 'Output products'}</span><span class="kv-val">5 (IgG, Albumin, Factor VIII, vWF, Alpha-1)</span></div>
+    ${isEU ? `<div class="kv-row"><span class="kv-key">${ja ? 'EMA準拠' : 'EMA compliance'}</span><span class="kv-val" style="color:var(--cyan);">Directive 2002/98/EC + EU GMP Annex 14 (blood derivatives)</span></div>` : ''}
+    <div style="margin-top:18px; font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px;">${ja ? 'プールからの出力製品' : 'Output Products from Pool'}</div>
     <div class="chain-row">
       <div class="chain-icon" style="background:var(--rose-dim);">Ig</div>
-      <div class="chain-info"><div class="chain-title">${isEU ? 'HYQVIA — 280 vials' : 'GAMMAGARD LIQUID — 340 vials'}</div><div class="chain-desc">Immunoglobulin (IgG) · Primary immune deficiency</div></div>
-      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Released</div>
+      <div class="chain-info"><div class="chain-title">${isEU ? 'HYQVIA — 280 vials' : 'GAMMAGARD LIQUID — 340 vials'}</div><div class="chain-desc">${ja ? '免疫グロブリン (IgG) · 原発性免疫不全症' : 'Immunoglobulin (IgG) · Primary immune deficiency'}</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">${ja ? '出荷済' : 'Released'}</div>
     </div>
     <div class="chain-row">
       <div class="chain-icon" style="background:var(--blue-dim);">Ab</div>
-      <div class="chain-info"><div class="chain-title">FLEXBUMIN — ${isEU ? '380' : '520'} vials</div><div class="chain-desc">Albumin 5%/25% · Hypovolemia, burns</div></div>
-      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Released</div>
+      <div class="chain-info"><div class="chain-title">FLEXBUMIN — ${isEU ? '380' : '520'} vials</div><div class="chain-desc">${ja ? 'アルブミン 5%/25% · 循環血液量減少、熱傷' : 'Albumin 5%/25% · Hypovolemia, burns'}</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">${ja ? '出荷済' : 'Released'}</div>
     </div>
     <div class="chain-row">
       <div class="chain-icon" style="background:var(--cyan-dim);">F8</div>
-      <div class="chain-info"><div class="chain-title">${isEU ? 'ADYNOVATE — 120 vials' : 'ADVATE — 180 vials'}</div><div class="chain-desc">Factor VIII · Hemophilia A</div></div>
-      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Released</div>
+      <div class="chain-info"><div class="chain-title">${isEU ? 'ADYNOVATE — 120 vials' : 'ADVATE — 180 vials'}</div><div class="chain-desc">${ja ? '第VIII因子 · 血友病A' : 'Factor VIII · Hemophilia A'}</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">${ja ? '出荷済' : 'Released'}</div>
     </div>
   </div>
   <div class="callout">
-    <strong>ZK proof generated:</strong> "Pool ${poolId} was fractionated at ${plantName} using a validated process. All ${inputUnits} input units passed screening. Each output product maintains cryptographic link to source units." The fractionation parameters (temperatures, pH, ethanol concentrations, timing) remain Takeda's trade secret — the proof verifies CORRECTNESS without revealing METHOD.${isEU ? ' <em>EMA inspectors at Lessines can verify process validation without accessing proprietary Cohn/Kistler-Nitschmann parameters.</em>' : ''}
+    <strong>${ja ? 'ZK証明を生成：' : 'ZK proof generated:'}</strong> ${ja ? `「プール${poolId}は${plantName}にて検証済みプロセスで分画されました。すべての${inputUnits}入力ユニットがスクリーニングに合格。各出力製品は原料ユニットとの暗号リンクを維持しています。」分画パラメータ（温度、pH、エタノール濃度、タイミング）は武田薬品の企業秘密のまま — 証明はメソッドを開示せずに正当性を検証します。` : `"Pool ${poolId} was fractionated at ${plantName} using a validated process. All ${inputUnits} input units passed screening. Each output product maintains cryptographic link to source units." The fractionation parameters (temperatures, pH, ethanol concentrations, timing) remain Takeda's trade secret — the proof verifies CORRECTNESS without revealing METHOD.`}${isEU ? (ja ? ' <em>LessinesのEMA査察官はCohn/Kistler-Nitschmannの独自パラメータにアクセスすることなくプロセスの妥当性を検証できます。</em>' : ' <em>EMA inspectors at Lessines can verify process validation without accessing proprietary Cohn/Kistler-Nitschmann parameters.</em>') : ''}
   </div>
   <div style="margin-top:16px;">
-    <button class="btn btn-primary" onclick="setReq(3,true); unlockNext(); goTo(5)">Continue to Cross-Border Compliance →</button>
+    <button class="btn btn-primary" onclick="setReq(3,true); unlockNext(); goTo(5)">${ja ? '越境データコンプライアンスへ進む →' : 'Continue to Cross-Border Compliance →'}</button>
   </div>`;
 }
 
 function screen5() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Cross-Border Data Compliance</h1>
-  <p class="screen-sub">Plasma collected in the US. Fractionated in the US. Sold in 40+ countries. Each jurisdiction has different rules about what health data can cross borders.</p>
+  <h1 class="screen-title">${ja ? '越境データコンプライアンス' : 'Cross-Border Data Compliance'}</h1>
+  <p class="screen-sub">${ja ? '米国で採取された血漿。米国で分画。40カ国以上に販売。各法域で越境可能な健康データに関するルールが異なります。' : 'Plasma collected in the US. Fractionated in the US. Sold in 40+ countries. Each jurisdiction has different rules about what health data can cross borders.'}</p>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Data Sovereignty Map</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? 'データ主権マップ' : 'Data Sovereignty Map'}</div>
     <div class="chain-row">
       <div class="chain-icon" style="background:var(--blue-dim);">🇺🇸</div>
-      <div class="chain-info"><div class="chain-title">United States — HIPAA</div><div class="chain-desc">Donor PHI stays in US. Product traceability data (without donor ID) can export.</div></div>
-      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Enforced</div>
+      <div class="chain-info"><div class="chain-title">${ja ? '米国 — HIPAA' : 'United States — HIPAA'}</div><div class="chain-desc">${ja ? 'ドナーPHIは米国内に保持。製品追跡データ（ドナーIDなし）はエクスポート可能。' : 'Donor PHI stays in US. Product traceability data (without donor ID) can export.'}</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">${ja ? '適用中' : 'Enforced'}</div>
     </div>
     <div class="chain-row">
       <div class="chain-icon" style="background:var(--blue-dim);">🇪🇺</div>
-      <div class="chain-info"><div class="chain-title">European Union — GDPR Art. 9</div><div class="chain-desc">Health data (special category). Processing only with explicit consent or public health exception.</div></div>
-      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Enforced</div>
+      <div class="chain-info"><div class="chain-title">${ja ? '欧州連合 — GDPR Art. 9' : 'European Union — GDPR Art. 9'}</div><div class="chain-desc">${ja ? '健康データ（特別カテゴリ）。明示的な同意または公衆衛生上の例外がある場合のみ処理可能。' : 'Health data (special category). Processing only with explicit consent or public health exception.'}</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">${ja ? '適用中' : 'Enforced'}</div>
     </div>
     <div class="chain-row">
       <div class="chain-icon" style="background:var(--blue-dim);">🇯🇵</div>
-      <div class="chain-info"><div class="chain-title">Japan — APPI (Takeda HQ)</div><div class="chain-desc">Sensitive personal information. Cross-border transfer requires consent or equivalent protection.</div></div>
-      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Enforced</div>
+      <div class="chain-info"><div class="chain-title">${ja ? '日本 — APPI（武田薬品本社）' : 'Japan — APPI (Takeda HQ)'}</div><div class="chain-desc">${ja ? '要配慮個人情報。越境移転には本人の同意または同等の保護措置が必要。' : 'Sensitive personal information. Cross-border transfer requires consent or equivalent protection.'}</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">${ja ? '適用中' : 'Enforced'}</div>
     </div>
     <div class="chain-row">
       <div class="chain-icon" style="background:var(--blue-dim);">🇨🇳</div>
-      <div class="chain-info"><div class="chain-title">China — PIPL</div><div class="chain-desc">Health data classified as sensitive. Security assessment required for cross-border transfer.</div></div>
-      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Enforced</div>
+      <div class="chain-info"><div class="chain-title">${ja ? '中国 — PIPL' : 'China — PIPL'}</div><div class="chain-desc">${ja ? '健康データは機密に分類。越境移転にはセキュリティ評価が必要。' : 'Health data classified as sensitive. Security assessment required for cross-border transfer.'}</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">${ja ? '適用中' : 'Enforced'}</div>
     </div>
   </div>
   <div class="callout">
-    <strong>How it works:</strong> When GAMMAGARD vials ship to Germany, the receiving hospital can verify: "This product is derived from screened plasma, cold chain maintained, fractionation validated." They CANNOT determine which US donors contributed, which BioLife center collected, or any donor-level health data. Compliance by architecture — not by policy.
+    <strong>${ja ? '仕組み：' : 'How it works:'}</strong> ${ja ? 'GAMMAGARDバイアルがドイツに出荷される際、受入病院は「本製品はスクリーニング済み血漿から派生し、コールドチェーンが維持され、分画が検証されている」ことを確認できます。しかし、どの米国ドナーが提供したか、どのBioLifeセンターが採取したか、ドナーレベルの健康データは一切特定できません。ポリシーではなく、アーキテクチャによるコンプライアンス。' : 'When GAMMAGARD vials ship to Germany, the receiving hospital can verify: "This product is derived from screened plasma, cold chain maintained, fractionation validated." They CANNOT determine which US donors contributed, which BioLife center collected, or any donor-level health data. Compliance by architecture — not by policy.'}
   </div>
   <div style="margin-top:16px;">
-    <button class="btn btn-primary" onclick="setReq(4,true); unlockNext(); goTo(6)">Continue to Rare Disease Registry →</button>
+    <button class="btn btn-primary" onclick="setReq(4,true); unlockNext(); goTo(6)">${ja ? '希少疾患レジストリへ進む →' : 'Continue to Rare Disease Registry →'}</button>
   </div>`;
 }
 
 function screen6() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Rare Disease Patient Registry</h1>
-  <p class="screen-sub">Takeda treats ultra-rare diseases (HAE, Fabry, Hunter). Patient populations are tiny — sometimes &lt;500 globally. In populations this small, even "anonymized" data can be re-identified.</p>
+  <h1 class="screen-title">${ja ? '希少疾患患者レジストリ' : 'Rare Disease Patient Registry'}</h1>
+  <p class="screen-sub">${ja ? '武田薬品は超希少疾患（HAE、ファブリー病、ハンター症候群）を治療しています。患者集団は極めて少数で、世界全体で500人未満の場合もあります。この規模では「匿名化された」データでも再識別される可能性があります。' : 'Takeda treats ultra-rare diseases (HAE, Fabry, Hunter). Patient populations are tiny — sometimes &lt;500 globally. In populations this small, even "anonymized" data can be re-identified.'}</p>
   <div class="card">
     <div class="grid-3" style="margin-bottom:20px;">
-      <div class="fleet-stat"><div class="fleet-num" style="color:var(--rose);">347</div><div class="fleet-label">HAE Patients (Global)</div></div>
-      <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">High</div><div class="fleet-label">Re-ID Risk</div></div>
-      <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">Zero</div><div class="fleet-label">Data Exposure</div></div>
+      <div class="fleet-stat"><div class="fleet-num" style="color:var(--rose);">347</div><div class="fleet-label">${ja ? 'HAE患者数（世界）' : 'HAE Patients (Global)'}</div></div>
+      <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">${ja ? '高' : 'High'}</div><div class="fleet-label">${ja ? '再識別リスク' : 'Re-ID Risk'}</div></div>
+      <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">${ja ? 'ゼロ' : 'Zero'}</div><div class="fleet-label">${ja ? 'データ漏洩' : 'Data Exposure'}</div></div>
     </div>
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:12px;">The Problem with Traditional Anonymization</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:12px;">${ja ? '従来の匿名化の問題点' : 'The Problem with Traditional Anonymization'}</div>
     <div class="chain-row" style="border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.04);">
       <div class="chain-icon" style="background:var(--red-dim);">⚠️</div>
-      <div class="chain-info"><div class="chain-title" style="color:var(--red);">347 patients. Age + gender + country = re-identification.</div><div class="chain-desc">With only 347 patients globally, removing the name is NOT enough. "Female, 34, diagnosed 2019, Japan" — there may be only ONE match.</div></div>
+      <div class="chain-info"><div class="chain-title" style="color:var(--red);">${ja ? '347人の患者。年齢＋性別＋国＝再識別。' : '347 patients. Age + gender + country = re-identification.'}</div><div class="chain-desc">${ja ? '世界で347人の患者しかいない場合、氏名を削除するだけでは不十分です。「女性、34歳、2019年診断、日本」—該当するのは1人だけかもしれません。' : 'With only 347 patients globally, removing the name is NOT enough. "Female, 34, diagnosed 2019, Japan" — there may be only ONE match.'}</div></div>
     </div>
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin:20px 0 12px;">Solution: ZK-Proven Registry Analytics</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin:20px 0 12px;">${ja ? '解決策：ZK証明によるレジストリ分析' : 'Solution: ZK-Proven Registry Analytics'}</div>
     <div class="chain-row">
       <div class="chain-icon" style="background:var(--emerald-dim);">✓</div>
-      <div class="chain-info"><div class="chain-title">Query: "What % of HAE patients achieve attack-free status on TAKHZYRO?"</div><div class="chain-desc">Answer: 76.4% — proven from real registry data. But no individual record is exposed, not even in aggregate groups small enough to re-identify.</div></div>
+      <div class="chain-info"><div class="chain-title">${ja ? 'クエリ：「HAE患者のうち、TAKHZYROで発作フリーの状態を達成した割合は？」' : 'Query: "What % of HAE patients achieve attack-free status on TAKHZYRO?"'}</div><div class="chain-desc">${ja ? '回答：76.4% — 実レジストリデータから証明。ただし、再識別可能な小集団に至るまで、個別レコードは一切公開されません。' : 'Answer: 76.4% — proven from real registry data. But no individual record is exposed, not even in aggregate groups small enough to re-identify.'}</div></div>
     </div>
     <div class="chain-row">
       <div class="chain-icon" style="background:var(--emerald-dim);">✓</div>
-      <div class="chain-info"><div class="chain-title">Query: "Mean annualized attack rate by treatment duration?"</div><div class="chain-desc">Answer: 0.3 attacks/year at 24mo. Proven from 347 records. No subgroup below k=5 anonymity threshold ever leaves the system.</div></div>
+      <div class="chain-info"><div class="chain-title">${ja ? 'クエリ：「治療期間別の年間平均発作率は？」' : 'Query: "Mean annualized attack rate by treatment duration?"'}</div><div class="chain-desc">${ja ? '回答：24カ月時点で年0.3回。347件のレコードから証明。k=5匿名性閾値を下回るサブグループのデータがシステム外に出ることはありません。' : 'Answer: 0.3 attacks/year at 24mo. Proven from 347 records. No subgroup below k=5 anonymity threshold ever leaves the system.'}</div></div>
     </div>
   </div>
   <div class="callout">
-    <strong>Takeda can publish real-world evidence to regulators and payers</strong> — proven from actual patient data — without any risk of re-identifying an individual patient. For populations of 347, this is the ONLY approach that works. Traditional anonymization fails at this scale.
+    <strong>${ja ? '武田薬品は規制当局や保険者に対しリアルワールドエビデンスを公開できます' : 'Takeda can publish real-world evidence to regulators and payers'}</strong> ${ja ? '— 実際の患者データから証明されたもので、個々の患者が再識別されるリスクはありません。347人の集団においては、これが唯一有効なアプローチです。従来の匿名化はこの規模では機能しません。' : '— proven from actual patient data — without any risk of re-identifying an individual patient. For populations of 347, this is the ONLY approach that works. Traditional anonymization fails at this scale.'}
   </div>
   <div style="margin-top:16px;">
-    <button class="btn btn-primary" onclick="unlockNext(); goTo(7)">Continue to Lookback Capability →</button>
+    <button class="btn btn-primary" onclick="unlockNext(); goTo(7)">${ja ? 'ルックバック機能へ進む →' : 'Continue to Lookback Capability →'}</button>
   </div>`;
 }
 
 function screen7() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Lookback & Recall Capability</h1>
-  <p class="screen-sub">The nightmare scenario: a donor who passed all screening tests is later diagnosed with a transmissible pathogen. Every product derived from their plasma must be identified — within hours, not days.</p>
+  <h1 class="screen-title">${ja ? 'ルックバック・リコール機能' : 'Lookback & Recall Capability'}</h1>
+  <p class="screen-sub">${ja ? '最悪のシナリオ：すべてのスクリーニング検査に合格したドナーが後に伝染性病原体と診断される。そのドナーの血漿から派生したすべての製品を数日ではなく数時間以内に特定する必要があります。' : 'The nightmare scenario: a donor who passed all screening tests is later diagnosed with a transmissible pathogen. Every product derived from their plasma must be identified — within hours, not days.'}</p>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px; color:var(--red);">LOOKBACK TRIGGERED — Simulation</div>
-    <div class="kv-row"><span class="kv-key">Donor</span><span class="kv-val">[Identity sealed — accessible only via threshold unlock]</span></div>
-    <div class="kv-row"><span class="kv-key">Trigger</span><span class="kv-val">Post-donation test positive (HCV antibody seroconversion)</span></div>
-    <div class="kv-row"><span class="kv-key">Donations in window</span><span class="kv-val">6 donations over past 4 months</span></div>
-    <div class="kv-row"><span class="kv-key">Approval required</span><span class="kv-val">3-of-4 threshold (Medical Director + VP Quality + Regulatory + Privacy Officer)</span></div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px; color:var(--red);">${ja ? 'ルックバック発動 — シミュレーション' : 'LOOKBACK TRIGGERED — Simulation'}</div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'ドナー' : 'Donor'}</span><span class="kv-val">${ja ? '[身元封印済 — 閾値解除によってのみアクセス可能]' : '[Identity sealed — accessible only via threshold unlock]'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'トリガー' : 'Trigger'}</span><span class="kv-val">${ja ? '献血後検査陽性（HCV抗体セロコンバージョン）' : 'Post-donation test positive (HCV antibody seroconversion)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '対象期間の献血数' : 'Donations in window'}</span><span class="kv-val">${ja ? '過去4カ月間で6回' : '6 donations over past 4 months'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '必要な承認' : 'Approval required'}</span><span class="kv-val">${ja ? '4名中3名の閾値承認（メディカルディレクター＋品質VP＋規制担当＋プライバシーオフィサー）' : '3-of-4 threshold (Medical Director + VP Quality + Regulatory + Privacy Officer)'}</span></div>
     <div style="margin-top:20px;" id="lookArea">
-      <button class="btn btn-rose" id="lookBtn" onclick="runLookback()">Initiate Lookback (Threshold Unlock)</button>
+      <button class="btn btn-rose" id="lookBtn" onclick="runLookback()">${ja ? 'ルックバック開始（閾値解除）' : 'Initiate Lookback (Threshold Unlock)'}</button>
     </div>
     <div id="lookResults" style="display:none;">
-      <div style="margin-top:18px; font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px;">Trace Results (revealed after threshold approval)</div>
+      <div style="margin-top:18px; font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px;">${ja ? '追跡結果（閾値承認後に開示）' : 'Trace Results (revealed after threshold approval)'}</div>
       <div class="chain-row">
         <div class="chain-icon" style="background:var(--red-dim);">1</div>
-        <div class="chain-info"><div class="chain-title">Pool FRX-LA-2026-0712 — GAMMAGARD Lot #GG-0712-A</div><div class="chain-desc">84 vials distributed · 23 to wholesalers, 61 to hospitals · 47 administered</div></div>
-        <div class="chain-status" style="background:var(--red-dim); color:var(--red);">RECALL</div>
+        <div class="chain-info"><div class="chain-title">Pool FRX-LA-2026-0712 — GAMMAGARD Lot #GG-0712-A</div><div class="chain-desc">${ja ? '84バイアル配布済 · 卸売業者23、病院61 · 47投与済' : '84 vials distributed · 23 to wholesalers, 61 to hospitals · 47 administered'}</div></div>
+        <div class="chain-status" style="background:var(--red-dim); color:var(--red);">${ja ? '回収' : 'RECALL'}</div>
       </div>
       <div class="chain-row">
         <div class="chain-icon" style="background:var(--red-dim);">2</div>
-        <div class="chain-info"><div class="chain-title">Pool FRX-LA-2026-0756 — FLEXBUMIN Lot #FB-0756-C</div><div class="chain-desc">130 vials distributed · 89 to hospitals · 72 administered</div></div>
-        <div class="chain-status" style="background:var(--red-dim); color:var(--red);">RECALL</div>
+        <div class="chain-info"><div class="chain-title">Pool FRX-LA-2026-0756 — FLEXBUMIN Lot #FB-0756-C</div><div class="chain-desc">${ja ? '130バイアル配布済 · 病院89 · 72投与済' : '130 vials distributed · 89 to hospitals · 72 administered'}</div></div>
+        <div class="chain-status" style="background:var(--red-dim); color:var(--red);">${ja ? '回収' : 'RECALL'}</div>
       </div>
       <div class="chain-row">
         <div class="chain-icon" style="background:var(--amber-dim);">3</div>
-        <div class="chain-info"><div class="chain-title">Pool FRX-LA-2026-0801 — In fractionation</div><div class="chain-desc">Not yet released · can be quarantined immediately</div></div>
-        <div class="chain-status" style="background:var(--amber-dim); color:var(--amber);">QUARANTINE</div>
+        <div class="chain-info"><div class="chain-title">${ja ? 'Pool FRX-LA-2026-0801 — 分画中' : 'Pool FRX-LA-2026-0801 — In fractionation'}</div><div class="chain-desc">${ja ? '未出荷 · 即時隔離可能' : 'Not yet released · can be quarantined immediately'}</div></div>
+        <div class="chain-status" style="background:var(--amber-dim); color:var(--amber);">${ja ? '隔離' : 'QUARANTINE'}</div>
       </div>
       <div class="grid-3" style="margin-top:18px;">
-        <div class="fleet-stat"><div class="fleet-num" style="color:var(--red);">214</div><div class="fleet-label">Vials Affected</div></div>
-        <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">119</div><div class="fleet-label">Already Administered</div></div>
-        <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">4 min</div><div class="fleet-label">Time to Full Trace</div></div>
+        <div class="fleet-stat"><div class="fleet-num" style="color:var(--red);">214</div><div class="fleet-label">${ja ? '影響バイアル数' : 'Vials Affected'}</div></div>
+        <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">119</div><div class="fleet-label">${ja ? '投与済み' : 'Already Administered'}</div></div>
+        <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">4 min</div><div class="fleet-label">${ja ? '完全追跡時間' : 'Time to Full Trace'}</div></div>
       </div>
-      <div class="callout"><strong>4 minutes.</strong> Previously this process took 3-5 DAYS of manual database queries, phone calls to distribution partners, and cross-referencing paper records. During those days, more patients receive potentially affected product. Now: threshold approval → instant cryptographic trace → recall notices dispatched.</div>
-      <div class="banner-done">✓ Lookback complete — 4 minutes vs. 3-5 days. Every affected unit identified. Recall notices dispatched.</div>
-      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(5,true); unlockNext(); goTo(8)">Generate Regulatory Package →</button></div>
+      <div class="callout"><strong>${ja ? '4分。' : '4 minutes.'}</strong> ${ja ? '従来このプロセスには手動データベースクエリ、流通パートナーへの電話連絡、紙の記録との照合で3〜5日かかっていました。その間にも、影響を受ける可能性のある製品が患者に投与され続けます。現在は：閾値承認→即時暗号追跡→回収通知発行。' : 'Previously this process took 3-5 DAYS of manual database queries, phone calls to distribution partners, and cross-referencing paper records. During those days, more patients receive potentially affected product. Now: threshold approval → instant cryptographic trace → recall notices dispatched.'}</div>
+      <div class="banner-done">${ja ? '✓ ルックバック完了 — 4分 vs. 従来3〜5日。影響を受けたすべてのユニットを特定。回収通知発行済。' : '✓ Lookback complete — 4 minutes vs. 3-5 days. Every affected unit identified. Recall notices dispatched.'}</div>
+      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(5,true); unlockNext(); goTo(8)">${ja ? '規制パッケージを生成 →' : 'Generate Regulatory Package →'}</button></div>
     </div>
   </div>`;
 }
 function runLookback() {
-  document.getElementById('lookBtn').innerHTML = '<span class="spinner" style="border-color:rgba(26,5,8,0.3); border-top-color:#1a0508;"></span> Collecting threshold approvals…';
+  const ja = lang === 'ja';
+  document.getElementById('lookBtn').innerHTML = ja
+    ? '<span class="spinner" style="border-color:rgba(26,5,8,0.3); border-top-color:#1a0508;"></span> 閾値承認を収集中…'
+    : '<span class="spinner" style="border-color:rgba(26,5,8,0.3); border-top-color:#1a0508;"></span> Collecting threshold approvals…';
   document.getElementById('lookBtn').disabled = true;
   setTimeout(() => {
     document.getElementById('lookArea').style.display = 'none';
@@ -577,32 +593,33 @@ function runLookback() {
 }
 
 function screen8() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Regulatory Submission</h1>
-  <p class="screen-sub">Complete evidence package for FDA (21 CFR 606/610), EMA (Directive 2002/98/EC), and PMDA. Traceability proven. Privacy maintained. Cold chain verified. Process integrity attested.</p>
+  <h1 class="screen-title">${ja ? '規制当局への提出' : 'Regulatory Submission'}</h1>
+  <p class="screen-sub">${ja ? 'FDA (21 CFR 606/610)、EMA (Directive 2002/98/EC)、およびPMDAへの完全なエビデンスパッケージ。追跡性証明済。プライバシー維持。コールドチェーン検証済。工程の完全性証明済。' : 'Complete evidence package for FDA (21 CFR 606/610), EMA (Directive 2002/98/EC), and PMDA. Traceability proven. Privacy maintained. Cold chain verified. Process integrity attested.'}</p>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Plasma-Derived Therapy Compliance Package</div>
-    <div class="zip-item"><span class="zip-icon">▸</span> Donor-to-Product Traceability Architecture (privacy-preserving)</div>
-    <div class="zip-item"><span class="zip-icon">▸</span> Cold Chain Integrity Proofs (continuous temperature verification)</div>
-    <div class="zip-item"><span class="zip-icon">▸</span> Fractionation Process Attestation (ZK — method protected)</div>
-    <div class="zip-item"><span class="zip-icon">▸</span> Cross-Border Data Compliance Matrix (HIPAA/GDPR/APPI/PIPL)</div>
-    <div class="zip-item"><span class="zip-icon">▸</span> Lookback Capability Demonstration (4-minute trace evidence)</div>
-    <div class="zip-item"><span class="zip-icon">▸</span> Rare Disease Registry Privacy Assessment</div>
-    <div class="zip-item"><span class="zip-icon">▸</span> FIPS 140-3 Cryptographic Module Validation</div>
-    <div class="zip-item"><span class="zip-icon">▸</span> Post-Quantum Encryption Certificate (harvest-now protection)</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? '血漿由来治療薬コンプライアンスパッケージ' : 'Plasma-Derived Therapy Compliance Package'}</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> ${ja ? 'ドナーから製品への追跡性アーキテクチャ（プライバシー保護型）' : 'Donor-to-Product Traceability Architecture (privacy-preserving)'}</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> ${ja ? 'コールドチェーン完全性証明（連続温度検証）' : 'Cold Chain Integrity Proofs (continuous temperature verification)'}</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> ${ja ? '分画工程証明（ZK — 方法保護）' : 'Fractionation Process Attestation (ZK — method protected)'}</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> ${ja ? '越境データコンプライアンスマトリクス (HIPAA/GDPR/APPI/PIPL)' : 'Cross-Border Data Compliance Matrix (HIPAA/GDPR/APPI/PIPL)'}</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> ${ja ? 'ルックバック機能実証（4分間追跡エビデンス）' : 'Lookback Capability Demonstration (4-minute trace evidence)'}</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> ${ja ? '希少疾患レジストリ プライバシー評価' : 'Rare Disease Registry Privacy Assessment'}</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> ${ja ? 'FIPS 140-3 暗号モジュール検証' : 'FIPS 140-3 Cryptographic Module Validation'}</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> ${ja ? '耐量子暗号証明書（harvest-now保護）' : 'Post-Quantum Encryption Certificate (harvest-now protection)'}</div>
     <div style="margin-top:18px; display:flex; gap:12px;">
-      <button class="btn btn-ghost">⬇ FDA Package (21 CFR 606)</button>
-      <button class="btn btn-ghost">⬇ EMA Package (2002/98/EC)</button>
-      <button class="btn btn-ghost">⬇ PMDA Package</button>
+      <button class="btn btn-ghost">${ja ? '⬇ FDAパッケージ (21 CFR 606)' : '⬇ FDA Package (21 CFR 606)'}</button>
+      <button class="btn btn-ghost">${ja ? '⬇ EMAパッケージ (2002/98/EC)' : '⬇ EMA Package (2002/98/EC)'}</button>
+      <button class="btn btn-ghost">${ja ? '⬇ PMDAパッケージ' : '⬇ PMDA Package'}</button>
     </div>
   </div>
   <div class="grid-4" style="margin-top:20px;">
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">4 min</div><div class="fleet-label">Lookback Time</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">0</div><div class="fleet-label">Privacy Breaches</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">100%</div><div class="fleet-label">Chain Integrity</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">40+</div><div class="fleet-label">Countries Compliant</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">4 min</div><div class="fleet-label">${ja ? 'ルックバック時間' : 'Lookback Time'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">0</div><div class="fleet-label">${ja ? 'プライバシー侵害' : 'Privacy Breaches'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">100%</div><div class="fleet-label">${ja ? 'チェーン完全性' : 'Chain Integrity'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">40+</div><div class="fleet-label">${ja ? '準拠国数' : 'Countries Compliant'}</div></div>
   </div>
-  <div class="banner-done" style="margin-top:24px;">✓ Complete: Donor privacy maintained → Full traceability active → Cold chain proven → Fractionation attested → Cross-border compliant → Lookback in 4 minutes (was 3-5 days). All 8 screens complete.</div>`;
+  <div class="banner-done" style="margin-top:24px;">${ja ? '✓ 完了：ドナープライバシー維持 → 完全追跡性有効 → コールドチェーン証明済 → 分画工程証明済 → 越境コンプライアンス対応 → ルックバック4分（従来3〜5日）。全8画面完了。' : '✓ Complete: Donor privacy maintained → Full traceability active → Cold chain proven → Fractionation attested → Cross-border compliant → Lookback in 4 minutes (was 3-5 days). All 8 screens complete.'}</div>`;
 }
 
 // Cold chain area chart data (seeded deterministically)
@@ -697,12 +714,13 @@ function drawColdChart() {
 }
 
 function ctaStrip() {
+  const ja = lang === 'ja';
   return `
   <div class="cta-strip">
-    <h3>Ready to see this with your data?</h3>
-    <p>Book a 30-minute technical walkthrough. We'll show the full SENTINEL platform configured for your plasma operations.</p>
+    <h3>${ja ? '貴社のデータでご確認いただけます' : 'Ready to see this with your data?'}</h3>
+    <p>${ja ? '30分間のテクニカルデモをご予約ください。貴社の血漿オペレーションに合わせて構成したSENTINELプラットフォーム全体をご紹介します。' : "Book a 30-minute technical walkthrough. We'll show the full SENTINEL platform configured for your plasma operations."}</p>
     <div class="cta-btns">
-      <a href="https://cal.com/agenticvaults" target="_blank"><button class="btn btn-primary">Schedule Meeting →</button></a>
+      <a href="https://cal.com/agenticvaults" target="_blank"><button class="btn btn-primary">${ja ? 'ミーティングを予約 →' : 'Schedule Meeting →'}</button></a>
       <a href="mailto:ldavid@agenticvaults.ai"><button class="btn btn-ghost">ldavid@agenticvaults.ai</button></a>
     </div>
   </div>`;
@@ -710,9 +728,12 @@ function ctaStrip() {
 
 const SCREEN_FNS = {1:screen1,2:screen2,3:screen3,4:screen4,5:screen5,6:screen6,7:screen7,8:screen8};
 function render() {
+  const ja = lang === 'ja';
   document.getElementById('content').innerHTML = `<div class="fade-in">${SCREEN_FNS[state.screen]()}${state.screen === 8 ? ctaStrip() : ''}</div>`;
-  document.getElementById('topTitle').textContent = STEP_LABELS[state.screen - 1];
-  const badges = { us: 'BioLife · US Network', eu: 'BioLife · EU Network (AT/DE/CZ/HU)', frax: 'BioLife · Fractionation Plants' };
+  document.getElementById('topTitle').textContent = getSTEP_LABELS()[state.screen - 1];
+  const badges = ja
+    ? { us: 'BioLife · 米国ネットワーク', eu: 'BioLife · EUネットワーク (AT/DE/CZ/HU)', frax: 'BioLife · 分画工場' }
+    : { us: 'BioLife · US Network', eu: 'BioLife · EU Network (AT/DE/CZ/HU)', frax: 'BioLife · Fractionation Plants' };
   document.getElementById('topBadge').textContent = badges[state.region] || badges.us;
   renderSidebar();
   window.scrollTo(0,0);

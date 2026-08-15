@@ -128,7 +128,7 @@
   <div class="sidebar">
     <div class="brand">
       <div class="brand-row">
-        <div class="brand-mark"><div></div></div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" width="26" height="26"><circle cx="24" cy="24" r="22" stroke="#34D399" stroke-width="1.5" fill="none" opacity="0.9"/><line x1="24" y1="4" x2="24" y2="44" stroke="#34D399" stroke-width="1.2" opacity="0.85"/><line x1="4" y1="24" x2="44" y2="24" stroke="#34D399" stroke-width="1.2" opacity="0.85"/><line x1="9.86" y1="9.86" x2="38.14" y2="38.14" stroke="#34D399" stroke-width="1" opacity="0.75"/><line x1="38.14" y1="9.86" x2="9.86" y2="38.14" stroke="#34D399" stroke-width="1" opacity="0.75"/><polygon points="24,6 30,18 24,14 18,18" fill="#34D399" opacity="0.9"/><polygon points="24,42 30,30 24,34 18,30" fill="#34D399" opacity="0.9"/><polygon points="6,24 18,18 14,24 18,30" fill="#34D399" opacity="0.9"/><polygon points="42,24 30,18 34,24 30,30" fill="#34D399" opacity="0.9"/><circle cx="24" cy="24" r="4" fill="#34D399" opacity="0.9"/><circle cx="24" cy="24" r="10" stroke="#34D399" stroke-width="0.8" fill="none" opacity="0.5"/></svg>
         <span class="brand-name">agenticvaults</span>
       </div>
       <div class="brand-sub">SENTINEL · Signature Integrity</div>
@@ -160,24 +160,38 @@
 </div>
 
 <script>
-const REQS = [
-  {code: '1', label: 'Crypto inventory complete'},
-  {code: '2', label: 'CRO risk assessed'},
-  {code: '3', label: 'Active records PQ-signed'},
-  {code: '4', label: 'Multi-jurisdiction signing live'},
-  {code: '5', label: 'Certificate lifecycle managed'},
-  {code: '6', label: 'Legacy integrity restored'},
-];
-const STEP_LABELS = [
-  'Cryptographic Asset Discovery',
-  'Third-Party / CRO Risk Dashboard',
-  'PQC Migration Planning',
-  'Sign-as-Service (Batch Release)',
-  'Certificate Lifecycle Automation',
-  'Sentinel: Integrity Monitoring',
-  'Regulatory Submission Signing',
-  'CISO Executive Dashboard',
-];
+let lang = 'en';
+function setLang(l) {
+  lang = l;
+  document.getElementById('langEn').classList.toggle('active', l === 'en');
+  document.getElementById('langJa').classList.toggle('active', l === 'ja');
+  render();
+}
+
+function getReqs() {
+  const ja = lang === 'ja';
+  return [
+    {code: '1', label: ja ? '暗号資産棚卸完了' : 'Crypto inventory complete'},
+    {code: '2', label: ja ? 'CROリスク評価済' : 'CRO risk assessed'},
+    {code: '3', label: ja ? 'アクティブ記録PQ署名済' : 'Active records PQ-signed'},
+    {code: '4', label: ja ? '多法域署名稼働中' : 'Multi-jurisdiction signing live'},
+    {code: '5', label: ja ? '証明書ライフサイクル管理中' : 'Certificate lifecycle managed'},
+    {code: '6', label: ja ? 'レガシー整合性復元済' : 'Legacy integrity restored'},
+  ];
+}
+function getStepLabels() {
+  const ja = lang === 'ja';
+  return [
+    ja ? '暗号資産ディスカバリー' : 'Cryptographic Asset Discovery',
+    ja ? 'CROリスクダッシュボード' : 'Third-Party / CRO Risk Dashboard',
+    ja ? 'PQC移行計画' : 'PQC Migration Planning',
+    ja ? '署名サービス（バッチリリース）' : 'Sign-as-Service (Batch Release)',
+    ja ? '証明書ライフサイクル自動化' : 'Certificate Lifecycle Automation',
+    ja ? 'Sentinel：整合性監視' : 'Sentinel: Integrity Monitoring',
+    ja ? '規制当局申請署名' : 'Regulatory Submission Signing',
+    ja ? 'CISOエグゼクティブダッシュボード' : 'CISO Executive Dashboard',
+  ];
+}
 
 let state = { screen: 1, maxUnlocked: 1, reqStatus: [false,false,false,false,false,false] };
 function setReq(idx, val) { state.reqStatus[idx] = val; renderSidebar(); }
@@ -185,8 +199,11 @@ function goTo(n) { if (n > state.maxUnlocked) return; state.screen = n; render()
 function unlockNext() { state.maxUnlocked = Math.max(state.maxUnlocked, state.screen + 1); }
 
 function renderSidebar() {
+  const ja = lang === 'ja';
+  const stepLabels = getStepLabels();
+  const reqs = getReqs();
   const stepsEl = document.getElementById('steps');
-  stepsEl.innerHTML = STEP_LABELS.map((label, i) => {
+  stepsEl.innerHTML = stepLabels.map((label, i) => {
     const n = i + 1;
     const cls = ['step'];
     if (n === state.screen) cls.push('active');
@@ -199,51 +216,57 @@ function renderSidebar() {
   }).join('');
   const doneCount = state.reqStatus.filter(Boolean).length;
   document.getElementById('miniCount').textContent = doneCount + '/6';
-  document.getElementById('miniList').innerHTML = REQS.map((r, i) => {
+  document.getElementById('miniList').innerHTML = reqs.map((r, i) => {
     const on = state.reqStatus[i];
     return `<div class="mini-row ${on ? 'on' : ''}"><div class="mini-dot ${on ? 'on' : ''}"></div>${r.label}</div>`;
   }).join('');
+  document.querySelector('.checklist-mini-title span').textContent = ja ? 'PQC移行チェックリスト' : 'PQC Migration';
+  document.querySelector('.context-label').textContent = ja ? '見込み客向けウォークスルー' : 'Prospect Walkthrough';
+  document.querySelector('.context-val').textContent = ja ? 'Takeda — GxP署名整合性とCRO量子リスク' : 'Takeda — GxP Signature Integrity & CRO Quantum Risk';
+  document.getElementById('topBadge').textContent = ja ? 'Enterprise · 34拠点' : 'Enterprise · 34 Sites';
 }
 
 function screen1() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Cryptographic Asset Discovery</h1>
-  <p class="screen-sub">SBOM module has scanned Takeda's entire GxP landscape — 34 manufacturing sites, 4 inherited PKIs (Baxter + Shire + Nycomed + Takeda-legacy), 2.3 million signed records.</p>
+  <h1 class="screen-title">${ja ? '暗号資産ディスカバリー' : 'Cryptographic Asset Discovery'}</h1>
+  <p class="screen-sub">${ja ? 'SBOMモジュールがTakedaのGxP環境全体をスキャン完了 — 製造拠点34箇所、継承PKI 4系統（Baxter + Shire + Nycomed + Takeda旧来）、署名済み記録230万件。' : "SBOM module has scanned Takeda's entire GxP landscape — 34 manufacturing sites, 4 inherited PKIs (Baxter + Shire + Nycomed + Takeda-legacy), 2.3 million signed records."}</p>
   <div class="grid-4" style="margin-bottom:24px;">
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--sky);">34</div><div class="fleet-label">Manufacturing Sites</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">2.3M</div><div class="fleet-label">Signed GxP Records</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--red);">47K</div><div class="fleet-label">Operator Certificates</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--purple);">4</div><div class="fleet-label">Inherited PKI Systems</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--sky);">34</div><div class="fleet-label">${ja ? '製造拠点' : 'Manufacturing Sites'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">2.3M</div><div class="fleet-label">${ja ? 'GxP署名済み記録' : 'Signed GxP Records'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--red);">47K</div><div class="fleet-label">${ja ? 'オペレーター証明書' : 'Operator Certificates'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--purple);">4</div><div class="fleet-label">${ja ? '継承PKIシステム' : 'Inherited PKI Systems'}</div></div>
   </div>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Signature Algorithm Distribution</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? '署名アルゴリズム分布' : 'Signature Algorithm Distribution'}</div>
     <div class="risk-bar">
       <div style="width:78%; background:var(--red); border-radius:100px 0 0 100px;"></div>
       <div style="width:19%; background:var(--amber);"></div>
       <div style="width:3%; background:var(--emerald); border-radius:0 100px 100px 0;"></div>
     </div>
     <div style="display:flex; justify-content:space-between; font-size:11px; margin-top:6px;">
-      <span style="color:var(--red);">RSA-2048 — 78% (quantum-vulnerable by 2033)</span>
+      <span style="color:var(--red);">RSA-2048 — 78% (${ja ? '2033年までに量子脆弱' : 'quantum-vulnerable by 2033'})</span>
       <span style="color:var(--amber);">ECDSA P-256 — 19%</span>
       <span style="color:var(--emerald);">ML-DSA — 3%</span>
     </div>
-    <div class="kv-row" style="margin-top:16px;"><span class="kv-key">Estimated exposure</span><span class="kv-val" style="color:var(--red);">$4.2B in product value on vulnerable signatures</span></div>
-    <div class="kv-row"><span class="kv-key">PKI sources</span><span class="kv-val">Baxter (2004) + Shire (2008) + Nycomed (2011) + Takeda (2014)</span></div>
-    <div class="kv-row"><span class="kv-key">Fragmentation risk</span><span class="kv-val" style="color:var(--red);">4,500 employees laid off May 2026 — PKI knowledge walking out</span></div>
+    <div class="kv-row" style="margin-top:16px;"><span class="kv-key">${ja ? '推定リスク額' : 'Estimated exposure'}</span><span class="kv-val" style="color:var(--red);">${ja ? '脆弱な署名に依存する製品価値42億ドル' : '$4.2B in product value on vulnerable signatures'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'PKI出元' : 'PKI sources'}</span><span class="kv-val">Baxter (2004) + Shire (2008) + Nycomed (2011) + Takeda (2014)</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '断片化リスク' : 'Fragmentation risk'}</span><span class="kv-val" style="color:var(--red);">${ja ? '2026年5月に4,500名解雇 — PKI知識が流出' : '4,500 employees laid off May 2026 — PKI knowledge walking out'}</span></div>
   </div>
   <div class="callout red">
-    <strong>The threat model:</strong> A nation-state adversary captures signed batch records today (RSA-2048). In 2033, they forge a signature on a counterfeit batch record — inserting a fake ENTYVIO lot into the supply chain. The forged record is indistinguishable from a genuine one. No classical signature algorithm prevents this within the product's patent life.
+    <strong>${ja ? '脅威モデル：' : 'The threat model:'}</strong> ${ja ? '国家レベルの攻撃者が本日のRSA-2048署名付きバッチ記録を取得。2033年に偽造署名で不正なENTYVIOロットをサプライチェーンに挿入。偽造記録は真正品と区別不可能。製品特許存続期間中、古典的署名アルゴリズムではこれを防止できません。' : "A nation-state adversary captures signed batch records today (RSA-2048). In 2033, they forge a signature on a counterfeit batch record — inserting a fake ENTYVIO lot into the supply chain. The forged record is indistinguishable from a genuine one. No classical signature algorithm prevents this within the product's patent life."}
   </div>
   <div style="margin-top:16px;" id="scanArea">
-    <button class="btn btn-primary" id="scanBtn" onclick="runScan()">Complete Discovery Scan</button>
+    <button class="btn btn-primary" id="scanBtn" onclick="runScan()">${ja ? 'ディスカバリースキャン実行' : 'Complete Discovery Scan'}</button>
   </div>
   <div id="s1done" style="display:none;">
-    <div class="banner-done">✓ Full cryptographic inventory — 2.3M records mapped, 4 PKIs cataloged, risk quantified</div>
-    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(0,true); unlockNext(); goTo(2)">View CRO Risk Dashboard →</button></div>
+    <div class="banner-done">${ja ? '✓ 暗号資産棚卸完了 — 230万件マッピング、PKI 4系統カタログ化、リスク定量化' : '✓ Full cryptographic inventory — 2.3M records mapped, 4 PKIs cataloged, risk quantified'}</div>
+    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(0,true); unlockNext(); goTo(2)">${ja ? 'CROリスクダッシュボードを表示 →' : 'View CRO Risk Dashboard →'}</button></div>
   </div>`;
 }
 function runScan() {
-  document.getElementById('scanBtn').innerHTML = '<span class="spinner"></span> Scanning 34 sites…';
+  const ja = lang === 'ja';
+  document.getElementById('scanBtn').innerHTML = `<span class="spinner"></span> ${ja ? '34拠点スキャン中…' : 'Scanning 34 sites…'}`;
   document.getElementById('scanBtn').disabled = true;
   setTimeout(() => {
     document.getElementById('scanArea').style.display = 'none';
@@ -252,76 +275,79 @@ function runScan() {
 }
 
 function screen2() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Third-Party / CRO Risk Dashboard</h1>
-  <p class="screen-sub">Takeda relies on CROs who hold signed clinical study reports. Their PKI is outside Takeda's control. If their keys are quantum-broken, every CSR they signed for Takeda becomes suspect.</p>
+  <h1 class="screen-title">${ja ? 'CROリスクダッシュボード' : 'Third-Party / CRO Risk Dashboard'}</h1>
+  <p class="screen-sub">${ja ? 'TakedaはCROが保有する署名付き臨床試験報告書に依存しています。CROのPKIはTakedaの管理外です。CROの鍵が量子攻撃で突破された場合、Takeda向けの全CSRが疑義対象となります。' : "Takeda relies on CROs who hold signed clinical study reports. Their PKI is outside Takeda's control. If their keys are quantum-broken, every CSR they signed for Takeda becomes suspect."}</p>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Top CRO/CMO Partners — Cryptographic Risk</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? '主要CRO/CMOパートナー — 暗号リスク' : 'Top CRO/CMO Partners — Cryptographic Risk'}</div>
     <div class="row-item" style="border-color: rgba(248,113,113,0.3);">
       <div class="row-icon" style="background:var(--red-dim);">⚠️</div>
-      <div class="row-info"><div class="row-title">IQVIA — 340 signed clinical study reports</div><div class="row-desc">PKI: RSA-2048 · Cert expiry: 2028 · No PQC migration plan disclosed</div></div>
-      <div class="row-status" style="background:var(--red-dim); color:var(--red);">HIGH RISK</div>
+      <div class="row-info"><div class="row-title">IQVIA — ${ja ? '署名付き臨床試験報告書340件' : '340 signed clinical study reports'}</div><div class="row-desc">PKI: RSA-2048 · ${ja ? '証明書有効期限: 2028年 · PQC移行計画未公表' : 'Cert expiry: 2028 · No PQC migration plan disclosed'}</div></div>
+      <div class="row-status" style="background:var(--red-dim); color:var(--red);">${ja ? '高リスク' : 'HIGH RISK'}</div>
     </div>
     <div class="row-item" style="border-color: rgba(251,191,36,0.3);">
       <div class="row-icon" style="background:var(--amber-dim);">⚡</div>
-      <div class="row-info"><div class="row-title">Covance / LabCorp — 180 signed bioanalytical reports</div><div class="row-desc">PKI: ECDSA P-256 · PQC migration planned Q3 2027 · Gap: 18 months exposed</div></div>
-      <div class="row-status" style="background:var(--amber-dim); color:var(--amber);">MEDIUM</div>
+      <div class="row-info"><div class="row-title">Covance / LabCorp — ${ja ? '署名付き生体分析報告書180件' : '180 signed bioanalytical reports'}</div><div class="row-desc">PKI: ECDSA P-256 · ${ja ? 'PQC移行予定 2027年Q3 · ギャップ: 18ヶ月間露出' : 'PQC migration planned Q3 2027 · Gap: 18 months exposed'}</div></div>
+      <div class="row-status" style="background:var(--amber-dim); color:var(--amber);">${ja ? '中' : 'MEDIUM'}</div>
     </div>
     <div class="row-item" style="border-color: rgba(248,113,113,0.3);">
       <div class="row-icon" style="background:var(--red-dim);">⚠️</div>
-      <div class="row-info"><div class="row-title">Neuchatel CMO (clotting factor fill-finish) — 45 batch records</div><div class="row-desc">PKI: RSA-2048 · No PQC awareness · Single point of failure for ADYNOVATE</div></div>
-      <div class="row-status" style="background:var(--red-dim); color:var(--red);">CRITICAL</div>
+      <div class="row-info"><div class="row-title">Neuchatel CMO (${ja ? '凝固因子充填仕上げ' : 'clotting factor fill-finish'}) — ${ja ? 'バッチ記録45件' : '45 batch records'}</div><div class="row-desc">PKI: RSA-2048 · ${ja ? 'PQC認識なし · ADYNOVATEの単一障害点' : 'No PQC awareness · Single point of failure for ADYNOVATE'}</div></div>
+      <div class="row-status" style="background:var(--red-dim); color:var(--red);">${ja ? '最重要' : 'CRITICAL'}</div>
     </div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--emerald-dim);">✓</div>
-      <div class="row-info"><div class="row-title">PPD / Thermo Fisher — 95 signed protocols</div><div class="row-desc">PKI: ML-DSA-65 (migrated Q1 2026) · Fully compliant</div></div>
-      <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">LOW</div>
+      <div class="row-info"><div class="row-title">PPD / Thermo Fisher — ${ja ? '署名付きプロトコル95件' : '95 signed protocols'}</div><div class="row-desc">PKI: ML-DSA-65 (${ja ? '2026年Q1に移行済' : 'migrated Q1 2026'}) · ${ja ? '完全準拠' : 'Fully compliant'}</div></div>
+      <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">${ja ? '低' : 'LOW'}</div>
     </div>
   </div>
   <div class="callout sky">
-    <strong>Action required:</strong> IQVIA holds 340 clinical study reports for TAKHZYRO, ENTYVIO, and ELAPRASE. If their RSA-2048 signing key is quantum-broken, every one of those CSRs becomes unverifiable — FDA could question the integrity of the data supporting three blockbuster products ($8.7B combined revenue).
+    <strong>${ja ? '対応必須：' : 'Action required:'}</strong> ${ja ? 'IQVIAはTAKHZYRO、ENTYVIO、ELAPRASEの臨床試験報告書340件を保有。RSA-2048署名鍵が量子攻撃で突破されれば、全CSRが検証不能に — FDAがブロックバスター3製品（売上合計87億ドル）のデータ完全性を問う可能性があります。' : 'IQVIA holds 340 clinical study reports for TAKHZYRO, ENTYVIO, and ELAPRASE. If their RSA-2048 signing key is quantum-broken, every one of those CSRs becomes unverifiable — FDA could question the integrity of the data supporting three blockbuster products ($8.7B combined revenue).'}
   </div>
   <div style="margin-top:16px;">
-    <button class="btn btn-primary" onclick="setReq(1,true); unlockNext(); goTo(3)">Plan PQC Migration →</button>
+    <button class="btn btn-primary" onclick="setReq(1,true); unlockNext(); goTo(3)">${ja ? 'PQC移行を計画 →' : 'Plan PQC Migration →'}</button>
   </div>`;
 }
 
 function screen3() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">PQC Migration Planning</h1>
-  <p class="screen-sub">Lessines fractionation facility selected. 340,000 signed batch records (2004-2026). Migration wraps originals with PQC envelope — preserving regulatory continuity.</p>
+  <h1 class="screen-title">${ja ? 'PQC移行計画' : 'PQC Migration Planning'}</h1>
+  <p class="screen-sub">${ja ? 'Lessines分画施設を選定。署名済みバッチ記録340,000件（2004-2026年）。移行は原本をPQCエンベロープでラップし、規制上の連続性を維持します。' : 'Lessines fractionation facility selected. 340,000 signed batch records (2004-2026). Migration wraps originals with PQC envelope — preserving regulatory continuity.'}</p>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Migration Plan — Lessines, Belgium</div>
-    <div class="kv-row"><span class="kv-key">Total signed records</span><span class="kv-val">340,000 batch records + 12,000 deviations + 5,600 equipment quals</span></div>
-    <div class="kv-row"><span class="kv-key">Original algorithm</span><span class="kv-val">RSA-2048 (Baxter-era PKI, 2004-2019) + ECDSA (2019-present)</span></div>
-    <div class="kv-row"><span class="kv-key">Target algorithm</span><span class="kv-val">ML-DSA-65 envelope (original signature preserved inside)</span></div>
-    <div class="kv-row"><span class="kv-key">Method</span><span class="kv-val">PQC envelope wrapping — original record + signature remain intact for audit</span></div>
-    <div class="kv-row"><span class="kv-key">Estimated time</span><span class="kv-val">14 weeks · zero production downtime</span></div>
-    <div style="margin-top:18px; font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px;">Migration Phases</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? '移行計画 — Lessines（ベルギー）' : 'Migration Plan — Lessines, Belgium'}</div>
+    <div class="kv-row"><span class="kv-key">${ja ? '署名済み記録総数' : 'Total signed records'}</span><span class="kv-val">${ja ? 'バッチ記録340,000件 + 逸脱12,000件 + 設備適格性5,600件' : '340,000 batch records + 12,000 deviations + 5,600 equipment quals'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '現行アルゴリズム' : 'Original algorithm'}</span><span class="kv-val">RSA-2048 (Baxter-era PKI, 2004-2019) + ECDSA (2019-${ja ? '現在' : 'present'})</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '目標アルゴリズム' : 'Target algorithm'}</span><span class="kv-val">ML-DSA-65 ${ja ? 'エンベロープ（原本署名を内部保持）' : 'envelope (original signature preserved inside)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '方式' : 'Method'}</span><span class="kv-val">${ja ? 'PQCエンベロープラッピング — 原本記録と署名は監査用にそのまま保持' : 'PQC envelope wrapping — original record + signature remain intact for audit'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '推定期間' : 'Estimated time'}</span><span class="kv-val">${ja ? '14週間・製造ダウンタイムゼロ' : '14 weeks · zero production downtime'}</span></div>
+    <div style="margin-top:18px; font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px;">${ja ? '移行フェーズ' : 'Migration Phases'}</div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--sky-dim);">P1</div>
-      <div class="row-info"><div class="row-title">Active products (last 5 years) — GAMMAGARD, HYQVIA</div><div class="row-desc">Re-sign with ML-DSA-65. PQC signature envelope wraps original RSA signature.</div></div>
-      <div class="row-status" style="background:var(--sky-dim); color:var(--sky);">Weeks 1-6</div>
+      <div class="row-info"><div class="row-title">${ja ? 'アクティブ製品（直近5年）— GAMMAGARD, HYQVIA' : 'Active products (last 5 years) — GAMMAGARD, HYQVIA'}</div><div class="row-desc">${ja ? 'ML-DSA-65で再署名。PQC署名エンベロープが元のRSA署名をラップ。' : 'Re-sign with ML-DSA-65. PQC signature envelope wraps original RSA signature.'}</div></div>
+      <div class="row-status" style="background:var(--sky-dim); color:var(--sky);">${ja ? '第1-6週' : 'Weeks 1-6'}</div>
     </div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--sky-dim);">P2</div>
-      <div class="row-info"><div class="row-title">Archived records (2004-2019) — Baxter-era</div><div class="row-desc">Hash-chain anchoring with PQC timestamps. Proves existence and integrity at original signing time.</div></div>
-      <div class="row-status" style="background:var(--sky-dim); color:var(--sky);">Weeks 7-14</div>
+      <div class="row-info"><div class="row-title">${ja ? 'アーカイブ記録（2004-2019）— Baxter時代' : 'Archived records (2004-2019) — Baxter-era'}</div><div class="row-desc">${ja ? 'PQCタイムスタンプ付きハッシュチェーンアンカリング。署名時点での存在と整合性を証明。' : 'Hash-chain anchoring with PQC timestamps. Proves existence and integrity at original signing time.'}</div></div>
+      <div class="row-status" style="background:var(--sky-dim); color:var(--sky);">${ja ? '第7-14週' : 'Weeks 7-14'}</div>
     </div>
   </div>
   <div style="margin-top:16px;" id="migArea">
-    <button class="btn btn-primary" id="migBtn" onclick="runMig()">Begin Migration (Phase 1)</button>
+    <button class="btn btn-primary" id="migBtn" onclick="runMig()">${ja ? '移行開始（Phase 1）' : 'Begin Migration (Phase 1)'}</button>
   </div>
   <div id="s3done" style="display:none;">
     <div class="progress-track"><div class="progress-fill" style="width:100%;"></div></div>
-    <div style="font-size:13px; color:var(--emerald); font-family:var(--fm);">357,600 records wrapped · ML-DSA-65 · zero downtime</div>
-    <div class="callout"><strong>Migration complete.</strong> Every batch record at Lessines now carries a PQC signature envelope. If a quantum computer breaks the original RSA signature in 2033, the ML-DSA envelope proves the record existed and was valid in 2026. Regulatory continuity preserved.</div>
-    <div class="banner-done">✓ Lessines PQC migration complete — 340K+ records quantum-safe</div>
-    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(2,true); unlockNext(); goTo(4)">Continue to Sign-as-Service →</button></div>
+    <div style="font-size:13px; color:var(--emerald); font-family:var(--fm);">${ja ? '357,600件ラップ完了 · ML-DSA-65 · ダウンタイムゼロ' : '357,600 records wrapped · ML-DSA-65 · zero downtime'}</div>
+    <div class="callout"><strong>${ja ? '移行完了。' : 'Migration complete.'}</strong> ${ja ? 'Lessinesの全バッチ記録がPQC署名エンベロープを付与されました。2033年に量子コンピュータが元のRSA署名を破った場合でも、ML-DSAエンベロープが2026年時点での記録の存在と有効性を証明します。規制上の連続性が確保されます。' : 'Every batch record at Lessines now carries a PQC signature envelope. If a quantum computer breaks the original RSA signature in 2033, the ML-DSA envelope proves the record existed and was valid in 2026. Regulatory continuity preserved.'}</div>
+    <div class="banner-done">${ja ? '✓ Lessines PQC移行完了 — 34万件以上の記録が量子安全' : '✓ Lessines PQC migration complete — 340K+ records quantum-safe'}</div>
+    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(2,true); unlockNext(); goTo(4)">${ja ? '署名サービスへ進む →' : 'Continue to Sign-as-Service →'}</button></div>
   </div>`;
 }
 function runMig() {
-  document.getElementById('migBtn').innerHTML = '<span class="spinner"></span> Wrapping records with PQC envelopes…';
+  const ja = lang === 'ja';
+  document.getElementById('migBtn').innerHTML = `<span class="spinner"></span> ${ja ? 'PQCエンベロープでラップ中…' : 'Wrapping records with PQC envelopes…'}`;
   document.getElementById('migBtn').disabled = true;
   setTimeout(() => {
     document.getElementById('migArea').style.display = 'none';
@@ -330,64 +356,66 @@ function runMig() {
 }
 
 function screen4() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Sign-as-Service — Batch Release</h1>
-  <p class="screen-sub">ENTYVIO batch ready for release at Hikari, Japan. One batch. Three jurisdictions (PMDA + EU Annex 11 + 21 CFR Part 11). One unified signing workflow.</p>
+  <h1 class="screen-title">${ja ? '署名サービス — バッチリリース' : 'Sign-as-Service — Batch Release'}</h1>
+  <p class="screen-sub">${ja ? 'ENTYVIOバッチが光工場（日本）でリリース準備完了。1バッチ。3法域（PMDA + EU Annex 11 + 21 CFR Part 11）。統一された署名ワークフロー。' : 'ENTYVIO batch ready for release at Hikari, Japan. One batch. Three jurisdictions (PMDA + EU Annex 11 + 21 CFR Part 11). One unified signing workflow.'}</p>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Batch: TK-HKR-2026-ENT-0294 — ENTYVIO 300mg</div>
-    <div class="kv-row"><span class="kv-key">Site</span><span class="kv-val">Hikari, Japan — Biologics Manufacturing</span></div>
-    <div class="kv-row"><span class="kv-key">Product</span><span class="kv-val">ENTYVIO® (vedolizumab) 300mg IV</span></div>
-    <div class="kv-row"><span class="kv-key">Markets</span><span class="kv-val">Japan (PMDA), EU (EMA), US (FDA)</span></div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? 'バッチ: TK-HKR-2026-ENT-0294 — ENTYVIO 300mg' : 'Batch: TK-HKR-2026-ENT-0294 — ENTYVIO 300mg'}</div>
+    <div class="kv-row"><span class="kv-key">${ja ? '拠点' : 'Site'}</span><span class="kv-val">${ja ? '光工場（日本）— バイオ医薬品製造' : 'Hikari, Japan — Biologics Manufacturing'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '製品' : 'Product'}</span><span class="kv-val">ENTYVIO® (vedolizumab) 300mg IV</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '市場' : 'Markets'}</span><span class="kv-val">${ja ? '日本（PMDA）、EU（EMA）、米国（FDA）' : 'Japan (PMDA), EU (EMA), US (FDA)'}</span></div>
     <div style="margin-top:18px;">
       <div class="row-item">
         <div class="row-icon" style="background:var(--emerald-dim);">QC</div>
-        <div class="row-info"><div class="row-title">QC Lab Manager — analytical results signed</div><div class="row-desc">ML-DSA-65 · PMDA-compliant · Hardware-bound key (JP Sovereign KMS)</div></div>
-        <div class="row-status" id="bs0" style="background:var(--red-dim); color:var(--red);">Pending</div>
+        <div class="row-info"><div class="row-title">${ja ? 'QCラボマネージャー — 分析結果署名済み' : 'QC Lab Manager — analytical results signed'}</div><div class="row-desc">ML-DSA-65 · ${ja ? 'PMDA準拠 · ハードウェアバウンド鍵（JP Sovereign KMS）' : 'PMDA-compliant · Hardware-bound key (JP Sovereign KMS)'}</div></div>
+        <div class="row-status" id="bs0" style="background:var(--red-dim); color:var(--red);">${ja ? '署名待ち' : 'Pending'}</div>
       </div>
       <div class="row-item">
         <div class="row-icon" style="background:var(--emerald-dim);">PM</div>
-        <div class="row-info"><div class="row-title">Production Manager — batch record completion</div><div class="row-desc">ML-DSA-65 · PMDA-compliant · Hardware-bound key (JP Sovereign KMS)</div></div>
-        <div class="row-status" id="bs1" style="background:var(--red-dim); color:var(--red);">Pending</div>
+        <div class="row-info"><div class="row-title">${ja ? '製造マネージャー — バッチ記録完了' : 'Production Manager — batch record completion'}</div><div class="row-desc">ML-DSA-65 · ${ja ? 'PMDA準拠 · ハードウェアバウンド鍵（JP Sovereign KMS）' : 'PMDA-compliant · Hardware-bound key (JP Sovereign KMS)'}</div></div>
+        <div class="row-status" id="bs1" style="background:var(--red-dim); color:var(--red);">${ja ? '署名待ち' : 'Pending'}</div>
       </div>
       <div class="row-item">
         <div class="row-icon" style="background:var(--emerald-dim);">QA</div>
-        <div class="row-info"><div class="row-title">QA Director — final release authorization</div><div class="row-desc">ML-DSA-65 · Threshold: all 3 required for biologics release</div></div>
-        <div class="row-status" id="bs2" style="background:var(--red-dim); color:var(--red);">Pending</div>
+        <div class="row-info"><div class="row-title">${ja ? 'QAディレクター — 最終リリース承認' : 'QA Director — final release authorization'}</div><div class="row-desc">ML-DSA-65 · ${ja ? '閾値: バイオ医薬品リリースに3名全員必要' : 'Threshold: all 3 required for biologics release'}</div></div>
+        <div class="row-status" id="bs2" style="background:var(--red-dim); color:var(--red);">${ja ? '署名待ち' : 'Pending'}</div>
       </div>
     </div>
     <div style="margin-top:20px;" id="bsArea">
-      <button class="btn btn-primary" id="bsBtn" onclick="runBatchSign()">Collect Signatures</button>
+      <button class="btn btn-primary" id="bsBtn" onclick="runBatchSign()">${ja ? '署名を収集' : 'Collect Signatures'}</button>
     </div>
     <div id="s4done" style="display:none;">
-      <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin:18px 0 12px;">Multi-Jurisdiction Counter-Signatures (Automatic)</div>
+      <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin:18px 0 12px;">${ja ? '多法域カウンター署名（自動）' : 'Multi-Jurisdiction Counter-Signatures (Automatic)'}</div>
       <div class="row-item">
         <div class="row-icon" style="background:var(--sky-dim);">🇯🇵</div>
-        <div class="row-info"><div class="row-title">PMDA release — JP format, JP Sovereign KMS</div></div>
-        <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">✓ Signed</div>
+        <div class="row-info"><div class="row-title">${ja ? 'PMDAリリース — JP形式、JP Sovereign KMS' : 'PMDA release — JP format, JP Sovereign KMS'}</div></div>
+        <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">✓ ${ja ? '署名済' : 'Signed'}</div>
       </div>
       <div class="row-item">
         <div class="row-icon" style="background:var(--sky-dim);">🇪🇺</div>
-        <div class="row-info"><div class="row-title">EU Annex 11 release — QP counter-signature, EU KMS</div></div>
-        <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">✓ Signed</div>
+        <div class="row-info"><div class="row-title">${ja ? 'EU Annex 11リリース — QPカウンター署名、EU KMS' : 'EU Annex 11 release — QP counter-signature, EU KMS'}</div></div>
+        <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">✓ ${ja ? '署名済' : 'Signed'}</div>
       </div>
       <div class="row-item">
         <div class="row-icon" style="background:var(--sky-dim);">🇺🇸</div>
-        <div class="row-info"><div class="row-title">21 CFR Part 11 release — US format, US KMS</div></div>
-        <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">✓ Signed</div>
+        <div class="row-info"><div class="row-title">${ja ? '21 CFR Part 11リリース — US形式、US KMS' : '21 CFR Part 11 release — US format, US KMS'}</div></div>
+        <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">✓ ${ja ? '署名済' : 'Signed'}</div>
       </div>
-      <div class="callout"><strong>One batch, three jurisdictions, one workflow.</strong> Previously: 3 separate signing ceremonies, 3 different systems, days of coordination. Now: single approval cascade auto-generates jurisdiction-specific counter-signatures.</div>
-      <div class="banner-done">✓ ENTYVIO batch released — PMDA + EMA + FDA signatures in single workflow</div>
-      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(3,true); unlockNext(); goTo(5)">Continue to Certificate Lifecycle →</button></div>
+      <div class="callout"><strong>${ja ? '1バッチ、3法域、1ワークフロー。' : 'One batch, three jurisdictions, one workflow.'}</strong> ${ja ? '従来: 3つの個別署名式典、3つの異なるシステム、数日の調整。現在: 単一承認カスケードが法域固有のカウンター署名を自動生成。' : 'Previously: 3 separate signing ceremonies, 3 different systems, days of coordination. Now: single approval cascade auto-generates jurisdiction-specific counter-signatures.'}</div>
+      <div class="banner-done">${ja ? '✓ ENTYVIOバッチリリース完了 — PMDA + EMA + FDA署名を単一ワークフローで' : '✓ ENTYVIO batch released — PMDA + EMA + FDA signatures in single workflow'}</div>
+      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(3,true); unlockNext(); goTo(5)">${ja ? '証明書ライフサイクルへ進む →' : 'Continue to Certificate Lifecycle →'}</button></div>
     </div>
   </div>`;
 }
 function runBatchSign() {
-  document.getElementById('bsBtn').innerHTML = '<span class="spinner"></span> Collecting signatures…';
+  const ja = lang === 'ja';
+  document.getElementById('bsBtn').innerHTML = `<span class="spinner"></span> ${ja ? '署名収集中…' : 'Collecting signatures…'}`;
   document.getElementById('bsBtn').disabled = true;
   ['bs0','bs1','bs2'].forEach((id, i) => {
     setTimeout(() => {
       const el = document.getElementById(id);
-      el.textContent = '✓ Signed'; el.style.background = 'var(--emerald-dim)'; el.style.color = 'var(--emerald)';
+      el.textContent = ja ? '✓ 署名済' : '✓ Signed'; el.style.background = 'var(--emerald-dim)'; el.style.color = 'var(--emerald)';
     }, 600 * (i + 1));
   });
   setTimeout(() => {
@@ -397,42 +425,44 @@ function runBatchSign() {
 }
 
 function screen5() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Certificate Lifecycle Automation</h1>
-  <p class="screen-sub">47,000 operator signing certificates across 34 sites. Previously managed in spreadsheets. Expired certificate = production halt. Now: automated lifecycle with zero manual tracking.</p>
+  <h1 class="screen-title">${ja ? '証明書ライフサイクル自動化' : 'Certificate Lifecycle Automation'}</h1>
+  <p class="screen-sub">${ja ? '34拠点にまたがる47,000のオペレーター署名証明書。以前はスプレッドシートで管理。証明書期限切れ＝製造停止。現在: 手作業ゼロの自動ライフサイクル管理。' : '47,000 operator signing certificates across 34 sites. Previously managed in spreadsheets. Expired certificate = production halt. Now: automated lifecycle with zero manual tracking.'}</p>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px; color:var(--amber);">Alert: Neuchatel — 47 Certificates Expiring in 30 Days</div>
-    <div class="kv-row"><span class="kv-key">Site</span><span class="kv-val">Neuchatel, Switzerland — Recombinant clotting factors</span></div>
-    <div class="kv-row"><span class="kv-key">Affected operators</span><span class="kv-val">47 (QC analysts, production operators, QA reviewers)</span></div>
-    <div class="kv-row"><span class="kv-key">Risk if expired</span><span class="kv-val" style="color:var(--red);">Operators cannot sign batch records → production halt → ADYNOVATE shortage</span></div>
-    <div class="kv-row"><span class="kv-key">Legacy process</span><span class="kv-val" style="color:var(--amber);">Manual tracking in Excel, 3-5 days per renewal, frequent misses</span></div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px; color:var(--amber);">${ja ? 'アラート: Neuchatel — 30日以内に期限切れの証明書47件' : 'Alert: Neuchatel — 47 Certificates Expiring in 30 Days'}</div>
+    <div class="kv-row"><span class="kv-key">${ja ? '拠点' : 'Site'}</span><span class="kv-val">${ja ? 'Neuchatel（スイス）— 遺伝子組換え凝固因子' : 'Neuchatel, Switzerland — Recombinant clotting factors'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '対象オペレーター' : 'Affected operators'}</span><span class="kv-val">${ja ? '47名（QC分析者、製造オペレーター、QAレビュアー）' : '47 (QC analysts, production operators, QA reviewers)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '期限切れ時のリスク' : 'Risk if expired'}</span><span class="kv-val" style="color:var(--red);">${ja ? 'オペレーターがバッチ記録に署名不可 → 製造停止 → ADYNOVATE供給不足' : 'Operators cannot sign batch records → production halt → ADYNOVATE shortage'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'レガシープロセス' : 'Legacy process'}</span><span class="kv-val" style="color:var(--amber);">${ja ? 'Excelで手動管理、更新に3-5日、頻繁な見落とし' : 'Manual tracking in Excel, 3-5 days per renewal, frequent misses'}</span></div>
   </div>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Automated Resolution</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? '自動解決' : 'Automated Resolution'}</div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--emerald-dim);">1</div>
-      <div class="row-info"><div class="row-title">Employment & training validation</div><div class="row-desc">Auto-verified: all 47 operators still employed + GxP training current</div></div>
+      <div class="row-info"><div class="row-title">${ja ? '在籍・教育訓練確認' : 'Employment & training validation'}</div><div class="row-desc">${ja ? '自動確認: 47名全員在籍 + GxP教育訓練有効' : 'Auto-verified: all 47 operators still employed + GxP training current'}</div></div>
     </div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--emerald-dim);">2</div>
-      <div class="row-info"><div class="row-title">New PQC certificates generated</div><div class="row-desc">ML-DSA-65 · Hardware-bound · Swiss Sovereign KMS</div></div>
+      <div class="row-info"><div class="row-title">${ja ? '新PQC証明書を生成' : 'New PQC certificates generated'}</div><div class="row-desc">ML-DSA-65 · ${ja ? 'ハードウェアバウンド · Swiss Sovereign KMS' : 'Hardware-bound · Swiss Sovereign KMS'}</div></div>
     </div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--emerald-dim);">3</div>
-      <div class="row-info"><div class="row-title">QA Manager batch approval</div><div class="row-desc">Single threshold-authenticated action renews all 47 simultaneously</div></div>
+      <div class="row-info"><div class="row-title">${ja ? 'QAマネージャー一括承認' : 'QA Manager batch approval'}</div><div class="row-desc">${ja ? '閾値認証による単一操作で47件同時更新' : 'Single threshold-authenticated action renews all 47 simultaneously'}</div></div>
     </div>
     <div style="margin-top:16px;" id="certArea">
-      <button class="btn btn-primary" id="certBtn" onclick="runCert()">Approve Batch Renewal</button>
+      <button class="btn btn-primary" id="certBtn" onclick="runCert()">${ja ? '一括更新を承認' : 'Approve Batch Renewal'}</button>
     </div>
     <div id="s5done" style="display:none;">
-      <div class="callout"><strong>47 certificates renewed in one action.</strong> Legacy process: 47 individual requests × 3-5 days each = 2-3 weeks of admin work + constant risk of expiry. Now: automated detection → validation → renewal → approval. Zero production disruption.</div>
-      <div class="banner-done">✓ Certificate lifecycle automated — zero expired certs, zero production halts</div>
-      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(4,true); unlockNext(); goTo(6)">Continue to Integrity Monitoring →</button></div>
+      <div class="callout"><strong>${ja ? '47件の証明書を一括更新完了。' : '47 certificates renewed in one action.'}</strong> ${ja ? 'レガシープロセス: 個別リクエスト47件 × 各3-5日 = 管理作業2-3週間 + 常時期限切れリスク。現在: 自動検知 → 確認 → 更新 → 承認。製造中断ゼロ。' : 'Legacy process: 47 individual requests × 3-5 days each = 2-3 weeks of admin work + constant risk of expiry. Now: automated detection → validation → renewal → approval. Zero production disruption.'}</div>
+      <div class="banner-done">${ja ? '✓ 証明書ライフサイクル自動化完了 — 期限切れゼロ、製造停止ゼロ' : '✓ Certificate lifecycle automated — zero expired certs, zero production halts'}</div>
+      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(4,true); unlockNext(); goTo(6)">${ja ? '整合性監視へ進む →' : 'Continue to Integrity Monitoring →'}</button></div>
     </div>
   </div>`;
 }
 function runCert() {
-  document.getElementById('certBtn').innerHTML = '<span class="spinner"></span> Renewing 47 certificates…';
+  const ja = lang === 'ja';
+  document.getElementById('certBtn').innerHTML = `<span class="spinner"></span> ${ja ? '47件の証明書を更新中…' : 'Renewing 47 certificates…'}`;
   document.getElementById('certBtn').disabled = true;
   setTimeout(() => {
     document.getElementById('certArea').style.display = 'none';
@@ -441,34 +471,36 @@ function runCert() {
 }
 
 function screen6() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Sentinel: Integrity Monitoring</h1>
-  <p class="screen-sub">Continuous verification of ALL signed GxP records across all 34 sites. Detects tampering, certificate chain breaks, and post-acquisition integration gaps — automatically.</p>
+  <h1 class="screen-title">${ja ? 'Sentinel：整合性監視' : 'Sentinel: Integrity Monitoring'}</h1>
+  <p class="screen-sub">${ja ? '全34拠点の全GxP署名済み記録を継続的に検証。改ざん、証明書チェーン断裂、買収後の統合ギャップを自動検出します。' : 'Continuous verification of ALL signed GxP records across all 34 sites. Detects tampering, certificate chain breaks, and post-acquisition integration gaps — automatically.'}</p>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Anomaly Detected</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? '異常検出' : 'Anomaly Detected'}</div>
     <div class="row-item" style="border-color: rgba(251,191,36,0.3); background: rgba(251,191,36,0.04);">
       <div class="row-icon" style="background:var(--amber-dim);">⚡</div>
-      <div class="row-info"><div class="row-title" style="color:var(--amber);">Batch record GARD-2024-7891 — Signature verification failed</div><div class="row-desc">GAMMAGARD LIQUID, Covington GA. Certificate chain incomplete: intermediate CA cert from Shire-era PKI expired 2025-12-31. Not renewed during post-acquisition integration.</div></div>
+      <div class="row-info"><div class="row-title" style="color:var(--amber);">${ja ? 'バッチ記録 GARD-2024-7891 — 署名検証失敗' : 'Batch record GARD-2024-7891 — Signature verification failed'}</div><div class="row-desc">${ja ? 'GAMMAGARD LIQUID, Covington GA。証明書チェーン不完全: Shire時代PKIの中間CA証明書が2025-12-31に期限切れ。買収後の統合で更新されず。' : 'GAMMAGARD LIQUID, Covington GA. Certificate chain incomplete: intermediate CA cert from Shire-era PKI expired 2025-12-31. Not renewed during post-acquisition integration.'}</div></div>
     </div>
     <div style="margin-top:16px;">
-      <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:10px;">Root Cause Analysis</div>
-      <div class="kv-row"><span class="kv-key">Type</span><span class="kv-val">Certificate lifecycle gap (NOT tampering)</span></div>
-      <div class="kv-row"><span class="kv-key">Origin</span><span class="kv-val">Shire PKI → Takeda integration. Intermediate CA not migrated.</span></div>
-      <div class="kv-row"><span class="kv-key">Impact</span><span class="kv-val">FDA inspector cannot validate 2024 batch records at Covington</span></div>
-      <div class="kv-row"><span class="kv-key">Legacy fix</span><span class="kv-val" style="color:var(--red);">3-6 months of forensic PKI work + external consultant ($200K+)</span></div>
+      <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:10px;">${ja ? '根本原因分析' : 'Root Cause Analysis'}</div>
+      <div class="kv-row"><span class="kv-key">${ja ? '種別' : 'Type'}</span><span class="kv-val">${ja ? '証明書ライフサイクルのギャップ（改ざんではない）' : 'Certificate lifecycle gap (NOT tampering)'}</span></div>
+      <div class="kv-row"><span class="kv-key">${ja ? '起源' : 'Origin'}</span><span class="kv-val">${ja ? 'Shire PKI → Takeda統合。中間CAが移行されず。' : 'Shire PKI → Takeda integration. Intermediate CA not migrated.'}</span></div>
+      <div class="kv-row"><span class="kv-key">${ja ? '影響' : 'Impact'}</span><span class="kv-val">${ja ? 'FDA査察官がCovingtonの2024年バッチ記録を検証不可' : 'FDA inspector cannot validate 2024 batch records at Covington'}</span></div>
+      <div class="kv-row"><span class="kv-key">${ja ? 'レガシー修正' : 'Legacy fix'}</span><span class="kv-val" style="color:var(--red);">${ja ? 'フォレンジックPKI作業3-6ヶ月 + 外部コンサルタント（$200K以上）' : '3-6 months of forensic PKI work + external consultant ($200K+)'}</span></div>
     </div>
     <div style="margin-top:16px;" id="fixArea">
-      <button class="btn btn-primary" id="fixBtn" onclick="runFix()">Auto-Remediate</button>
+      <button class="btn btn-primary" id="fixBtn" onclick="runFix()">${ja ? '自動修復' : 'Auto-Remediate'}</button>
     </div>
     <div id="s6done" style="display:none;">
-      <div class="callout"><strong>Auto-remediated:</strong> Re-anchored the signature to a valid trust chain using the archived Shire CA certificate (recovered from backup). Added PQC timestamp proving the record existed and was validly signed at original signing time. FDA inspector can now verify. Total time: 4 seconds (was 3-6 months).</div>
-      <div class="banner-done">✓ Legacy integrity restored — Shire-era records re-anchored + PQC timestamped</div>
-      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(5,true); unlockNext(); goTo(7)">Continue to Regulatory Submission →</button></div>
+      <div class="callout"><strong>${ja ? '自動修復完了：' : 'Auto-remediated:'}</strong> ${ja ? 'バックアップから復元したShire CA証明書を使用し、有効な信頼チェーンに再アンカリング。原署名時点での記録の存在と有効性を証明するPQCタイムスタンプを付与。FDA査察官が検証可能に。所要時間: 4秒（従来は3-6ヶ月）。' : 'Re-anchored the signature to a valid trust chain using the archived Shire CA certificate (recovered from backup). Added PQC timestamp proving the record existed and was validly signed at original signing time. FDA inspector can now verify. Total time: 4 seconds (was 3-6 months).'}</div>
+      <div class="banner-done">${ja ? '✓ レガシー整合性復元 — Shire時代の記録を再アンカリング + PQCタイムスタンプ付与' : '✓ Legacy integrity restored — Shire-era records re-anchored + PQC timestamped'}</div>
+      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(5,true); unlockNext(); goTo(7)">${ja ? '規制当局申請へ進む →' : 'Continue to Regulatory Submission →'}</button></div>
     </div>
   </div>`;
 }
 function runFix() {
-  document.getElementById('fixBtn').innerHTML = '<span class="spinner"></span> Re-anchoring trust chain…';
+  const ja = lang === 'ja';
+  document.getElementById('fixBtn').innerHTML = `<span class="spinner"></span> ${ja ? '信頼チェーンを再アンカリング中…' : 'Re-anchoring trust chain…'}`;
   document.getElementById('fixBtn').disabled = true;
   setTimeout(() => {
     document.getElementById('fixArea').style.display = 'none';
@@ -477,53 +509,55 @@ function runFix() {
 }
 
 function screen7() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Regulatory Submission Signing</h1>
-  <p class="screen-sub">TAKHZYRO supplemental NDA to FDA. 47,000 pages. 500+ documents. Post-quantum signatures that remain valid for the 20-year retention obligation.</p>
+  <h1 class="screen-title">${ja ? '規制当局申請署名' : 'Regulatory Submission Signing'}</h1>
+  <p class="screen-sub">${ja ? 'TAKHZYRO補足NDAをFDAに提出。47,000ページ。500以上の文書。20年間の保管義務に耐える耐量子署名。' : 'TAKHZYRO supplemental NDA to FDA. 47,000 pages. 500+ documents. Post-quantum signatures that remain valid for the 20-year retention obligation.'}</p>
   <div class="card">
-    <div class="kv-row"><span class="kv-key">Submission</span><span class="kv-val">TAKHZYRO sNDA — new pediatric indication (ages 2-6)</span></div>
-    <div class="kv-row"><span class="kv-key">Format</span><span class="kv-val">eCTD (electronic Common Technical Document)</span></div>
-    <div class="kv-row"><span class="kv-key">Documents</span><span class="kv-val">500+ modules · 47,000 pages</span></div>
-    <div class="kv-row"><span class="kv-key">Signature</span><span class="kv-val">ML-DSA-87 (NIST Level 5 — highest security)</span></div>
-    <div class="kv-row"><span class="kv-key">Governance</span><span class="kv-val">Global Reg Affairs VP + TA Head + Medical Director (3-of-3)</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '申請' : 'Submission'}</span><span class="kv-val">${ja ? 'TAKHZYRO sNDA — 新小児適応（2-6歳）' : 'TAKHZYRO sNDA — new pediatric indication (ages 2-6)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '形式' : 'Format'}</span><span class="kv-val">eCTD (electronic Common Technical Document)</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '文書数' : 'Documents'}</span><span class="kv-val">${ja ? '500以上のモジュール · 47,000ページ' : '500+ modules · 47,000 pages'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '署名' : 'Signature'}</span><span class="kv-val">ML-DSA-87 (NIST Level 5 — ${ja ? '最高セキュリティ' : 'highest security'})</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'ガバナンス' : 'Governance'}</span><span class="kv-val">${ja ? 'グローバル薬事VP + TA責任者 + メディカルディレクター（3名中3名）' : 'Global Reg Affairs VP + TA Head + Medical Director (3-of-3)'}</span></div>
     <div style="margin-top:20px;">
       <div class="row-item">
         <div class="row-icon" style="background:var(--emerald-dim);">RA</div>
-        <div class="row-info"><div class="row-title">Global Regulatory Affairs VP — Glattpark</div></div>
-        <div class="row-status" id="rs0" style="background:var(--red-dim); color:var(--red);">Pending</div>
+        <div class="row-info"><div class="row-title">${ja ? 'グローバル薬事VP — Glattpark' : 'Global Regulatory Affairs VP — Glattpark'}</div></div>
+        <div class="row-status" id="rs0" style="background:var(--red-dim); color:var(--red);">${ja ? '署名待ち' : 'Pending'}</div>
       </div>
       <div class="row-item">
         <div class="row-icon" style="background:var(--emerald-dim);">TA</div>
-        <div class="row-info"><div class="row-title">Therapeutic Area Head, Rare Diseases — Cambridge</div></div>
-        <div class="row-status" id="rs1" style="background:var(--red-dim); color:var(--red);">Pending</div>
+        <div class="row-info"><div class="row-title">${ja ? '希少疾患TA責任者 — Cambridge' : 'Therapeutic Area Head, Rare Diseases — Cambridge'}</div></div>
+        <div class="row-status" id="rs1" style="background:var(--red-dim); color:var(--red);">${ja ? '署名待ち' : 'Pending'}</div>
       </div>
       <div class="row-item">
         <div class="row-icon" style="background:var(--emerald-dim);">MD</div>
-        <div class="row-info"><div class="row-title">Medical Director, TAKHZYRO — Tokyo</div></div>
-        <div class="row-status" id="rs2" style="background:var(--red-dim); color:var(--red);">Pending</div>
+        <div class="row-info"><div class="row-title">${ja ? 'TAKHZYROメディカルディレクター — 東京' : 'Medical Director, TAKHZYRO — Tokyo'}</div></div>
+        <div class="row-status" id="rs2" style="background:var(--red-dim); color:var(--red);">${ja ? '署名待ち' : 'Pending'}</div>
       </div>
     </div>
     <div style="margin-top:20px;" id="rsArea">
-      <button class="btn btn-primary" id="rsBtn" onclick="runRegSub()">Sign & Submit to FDA</button>
+      <button class="btn btn-primary" id="rsBtn" onclick="runRegSub()">${ja ? '署名してFDAに提出' : 'Sign & Submit to FDA'}</button>
     </div>
     <div id="s7done" style="display:none;">
-      <div class="callout"><strong>Submitted.</strong> 47,000 pages, 500+ documents, each individually signed ML-DSA-87. FDA can verify using NIST-standardized PQC algorithms. In 2046, when this submission is still in the regulatory record, the signatures remain unforgeable — unlike today's RSA-2048 submissions which will be breakable by then.</div>
+      <div class="callout"><strong>${ja ? '提出完了。' : 'Submitted.'}</strong> ${ja ? '47,000ページ、500以上の文書、各々ML-DSA-87で個別署名。FDAはNIST標準PQCアルゴリズムで検証可能。2046年に規制記録として残る時点でも、署名は偽造不可能 — 現行のRSA-2048による申請はその時点で突破可能になるのとは対照的です。' : "47,000 pages, 500+ documents, each individually signed ML-DSA-87. FDA can verify using NIST-standardized PQC algorithms. In 2046, when this submission is still in the regulatory record, the signatures remain unforgeable — unlike today's RSA-2048 submissions which will be breakable by then."}</div>
       <div style="margin-top:14px; display:flex; gap:10px;">
-        <button class="btn btn-ghost">⬇ Submission Manifest</button>
-        <button class="btn btn-ghost">⬇ Signature Certificate Chain</button>
+        <button class="btn btn-ghost">${ja ? '⬇ 提出マニフェスト' : '⬇ Submission Manifest'}</button>
+        <button class="btn btn-ghost">${ja ? '⬇ 署名証明書チェーン' : '⬇ Signature Certificate Chain'}</button>
       </div>
-      <div class="banner-done">✓ eCTD submitted — PQC signatures, 20-year validity guaranteed</div>
-      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="unlockNext(); goTo(8)">View CISO Dashboard →</button></div>
+      <div class="banner-done">${ja ? '✓ eCTD提出完了 — PQC署名、20年間の有効性保証' : '✓ eCTD submitted — PQC signatures, 20-year validity guaranteed'}</div>
+      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="unlockNext(); goTo(8)">${ja ? 'CISOダッシュボードを表示 →' : 'View CISO Dashboard →'}</button></div>
     </div>
   </div>`;
 }
 function runRegSub() {
-  document.getElementById('rsBtn').innerHTML = '<span class="spinner"></span> Signing 500+ documents…';
+  const ja = lang === 'ja';
+  document.getElementById('rsBtn').innerHTML = `<span class="spinner"></span> ${ja ? '500以上の文書に署名中…' : 'Signing 500+ documents…'}`;
   document.getElementById('rsBtn').disabled = true;
   ['rs0','rs1','rs2'].forEach((id, i) => {
     setTimeout(() => {
       const el = document.getElementById(id);
-      el.textContent = '✓ Signed'; el.style.background = 'var(--emerald-dim)'; el.style.color = 'var(--emerald)';
+      el.textContent = ja ? '✓ 署名済' : '✓ Signed'; el.style.background = 'var(--emerald-dim)'; el.style.color = 'var(--emerald)';
     }, 600 * (i + 1));
   });
   setTimeout(() => {
@@ -533,59 +567,61 @@ function runRegSub() {
 }
 
 function screen8() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">CISO Executive Dashboard</h1>
-  <p class="screen-sub">The view from Takeda International AG, Glattpark. Enterprise-wide cryptographic posture — one screen.</p>
+  <h1 class="screen-title">${ja ? 'CISOエグゼクティブダッシュボード' : 'CISO Executive Dashboard'}</h1>
+  <p class="screen-sub">${ja ? 'Takeda International AG（Glattpark）からの全社俯瞰。エンタープライズ全体の暗号態勢を一画面で。' : 'The view from Takeda International AG, Glattpark. Enterprise-wide cryptographic posture — one screen.'}</p>
   <div class="grid-4" style="margin-bottom:24px;">
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">67%</div><div class="fleet-label">PQC Migration Progress</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">99.7%</div><div class="fleet-label">Cert Health (47K certs)</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">0</div><div class="fleet-label">Audit Findings (18mo)</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">CHF 12M</div><div class="fleet-label">Annual Savings</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">67%</div><div class="fleet-label">${ja ? 'PQC移行進捗' : 'PQC Migration Progress'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">99.7%</div><div class="fleet-label">${ja ? '証明書健全性（47K件）' : 'Cert Health (47K certs)'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">0</div><div class="fleet-label">${ja ? '監査指摘事項（18ヶ月）' : 'Audit Findings (18mo)'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">CHF 12M</div><div class="fleet-label">${ja ? '年間コスト削減' : 'Annual Savings'}</div></div>
   </div>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Regulatory Readiness by Agency</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? '規制当局別対応状況' : 'Regulatory Readiness by Agency'}</div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--emerald-dim);">🇺🇸</div>
-      <div class="row-info"><div class="row-title">FDA — PQC signatures accepted (2025 guidance)</div></div>
+      <div class="row-info"><div class="row-title">${ja ? 'FDA — PQC署名受理（2025年ガイダンス）' : 'FDA — PQC signatures accepted (2025 guidance)'}</div></div>
       <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">GREEN</div>
     </div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--emerald-dim);">🇪🇺</div>
-      <div class="row-info"><div class="row-title">EMA — eIDAS 2.0 PQC-compatible</div></div>
+      <div class="row-info"><div class="row-title">${ja ? 'EMA — eIDAS 2.0 PQC互換' : 'EMA — eIDAS 2.0 PQC-compatible'}</div></div>
       <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">GREEN</div>
     </div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--amber-dim);">🇯🇵</div>
-      <div class="row-info"><div class="row-title">PMDA — Awaiting Japanese PQC standard finalization</div></div>
+      <div class="row-info"><div class="row-title">${ja ? 'PMDA — 日本PQC基準の最終化待ち' : 'PMDA — Awaiting Japanese PQC standard finalization'}</div></div>
       <div class="row-status" style="background:var(--amber-dim); color:var(--amber);">AMBER</div>
     </div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--emerald-dim);">🇨🇭</div>
-      <div class="row-info"><div class="row-title">Swissmedic — accepts ML-DSA</div></div>
+      <div class="row-info"><div class="row-title">${ja ? 'Swissmedic — ML-DSA受理' : 'Swissmedic — accepts ML-DSA'}</div></div>
       <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">GREEN</div>
     </div>
   </div>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">CRO Remediation Status</div>
-    <div class="kv-row"><span class="kv-key">IQVIA — contractual PQC deadline</span><span class="kv-val" style="color:var(--amber);">Q2 2027 (in progress)</span></div>
-    <div class="kv-row"><span class="kv-key">Covance — PQC migration</span><span class="kv-val" style="color:var(--emerald);">Q3 2027 (on track)</span></div>
-    <div class="kv-row"><span class="kv-key">Neuchatel CMO — urgent remediation</span><span class="kv-val" style="color:var(--amber);">Q4 2026 (escalated)</span></div>
-    <div class="kv-row"><span class="kv-key">PPD/Thermo Fisher</span><span class="kv-val" style="color:var(--emerald);">Complete ✓</span></div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? 'CRO是正状況' : 'CRO Remediation Status'}</div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'IQVIA — PQC契約期限' : 'IQVIA — contractual PQC deadline'}</span><span class="kv-val" style="color:var(--amber);">${ja ? '2027年Q2（進行中）' : 'Q2 2027 (in progress)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'Covance — PQC移行' : 'Covance — PQC migration'}</span><span class="kv-val" style="color:var(--emerald);">${ja ? '2027年Q3（計画通り）' : 'Q3 2027 (on track)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'Neuchatel CMO — 緊急是正' : 'Neuchatel CMO — urgent remediation'}</span><span class="kv-val" style="color:var(--amber);">${ja ? '2026年Q4（エスカレーション済）' : 'Q4 2026 (escalated)'}</span></div>
+    <div class="kv-row"><span class="kv-key">PPD/Thermo Fisher</span><span class="kv-val" style="color:var(--emerald);">${ja ? '完了 ✓' : 'Complete ✓'}</span></div>
   </div>
   <div class="grid-2" style="margin-top:20px;">
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--red);">Before</div><div class="fleet-label">14 audit findings / 2yr · €50M+ PKI program · 4,500 lay-offs = knowledge loss</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">After</div><div class="fleet-label">0 findings / 18mo · CHF 12M/yr savings · automated lifecycle · quantum-safe</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--red);">${ja ? '導入前' : 'Before'}</div><div class="fleet-label">${ja ? '監査指摘14件/2年 · €50M以上のPKIプログラム · 4,500名解雇=知識流出' : '14 audit findings / 2yr · €50M+ PKI program · 4,500 lay-offs = knowledge loss'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">${ja ? '導入後' : 'After'}</div><div class="fleet-label">${ja ? '指摘0件/18ヶ月 · CHF 12M/年削減 · ライフサイクル自動化 · 量子安全' : '0 findings / 18mo · CHF 12M/yr savings · automated lifecycle · quantum-safe'}</div></div>
   </div>
-  <div class="banner-done" style="margin-top:24px;">✓ Complete: $4.2B product value quantum-protected → CRO risk surfaced & remediated → Multi-jurisdiction signing unified → Certificate lifecycle automated → Legacy integrity restored. All 8 screens complete.</div>`;
+  <div class="banner-done" style="margin-top:24px;">${ja ? '✓ 完了: 製品価值42億ドルを量子保護 → CROリスク可視化・是正 → 多法域署名統合 → 証明書ライフサイクル自動化 → レガシー整合性復元。全8画面完了。' : '✓ Complete: $4.2B product value quantum-protected → CRO risk surfaced & remediated → Multi-jurisdiction signing unified → Certificate lifecycle automated → Legacy integrity restored. All 8 screens complete.'}</div>`;
 }
 
 function ctaStrip() {
+  const ja = lang === 'ja';
   return `
   <div class="cta-strip">
-    <h3>Ready to protect $4.2B in product value?</h3>
-    <p>Book a 30-minute technical walkthrough. We'll show the full SENTINEL PQC migration plan configured for your GxP landscape.</p>
+    <h3>${ja ? '42億ドルの製品価値を守る準備はできていますか？' : 'Ready to protect $4.2B in product value?'}</h3>
+    <p>${ja ? '30分の技術ウォークスルーをご予約ください。貴社GxP環境に合わせたSENTINEL PQC移行計画をご提示します。' : "Book a 30-minute technical walkthrough. We'll show the full SENTINEL PQC migration plan configured for your GxP landscape."}</p>
     <div class="cta-btns">
-      <a href="https://cal.com/agenticvaults" target="_blank"><button class="btn btn-primary">Schedule Meeting →</button></a>
+      <a href="https://cal.com/agenticvaults" target="_blank"><button class="btn btn-primary">${ja ? 'ミーティングを予約 →' : 'Schedule Meeting →'}</button></a>
       <a href="mailto:ldavid@agenticvaults.ai"><button class="btn btn-ghost">ldavid@agenticvaults.ai</button></a>
     </div>
   </div>`;
@@ -593,8 +629,9 @@ function ctaStrip() {
 
 const SCREEN_FNS = {1:screen1,2:screen2,3:screen3,4:screen4,5:screen5,6:screen6,7:screen7,8:screen8};
 function render() {
+  const stepLabels = getStepLabels();
   document.getElementById('content').innerHTML = `<div class="fade-in">${SCREEN_FNS[state.screen]()}${state.screen === 8 ? ctaStrip() : ''}</div>`;
-  document.getElementById('topTitle').textContent = STEP_LABELS[state.screen - 1];
+  document.getElementById('topTitle').textContent = stepLabels[state.screen - 1];
   renderSidebar();
   window.scrollTo(0,0);
 }
