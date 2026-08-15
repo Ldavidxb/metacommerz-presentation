@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SENTINEL — Plasma-Derived Therapy Supply Chain Integrity · Takeda</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #06060B; --surface: #0E0E16; --surface2: #16161F; --surface3: #1C1C28;
+    --border: #252535; --border-light: #2E2E40;
+    --emerald: #34D399; --emerald-dim: rgba(52,211,153,0.12);
+    --red: #F87171; --red-dim: rgba(248,113,113,0.12);
+    --amber: #FBBF24; --amber-dim: rgba(251,191,36,0.12);
+    --cyan: #22D3EE; --cyan-dim: rgba(34,211,238,0.12);
+    --blue: #60A5FA; --blue-dim: rgba(96,165,250,0.12);
+    --purple: #A78BFA; --rose: #FB7185; --rose-dim: rgba(251,113,133,0.12);
+    --white: #F0EDE6; --muted: #8E8EA3; --dim: #55556A;
+    --fd: 'Space Grotesk', sans-serif; --fb: 'DM Sans', sans-serif; --fm: 'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--white); font-family: var(--fb); overflow-x: hidden; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .fade-in { animation: fadeIn 0.4s ease-out both; }
+  .app { display: flex; min-height: 100vh; }
+
+  .sidebar { width: 280px; background: var(--surface); border-right: 1px solid var(--border); flex-shrink: 0; display: flex; flex-direction: column; position: fixed; top:0; bottom:0; left:0; overflow-y:auto; }
+  .brand { padding: 22px 22px 18px; border-bottom: 1px solid var(--border); }
+  .brand-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .brand-mark { width: 26px; height: 26px; border: 2px solid var(--emerald); border-radius: 7px; display:flex; align-items:center; justify-content:center; }
+  .brand-mark div { width: 9px; height: 9px; background: var(--emerald); border-radius: 2px; }
+  .brand-name { font-family: var(--fd); font-weight: 700; font-size: 14.5px; color: var(--emerald); letter-spacing: 0.03em; }
+  .brand-sub { font-size: 10.5px; color: var(--dim); margin-left: 36px; }
+  .context-box { margin: 16px 18px; padding: 12px 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; }
+  .context-label { font-size: 9.5px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .context-val { font-size: 12.5px; color: var(--white); font-weight: 600; line-height: 1.4; }
+
+  .steps { padding: 8px 12px; flex: 1; }
+  .step { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 9px; cursor: pointer; margin-bottom: 2px; transition: background 0.15s; }
+  .step:hover { background: var(--surface2); }
+  .step.active { background: var(--emerald-dim); }
+  .step-num { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 700; font-family: var(--fm); flex-shrink: 0; border: 1.5px solid var(--border-light); color: var(--dim); }
+  .step.done .step-num { background: var(--emerald); border-color: var(--emerald); color: #04140d; }
+  .step.active .step-num { border-color: var(--emerald); color: var(--emerald); }
+  .step-label { font-size: 12.5px; color: var(--muted); font-weight: 500; line-height: 1.3; }
+  .step.active .step-label, .step.done .step-label { color: var(--white); }
+  .step.locked { opacity: 0.35; pointer-events: none; }
+
+  .checklist-mini { margin: 10px 18px 20px; padding: 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; }
+  .checklist-mini-title { font-size: 9.5px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; display:flex; justify-content:space-between; }
+  .mini-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 11px; color: var(--muted); }
+  .mini-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); flex-shrink: 0; transition: background 0.4s; }
+  .mini-dot.on { background: var(--emerald); }
+  .mini-row.on { color: var(--white); }
+
+  .main { margin-left: 280px; flex: 1; min-height: 100vh; }
+  .topbar { position: sticky; top: 0; z-index: 10; background: rgba(6,6,11,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 40px; display:flex; align-items:center; justify-content: space-between; }
+  .topbar-title { font-family: var(--fd); font-weight: 700; font-size: 17px; }
+  .topbar-badge { font-family: var(--fm); font-size: 11px; color: var(--rose); background: var(--rose-dim); padding: 5px 12px; border-radius: 100px; border: 1px solid rgba(251,113,133,0.25); }
+  .content { padding: 40px; max-width: 1100px; }
+
+  h1.screen-title { font-family: var(--fd); font-size: 30px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .screen-sub { color: var(--muted); font-size: 15px; margin-bottom: 32px; line-height: 1.6; max-width: 700px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 26px; margin-bottom: 20px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; }
+
+  .kv-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+  .kv-row:last-child { border-bottom: none; }
+  .kv-key { color: var(--dim); }
+  .kv-val { font-family: var(--fm); color: var(--white); font-weight: 500; }
+
+  .progress-track { height: 8px; background: var(--surface3); border-radius: 100px; overflow: hidden; margin: 14px 0; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--rose), var(--emerald)); border-radius: 100px; width: 0%; transition: width 1.6s cubic-bezier(.2,.8,.2,1); }
+
+  .btn { font-family: var(--fd); font-weight: 600; font-size: 14.5px; padding: 13px 26px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary { background: var(--emerald); color: #04140d; }
+  .btn-primary:hover { background: #4fe3ab; transform: translateY(-1px); }
+  .btn-primary:disabled { background: var(--surface3); color: var(--dim); cursor: not-allowed; transform: none; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border-light); color: var(--white); }
+  .btn-ghost:hover { border-color: var(--emerald); }
+  .btn-rose { background: var(--rose); color: #1a0508; }
+  .btn-rose:hover { background: #fc8d9e; transform: translateY(-1px); }
+
+  .callout { padding: 14px 18px; border-radius: 10px; border-left: 3px solid var(--emerald); background: rgba(52,211,153,0.06); font-size: 13.5px; color: var(--white); line-height: 1.6; margin: 18px 0; }
+  .callout.rose { border-left-color: var(--rose); background: rgba(251,113,133,0.06); }
+  .callout.red { border-left-color: var(--red); background: rgba(248,113,113,0.06); }
+  .callout strong { color: var(--emerald); }
+  .callout.rose strong { color: var(--rose); }
+
+  .fleet-stat { text-align: center; padding: 22px; background: var(--surface2); border-radius: 12px; border: 1px solid var(--border); }
+  .fleet-num { font-family: var(--fm); font-size: 27px; font-weight: 700; }
+  .fleet-label { font-size: 11.5px; color: var(--dim); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .spinner { width: 15px; height: 15px; border: 2px solid rgba(4,20,13,0.3); border-top-color: #04140d; border-radius: 50%; animation: spin 0.7s linear infinite; }
+  .banner-done { display: flex; align-items: center; gap: 10px; padding: 16px 20px; background: var(--emerald-dim); border: 1px solid rgba(52,211,153,0.3); border-radius: 12px; margin-top: 24px; font-size: 14px; font-weight: 600; color: var(--emerald); }
+
+  .chain-row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--surface2); border-radius: 10px; margin-bottom: 10px; border: 1px solid var(--border); }
+  .chain-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .chain-info { flex: 1; }
+  .chain-title { font-size: 13.5px; font-weight: 600; }
+  .chain-desc { font-size: 11.5px; color: var(--dim); }
+  .chain-status { font-family: var(--fm); font-size: 11px; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+
+  .zip-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: var(--surface2); border-radius: 9px; margin-bottom: 8px; border: 1px solid var(--border); font-size: 13.5px; }
+  .zip-icon { color: var(--emerald); font-family: var(--fm); font-size: 15px; }
+
+  .site-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 18px; cursor: pointer; transition: all 0.2s; }
+  .site-card:hover { border-color: var(--rose); transform: translateY(-1px); }
+  .site-name { font-family: var(--fd); font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+  .site-meta { font-size: 11px; color: var(--dim); font-family: var(--fm); }
+  .site-stat { font-family: var(--fm); font-size: 16px; font-weight: 700; margin-top: 10px; }
+
+  .donor-bar { display: flex; height: 10px; border-radius: 100px; overflow: hidden; margin: 12px 0; }
+  .donor-bar div { height: 100%; transition: width 0.6s; }
+
+  .cta-strip { margin-top: 40px; padding: 28px; background: linear-gradient(135deg, rgba(251,113,133,0.06), rgba(52,211,153,0.06)); border: 1px solid var(--border-light); border-radius: 14px; text-align: center; }
+  .cta-strip h3 { font-family: var(--fd); font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .cta-strip p { color: var(--muted); font-size: 13.5px; margin-bottom: 18px; }
+  .cta-strip .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .cta-strip a { text-decoration: none; }
+
+  .chart-area { position: relative; width: 100%; height: 160px; margin: 16px 0; }
+  .chart-area canvas { width: 100%; height: 100%; }
+  .chart-tooltip { position: absolute; background: var(--surface); border: 1px solid var(--border-light); border-radius: 8px; padding: 8px 12px; font-size: 11px; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 5; }
+  .chart-tooltip .tt-time { color: var(--dim); font-family: var(--fm); }
+  .chart-tooltip .tt-temp { font-family: var(--fm); font-weight: 600; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-row">
+        <div class="brand-mark"><div></div></div>
+        <span class="brand-name">agenticvaults</span>
+      </div>
+      <div class="brand-sub">SENTINEL · Supply Chain Integrity</div>
+    </div>
+    <div class="context-box">
+      <div class="context-label">Prospect Walkthrough</div>
+      <div class="context-val">Takeda — Plasma-Derived Therapy Traceability & Donor Privacy</div>
+    </div>
+    <div class="steps" id="steps"></div>
+    <div class="checklist-mini">
+      <div class="checklist-mini-title"><span>Compliance</span><span id="miniCount">0/6</span></div>
+      <div id="miniList"></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topTitle">Plasma Network</div>
+      <div class="topbar-badge" id="topBadge">BioLife · PDT Division</div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<script>
+const REQS = [
+  {code: '1', label: 'Donor-to-patient traceability'},
+  {code: '2', label: 'Donor privacy protected'},
+  {code: '3', label: 'Cold chain verified'},
+  {code: '4', label: 'Fractionation integrity'},
+  {code: '5', label: 'Cross-border compliance'},
+  {code: '6', label: 'Lookback capability active'},
+];
+const STEP_LABELS = [
+  'Plasma Collection Network',
+  'Donor Privacy & Traceability',
+  'Cold Chain Verification',
+  'Fractionation Integrity',
+  'Cross-Border Data Compliance',
+  'Rare Disease Registry (Privacy)',
+  'Lookback & Recall Capability',
+  'Regulatory Submission',
+];
+
+let state = { screen: 1, maxUnlocked: 1, reqStatus: [false,false,false,false,false,false], region: 'us' };
+function setReq(idx, val) { state.reqStatus[idx] = val; renderSidebar(); }
+function goTo(n) { if (n > state.maxUnlocked) return; state.screen = n; render(); }
+function unlockNext() { state.maxUnlocked = Math.max(state.maxUnlocked, state.screen + 1); }
+
+function renderSidebar() {
+  const stepsEl = document.getElementById('steps');
+  stepsEl.innerHTML = STEP_LABELS.map((label, i) => {
+    const n = i + 1;
+    const cls = ['step'];
+    if (n === state.screen) cls.push('active');
+    else if (n < state.screen) cls.push('done');
+    if (n > state.maxUnlocked) cls.push('locked');
+    return `<div class="${cls.join(' ')}" onclick="goTo(${n})">
+      <div class="step-num">${n < state.screen ? '✓' : n}</div>
+      <div class="step-label">${label}</div>
+    </div>`;
+  }).join('');
+  const doneCount = state.reqStatus.filter(Boolean).length;
+  document.getElementById('miniCount').textContent = doneCount + '/6';
+  document.getElementById('miniList').innerHTML = REQS.map((r, i) => {
+    const on = state.reqStatus[i];
+    return `<div class="mini-row ${on ? 'on' : ''}"><div class="mini-dot ${on ? 'on' : ''}"></div>${r.label}</div>`;
+  }).join('');
+}
+
+function screen1() {
+  return `
+  <h1 class="screen-title">Plasma Collection Network</h1>
+  <p class="screen-sub">Takeda's BioLife operates 200+ plasma collection centers across 4 countries. Millions of donations per year become life-saving therapies — immunoglobulins, albumin, clotting factors.</p>
+  <div class="grid-4" style="margin-bottom:24px;">
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--rose);">230</div><div class="fleet-label">BioLife Centers</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--blue);">12M+</div><div class="fleet-label">Donations / Year</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">6</div><div class="fleet-label">Fractionation Plants</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">40+</div><div class="fleet-label">Countries Served</div></div>
+  </div>
+  <div class="grid-3" style="margin-bottom:20px;">
+    <div class="site-card" onclick="state.region='us'; unlockNext(); goTo(2)">
+      <div class="site-name">US Network</div>
+      <div class="site-meta">180 CENTERS · MIDWEST + SOUTH</div>
+      <div class="site-stat" style="color:var(--rose);">9.2M donations/yr</div>
+      <div style="font-size:11px; color:var(--emerald); margin-top:8px; font-weight:600;">→ Click to begin traceability demo</div>
+    </div>
+    <div class="site-card" onclick="state.region='eu'; unlockNext(); goTo(2)">
+      <div class="site-name">EU Network</div>
+      <div class="site-meta">38 CENTERS · AT + DE + CZ + HU</div>
+      <div class="site-stat" style="color:var(--rose);">2.1M donations/yr</div>
+      <div style="font-size:11px; color:var(--emerald); margin-top:8px; font-weight:600;">→ Click to begin traceability demo</div>
+    </div>
+    <div class="site-card" onclick="state.region='frax'; state.maxUnlocked=Math.max(state.maxUnlocked,4); state.screen=4; render();">
+      <div class="site-name">Fractionation</div>
+      <div class="site-meta">6 PLANTS GLOBALLY</div>
+      <div class="site-stat" style="color:var(--rose);">14 PDT products</div>
+      <div style="font-size:11px; color:var(--emerald); margin-top:8px; font-weight:600;">→ Jump to fractionation integrity</div>
+    </div>
+  </div>
+  <div class="callout rose">
+    <strong>The dual mandate:</strong> Regulators (FDA, EMA) require complete donor-to-patient traceability — if a donor later tests positive for a pathogen, every product derived from their plasma must be recalled within hours. But HIPAA/GDPR require that donor identity is protected. These two requirements are in direct tension. Today's solution: siloed databases with manual lookback procedures (takes days). One delay = patient harm.
+  </div>`;
+}
+
+function screen2() {
+  const isEU = state.region === 'eu';
+  const center = isEU ? 'BioLife Center #12, Vienna (Austria)' : 'BioLife Center #47, Indianapolis';
+  const fraxPlant = isEU ? 'Lessines, Belgium' : 'Los Angeles';
+  const centerCount = isEU ? '38 EU centers' : '230 centers';
+  const regulation = isEU ? 'EU Tissue & Cells Directive 2004/23/EC + GDPR Art. 9 (health data)' : 'HIPAA + FDA 21 CFR 606/610';
+  const donorExample = isEU ? 'Donor Hans M.' : 'Donor John Smith';
+  return `
+  <h1 class="screen-title">Donor Privacy & Traceability</h1>
+  <p class="screen-sub">The impossible requirement solved: full donor-to-patient traceability WITHOUT any single system holding donor identity + product assignment together in cleartext.${isEU ? ' <strong style="color:var(--cyan);">EU GDPR Art. 9</strong> makes this even more stringent — health data is a "special category" requiring explicit consent OR public health exception.' : ''}</p>
+  ${isEU ? `<div class="callout rose" style="margin-bottom:20px;"><strong>EU-specific challenge:</strong> Under ${regulation}, donor traceability data must be retained for 30 years (Directive 2006/17/EC Art. 10) while GDPR demands data minimisation and purpose limitation. The Tissue Establishments in AT, DE, CZ, HU must comply with BOTH — simultaneously.</div>` : ''}
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">How It Works ${isEU ? '(EU Regulatory Context)' : ''}</div>
+    <div class="chain-row">
+      <div class="chain-icon" style="background:var(--rose-dim);">🩸</div>
+      <div class="chain-info"><div class="chain-title">Donation Event — ${center}</div><div class="chain-desc">Donor identity verified locally. System assigns a cryptographic commitment (not the donor ID itself) to the plasma unit.${isEU ? ' <strong>GDPR-compliant: no cross-border transfer of donor PII.</strong>' : ''}</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Privacy ✓</div>
+    </div>
+    <div class="chain-row">
+      <div class="chain-icon" style="background:var(--rose-dim);">🧪</div>
+      <div class="chain-info"><div class="chain-title">Testing & Pooling — ${isEU ? 'EU Quality Lab (Vienna)' : 'Quality Lab'}</div><div class="chain-desc">Plasma tested for pathogens. Cryptographic commitment travels with the unit — lab never sees donor name.</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Privacy ✓</div>
+    </div>
+    <div class="chain-row">
+      <div class="chain-icon" style="background:var(--rose-dim);">🏭</div>
+      <div class="chain-info"><div class="chain-title">Fractionation — ${fraxPlant} Plant</div><div class="chain-desc">${isEU ? '800' : '1,200'} units pooled. Each unit's commitment is recorded in the pool manifest. Plant never sees any donor identity.</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Privacy ✓</div>
+    </div>
+    <div class="chain-row">
+      <div class="chain-icon" style="background:var(--rose-dim);">💊</div>
+      <div class="chain-info"><div class="chain-title">Final Product — ${isEU ? 'HYQVIA (subcutaneous IgG)' : 'GAMMAGARD LIQUID'}</div><div class="chain-desc">Finished vial carries a cryptographic proof: "Derived from units that ALL passed pathogen screening." No donor IDs attached.</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Privacy ✓</div>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>The key property:</strong> At NO point does any single system hold both "${donorExample}" AND "Product Lot #XYZ" together in cleartext. But if a lookback is needed — the cryptographic commitment can be opened (with threshold approval) to trace every product derived from that donor. Privacy by default. Traceability when needed.
+  </div>
+  <div style="margin-top:16px;" id="traceArea">
+    <button class="btn btn-primary" id="traceBtn" onclick="runTrace()">Activate Cryptographic Traceability (${centerCount})</button>
+  </div>
+  <div id="s2done" style="display:none;">
+    <div class="banner-done">✓ Donor-to-patient traceability active — privacy maintained at every handoff</div>
+    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="unlockNext(); goTo(3)">Continue to Cold Chain →</button></div>
+  </div>`;
+}
+function runTrace() {
+  const count = state.region === 'eu' ? '38 EU centers' : '230 centers';
+  document.getElementById('traceBtn').innerHTML = `<span class="spinner"></span> Provisioning commitments across ${count}…`;
+  document.getElementById('traceBtn').disabled = true;
+  setTimeout(() => {
+    document.getElementById('traceArea').style.display = 'none';
+    document.getElementById('s2done').style.display = 'block';
+    setReq(0, true);
+    setReq(1, true);
+  }, 1400);
+}
+
+function screen3() {
+  return `
+  <h1 class="screen-title">Cold Chain Verification</h1>
+  <p class="screen-sub">Plasma must remain frozen (-25°C to -30°C) from collection through fractionation. A single excursion can render an entire pool (1,200 units, $1.8M) unusable.</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${state.region === 'eu' ? 'Shipment: BL12-2026-08-0187 (Vienna → Lessines, Belgium)' : 'Shipment: BL47-2026-08-0294 (Indianapolis → Los Angeles)'}</div>
+    <div class="kv-row"><span class="kv-key">Units</span><span class="kv-val">${state.region === 'eu' ? '320 plasma units (2 containers)' : '480 plasma units (3 containers)'}</span></div>
+    <div class="kv-row"><span class="kv-key">Required temp</span><span class="kv-val">-25°C to -30°C (continuous)</span></div>
+    <div class="kv-row"><span class="kv-key">Transit time</span><span class="kv-val">${state.region === 'eu' ? '14 hours (road freight, AT → BE, EU GDP-compliant route)' : '38 hours (road freight, validated route)'}</span></div>
+    <div class="kv-row"><span class="kv-key">Sensors</span><span class="kv-val">6 per container · logging every 30 seconds</span></div>
+    ${state.region === 'eu' ? '<div class="kv-row"><span class="kv-key">Cross-border</span><span class="kv-val" style="color:var(--cyan);">AT → DE → BE · EU GDP Annex 5 (cold chain) + PIC/S Guide</span></div>' : ''}
+    <div style="margin-top:20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <div style="font-family:var(--fd); font-weight:600; font-size:14px;">Temperature Log — Container 1</div>
+        <div style="display:flex; gap:14px; font-size:10px;">
+          <span style="color:var(--emerald);">● Normal (-25°C to -30°C)</span>
+          <span style="color:var(--amber);">● Near-threshold</span>
+          <span style="color:var(--red);">● Excursion (&gt; -25°C)</span>
+        </div>
+      </div>
+      <div class="chart-area" id="coldChartWrap">
+        <canvas id="coldChart"></canvas>
+        <div class="chart-tooltip" id="coldTooltip">
+          <div class="tt-time"></div>
+          <div class="tt-temp"></div>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--dim); font-family:var(--fm);">
+        <span>Hour 0 (Departure)</span><span style="color:var(--emerald);">avg -27.4°C</span><span>Hour 38 (Arrival)</span>
+      </div>
+      <div style="display:flex; gap:12px; margin-top:14px;">
+        <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
+          <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--emerald);">-27.4°C</div>
+          <div style="font-size:10px; color:var(--dim); margin-top:4px;">AVG TEMP</div>
+        </div>
+        <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
+          <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--emerald);">-25.1°C</div>
+          <div style="font-size:10px; color:var(--dim); margin-top:4px;">MAX (WARMEST)</div>
+        </div>
+        <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
+          <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--emerald);">-29.8°C</div>
+          <div style="font-size:10px; color:var(--dim); margin-top:4px;">MIN (COLDEST)</div>
+        </div>
+        <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
+          <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--emerald);">4,560</div>
+          <div style="font-size:10px; color:var(--dim); margin-top:4px;">DATA POINTS</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:20px;" id="ccArea">
+      <button class="btn btn-primary" id="ccBtn" onclick="runCC()">Seal Cold Chain Proof</button>
+    </div>
+    <div id="s3done" style="display:none;">
+      <div class="callout"><strong>Cold chain verified.</strong> Continuous temperature log cryptographically sealed. ${state.region === 'eu' ? '1,680 sensor readings over 14 hours' : '4,560 sensor readings over 38 hours'} — every one within specification. Proof states: "All ${state.region === 'eu' ? '320' : '480'} units remained within -25°C to -30°C for entire ${state.region === 'eu' ? '14-hour cross-border' : '38-hour'} transit." The logistics partner does NOT see which donor contributed which unit. They verify temperature — nothing else.${state.region === 'eu' ? ' <strong>EU GDP Annex 5 compliance proven across 3 member states (AT→DE→BE).</strong>' : ''}</div>
+      <div class="banner-done">✓ Cold chain integrity proven — ${state.region === 'eu' ? '€1.2M' : '$1.8M'} pool validated</div>
+      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="unlockNext(); goTo(4)">Continue to Fractionation →</button></div>
+    </div>
+  </div>`;
+}
+function runCC() {
+  document.getElementById('ccBtn').innerHTML = '<span class="spinner"></span> Sealing temperature log…';
+  document.getElementById('ccBtn').disabled = true;
+  setTimeout(() => {
+    document.getElementById('ccArea').style.display = 'none';
+    document.getElementById('s3done').style.display = 'block';
+    setReq(2, true);
+  }, 1200);
+}
+
+function screen4() {
+  const isEU = state.region === 'eu' || state.region === 'frax';
+  const poolId = isEU ? 'FRX-LES-2026-0412' : 'FRX-LA-2026-0847';
+  const plantName = isEU ? 'Lessines, Belgium' : 'Los Angeles, USA';
+  const inputUnits = isEU ? '800' : '1,200';
+  const centerCount = isEU ? '8 EU BioLife centers (AT/DE/CZ/HU)' : '14 BioLife centers';
+  return `
+  <h1 class="screen-title">Fractionation Integrity</h1>
+  <p class="screen-sub">${inputUnits} plasma units pooled and fractionated into 5 protein products at ${plantName}. The pool manifest must maintain traceability — but the fractionation process parameters are trade secrets.</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Pool: ${poolId} — ${plantName}</div>
+    <div class="kv-row"><span class="kv-key">Input</span><span class="kv-val">${inputUnits} plasma units (from ${centerCount})</span></div>
+    <div class="kv-row"><span class="kv-key">Fractionation method</span><span class="kv-val">[TRADE SECRET — protected by ZK attestation]</span></div>
+    <div class="kv-row"><span class="kv-key">Output products</span><span class="kv-val">5 (IgG, Albumin, Factor VIII, vWF, Alpha-1)</span></div>
+    ${isEU ? '<div class="kv-row"><span class="kv-key">EMA compliance</span><span class="kv-val" style="color:var(--cyan);">Directive 2002/98/EC + EU GMP Annex 14 (blood derivatives)</span></div>' : ''}
+    <div style="margin-top:18px; font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px;">Output Products from Pool</div>
+    <div class="chain-row">
+      <div class="chain-icon" style="background:var(--rose-dim);">Ig</div>
+      <div class="chain-info"><div class="chain-title">${isEU ? 'HYQVIA — 280 vials' : 'GAMMAGARD LIQUID — 340 vials'}</div><div class="chain-desc">Immunoglobulin (IgG) · Primary immune deficiency</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Released</div>
+    </div>
+    <div class="chain-row">
+      <div class="chain-icon" style="background:var(--blue-dim);">Ab</div>
+      <div class="chain-info"><div class="chain-title">FLEXBUMIN — ${isEU ? '380' : '520'} vials</div><div class="chain-desc">Albumin 5%/25% · Hypovolemia, burns</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Released</div>
+    </div>
+    <div class="chain-row">
+      <div class="chain-icon" style="background:var(--cyan-dim);">F8</div>
+      <div class="chain-info"><div class="chain-title">${isEU ? 'ADYNOVATE — 120 vials' : 'ADVATE — 180 vials'}</div><div class="chain-desc">Factor VIII · Hemophilia A</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Released</div>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>ZK proof generated:</strong> "Pool ${poolId} was fractionated at ${plantName} using a validated process. All ${inputUnits} input units passed screening. Each output product maintains cryptographic link to source units." The fractionation parameters (temperatures, pH, ethanol concentrations, timing) remain Takeda's trade secret — the proof verifies CORRECTNESS without revealing METHOD.${isEU ? ' <em>EMA inspectors at Lessines can verify process validation without accessing proprietary Cohn/Kistler-Nitschmann parameters.</em>' : ''}
+  </div>
+  <div style="margin-top:16px;">
+    <button class="btn btn-primary" onclick="setReq(3,true); unlockNext(); goTo(5)">Continue to Cross-Border Compliance →</button>
+  </div>`;
+}
+
+function screen5() {
+  return `
+  <h1 class="screen-title">Cross-Border Data Compliance</h1>
+  <p class="screen-sub">Plasma collected in the US. Fractionated in the US. Sold in 40+ countries. Each jurisdiction has different rules about what health data can cross borders.</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Data Sovereignty Map</div>
+    <div class="chain-row">
+      <div class="chain-icon" style="background:var(--blue-dim);">🇺🇸</div>
+      <div class="chain-info"><div class="chain-title">United States — HIPAA</div><div class="chain-desc">Donor PHI stays in US. Product traceability data (without donor ID) can export.</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Enforced</div>
+    </div>
+    <div class="chain-row">
+      <div class="chain-icon" style="background:var(--blue-dim);">🇪🇺</div>
+      <div class="chain-info"><div class="chain-title">European Union — GDPR Art. 9</div><div class="chain-desc">Health data (special category). Processing only with explicit consent or public health exception.</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Enforced</div>
+    </div>
+    <div class="chain-row">
+      <div class="chain-icon" style="background:var(--blue-dim);">🇯🇵</div>
+      <div class="chain-info"><div class="chain-title">Japan — APPI (Takeda HQ)</div><div class="chain-desc">Sensitive personal information. Cross-border transfer requires consent or equivalent protection.</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Enforced</div>
+    </div>
+    <div class="chain-row">
+      <div class="chain-icon" style="background:var(--blue-dim);">🇨🇳</div>
+      <div class="chain-info"><div class="chain-title">China — PIPL</div><div class="chain-desc">Health data classified as sensitive. Security assessment required for cross-border transfer.</div></div>
+      <div class="chain-status" style="background:var(--emerald-dim); color:var(--emerald);">Enforced</div>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>How it works:</strong> When GAMMAGARD vials ship to Germany, the receiving hospital can verify: "This product is derived from screened plasma, cold chain maintained, fractionation validated." They CANNOT determine which US donors contributed, which BioLife center collected, or any donor-level health data. Compliance by architecture — not by policy.
+  </div>
+  <div style="margin-top:16px;">
+    <button class="btn btn-primary" onclick="setReq(4,true); unlockNext(); goTo(6)">Continue to Rare Disease Registry →</button>
+  </div>`;
+}
+
+function screen6() {
+  return `
+  <h1 class="screen-title">Rare Disease Patient Registry</h1>
+  <p class="screen-sub">Takeda treats ultra-rare diseases (HAE, Fabry, Hunter). Patient populations are tiny — sometimes &lt;500 globally. In populations this small, even "anonymized" data can be re-identified.</p>
+  <div class="card">
+    <div class="grid-3" style="margin-bottom:20px;">
+      <div class="fleet-stat"><div class="fleet-num" style="color:var(--rose);">347</div><div class="fleet-label">HAE Patients (Global)</div></div>
+      <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">High</div><div class="fleet-label">Re-ID Risk</div></div>
+      <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">Zero</div><div class="fleet-label">Data Exposure</div></div>
+    </div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:12px;">The Problem with Traditional Anonymization</div>
+    <div class="chain-row" style="border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.04);">
+      <div class="chain-icon" style="background:var(--red-dim);">⚠️</div>
+      <div class="chain-info"><div class="chain-title" style="color:var(--red);">347 patients. Age + gender + country = re-identification.</div><div class="chain-desc">With only 347 patients globally, removing the name is NOT enough. "Female, 34, diagnosed 2019, Japan" — there may be only ONE match.</div></div>
+    </div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin:20px 0 12px;">Solution: ZK-Proven Registry Analytics</div>
+    <div class="chain-row">
+      <div class="chain-icon" style="background:var(--emerald-dim);">✓</div>
+      <div class="chain-info"><div class="chain-title">Query: "What % of HAE patients achieve attack-free status on TAKHZYRO?"</div><div class="chain-desc">Answer: 76.4% — proven from real registry data. But no individual record is exposed, not even in aggregate groups small enough to re-identify.</div></div>
+    </div>
+    <div class="chain-row">
+      <div class="chain-icon" style="background:var(--emerald-dim);">✓</div>
+      <div class="chain-info"><div class="chain-title">Query: "Mean annualized attack rate by treatment duration?"</div><div class="chain-desc">Answer: 0.3 attacks/year at 24mo. Proven from 347 records. No subgroup below k=5 anonymity threshold ever leaves the system.</div></div>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>Takeda can publish real-world evidence to regulators and payers</strong> — proven from actual patient data — without any risk of re-identifying an individual patient. For populations of 347, this is the ONLY approach that works. Traditional anonymization fails at this scale.
+  </div>
+  <div style="margin-top:16px;">
+    <button class="btn btn-primary" onclick="unlockNext(); goTo(7)">Continue to Lookback Capability →</button>
+  </div>`;
+}
+
+function screen7() {
+  return `
+  <h1 class="screen-title">Lookback & Recall Capability</h1>
+  <p class="screen-sub">The nightmare scenario: a donor who passed all screening tests is later diagnosed with a transmissible pathogen. Every product derived from their plasma must be identified — within hours, not days.</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px; color:var(--red);">LOOKBACK TRIGGERED — Simulation</div>
+    <div class="kv-row"><span class="kv-key">Donor</span><span class="kv-val">[Identity sealed — accessible only via threshold unlock]</span></div>
+    <div class="kv-row"><span class="kv-key">Trigger</span><span class="kv-val">Post-donation test positive (HCV antibody seroconversion)</span></div>
+    <div class="kv-row"><span class="kv-key">Donations in window</span><span class="kv-val">6 donations over past 4 months</span></div>
+    <div class="kv-row"><span class="kv-key">Approval required</span><span class="kv-val">3-of-4 threshold (Medical Director + VP Quality + Regulatory + Privacy Officer)</span></div>
+    <div style="margin-top:20px;" id="lookArea">
+      <button class="btn btn-rose" id="lookBtn" onclick="runLookback()">Initiate Lookback (Threshold Unlock)</button>
+    </div>
+    <div id="lookResults" style="display:none;">
+      <div style="margin-top:18px; font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px;">Trace Results (revealed after threshold approval)</div>
+      <div class="chain-row">
+        <div class="chain-icon" style="background:var(--red-dim);">1</div>
+        <div class="chain-info"><div class="chain-title">Pool FRX-LA-2026-0712 — GAMMAGARD Lot #GG-0712-A</div><div class="chain-desc">84 vials distributed · 23 to wholesalers, 61 to hospitals · 47 administered</div></div>
+        <div class="chain-status" style="background:var(--red-dim); color:var(--red);">RECALL</div>
+      </div>
+      <div class="chain-row">
+        <div class="chain-icon" style="background:var(--red-dim);">2</div>
+        <div class="chain-info"><div class="chain-title">Pool FRX-LA-2026-0756 — FLEXBUMIN Lot #FB-0756-C</div><div class="chain-desc">130 vials distributed · 89 to hospitals · 72 administered</div></div>
+        <div class="chain-status" style="background:var(--red-dim); color:var(--red);">RECALL</div>
+      </div>
+      <div class="chain-row">
+        <div class="chain-icon" style="background:var(--amber-dim);">3</div>
+        <div class="chain-info"><div class="chain-title">Pool FRX-LA-2026-0801 — In fractionation</div><div class="chain-desc">Not yet released · can be quarantined immediately</div></div>
+        <div class="chain-status" style="background:var(--amber-dim); color:var(--amber);">QUARANTINE</div>
+      </div>
+      <div class="grid-3" style="margin-top:18px;">
+        <div class="fleet-stat"><div class="fleet-num" style="color:var(--red);">214</div><div class="fleet-label">Vials Affected</div></div>
+        <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">119</div><div class="fleet-label">Already Administered</div></div>
+        <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">4 min</div><div class="fleet-label">Time to Full Trace</div></div>
+      </div>
+      <div class="callout"><strong>4 minutes.</strong> Previously this process took 3-5 DAYS of manual database queries, phone calls to distribution partners, and cross-referencing paper records. During those days, more patients receive potentially affected product. Now: threshold approval → instant cryptographic trace → recall notices dispatched.</div>
+      <div class="banner-done">✓ Lookback complete — 4 minutes vs. 3-5 days. Every affected unit identified. Recall notices dispatched.</div>
+      <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(5,true); unlockNext(); goTo(8)">Generate Regulatory Package →</button></div>
+    </div>
+  </div>`;
+}
+function runLookback() {
+  document.getElementById('lookBtn').innerHTML = '<span class="spinner" style="border-color:rgba(26,5,8,0.3); border-top-color:#1a0508;"></span> Collecting threshold approvals…';
+  document.getElementById('lookBtn').disabled = true;
+  setTimeout(() => {
+    document.getElementById('lookArea').style.display = 'none';
+    document.getElementById('lookResults').style.display = 'block';
+  }, 2000);
+}
+
+function screen8() {
+  return `
+  <h1 class="screen-title">Regulatory Submission</h1>
+  <p class="screen-sub">Complete evidence package for FDA (21 CFR 606/610), EMA (Directive 2002/98/EC), and PMDA. Traceability proven. Privacy maintained. Cold chain verified. Process integrity attested.</p>
+  <div class="card">
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Plasma-Derived Therapy Compliance Package</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> Donor-to-Product Traceability Architecture (privacy-preserving)</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> Cold Chain Integrity Proofs (continuous temperature verification)</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> Fractionation Process Attestation (ZK — method protected)</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> Cross-Border Data Compliance Matrix (HIPAA/GDPR/APPI/PIPL)</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> Lookback Capability Demonstration (4-minute trace evidence)</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> Rare Disease Registry Privacy Assessment</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> FIPS 140-3 Cryptographic Module Validation</div>
+    <div class="zip-item"><span class="zip-icon">▸</span> Post-Quantum Encryption Certificate (harvest-now protection)</div>
+    <div style="margin-top:18px; display:flex; gap:12px;">
+      <button class="btn btn-ghost">⬇ FDA Package (21 CFR 606)</button>
+      <button class="btn btn-ghost">⬇ EMA Package (2002/98/EC)</button>
+      <button class="btn btn-ghost">⬇ PMDA Package</button>
+    </div>
+  </div>
+  <div class="grid-4" style="margin-top:20px;">
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">4 min</div><div class="fleet-label">Lookback Time</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">0</div><div class="fleet-label">Privacy Breaches</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">100%</div><div class="fleet-label">Chain Integrity</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">40+</div><div class="fleet-label">Countries Compliant</div></div>
+  </div>
+  <div class="banner-done" style="margin-top:24px;">✓ Complete: Donor privacy maintained → Full traceability active → Cold chain proven → Fractionation attested → Cross-border compliant → Lookback in 4 minutes (was 3-5 days). All 8 screens complete.</div>`;
+}
+
+// Cold chain area chart data (seeded deterministically)
+const CC_DATA = [];
+(function(){
+  let temp = -27.8;
+  for (let i = 0; i < 76; i++) {
+    const drift = (Math.sin(i*0.3)*0.6) + (Math.cos(i*0.13)*0.4);
+    temp = Math.max(-30, Math.min(-25, -27.4 + drift + (i===54 ? 2.3 : 0)));
+    CC_DATA.push({ hour: (i*0.5).toFixed(1), temp: +temp.toFixed(2) });
+  }
+})();
+
+function drawColdChart() {
+  const canvas = document.getElementById('coldChart');
+  if (!canvas) return;
+  const wrap = document.getElementById('coldChartWrap');
+  const tooltip = document.getElementById('coldTooltip');
+  const dpr = window.devicePixelRatio || 1;
+  const w = wrap.clientWidth, h = wrap.clientHeight;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const pad = { top: 16, bottom: 24, left: 44, right: 16 };
+  const cw = w - pad.left - pad.right, ch = h - pad.top - pad.bottom;
+  const minT = -30.5, maxT = -24.5;
+  const toX = i => pad.left + (i / (CC_DATA.length - 1)) * cw;
+  const toY = t => pad.top + ((maxT - t) / (maxT - minT)) * ch;
+
+  // grid
+  ctx.strokeStyle = 'rgba(37,37,53,0.7)'; ctx.lineWidth = 0.5;
+  [-25, -26, -27, -28, -29, -30].forEach(t => {
+    const y = toY(t);
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(w - pad.right, y); ctx.stroke();
+    ctx.fillStyle = '#55556A'; ctx.font = '10px JetBrains Mono';
+    ctx.fillText(t + '°C', 4, y + 3);
+  });
+
+  // threshold bands
+  ctx.fillStyle = 'rgba(248,113,113,0.04)';
+  ctx.fillRect(pad.left, pad.top, cw, toY(-25) - pad.top);
+  ctx.fillStyle = 'rgba(52,211,153,0.04)';
+  ctx.fillRect(pad.left, toY(-25), cw, toY(-30) - toY(-25));
+
+  // threshold lines
+  ctx.setLineDash([4,4]); ctx.strokeStyle = 'rgba(248,113,113,0.4)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad.left, toY(-25)); ctx.lineTo(w-pad.right, toY(-25)); ctx.stroke();
+  ctx.strokeStyle = 'rgba(96,165,250,0.3)';
+  ctx.beginPath(); ctx.moveTo(pad.left, toY(-30)); ctx.lineTo(w-pad.right, toY(-30)); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // area fill
+  ctx.beginPath();
+  ctx.moveTo(toX(0), toY(CC_DATA[0].temp));
+  CC_DATA.forEach((d, i) => { if(i>0) ctx.lineTo(toX(i), toY(d.temp)); });
+  ctx.lineTo(toX(CC_DATA.length-1), toY(-30));
+  ctx.lineTo(toX(0), toY(-30));
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0, toY(-25), 0, toY(-30));
+  grad.addColorStop(0, 'rgba(52,211,153,0.25)');
+  grad.addColorStop(1, 'rgba(52,211,153,0.02)');
+  ctx.fillStyle = grad; ctx.fill();
+
+  // line
+  ctx.beginPath();
+  CC_DATA.forEach((d, i) => { i === 0 ? ctx.moveTo(toX(i), toY(d.temp)) : ctx.lineTo(toX(i), toY(d.temp)); });
+  ctx.strokeStyle = 'var(--emerald)'; ctx.lineWidth = 2; ctx.stroke();
+
+  // near-threshold point
+  const hotIdx = 54;
+  ctx.beginPath(); ctx.arc(toX(hotIdx), toY(CC_DATA[hotIdx].temp), 5, 0, Math.PI*2);
+  ctx.fillStyle = 'var(--amber)'; ctx.fill();
+  ctx.strokeStyle = 'rgba(251,191,36,0.4)'; ctx.lineWidth = 2; ctx.stroke();
+
+  // hover interaction
+  canvas.onmousemove = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const idx = Math.round(((mx - pad.left) / cw) * (CC_DATA.length - 1));
+    if (idx < 0 || idx >= CC_DATA.length) { tooltip.style.opacity = '0'; return; }
+    const d = CC_DATA[idx];
+    tooltip.querySelector('.tt-time').textContent = 'Hour ' + d.hour;
+    const color = d.temp > -25 ? 'var(--red)' : d.temp > -25.5 ? 'var(--amber)' : 'var(--emerald)';
+    tooltip.querySelector('.tt-temp').innerHTML = `<span style="color:${color}">${d.temp.toFixed(1)}°C</span>`;
+    tooltip.style.opacity = '1';
+    tooltip.style.left = Math.min(mx + 12, w - 120) + 'px';
+    tooltip.style.top = (toY(d.temp) - 40) + 'px';
+  };
+  canvas.onmouseleave = () => { tooltip.style.opacity = '0'; };
+}
+
+function ctaStrip() {
+  return `
+  <div class="cta-strip">
+    <h3>Ready to see this with your data?</h3>
+    <p>Book a 30-minute technical walkthrough. We'll show the full SENTINEL platform configured for your plasma operations.</p>
+    <div class="cta-btns">
+      <a href="https://cal.com/agenticvaults" target="_blank"><button class="btn btn-primary">Schedule Meeting →</button></a>
+      <a href="mailto:ldavid@agenticvaults.ai"><button class="btn btn-ghost">ldavid@agenticvaults.ai</button></a>
+    </div>
+  </div>`;
+}
+
+const SCREEN_FNS = {1:screen1,2:screen2,3:screen3,4:screen4,5:screen5,6:screen6,7:screen7,8:screen8};
+function render() {
+  document.getElementById('content').innerHTML = `<div class="fade-in">${SCREEN_FNS[state.screen]()}${state.screen === 8 ? ctaStrip() : ''}</div>`;
+  document.getElementById('topTitle').textContent = STEP_LABELS[state.screen - 1];
+  const badges = { us: 'BioLife · US Network', eu: 'BioLife · EU Network (AT/DE/CZ/HU)', frax: 'BioLife · Fractionation Plants' };
+  document.getElementById('topBadge').textContent = badges[state.region] || badges.us;
+  renderSidebar();
+  window.scrollTo(0,0);
+  if (state.screen === 3) setTimeout(drawColdChart, 50);
+}
+render();
+</script>
+</body>
+</html>
