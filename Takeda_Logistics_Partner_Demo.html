@@ -120,12 +120,54 @@
   .cta-strip p { color: var(--muted); font-size: 13.5px; margin-bottom: 18px; }
   .cta-strip .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
   .cta-strip a { text-decoration: none; }
+
+  /* Mobile toggle button */
+  .mobile-toggle { display: none; position: fixed; top: 14px; left: 14px; z-index: 100; width: 40px; height: 40px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); color: var(--white); font-size: 20px; cursor: pointer; align-items: center; justify-content: center; }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .mobile-toggle { display: flex; }
+    .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; z-index: 90; width: 280px; }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 80; }
+    .sidebar-overlay.open { display: block; }
+    .main { margin-left: 0; }
+    .topbar { padding: 14px 16px 14px 60px; }
+    .topbar-title { font-size: 14px; }
+    .topbar-badge { font-size: 9.5px; padding: 4px 8px; display: none; }
+    .content { padding: 20px 16px; }
+    h1.screen-title { font-size: 22px; }
+    .screen-sub { font-size: 13.5px; margin-bottom: 20px; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .fleet-stat { padding: 14px; }
+    .fleet-num { font-size: 20px; }
+    .fleet-label { font-size: 9.5px; }
+    .card { padding: 18px; margin-bottom: 14px; }
+    .kv-row { flex-direction: column; gap: 4px; padding: 8px 0; }
+    .kv-val { font-size: 12px; }
+    .row-item { flex-wrap: wrap; gap: 10px; padding: 12px; }
+    .row-status { margin-left: auto; }
+    .vis-row { flex-wrap: wrap; }
+    .vis-cell { font-size: 10px; padding: 5px 8px; }
+    .callout { font-size: 12.5px; padding: 12px 14px; }
+    .banner-done { font-size: 12.5px; padding: 12px 14px; flex-wrap: wrap; }
+    .btn { font-size: 13px; padding: 11px 20px; width: 100%; justify-content: center; }
+    .cta-strip { padding: 20px 16px; }
+    .cta-strip h3 { font-size: 15px; }
+    .cta-strip .cta-btns { flex-direction: column; }
+    .handoff-arrow { font-size: 10px; overflow-wrap: break-word; word-break: break-all; }
+    .chart-area { height: 130px; }
+  }
 </style>
 </head>
 <body>
 
 <div class="app">
-  <div class="sidebar">
+  <button class="mobile-toggle" id="mobileToggle" onclick="toggleSidebar()">☰</button>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <div class="sidebar" id="sidebar">
     <div class="brand">
       <div class="brand-row">
         <div class="brand-mark"><div></div></div>
@@ -154,6 +196,16 @@
 </div>
 
 <script>
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  const btn = document.getElementById('mobileToggle');
+  const isOpen = sb.classList.contains('open');
+  sb.classList.toggle('open');
+  ov.classList.toggle('open');
+  btn.textContent = isOpen ? '☰' : '✕';
+}
+
 const REQS = [
   {code: '1', label: 'Cold chain proof without cargo data'},
   {code: '2', label: 'Cryptographic custody receipt'},
@@ -175,7 +227,7 @@ const STEP_LABELS = [
 
 let state = { screen: 1, maxUnlocked: 1, reqStatus: [false,false,false,false,false,false] };
 function setReq(idx, val) { state.reqStatus[idx] = val; renderSidebar(); }
-function goTo(n) { if (n > state.maxUnlocked) return; state.screen = n; render(); }
+function goTo(n) { if (n > state.maxUnlocked) return; state.screen = n; render(); if (window.innerWidth <= 768) { const sb = document.getElementById('sidebar'); if (sb.classList.contains('open')) toggleSidebar(); } }
 function unlockNext() { state.maxUnlocked = Math.max(state.maxUnlocked, state.screen + 1); }
 
 function renderSidebar() {
