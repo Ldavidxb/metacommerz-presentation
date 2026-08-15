@@ -121,6 +121,11 @@
   .cta-strip .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
   .cta-strip a { text-decoration: none; }
 
+  .lang-picker { display: flex; align-items: center; gap: 0; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; margin-left: 12px; flex-shrink: 0; }
+  .lang-btn { font-family: var(--fm); font-size: 11px; padding: 5px 10px; background: transparent; border: none; color: var(--dim); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .lang-btn.active { background: var(--cyan-dim); color: var(--cyan); }
+  .lang-btn:hover:not(.active) { color: var(--white); }
+
   /* Mobile toggle button */
   .mobile-toggle { display: none; position: fixed; top: 14px; left: 14px; z-index: 100; width: 40px; height: 40px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); color: var(--white); font-size: 20px; cursor: pointer; align-items: center; justify-content: center; }
 
@@ -170,7 +175,7 @@
   <div class="sidebar" id="sidebar">
     <div class="brand">
       <div class="brand-row">
-        <div class="brand-mark"><div></div></div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" width="26" height="26"><circle cx="24" cy="24" r="22" stroke="#34D399" stroke-width="1.5" fill="none" opacity="0.9"/><line x1="24" y1="4" x2="24" y2="44" stroke="#34D399" stroke-width="1.2" opacity="0.85"/><line x1="4" y1="24" x2="44" y2="24" stroke="#34D399" stroke-width="1.2" opacity="0.85"/><line x1="9.86" y1="9.86" x2="38.14" y2="38.14" stroke="#34D399" stroke-width="1" opacity="0.75"/><line x1="38.14" y1="9.86" x2="9.86" y2="38.14" stroke="#34D399" stroke-width="1" opacity="0.75"/><polygon points="24,6 30,18 24,14 18,18" fill="#34D399" opacity="0.9"/><polygon points="24,42 30,30 24,34 18,30" fill="#34D399" opacity="0.9"/><polygon points="6,24 18,18 14,24 18,30" fill="#34D399" opacity="0.9"/><polygon points="42,24 30,18 34,24 30,30" fill="#34D399" opacity="0.9"/><circle cx="24" cy="24" r="4" fill="#34D399" opacity="0.9"/><circle cx="24" cy="24" r="10" stroke="#34D399" stroke-width="0.8" fill="none" opacity="0.5"/></svg>
         <span class="brand-name">agenticvaults</span>
       </div>
       <div class="brand-sub">SENTINEL · Logistics Integrity</div>
@@ -189,7 +194,13 @@
   <div class="main">
     <div class="topbar">
       <div class="topbar-title" id="topTitle">The Problem</div>
-      <div class="topbar-badge" id="topBadge">Pharma Logistics · GDP-Compliant</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="topbar-badge" id="topBadge">Pharma Logistics · GDP-Compliant</div>
+        <div class="lang-picker" id="langPicker">
+          <button class="lang-btn active" id="langEn" onclick="setLang('en')">EN</button>
+          <button class="lang-btn" id="langJa" onclick="setLang('ja')">日本語</button>
+        </div>
+      </div>
     </div>
     <div class="content" id="content"></div>
   </div>
@@ -206,24 +217,43 @@ function toggleSidebar() {
   btn.textContent = isOpen ? '☰' : '✕';
 }
 
-const REQS = [
-  {code: '1', label: 'Cold chain proof without cargo data'},
-  {code: '2', label: 'Cryptographic custody receipt'},
-  {code: '3', label: 'Zero breach liability'},
-  {code: '4', label: 'False excursion protection'},
-  {code: '5', label: 'Provider-agnostic handoff'},
-  {code: '6', label: 'Competitive differentiation'},
-];
-const STEP_LABELS = [
-  'The Trust Problem Today',
-  'What You See vs. What You Don\'t',
-  'Shipment Custody Handoff',
-  'Cold Chain Proof (Your Sensors)',
-  'Dispute Resolution (ZK Receipt)',
-  'Multi-Pharma Scalability',
-  'Breach Liability Elimination',
-  'Your Competitive Advantage',
-];
+// i18n
+const T = {
+  en: {
+    badge: 'Pharma Logistics · GDP-Compliant',
+    ctxLabel: 'Partner Demonstration',
+    ctxVal: 'Pharma Cold Chain — Zero-Knowledge Custody Proofs for Logistics Partners',
+    checkTitle: 'Partner Benefits',
+    reqs: ['Cold chain proof without cargo data','Cryptographic custody receipt','Zero breach liability','False excursion protection','Provider-agnostic handoff','Competitive differentiation'],
+    steps: ['The Trust Problem Today','What You See vs. What You Don\'t','Shipment Custody Handoff','Cold Chain Proof (Your Sensors)','Dispute Resolution (ZK Receipt)','Multi-Pharma Scalability','Breach Liability Elimination','Your Competitive Advantage'],
+    cta_h: 'Ready to eliminate data liability and prove compliance cryptographically?',
+    cta_p: 'Book a 30-minute technical briefing. We\'ll show SENTINEL configured for your fleet operations and specific pharma client requirements.',
+    cta_btn: 'Schedule Meeting →',
+  },
+  ja: {
+    badge: '医薬品物流 · GDP準拠',
+    ctxLabel: 'パートナーデモンストレーション',
+    ctxVal: '医薬品コールドチェーン — 物流パートナー向けゼロ知識保管証明',
+    checkTitle: 'パートナーメリット',
+    reqs: ['貨物データなしのコールドチェーン証明','暗号化保管レシート','データ漏洩リスクゼロ','虚偽の温度逸脱からの保護','プロバイダー非依存の引渡し','競争優位性'],
+    steps: ['現在の信頼性の課題','見えるデータと見えないデータ','暗号化された保管引渡し','コールドチェーン証明（貴社センサー）','紛争解決（ZKレシート）','マルチ製薬スケーラビリティ','漏洩責任の排除','貴社の競争優位性'],
+    cta_h: 'データ責任を排除し、暗号的にコンプライアンスを証明する準備はできていますか？',
+    cta_p: '30分のテクニカルブリーフィングをご予約ください。貴社のフリート運用と特定の製薬クライアント要件に合わせたSENTINELをご紹介します。',
+    cta_btn: 'ミーティングを予約 →',
+  }
+};
+let lang = 'en';
+function t(key) { return (T[lang] && T[lang][key]) || T.en[key] || key; }
+function setLang(l) {
+  lang = l;
+  document.getElementById('langEn').classList.toggle('active', l === 'en');
+  document.getElementById('langJa').classList.toggle('active', l === 'ja');
+  document.getElementById('topBadge').textContent = t('badge');
+  document.querySelector('.context-label').textContent = t('ctxLabel');
+  document.querySelector('.context-val').textContent = t('ctxVal');
+  document.querySelector('.checklist-mini-title span').textContent = t('checkTitle');
+  render();
+}
 
 let state = { screen: 1, maxUnlocked: 1, reqStatus: [false,false,false,false,false,false] };
 function setReq(idx, val) { state.reqStatus[idx] = val; renderSidebar(); }
@@ -231,8 +261,9 @@ function goTo(n) { if (n > state.maxUnlocked) return; state.screen = n; render()
 function unlockNext() { state.maxUnlocked = Math.max(state.maxUnlocked, state.screen + 1); }
 
 function renderSidebar() {
+  const steps = t('steps');
   const stepsEl = document.getElementById('steps');
-  stepsEl.innerHTML = STEP_LABELS.map((label, i) => {
+  stepsEl.innerHTML = steps.map((label, i) => {
     const n = i + 1;
     const cls = ['step'];
     if (n === state.screen) cls.push('active');
@@ -243,112 +274,117 @@ function renderSidebar() {
       <div class="step-label">${label}</div>
     </div>`;
   }).join('');
+  const reqs = t('reqs');
   const doneCount = state.reqStatus.filter(Boolean).length;
   document.getElementById('miniCount').textContent = doneCount + '/6';
-  document.getElementById('miniList').innerHTML = REQS.map((r, i) => {
+  document.getElementById('miniList').innerHTML = reqs.map((r, i) => {
     const on = state.reqStatus[i];
-    return `<div class="mini-row ${on ? 'on' : ''}"><div class="mini-dot ${on ? 'on' : ''}"></div>${r.label}</div>`;
+    return `<div class="mini-row ${on ? 'on' : ''}"><div class="mini-dot ${on ? 'on' : ''}"></div>${r}</div>`;
   }).join('');
 }
 
 function screen1() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">The Trust Problem in Pharma Logistics</h1>
-  <p class="screen-sub">You transport the world's most valuable biological products. You prove compliance every day. But the current model puts you in an impossible position.</p>
+  <h1 class="screen-title">${ja ? '医薬品物流における信頼性の課題' : 'The Trust Problem in Pharma Logistics'}</h1>
+  <p class="screen-sub">${ja ? '貴社は世界で最も価値のある生物学的製品を輸送しています。毎日コンプライアンスを証明しています。しかし、現在のモデルでは不可能な立場に置かれています。' : 'You transport the world\'s most valuable biological products. You prove compliance every day. But the current model puts you in an impossible position.'}</p>
   <div class="grid-4" style="margin-bottom:24px;">
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--cyan);">$1.8M</div><div class="fleet-label">Value Per Plasma Pool</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">38 hrs</div><div class="fleet-label">Avg Transit (US)</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--red);">$47M</div><div class="fleet-label">Annual Excursion Losses</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">0</div><div class="fleet-label">Tolerance for Error</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--cyan);">$1.8M</div><div class="fleet-label">${ja ? '血漿プール単価' : 'Value Per Plasma Pool'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--amber);">38 hrs</div><div class="fleet-label">${ja ? '平均輸送時間（米国）' : 'Avg Transit (US)'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--red);">$47M</div><div class="fleet-label">${ja ? '年間温度逸脱損失' : 'Annual Excursion Losses'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">0</div><div class="fleet-label">${ja ? 'エラー許容度' : 'Tolerance for Error'}</div></div>
   </div>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px; color:var(--red);">Today's Problems for Logistics Partners</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px; color:var(--red);">${ja ? '物流パートナーが直面する現在の課題' : 'Today\'s Problems for Logistics Partners'}</div>
     <div class="row-item" style="border-color: rgba(248,113,113,0.3);">
       <div class="row-icon" style="background:var(--red-dim);">1</div>
-      <div class="row-info"><div class="row-title" style="color:var(--red);">You're exposed to data you shouldn't hold</div><div class="row-desc">Shipping manifests reveal donor pool composition, product lot assignments, patient destinations. If your systems are breached, YOUR company is liable for HIPAA/GDPR violations on data you never needed.</div></div>
+      <div class="row-info"><div class="row-title" style="color:var(--red);">${ja ? '保持すべきでないデータにさらされている' : 'You\'re exposed to data you shouldn\'t hold'}</div><div class="row-desc">${ja ? '出荷マニフェストにはドナープール構成、製品ロット割当、患者搬送先が含まれています。貴社のシステムが侵害された場合、不要なデータに対するHIPAA/GDPR違反の責任を負います。' : 'Shipping manifests reveal donor pool composition, product lot assignments, patient destinations. If your systems are breached, YOUR company is liable for HIPAA/GDPR violations on data you never needed.'}</div></div>
     </div>
     <div class="row-item" style="border-color: rgba(248,113,113,0.3);">
       <div class="row-icon" style="background:var(--red-dim);">2</div>
-      <div class="row-info"><div class="row-title" style="color:var(--red);">No cryptographic proof you did your job</div><div class="row-desc">If a pharma client claims a temperature excursion, your paper-based temperature logs are disputable. PDF exports from data loggers can be questioned in court. You have no mathematically unforgeable proof of compliance.</div></div>
+      <div class="row-info"><div class="row-title" style="color:var(--red);">${ja ? '業務遂行の暗号学的証明がない' : 'No cryptographic proof you did your job'}</div><div class="row-desc">${ja ? '製薬クライアントが温度逸脱を主張した場合、紙ベースの温度ログは異議申立可能です。データロガーのPDFエクスポートは法廷で疑問視されます。数学的に偽造不可能なコンプライアンス証明がありません。' : 'If a pharma client claims a temperature excursion, your paper-based temperature logs are disputable. PDF exports from data loggers can be questioned in court. You have no mathematically unforgeable proof of compliance.'}</div></div>
     </div>
     <div class="row-item" style="border-color: rgba(248,113,113,0.3);">
       <div class="row-icon" style="background:var(--red-dim);">3</div>
-      <div class="row-info"><div class="row-title" style="color:var(--red);">Switching costs lock clients to you (and vice versa)</div><div class="row-desc">Every pharma client has a different data integration, different handoff protocol, different documentation format. Onboarding a new client takes months. Losing one is catastrophic because the integration cost is sunk.</div></div>
+      <div class="row-info"><div class="row-title" style="color:var(--red);">${ja ? 'スイッチングコストがクライアントを固定する' : 'Switching costs lock clients to you (and vice versa)'}</div><div class="row-desc">${ja ? '各製薬クライアントには異なるデータ連携、異なる引渡しプロトコル、異なる文書形式があります。新規クライアントのオンボーディングには数ヶ月かかります。統合コストが埋没しているため、1社の喪失は致命的です。' : 'Every pharma client has a different data integration, different handoff protocol, different documentation format. Onboarding a new client takes months. Losing one is catastrophic because the integration cost is sunk.'}</div></div>
     </div>
   </div>
   <div class="callout red">
-    <strong>The core issue:</strong> You're carrying $1.8M pools of human plasma. You need to prove temperature compliance. But you do NOT need to know which donors contributed, which patients will receive the product, or what the fractionation plan is. Today's systems force you to hold that data anyway — creating liability without benefit.
+    <strong>${ja ? '核心的問題：' : 'The core issue:'}</strong> ${ja ? '貴社は1.8百万ドルのヒト血漿プールを輸送しています。温度コンプライアンスを証明する必要があります。しかし、どのドナーが寄与したか、どの患者が製品を受け取るか、分画計画は何かを知る必要はありません。現在のシステムはそのデータを強制的に保持させています — 利益なしに責任を生み出しています。' : 'You\'re carrying $1.8M pools of human plasma. You need to prove temperature compliance. But you do NOT need to know which donors contributed, which patients will receive the product, or what the fractionation plan is. Today\'s systems force you to hold that data anyway — creating liability without benefit.'}
   </div>
   <div style="margin-top:16px;">
-    <button class="btn btn-primary" onclick="unlockNext(); goTo(2)">See the Solution →</button>
+    <button class="btn btn-primary" onclick="unlockNext(); goTo(2)">${ja ? 'ソリューションを見る →' : 'See the Solution →'}</button>
   </div>`;
 }
 
 function screen2() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">What You See vs. What You Don't</h1>
-  <p class="screen-sub">SENTINEL creates a clean separation: you see everything you need for your job. You never see anything that creates liability.</p>
+  <h1 class="screen-title">${ja ? '見えるデータと見えないデータ' : 'What You See vs. What You Don\'t'}</h1>
+  <p class="screen-sub">${ja ? 'SENTINELは明確な分離を実現します：業務に必要なものはすべて見えます。責任を生むものは一切見えません。' : 'SENTINEL creates a clean separation: you see everything you need for your job. You never see anything that creates liability.'}</p>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:18px;">Data Visibility Matrix</div>
-    <div style="margin-bottom:12px; font-size:12px; font-weight:600; color:var(--cyan);">✓ YOU SEE (operational data for your job):</div>
-    <div class="vis-row"><div class="vis-cell vis-see">Container count: 3</div><div class="vis-cell vis-see">Required temp: -25°C to -30°C</div><div class="vis-cell vis-see">Route: Indianapolis → LA</div></div>
-    <div class="vis-row"><div class="vis-cell vis-see">Transit window: 38 hours max</div><div class="vis-cell vis-see">Pickup: BioLife Center #47</div><div class="vis-cell vis-see">Delivery: Frax Plant Gate 4</div></div>
-    <div class="vis-row"><div class="vis-cell vis-see">GPS tracking: continuous</div><div class="vis-cell vis-see">Sensor logging: every 30s</div><div class="vis-cell vis-see">Alert threshold: -24.5°C</div></div>
-    <div style="margin:18px 0 12px; font-size:12px; font-weight:600; color:var(--red);">✗ YOU NEVER SEE (protected by cryptography):</div>
-    <div class="vis-row"><div class="vis-cell vis-no">Donor identities</div><div class="vis-cell vis-no">Pool composition</div><div class="vis-cell vis-no">Patient assignments</div></div>
-    <div class="vis-row"><div class="vis-cell vis-no">Product lot numbers</div><div class="vis-cell vis-no">Traceability chain</div><div class="vis-cell vis-no">Clinical test results</div></div>
-    <div class="vis-row"><div class="vis-cell vis-no">BioLife center donor data</div><div class="vis-cell vis-no">Fractionation parameters</div><div class="vis-cell vis-no">Batch record links</div></div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:18px;">${ja ? 'データ可視性マトリックス' : 'Data Visibility Matrix'}</div>
+    <div style="margin-bottom:12px; font-size:12px; font-weight:600; color:var(--cyan);">${ja ? '✓ 見えるデータ（業務に必要な運用データ）：' : '✓ YOU SEE (operational data for your job):'}</div>
+    <div class="vis-row"><div class="vis-cell vis-see">${ja ? 'コンテナ数: 3' : 'Container count: 3'}</div><div class="vis-cell vis-see">${ja ? '必要温度: -25°C〜-30°C' : 'Required temp: -25°C to -30°C'}</div><div class="vis-cell vis-see">${ja ? 'ルート: Indianapolis → LA' : 'Route: Indianapolis → LA'}</div></div>
+    <div class="vis-row"><div class="vis-cell vis-see">${ja ? '輸送時間: 最大38時間' : 'Transit window: 38 hours max'}</div><div class="vis-cell vis-see">${ja ? '集荷: BioLife Center #47' : 'Pickup: BioLife Center #47'}</div><div class="vis-cell vis-see">${ja ? '配送: Frax Plant Gate 4' : 'Delivery: Frax Plant Gate 4'}</div></div>
+    <div class="vis-row"><div class="vis-cell vis-see">${ja ? 'GPS追跡: 常時' : 'GPS tracking: continuous'}</div><div class="vis-cell vis-see">${ja ? 'センサー記録: 30秒毎' : 'Sensor logging: every 30s'}</div><div class="vis-cell vis-see">${ja ? 'アラート閾値: -24.5°C' : 'Alert threshold: -24.5°C'}</div></div>
+    <div style="margin:18px 0 12px; font-size:12px; font-weight:600; color:var(--red);">${ja ? '✗ 見えないデータ（暗号化により保護）：' : '✗ YOU NEVER SEE (protected by cryptography):'}</div>
+    <div class="vis-row"><div class="vis-cell vis-no">${ja ? 'ドナー身元' : 'Donor identities'}</div><div class="vis-cell vis-no">${ja ? 'プール構成' : 'Pool composition'}</div><div class="vis-cell vis-no">${ja ? '患者割当' : 'Patient assignments'}</div></div>
+    <div class="vis-row"><div class="vis-cell vis-no">${ja ? '製品ロット番号' : 'Product lot numbers'}</div><div class="vis-cell vis-no">${ja ? 'トレーサビリティチェーン' : 'Traceability chain'}</div><div class="vis-cell vis-no">${ja ? '臨床検査結果' : 'Clinical test results'}</div></div>
+    <div class="vis-row"><div class="vis-cell vis-no">${ja ? 'BioLifeセンタードナーデータ' : 'BioLife center donor data'}</div><div class="vis-cell vis-no">${ja ? '分画パラメータ' : 'Fractionation parameters'}</div><div class="vis-cell vis-no">${ja ? 'バッチ記録リンク' : 'Batch record links'}</div></div>
   </div>
   <div class="callout cyan">
-    <strong>Why this protects YOU:</strong> If your systems are breached tomorrow, the attacker gets temperature logs and GPS coordinates. They do NOT get donor health records, patient data, or proprietary product information. Your HIPAA/GDPR liability drops to zero for the pharma cargo. You cannot leak what you never held.
+    <strong>${ja ? '貴社を守る理由：' : 'Why this protects YOU:'}</strong> ${ja ? '明日貴社のシステムが侵害されても、攻撃者が得るのは温度ログとGPS座標だけです。ドナーの健康記録、患者データ、独自の製品情報は得られません。医薬品貨物に対するHIPAA/GDPR責任はゼロになります。保持していないものは漏洩できません。' : 'If your systems are breached tomorrow, the attacker gets temperature logs and GPS coordinates. They do NOT get donor health records, patient data, or proprietary product information. Your HIPAA/GDPR liability drops to zero for the pharma cargo. You cannot leak what you never held.'}
   </div>
   <div style="margin-top:16px;">
-    <button class="btn btn-primary" onclick="setReq(2,true); unlockNext(); goTo(3)">See the Custody Handoff →</button>
+    <button class="btn btn-primary" onclick="setReq(2,true); unlockNext(); goTo(3)">${ja ? '保管引渡しを見る →' : 'See the Custody Handoff →'}</button>
   </div>`;
 }
 
 function screen3() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Cryptographic Custody Handoff</h1>
-  <p class="screen-sub">At each transfer point, SENTINEL generates a zero-knowledge custody proof. You confirm receipt. The pharma client confirms delivery. Neither party can later dispute what happened.</p>
+  <h1 class="screen-title">${ja ? '暗号化された保管引渡し' : 'Cryptographic Custody Handoff'}</h1>
+  <p class="screen-sub">${ja ? '各移転ポイントで、SENTINELはゼロ知識保管証明を生成します。貴社が受領を確認し、製薬クライアントが配送を確認します。どちらの当事者も後から何が起きたかを争うことはできません。' : 'At each transfer point, SENTINEL generates a zero-knowledge custody proof. You confirm receipt. The pharma client confirms delivery. Neither party can later dispute what happened.'}</p>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Shipment: Plasma Pool → Fractionation</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? '出荷: 血漿プール → 分画工場' : 'Shipment: Plasma Pool → Fractionation'}</div>
     <div class="row-item" style="border-color: rgba(34,211,238,0.3);">
       <div class="row-icon" style="background:var(--cyan-dim);">🩸</div>
-      <div class="row-info"><div class="row-title">Pickup — BioLife Center #47, Indianapolis</div><div class="row-desc">You scan containers. System confirms: 3 containers, -27.4°C at handoff, seals intact.</div></div>
-      <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">SEALED</div>
+      <div class="row-info"><div class="row-title">${ja ? '集荷 — BioLife Center #47, Indianapolis' : 'Pickup — BioLife Center #47, Indianapolis'}</div><div class="row-desc">${ja ? 'コンテナをスキャン。システム確認：3コンテナ、引渡し時-27.4°C、シール無傷。' : 'You scan containers. System confirms: 3 containers, -27.4°C at handoff, seals intact.'}</div></div>
+      <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">${ja ? '封印済' : 'SEALED'}</div>
     </div>
-    <div class="handoff-arrow">━━━ YOUR CUSTODY ━━━ sensors logging every 30s ━━━</div>
+    <div class="handoff-arrow">${ja ? '━━━ 貴社の保管 ━━━ 30秒毎にセンサー記録 ━━━' : '━━━ YOUR CUSTODY ━━━ sensors logging every 30s ━━━'}</div>
     <div class="row-item" style="border-color: rgba(34,211,238,0.3);">
       <div class="row-icon" style="background:var(--cyan-dim);">🚛</div>
-      <div class="row-info"><div class="row-title">In Transit — 38 hours</div><div class="row-desc">Your sensors generate 4,560 temperature readings. GPS confirms validated route. SENTINEL cryptographically seals each reading as it occurs — tamper-proof from the moment of capture.</div></div>
-      <div class="row-status" style="background:var(--cyan-dim); color:var(--cyan);">ACTIVE</div>
+      <div class="row-info"><div class="row-title">${ja ? '輸送中 — 38時間' : 'In Transit — 38 hours'}</div><div class="row-desc">${ja ? '貴社のセンサーが4,560の温度読取を生成。GPSが検証済みルートを確認。SENTINELが各読取を発生時に暗号的に封印 — キャプチャの瞬間から改ざん不可能。' : 'Your sensors generate 4,560 temperature readings. GPS confirms validated route. SENTINEL cryptographically seals each reading as it occurs — tamper-proof from the moment of capture.'}</div></div>
+      <div class="row-status" style="background:var(--cyan-dim); color:var(--cyan);">${ja ? '稼働中' : 'ACTIVE'}</div>
     </div>
-    <div class="handoff-arrow">━━━ DELIVERY ━━━ custody transfer ━━━</div>
+    <div class="handoff-arrow">${ja ? '━━━ 配送 ━━━ 保管移転 ━━━' : '━━━ DELIVERY ━━━ custody transfer ━━━'}</div>
     <div class="row-item" style="border-color: rgba(34,211,238,0.3);">
       <div class="row-icon" style="background:var(--cyan-dim);">🏭</div>
-      <div class="row-info"><div class="row-title">Delivery — Fractionation Plant, Los Angeles</div><div class="row-desc">Plant operator scans containers. System confirms: 3 containers, -27.1°C at delivery, seals intact. Custody transfers from you to plant.</div></div>
-      <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">SEALED</div>
+      <div class="row-info"><div class="row-title">${ja ? '配送 — 分画工場, Los Angeles' : 'Delivery — Fractionation Plant, Los Angeles'}</div><div class="row-desc">${ja ? '工場オペレーターがコンテナをスキャン。システム確認：3コンテナ、配送時-27.1°C、シール無傷。保管が貴社から工場に移転。' : 'Plant operator scans containers. System confirms: 3 containers, -27.1°C at delivery, seals intact. Custody transfers from you to plant.'}</div></div>
+      <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">${ja ? '封印済' : 'SEALED'}</div>
     </div>
   </div>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px;">What the Cryptographic Receipt Contains</div>
-    <div class="kv-row"><span class="kv-key">Your proof</span><span class="kv-val" style="color:var(--emerald);">"3 containers maintained -25°C to -30°C for 38 hours"</span></div>
-    <div class="kv-row"><span class="kv-key">Sealed by</span><span class="kv-val">Your sensor hardware + SENTINEL attestation (ML-DSA-65)</span></div>
-    <div class="kv-row"><span class="kv-key">Verifiable by</span><span class="kv-val">Pharma client, regulators, insurers — without your involvement</span></div>
-    <div class="kv-row"><span class="kv-key">Forgeable?</span><span class="kv-val" style="color:var(--emerald);">Mathematically impossible (post-quantum signatures)</span></div>
-    <div class="kv-row"><span class="kv-key">What it does NOT contain</span><span class="kv-val" style="color:var(--dim);">Donor IDs, pool composition, product assignments, patient data</span></div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px;">${ja ? '暗号レシートの内容' : 'What the Cryptographic Receipt Contains'}</div>
+    <div class="kv-row"><span class="kv-key">${ja ? '貴社の証明' : 'Your proof'}</span><span class="kv-val" style="color:var(--emerald);">${ja ? '"3コンテナが38時間-25°C〜-30°Cを維持"' : '"3 containers maintained -25°C to -30°C for 38 hours"'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '封印者' : 'Sealed by'}</span><span class="kv-val">${ja ? '貴社のセンサーハードウェア + SENTINEL認証 (ML-DSA-65)' : 'Your sensor hardware + SENTINEL attestation (ML-DSA-65)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '検証者' : 'Verifiable by'}</span><span class="kv-val">${ja ? '製薬クライアント、規制当局、保険会社 — 貴社の関与なし' : 'Pharma client, regulators, insurers — without your involvement'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '偽造可能か？' : 'Forgeable?'}</span><span class="kv-val" style="color:var(--emerald);">${ja ? '数学的に不可能（耐量子署名）' : 'Mathematically impossible (post-quantum signatures)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '含まないもの' : 'What it does NOT contain'}</span><span class="kv-val" style="color:var(--dim);">${ja ? 'ドナーID、プール構成、製品割当、患者データ' : 'Donor IDs, pool composition, product assignments, patient data'}</span></div>
   </div>
   <div style="margin-top:16px;" id="handoffArea">
-    <button class="btn btn-primary" id="handoffBtn" onclick="runHandoff()">Simulate Custody Handoff</button>
+    <button class="btn btn-primary" id="handoffBtn" onclick="runHandoff()">${ja ? '保管引渡しをシミュレート' : 'Simulate Custody Handoff'}</button>
   </div>
   <div id="s3done" style="display:none;">
-    <div class="banner-done">✓ Cryptographic custody receipt generated — unforgeable proof of your compliance</div>
-    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(1,true); unlockNext(); goTo(4)">See Cold Chain Proof →</button></div>
+    <div class="banner-done">${ja ? '✓ 暗号保管レシート生成完了 — 偽造不可能なコンプライアンス証明' : '✓ Cryptographic custody receipt generated — unforgeable proof of your compliance'}</div>
+    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(1,true); unlockNext(); goTo(4)">${ja ? 'コールドチェーン証明を見る →' : 'See Cold Chain Proof →'}</button></div>
   </div>`;
 }
 function runHandoff() {
-  document.getElementById('handoffBtn').innerHTML = '<span class="spinner"></span> Sealing custody transfer…';
+  const ja = lang === 'ja';
+  document.getElementById('handoffBtn').innerHTML = `<span class="spinner"></span> ${ja ? '保管移転を封印中…' : 'Sealing custody transfer…'}`;
   document.getElementById('handoffBtn').disabled = true;
   setTimeout(() => {
     document.getElementById('handoffArea').style.display = 'none';
@@ -357,15 +393,16 @@ function runHandoff() {
 }
 
 function screen4() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Cold Chain Proof — Your Sensors, Your Proof</h1>
-  <p class="screen-sub">Your sensors generate the temperature data. SENTINEL cryptographically seals it in real-time. The result: an unforgeable proof that you maintained -25°C to -30°C for the entire transit.</p>
+  <h1 class="screen-title">${ja ? 'コールドチェーン証明 — 貴社のセンサー、貴社の証明' : 'Cold Chain Proof — Your Sensors, Your Proof'}</h1>
+  <p class="screen-sub">${ja ? '貴社のセンサーが温度データを生成します。SENTINELがリアルタイムで暗号的に封印します。結果：全輸送期間中-25°C〜-30°Cを維持したことの偽造不可能な証明。' : 'Your sensors generate the temperature data. SENTINEL cryptographically seals it in real-time. The result: an unforgeable proof that you maintained -25°C to -30°C for the entire transit.'}</p>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Live Temperature Log — Your Hardware</div>
-    <div class="kv-row"><span class="kv-key">Sensors</span><span class="kv-val">6 per container · your existing hardware</span></div>
-    <div class="kv-row"><span class="kv-key">Logging interval</span><span class="kv-val">Every 30 seconds · 4,560 readings per transit</span></div>
-    <div class="kv-row"><span class="kv-key">Seal method</span><span class="kv-val">Each reading cryptographically signed at source (edge attestation)</span></div>
-    <div class="kv-row"><span class="kv-key">Tamper detection</span><span class="kv-val">Any modified reading invalidates entire proof chain</span></div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? 'リアルタイム温度ログ — 貴社ハードウェア' : 'Live Temperature Log — Your Hardware'}</div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'センサー' : 'Sensors'}</span><span class="kv-val">${ja ? 'コンテナ当たり6個 · 既存ハードウェア' : '6 per container · your existing hardware'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '記録間隔' : 'Logging interval'}</span><span class="kv-val">${ja ? '30秒毎 · 輸送あたり4,560読取' : 'Every 30 seconds · 4,560 readings per transit'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '封印方法' : 'Seal method'}</span><span class="kv-val">${ja ? '各読取をソースで暗号署名（エッジ認証）' : 'Each reading cryptographically signed at source (edge attestation)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '改ざん検出' : 'Tamper detection'}</span><span class="kv-val">${ja ? '一つでも変更された読取は全証明チェーンを無効化' : 'Any modified reading invalidates entire proof chain'}</span></div>
     <div class="chart-area" id="coldChartWrap">
       <canvas id="coldChart"></canvas>
       <div class="chart-tooltip" id="coldTooltip">
@@ -374,40 +411,41 @@ function screen4() {
       </div>
     </div>
     <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--dim); font-family:var(--fm);">
-      <span>Hour 0 (Pickup)</span><span style="color:var(--emerald);">avg -27.4°C · all readings in spec</span><span>Hour 38 (Delivery)</span>
+      <span>${ja ? '0時間目（集荷）' : 'Hour 0 (Pickup)'}</span><span style="color:var(--emerald);">${ja ? '平均 -27.4°C · 全読取仕様内' : 'avg -27.4°C · all readings in spec'}</span><span>${ja ? '38時間目（配送）' : 'Hour 38 (Delivery)'}</span>
     </div>
     <div style="display:flex; gap:12px; margin-top:14px;">
       <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
         <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--emerald);">4,560</div>
-        <div style="font-size:10px; color:var(--dim); margin-top:4px;">SEALED READINGS</div>
+        <div style="font-size:10px; color:var(--dim); margin-top:4px;">${ja ? '封印済読取数' : 'SEALED READINGS'}</div>
       </div>
       <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
         <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--emerald);">0</div>
-        <div style="font-size:10px; color:var(--dim); margin-top:4px;">EXCURSIONS</div>
+        <div style="font-size:10px; color:var(--dim); margin-top:4px;">${ja ? '温度逸脱' : 'EXCURSIONS'}</div>
       </div>
       <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
         <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--cyan);">ML-DSA-65</div>
-        <div style="font-size:10px; color:var(--dim); margin-top:4px;">SIGNATURE ALGO</div>
+        <div style="font-size:10px; color:var(--dim); margin-top:4px;">${ja ? '署名アルゴリズム' : 'SIGNATURE ALGO'}</div>
       </div>
       <div style="flex:1; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); text-align:center;">
         <div style="font-family:var(--fm); font-size:18px; font-weight:700; color:var(--emerald);">2070+</div>
-        <div style="font-size:10px; color:var(--dim); margin-top:4px;">PROOF VALIDITY</div>
+        <div style="font-size:10px; color:var(--dim); margin-top:4px;">${ja ? '証明有効期間' : 'PROOF VALIDITY'}</div>
       </div>
     </div>
   </div>
   <div class="callout">
-    <strong>Key insight:</strong> This proof is generated by YOUR sensors, sealed by SENTINEL, and verifiable by ANYONE (pharma client, regulator, insurer). You don't need the pharma client's cooperation to prove you did your job. The proof stands on its own — mathematically.
+    <strong>${ja ? '重要なポイント：' : 'Key insight:'}</strong> ${ja ? 'この証明は貴社のセンサーで生成され、SENTINELで封印され、誰でも（製薬クライアント、規制当局、保険会社）が検証可能です。業務遂行を証明するために製薬クライアントの協力は不要です。証明はそれ自体で成立します — 数学的に。' : 'This proof is generated by YOUR sensors, sealed by SENTINEL, and verifiable by ANYONE (pharma client, regulator, insurer). You don\'t need the pharma client\'s cooperation to prove you did your job. The proof stands on its own — mathematically.'}
   </div>
   <div style="margin-top:16px;" id="sealArea">
-    <button class="btn btn-primary" id="sealBtn" onclick="runSeal()">Generate Cold Chain Proof</button>
+    <button class="btn btn-primary" id="sealBtn" onclick="runSeal()">${ja ? 'コールドチェーン証明を生成' : 'Generate Cold Chain Proof'}</button>
   </div>
   <div id="s4done" style="display:none;">
-    <div class="banner-done">✓ Cold chain proof sealed — 4,560 readings, all in spec, mathematically unforgeable</div>
-    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(0,true); unlockNext(); goTo(5)">See Dispute Resolution →</button></div>
+    <div class="banner-done">${ja ? '✓ コールドチェーン証明封印完了 — 4,560読取、全て仕様内、数学的に偽造不可能' : '✓ Cold chain proof sealed — 4,560 readings, all in spec, mathematically unforgeable'}</div>
+    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(0,true); unlockNext(); goTo(5)">${ja ? '紛争解決を見る →' : 'See Dispute Resolution →'}</button></div>
   </div>`;
 }
 function runSeal() {
-  document.getElementById('sealBtn').innerHTML = '<span class="spinner"></span> Sealing 4,560 sensor readings…';
+  const ja = lang === 'ja';
+  document.getElementById('sealBtn').innerHTML = `<span class="spinner"></span> ${ja ? '4,560センサー読取を封印中…' : 'Sealing 4,560 sensor readings…'}`;
   document.getElementById('sealBtn').disabled = true;
   setTimeout(() => {
     document.getElementById('sealArea').style.display = 'none';
@@ -416,42 +454,44 @@ function runSeal() {
 }
 
 function screen5() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Dispute Resolution — Your ZK Receipt</h1>
-  <p class="screen-sub">A pharma client claims a temperature excursion caused product loss. Previously: your word against theirs. Now: mathematically unforgeable proof settles it instantly.</p>
+  <h1 class="screen-title">${ja ? '紛争解決 — ZKレシート' : 'Dispute Resolution — Your ZK Receipt'}</h1>
+  <p class="screen-sub">${ja ? '製薬クライアントが温度逸脱による製品損失を主張します。以前：お互いの主張の対立。現在：数学的に偽造不可能な証明が即座に解決。' : 'A pharma client claims a temperature excursion caused product loss. Previously: your word against theirs. Now: mathematically unforgeable proof settles it instantly.'}</p>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px; color:var(--amber);">Dispute Scenario — Simulated</div>
-    <div class="kv-row"><span class="kv-key">Claim</span><span class="kv-val" style="color:var(--red);">"Pool FRX-0847 showed temperature excursion. $1.8M loss. Logistics partner liable."</span></div>
-    <div class="kv-row"><span class="kv-key">Claimant</span><span class="kv-val">Pharma client's QA team</span></div>
-    <div class="kv-row"><span class="kv-key">Without SENTINEL</span><span class="kv-val" style="color:var(--red);">6-12 months arbitration · $200K legal fees · reputation damage</span></div>
-    <div class="kv-row"><span class="kv-key">With SENTINEL</span><span class="kv-val" style="color:var(--emerald);">30-second proof verification · dispute resolved instantly</span></div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px; color:var(--amber);">${ja ? '紛争シナリオ — シミュレーション' : 'Dispute Scenario — Simulated'}</div>
+    <div class="kv-row"><span class="kv-key">${ja ? '主張' : 'Claim'}</span><span class="kv-val" style="color:var(--red);">${ja ? '"プールFRX-0847に温度逸脱発生。$1.8M損失。物流パートナーに責任あり。"' : '"Pool FRX-0847 showed temperature excursion. $1.8M loss. Logistics partner liable."'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '主張者' : 'Claimant'}</span><span class="kv-val">${ja ? '製薬クライアントのQAチーム' : 'Pharma client\'s QA team'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'SENTINELなし' : 'Without SENTINEL'}</span><span class="kv-val" style="color:var(--red);">${ja ? '6-12ヶ月の仲裁 · $200K法的費用 · 評判の損害' : '6-12 months arbitration · $200K legal fees · reputation damage'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'SENTINELあり' : 'With SENTINEL'}</span><span class="kv-val" style="color:var(--emerald);">${ja ? '30秒で証明検証 · 紛争即時解決' : '30-second proof verification · dispute resolved instantly'}</span></div>
   </div>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px;">Your Cryptographic Defense</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px;">${ja ? '貴社の暗号学的防御' : 'Your Cryptographic Defense'}</div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--emerald-dim);">1</div>
-      <div class="row-info"><div class="row-title">Present sealed cold chain proof</div><div class="row-desc">4,560 readings, each individually signed at capture time by your sensor hardware. Timestamp provenance anchored to NIST time source.</div></div>
+      <div class="row-info"><div class="row-title">${ja ? '封印済みコールドチェーン証明を提示' : 'Present sealed cold chain proof'}</div><div class="row-desc">${ja ? '4,560読取、各々がキャプチャ時に貴社のセンサーハードウェアで個別に署名。タイムスタンプの出所はNIST時刻源に固定。' : '4,560 readings, each individually signed at capture time by your sensor hardware. Timestamp provenance anchored to NIST time source.'}</div></div>
     </div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--emerald-dim);">2</div>
-      <div class="row-info"><div class="row-title">Third party verifies (no cooperation needed)</div><div class="row-desc">Insurer, arbitrator, or regulator independently verifies every signature. If even ONE reading were altered, the entire chain would fail verification.</div></div>
+      <div class="row-info"><div class="row-title">${ja ? '第三者が検証（協力不要）' : 'Third party verifies (no cooperation needed)'}</div><div class="row-desc">${ja ? '保険会社、仲裁人、規制当局が独立して全署名を検証。1つでも読取が変更されていれば、チェーン全体が検証に失敗。' : 'Insurer, arbitrator, or regulator independently verifies every signature. If even ONE reading were altered, the entire chain would fail verification.'}</div></div>
     </div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--emerald-dim);">3</div>
-      <div class="row-info"><div class="row-title">Custody transfer receipts confirm handoff state</div><div class="row-desc">Cryptographic proof: containers were -27.4°C at pickup AND -27.1°C at delivery. If excursion occurred AFTER delivery, that's provable.</div></div>
+      <div class="row-info"><div class="row-title">${ja ? '保管移転レシートが引渡し状態を確認' : 'Custody transfer receipts confirm handoff state'}</div><div class="row-desc">${ja ? '暗号学的証明：集荷時にコンテナは-27.4°C、配送時に-27.1°C。逸脱が配送後に発生した場合、それは証明可能。' : 'Cryptographic proof: containers were -27.4°C at pickup AND -27.1°C at delivery. If excursion occurred AFTER delivery, that\'s provable.'}</div></div>
     </div>
   </div>
   <div style="margin-top:16px;" id="disputeArea">
-    <button class="btn btn-primary" id="disputeBtn" onclick="runDispute()">Resolve Dispute</button>
+    <button class="btn btn-primary" id="disputeBtn" onclick="runDispute()">${ja ? '紛争を解決' : 'Resolve Dispute'}</button>
   </div>
   <div id="s5done" style="display:none;">
-    <div class="callout"><strong>Dispute resolved in 30 seconds.</strong> Your cryptographic proof is mathematically unforgeable. The pharma client's claim is refuted by 4,560 individually-signed sensor readings. No arbitration needed. No legal fees. No reputation damage. The proof speaks for itself.</div>
-    <div class="banner-done">✓ False excursion claim refuted — your proof is mathematically irrefutable</div>
-    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(3,true); unlockNext(); goTo(6)">See Multi-Client Scale →</button></div>
+    <div class="callout"><strong>${ja ? '30秒で紛争解決。' : 'Dispute resolved in 30 seconds.'}</strong> ${ja ? '貴社の暗号学的証明は数学的に偽造不可能です。製薬クライアントの主張は4,560の個別署名済みセンサー読取により反証されます。仲裁不要。法的費用不要。評判の損害なし。証明がすべてを語ります。' : 'Your cryptographic proof is mathematically unforgeable. The pharma client\'s claim is refuted by 4,560 individually-signed sensor readings. No arbitration needed. No legal fees. No reputation damage. The proof speaks for itself.'}</div>
+    <div class="banner-done">${ja ? '✓ 虚偽の温度逸脱主張を反証 — 貴社の証明は数学的に反駁不可能' : '✓ False excursion claim refuted — your proof is mathematically irrefutable'}</div>
+    <div style="margin-top:20px;"><button class="btn btn-primary" onclick="setReq(3,true); unlockNext(); goTo(6)">${ja ? 'マルチクライアント拡張を見る →' : 'See Multi-Client Scale →'}</button></div>
   </div>`;
 }
 function runDispute() {
-  document.getElementById('disputeBtn').innerHTML = '<span class="spinner"></span> Verifying proof chain…';
+  const ja = lang === 'ja';
+  document.getElementById('disputeBtn').innerHTML = `<span class="spinner"></span> ${ja ? '証明チェーンを検証中…' : 'Verifying proof chain…'}`;
   document.getElementById('disputeBtn').disabled = true;
   setTimeout(() => {
     document.getElementById('disputeArea').style.display = 'none';
@@ -460,107 +500,110 @@ function runDispute() {
 }
 
 function screen6() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Multi-Pharma Scalability</h1>
-  <p class="screen-sub">One SENTINEL integration works across ALL your pharma clients. No per-client data integration. No custom handoff protocols. Provider-agnostic proofs.</p>
+  <h1 class="screen-title">${ja ? 'マルチ製薬スケーラビリティ' : 'Multi-Pharma Scalability'}</h1>
+  <p class="screen-sub">${ja ? '1つのSENTINEL連携が全ての製薬クライアントに対応。クライアント毎のデータ連携不要。カスタム引渡しプロトコル不要。プロバイダー非依存の証明。' : 'One SENTINEL integration works across ALL your pharma clients. No per-client data integration. No custom handoff protocols. Provider-agnostic proofs.'}</p>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Same Infrastructure, Multiple Clients</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? '同一インフラ、複数クライアント' : 'Same Infrastructure, Multiple Clients'}</div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--cyan-dim);">T</div>
-      <div class="row-info"><div class="row-title">Takeda (Plasma-derived therapies)</div><div class="row-desc">BioLife centers → Fractionation plants · -25°C to -30°C · GDP/HIPAA/GDPR</div></div>
-      <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">Active</div>
+      <div class="row-info"><div class="row-title">${ja ? '武田薬品（血漿由来治療薬）' : 'Takeda (Plasma-derived therapies)'}</div><div class="row-desc">${ja ? 'BioLifeセンター → 分画工場 · -25°C〜-30°C · GDP/HIPAA/GDPR' : 'BioLife centers → Fractionation plants · -25°C to -30°C · GDP/HIPAA/GDPR'}</div></div>
+      <div class="row-status" style="background:var(--emerald-dim); color:var(--emerald);">${ja ? '稼働中' : 'Active'}</div>
     </div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--blue-dim);">N</div>
-      <div class="row-info"><div class="row-title">Novo Nordisk (Insulin, GLP-1)</div><div class="row-desc">Manufacturing → Distribution centers · 2°C to 8°C · GDP/EU Annex 15</div></div>
-      <div class="row-status" style="background:var(--cyan-dim); color:var(--cyan);">Same system</div>
+      <div class="row-info"><div class="row-title">${ja ? 'ノボ ノルディスク（インスリン、GLP-1）' : 'Novo Nordisk (Insulin, GLP-1)'}</div><div class="row-desc">${ja ? '製造 → 配送センター · 2°C〜8°C · GDP/EU Annex 15' : 'Manufacturing → Distribution centers · 2°C to 8°C · GDP/EU Annex 15'}</div></div>
+      <div class="row-status" style="background:var(--cyan-dim); color:var(--cyan);">${ja ? '同一システム' : 'Same system'}</div>
     </div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--purple-dim);">M</div>
-      <div class="row-info"><div class="row-title">Moderna (mRNA vaccines)</div><div class="row-desc">Ultra-cold chain · -70°C to -80°C · CDC/EUA compliance</div></div>
-      <div class="row-status" style="background:var(--cyan-dim); color:var(--cyan);">Same system</div>
+      <div class="row-info"><div class="row-title">${ja ? 'モデルナ（mRNAワクチン）' : 'Moderna (mRNA vaccines)'}</div><div class="row-desc">${ja ? '超低温チェーン · -70°C〜-80°C · CDC/EUAコンプライアンス' : 'Ultra-cold chain · -70°C to -80°C · CDC/EUA compliance'}</div></div>
+      <div class="row-status" style="background:var(--cyan-dim); color:var(--cyan);">${ja ? '同一システム' : 'Same system'}</div>
     </div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--amber-dim);">R</div>
-      <div class="row-info"><div class="row-title">Roche (Oncology biologics)</div><div class="row-desc">Hospital last-mile · 2°C to 8°C · Patient-level traceability</div></div>
-      <div class="row-status" style="background:var(--cyan-dim); color:var(--cyan);">Same system</div>
+      <div class="row-info"><div class="row-title">${ja ? 'ロシュ（腫瘍学バイオ医薬品）' : 'Roche (Oncology biologics)'}</div><div class="row-desc">${ja ? '病院ラストマイル · 2°C〜8°C · 患者レベルのトレーサビリティ' : 'Hospital last-mile · 2°C to 8°C · Patient-level traceability'}</div></div>
+      <div class="row-status" style="background:var(--cyan-dim); color:var(--cyan);">${ja ? '同一システム' : 'Same system'}</div>
     </div>
   </div>
   <div class="callout cyan">
-    <strong>Zero per-client integration cost.</strong> Each pharma client gets their own cryptographic proofs from the same sensor data stream. Onboarding a new pharma client = configuring their temperature spec and handoff points. Not building a new data pipeline. Not negotiating a new DTA. Days, not months.
+    <strong>${ja ? 'クライアント毎の連携コストゼロ。' : 'Zero per-client integration cost.'}</strong> ${ja ? '各製薬クライアントは同一センサーデータストリームから独自の暗号証明を取得します。新規製薬クライアントのオンボーディング = 温度仕様と引渡しポイントの設定のみ。新しいデータパイプラインの構築不要。新しいDTAの交渉不要。数ヶ月ではなく数日。' : 'Each pharma client gets their own cryptographic proofs from the same sensor data stream. Onboarding a new pharma client = configuring their temperature spec and handoff points. Not building a new data pipeline. Not negotiating a new DTA. Days, not months.'}
   </div>
   <div style="margin-top:16px;">
-    <button class="btn btn-primary" onclick="setReq(4,true); unlockNext(); goTo(7)">See Liability Elimination →</button>
+    <button class="btn btn-primary" onclick="setReq(4,true); unlockNext(); goTo(7)">${ja ? '責任排除を見る →' : 'See Liability Elimination →'}</button>
   </div>`;
 }
 
 function screen7() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Breach Liability Elimination</h1>
-  <p class="screen-sub">If your systems are breached today, you're potentially liable for HIPAA violations on data you never needed. SENTINEL eliminates this risk architecturally.</p>
+  <h1 class="screen-title">${ja ? '漏洩責任の排除' : 'Breach Liability Elimination'}</h1>
+  <p class="screen-sub">${ja ? '今日貴社のシステムが侵害された場合、不要なデータに対するHIPAA違反の責任を潜在的に負います。SENTINELはこのリスクをアーキテクチャ的に排除します。' : 'If your systems are breached today, you\'re potentially liable for HIPAA violations on data you never needed. SENTINEL eliminates this risk architecturally.'}</p>
   <div class="grid-2" style="margin-bottom:20px;">
     <div class="card" style="border-color: rgba(248,113,113,0.3);">
-      <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px; color:var(--red);">Today (Without SENTINEL)</div>
-      <div class="kv-row"><span class="kv-key">Your systems hold</span><span class="kv-val" style="color:var(--red);">Shipping manifests with lot numbers, product types, destination hospitals</span></div>
-      <div class="kv-row"><span class="kv-key">If breached</span><span class="kv-val" style="color:var(--red);">Donor pool composition exposed. HIPAA/GDPR notification mandatory.</span></div>
-      <div class="kv-row"><span class="kv-key">Regulatory penalty</span><span class="kv-val" style="color:var(--red);">Up to $1.9M per HIPAA violation category</span></div>
-      <div class="kv-row"><span class="kv-key">Client impact</span><span class="kv-val" style="color:var(--red);">Contract termination, loss of future business</span></div>
+      <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px; color:var(--red);">${ja ? '現在（SENTINELなし）' : 'Today (Without SENTINEL)'}</div>
+      <div class="kv-row"><span class="kv-key">${ja ? '貴社システムが保持' : 'Your systems hold'}</span><span class="kv-val" style="color:var(--red);">${ja ? 'ロット番号、製品タイプ、搬送先病院付き出荷マニフェスト' : 'Shipping manifests with lot numbers, product types, destination hospitals'}</span></div>
+      <div class="kv-row"><span class="kv-key">${ja ? '侵害された場合' : 'If breached'}</span><span class="kv-val" style="color:var(--red);">${ja ? 'ドナープール構成が露出。HIPAA/GDPR通知義務。' : 'Donor pool composition exposed. HIPAA/GDPR notification mandatory.'}</span></div>
+      <div class="kv-row"><span class="kv-key">${ja ? '規制罰則' : 'Regulatory penalty'}</span><span class="kv-val" style="color:var(--red);">${ja ? 'HIPAA違反カテゴリ毎に最大$1.9M' : 'Up to $1.9M per HIPAA violation category'}</span></div>
+      <div class="kv-row"><span class="kv-key">${ja ? 'クライアント影響' : 'Client impact'}</span><span class="kv-val" style="color:var(--red);">${ja ? '契約解除、将来のビジネス喪失' : 'Contract termination, loss of future business'}</span></div>
     </div>
     <div class="card" style="border-color: rgba(52,211,153,0.3);">
-      <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px; color:var(--emerald);">With SENTINEL</div>
-      <div class="kv-row"><span class="kv-key">Your systems hold</span><span class="kv-val" style="color:var(--emerald);">Temperature data, GPS logs, container counts. Zero PHI.</span></div>
-      <div class="kv-row"><span class="kv-key">If breached</span><span class="kv-val" style="color:var(--emerald);">Attacker gets: "3 containers, -27°C, Route A." That's it.</span></div>
-      <div class="kv-row"><span class="kv-key">Regulatory penalty</span><span class="kv-val" style="color:var(--emerald);">$0 — no PHI to expose = no HIPAA notification</span></div>
-      <div class="kv-row"><span class="kv-key">Client impact</span><span class="kv-val" style="color:var(--emerald);">Zero — their data was never in your system</span></div>
+      <div style="font-family:var(--fd); font-weight:600; font-size:14px; margin-bottom:12px; color:var(--emerald);">${ja ? 'SENTINELあり' : 'With SENTINEL'}</div>
+      <div class="kv-row"><span class="kv-key">${ja ? '貴社システムが保持' : 'Your systems hold'}</span><span class="kv-val" style="color:var(--emerald);">${ja ? '温度データ、GPSログ、コンテナ数。PHIゼロ。' : 'Temperature data, GPS logs, container counts. Zero PHI.'}</span></div>
+      <div class="kv-row"><span class="kv-key">${ja ? '侵害された場合' : 'If breached'}</span><span class="kv-val" style="color:var(--emerald);">${ja ? '攻撃者が得るもの：「3コンテナ、-27°C、ルートA」以上。' : 'Attacker gets: "3 containers, -27°C, Route A." That\'s it.'}</span></div>
+      <div class="kv-row"><span class="kv-key">${ja ? '規制罰則' : 'Regulatory penalty'}</span><span class="kv-val" style="color:var(--emerald);">${ja ? '$0 — 露出するPHIなし = HIPAA通知不要' : '$0 — no PHI to expose = no HIPAA notification'}</span></div>
+      <div class="kv-row"><span class="kv-key">${ja ? 'クライアント影響' : 'Client impact'}</span><span class="kv-val" style="color:var(--emerald);">${ja ? 'ゼロ — データは貴社のシステムに存在しなかった' : 'Zero — their data was never in your system'}</span></div>
     </div>
   </div>
   <div class="callout">
-    <strong>Architectural guarantee:</strong> It's not that you PROMISE not to look at donor data. It's that you CANNOT — the data is cryptographically sealed before it reaches your systems. This is a fundamentally different security posture. You can prove to insurers, to regulators, and to your pharma clients that you are architecturally incapable of exposing their sensitive data.
+    <strong>${ja ? 'アーキテクチャ的保証：' : 'Architectural guarantee:'}</strong> ${ja ? 'ドナーデータを見ないと約束しているのではありません。見ることが不可能なのです — データは貴社のシステムに届く前に暗号化されて封印されています。これは根本的に異なるセキュリティ態勢です。保険会社、規制当局、製薬クライアントに対して、貴社がアーキテクチャ的に機密データを露出させることが不可能であることを証明できます。' : 'It\'s not that you PROMISE not to look at donor data. It\'s that you CANNOT — the data is cryptographically sealed before it reaches your systems. This is a fundamentally different security posture. You can prove to insurers, to regulators, and to your pharma clients that you are architecturally incapable of exposing their sensitive data.'}
   </div>
   <div style="margin-top:16px;">
-    <button class="btn btn-primary" onclick="setReq(2,true); unlockNext(); goTo(8)">See Your Competitive Advantage →</button>
+    <button class="btn btn-primary" onclick="setReq(2,true); unlockNext(); goTo(8)">${ja ? '貴社の競争優位性を見る →' : 'See Your Competitive Advantage →'}</button>
   </div>`;
 }
 
 function screen8() {
+  const ja = lang === 'ja';
   return `
-  <h1 class="screen-title">Your Competitive Advantage</h1>
-  <p class="screen-sub">SENTINEL doesn't just protect you — it makes you the preferred logistics partner for every pharma company that cares about data sovereignty, regulatory compliance, and supply chain integrity.</p>
+  <h1 class="screen-title">${ja ? '貴社の競争優位性' : 'Your Competitive Advantage'}</h1>
+  <p class="screen-sub">${ja ? 'SENTINELは貴社を保護するだけではありません — データ主権、規制コンプライアンス、サプライチェーンの完全性を重視する全ての製薬企業にとって、貴社を最適な物流パートナーにします。' : 'SENTINEL doesn\'t just protect you — it makes you the preferred logistics partner for every pharma company that cares about data sovereignty, regulatory compliance, and supply chain integrity.'}</p>
   <div class="grid-3" style="margin-bottom:24px;">
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">Zero</div><div class="fleet-label">Data Breach Liability</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">30s</div><div class="fleet-label">Dispute Resolution</div></div>
-    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">Days</div><div class="fleet-label">New Client Onboarding</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">${ja ? 'ゼロ' : 'Zero'}</div><div class="fleet-label">${ja ? 'データ漏洩責任' : 'Data Breach Liability'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">30${ja ? '秒' : 's'}</div><div class="fleet-label">${ja ? '紛争解決' : 'Dispute Resolution'}</div></div>
+    <div class="fleet-stat"><div class="fleet-num" style="color:var(--emerald);">${ja ? '数日' : 'Days'}</div><div class="fleet-label">${ja ? '新規クライアントオンボーディング' : 'New Client Onboarding'}</div></div>
   </div>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">What You Tell Your Pharma Clients</div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? '製薬クライアントへの訴求ポイント' : 'What You Tell Your Pharma Clients'}</div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--emerald-dim);">✓</div>
-      <div class="row-info"><div class="row-title">"We prove cold chain integrity with post-quantum cryptographic proofs"</div><div class="row-desc">Not PDF exports. Not Excel logs. Mathematically unforgeable, independently verifiable, valid for 50+ years.</div></div>
+      <div class="row-info"><div class="row-title">${ja ? '「耐量子暗号証明でコールドチェーンの完全性を証明します」' : '"We prove cold chain integrity with post-quantum cryptographic proofs"'}</div><div class="row-desc">${ja ? 'PDFエクスポートではない。Excelログではない。数学的に偽造不可能、独立して検証可能、50年以上有効。' : 'Not PDF exports. Not Excel logs. Mathematically unforgeable, independently verifiable, valid for 50+ years.'}</div></div>
     </div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--emerald-dim);">✓</div>
-      <div class="row-info"><div class="row-title">"Your donor/patient data never touches our systems — architecturally impossible"</div><div class="row-desc">We cannot be the source of a HIPAA breach because we never hold PHI. Zero liability for you AND for us.</div></div>
+      <div class="row-info"><div class="row-title">${ja ? '「ドナー/患者データは当社システムに一切触れません — アーキテクチャ的に不可能」' : '"Your donor/patient data never touches our systems — architecturally impossible"'}</div><div class="row-desc">${ja ? 'PHIを保持しないため、HIPAA違反の発生源になることは不可能。お客様と当社双方のリスクゼロ。' : 'We cannot be the source of a HIPAA breach because we never hold PHI. Zero liability for you AND for us.'}</div></div>
     </div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--emerald-dim);">✓</div>
-      <div class="row-info"><div class="row-title">"Switch to us in days, not months — zero data migration required"</div><div class="row-desc">Our proofs are provider-agnostic. Your previous logistics partner's proofs remain valid. Our proofs start immediately. No transition gap.</div></div>
+      <div class="row-info"><div class="row-title">${ja ? '「数ヶ月ではなく数日で当社に切替可能 — データ移行不要」' : '"Switch to us in days, not months — zero data migration required"'}</div><div class="row-desc">${ja ? '当社の証明はプロバイダー非依存。以前の物流パートナーの証明も有効のまま。当社の証明は即座に開始。移行ギャップなし。' : 'Our proofs are provider-agnostic. Your previous logistics partner\'s proofs remain valid. Our proofs start immediately. No transition gap.'}</div></div>
     </div>
     <div class="row-item">
       <div class="row-icon" style="background:var(--emerald-dim);">✓</div>
-      <div class="row-info"><div class="row-title">"If there's ever a dispute, our cryptographic receipt resolves it in 30 seconds"</div><div class="row-desc">No arbitration. No legal fees. No 6-month back-and-forth. The math is the proof.</div></div>
+      <div class="row-info"><div class="row-title">${ja ? '「紛争が発生した場合、暗号レシートが30秒で解決します」' : '"If there\'s ever a dispute, our cryptographic receipt resolves it in 30 seconds"'}</div><div class="row-desc">${ja ? '仲裁不要。法的費用不要。6ヶ月のやり取り不要。数学が証明です。' : 'No arbitration. No legal fees. No 6-month back-and-forth. The math is the proof.'}</div></div>
     </div>
   </div>
   <div class="card">
-    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">Revenue Impact</div>
-    <div class="kv-row"><span class="kv-key">Win rate increase</span><span class="kv-val" style="color:var(--emerald);">Differentiation vs. competitors still using paper-based GDP proofs</span></div>
-    <div class="kv-row"><span class="kv-key">Client retention</span><span class="kv-val" style="color:var(--emerald);">Pharma clients stay because your proofs are portable (not locked to your system)</span></div>
-    <div class="kv-row"><span class="kv-key">Insurance premiums</span><span class="kv-val" style="color:var(--emerald);">Lower — demonstrably zero PHI exposure = reduced cyber coverage requirement</span></div>
-    <div class="kv-row"><span class="kv-key">New client onboarding</span><span class="kv-val" style="color:var(--emerald);">Days not months → faster revenue ramp per new contract</span></div>
-    <div class="kv-row"><span class="kv-key">Regulatory audits</span><span class="kv-val" style="color:var(--emerald);">Instant compliance demonstration — no 2-week audit prep cycle</span></div>
+    <div style="font-family:var(--fd); font-weight:600; font-size:15px; margin-bottom:14px;">${ja ? '収益インパクト' : 'Revenue Impact'}</div>
+    <div class="kv-row"><span class="kv-key">${ja ? '受注率向上' : 'Win rate increase'}</span><span class="kv-val" style="color:var(--emerald);">${ja ? '紙ベースのGDP証明を使用する競合との差別化' : 'Differentiation vs. competitors still using paper-based GDP proofs'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? 'クライアント維持' : 'Client retention'}</span><span class="kv-val" style="color:var(--emerald);">${ja ? '証明がポータブル（システムにロックされない）なため継続利用' : 'Pharma clients stay because your proofs are portable (not locked to your system)'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '保険料' : 'Insurance premiums'}</span><span class="kv-val" style="color:var(--emerald);">${ja ? '低減 — PHI露出ゼロを実証 = サイバー保険要件の削減' : 'Lower — demonstrably zero PHI exposure = reduced cyber coverage requirement'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '新規クライアントオンボーディング' : 'New client onboarding'}</span><span class="kv-val" style="color:var(--emerald);">${ja ? '数ヶ月ではなく数日 → 新規契約の収益立上りを加速' : 'Days not months → faster revenue ramp per new contract'}</span></div>
+    <div class="kv-row"><span class="kv-key">${ja ? '規制監査' : 'Regulatory audits'}</span><span class="kv-val" style="color:var(--emerald);">${ja ? '即時コンプライアンス実証 — 2週間の監査準備サイクル不要' : 'Instant compliance demonstration — no 2-week audit prep cycle'}</span></div>
   </div>
-  <div class="banner-done" style="margin-top:24px;">✓ Complete: Zero data liability + Unforgeable compliance proofs + Instant dispute resolution + Multi-pharma scalability + Competitive differentiation. All 8 screens complete.</div>
+  <div class="banner-done" style="margin-top:24px;">${ja ? '✓ 完了：データ責任ゼロ + 偽造不可能なコンプライアンス証明 + 即時紛争解決 + マルチ製薬スケーラビリティ + 競争差別化。全8画面完了。' : '✓ Complete: Zero data liability + Unforgeable compliance proofs + Instant dispute resolution + Multi-pharma scalability + Competitive differentiation. All 8 screens complete.'}</div>
   <div style="margin-top:20px;">
-    <button class="btn btn-primary" onclick="setReq(5,true); renderSidebar();">Complete ✓</button>
+    <button class="btn btn-primary" onclick="setReq(5,true); renderSidebar();">${ja ? '完了 ✓' : 'Complete ✓'}</button>
   </div>`;
 }
 
@@ -644,12 +687,13 @@ function drawColdChart() {
 }
 
 function ctaStrip() {
+  const ja = lang === 'ja';
   return `
   <div class="cta-strip">
-    <h3>Ready to eliminate data liability and prove compliance cryptographically?</h3>
-    <p>Book a 30-minute technical briefing. We'll show SENTINEL configured for your fleet operations and specific pharma client requirements.</p>
+    <h3>${t('cta_h')}</h3>
+    <p>${t('cta_p')}</p>
     <div class="cta-btns">
-      <a href="https://cal.com/agenticvaults" target="_blank"><button class="btn btn-primary">Schedule Meeting →</button></a>
+      <a href="https://cal.com/agenticvaults" target="_blank"><button class="btn btn-primary">${t('cta_btn')}</button></a>
       <a href="mailto:ldavid@agenticvaults.ai"><button class="btn btn-ghost">ldavid@agenticvaults.ai</button></a>
     </div>
   </div>`;
@@ -658,7 +702,7 @@ function ctaStrip() {
 const SCREEN_FNS = {1:screen1,2:screen2,3:screen3,4:screen4,5:screen5,6:screen6,7:screen7,8:screen8};
 function render() {
   document.getElementById('content').innerHTML = `<div class="fade-in">${SCREEN_FNS[state.screen]()}${state.screen === 8 ? ctaStrip() : ''}</div>`;
-  document.getElementById('topTitle').textContent = STEP_LABELS[state.screen - 1];
+  document.getElementById('topTitle').textContent = t('steps')[state.screen - 1];
   renderSidebar();
   window.scrollTo(0,0);
   if (state.screen === 4) setTimeout(drawColdChart, 50);
