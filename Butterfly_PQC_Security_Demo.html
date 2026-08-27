@@ -159,9 +159,98 @@
   .evidence-icon { font-size: 16px; width: 28px; text-align: center; }
   .evidence-label { flex: 1; font-size: 13.5px; }
   .evidence-status { font-family: var(--fm); font-size: 11px; }
+
+/* ─── Responsive base fixes ─── */
+img, video, svg { max-width: 100%; }
+.content { box-sizing: border-box; width: 100%; }
+pre, code, .kv-val { word-break: break-all; overflow-wrap: break-word; }
+.topbar { gap: 8px; }
+
+/* ─── Hamburger ─── */
+.hamburger { display: none; background: none; border: none; color: var(--white); font-size: 22px; cursor: pointer; padding: 4px 8px; margin-right: 10px; line-height: 1; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+
+/* ─── Sidebar overlay ─── */
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 49; }
+.sidebar-overlay.active { display: block; }
+
+/* ─── Desktop: sidebar visible ─── */
+@media(min-width:1025px) {
+  .hamburger { display: none !important; }
+  .sidebar { transform: none !important; }
+  .main { margin-left: 280px !important; }
+}
+
+/* ─── Tablet & below: sidebar off-canvas ─── */
+@media(max-width:1024px) {
+  .hamburger { display: block; }
+  .sidebar { transform: translateX(-100%); transition: transform .25s ease; z-index: 50; width: 280px; }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0 !important; }
+  .topbar { padding: 12px 16px; }
+  .content { padding: 24px 20px; max-width: 100%; }
+  h1.screen-title { font-size: 22px; }
+  .screen-sub { font-size: 13.5px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { grid-template-columns: 1fr 1fr; gap: 14px; }
+  .metric-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ─── Mobile: collapse all multi-column grids ─── */
+@media(max-width:768px) {
+  .grid-2 { grid-template-columns: 1fr !important; gap: 14px; }
+  .grid-3 { grid-template-columns: 1fr !important; gap: 12px; }
+  .metric-grid { grid-template-columns: 1fr 1fr !important; gap: 10px; }
+  .content { padding: 16px 14px; }
+  h1.screen-title { font-size: 20px; }
+  .screen-sub { font-size: 13px; margin-bottom: 20px; }
+  .card { padding: 16px 14px; }
+  .btn { font-size: 13px; padding: 11px 18px; width: 100%; justify-content: center; box-sizing: border-box; }
+  .btn + .btn, .btn ~ .btn { margin-top: 8px; }
+  .kv-row { font-size: 12px; flex-wrap: wrap; gap: 4px; }
+  .kv-key { min-width: 120px; }
+  .kv-val { font-size: 11px; }
+  .kat-row { font-size: 11.5px; padding: 9px 12px; flex-wrap: wrap; gap: 6px; }
+  .evidence-row { flex-wrap: wrap; }
+  .topbar-badge { font-size: 10px; padding: 4px 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px; }
+  .topbar-title { font-size: 14px; }
+  .callout { font-size: 12.5px; padding: 12px 14px; }
+  .banner-done, .banner-alert { font-size: 13px; padding: 13px 16px; flex-wrap: wrap; gap: 6px; }
+  .session-card { padding: 14px; }
+  .tl-title { font-size: 13px; }
+  .tl-desc { font-size: 12px; }
+  .metric-box { padding: 14px 8px; }
+  .metric-num { font-size: 18px; }
+  .sdk-block { padding: 14px; }
+  .code-block { font-size: 11.5px; padding: 10px 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: pre; word-break: normal; }
+  /* Table overflow for narrow screens */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { min-width: 380px; font-size: 11px; }
+  /* Inline 3-col grids inside JS screens collapse via JS helper */
+}
+
+/* ─── Very small phones ─── */
+@media(max-width:400px) {
+  .content { padding: 12px 10px; }
+  h1.screen-title { font-size: 18px; }
+  .topbar-badge { display: none; }
+  .brand-name { font-size: 13px; }
+  .metric-grid { grid-template-columns: 1fr !important; }
+  .metric-num { font-size: 16px; }
+}
+
+/* ─── Cross-browser fixes ─── */
+.btn { -webkit-appearance: none; appearance: none; }
+.sidebar { -webkit-overflow-scrolling: touch; }
+.progress-fill { -webkit-transition: width 1.4s cubic-bezier(.2,.8,.2,1); }
+@supports not (backdrop-filter: blur(12px)) {
+  .topbar { background: rgba(6,6,11,0.97); }
+}
+/* Prevent iOS font size bump on orientation change */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 </style>
 </head>
 <body>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
 <div class="app">
 
@@ -190,7 +279,10 @@
   <!-- MAIN -->
   <div class="main">
     <div class="topbar">
-      <div class="topbar-title" id="topTitle">The Threat Landscape</div>
+      <div style="display:flex;align-items:center">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title" id="topTitle">The Threat Landscape</div>
+      </div>
       <div class="topbar-badge" id="topBadge">iQ Probe · HIPAA §164.312</div>
     </div>
     <div class="content" id="content"></div>
@@ -199,6 +291,14 @@
 </div>
 
 <script>
+function toggleSidebar(){
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+function closeSidebar(){
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('active');
+}
 // ─── State ────────────────────────────────────────────────────────────────────
 const STEP_LABELS = [
   'The Threat Landscape',
@@ -227,11 +327,7 @@ let state = {
   evidenceGenerated: false,
 };
 
-function goTo(n) {
-  if (n > state.maxUnlocked) return;
-  state.screen = n;
-  render();
-}
+function goTo(n){closeSidebar();if(n>state.maxUnlocked)return;state.screen=n;render();}
 function unlockNext() {
   state.maxUnlocked = Math.max(state.maxUnlocked, state.screen + 1);
 }
@@ -822,7 +918,39 @@ function render() {
   document.getElementById('content').innerHTML = `<div class="fade-in">${(screens[state.screen] || screen1)()}</div>`;
   renderSidebar();
   window.scrollTo(0, 0);
+  applyResponsive();
 }
+
+// ── Collapse inline multi-column grids on small screens ──────────────────────
+function applyResponsive() {
+  const mobile = window.innerWidth <= 768;
+  // Wrap any bare <table> elements in overflow container
+  document.querySelectorAll('.content table').forEach(t => {
+    if (!t.closest('.table-wrap')) {
+      const wrap = document.createElement('div');
+      wrap.className = 'table-wrap';
+      t.parentNode.insertBefore(wrap, t);
+      wrap.appendChild(t);
+    }
+  });
+  if (mobile) {
+    // Collapse inline 3-col grids
+    document.querySelectorAll('[style*="grid-template-columns: 1fr 1fr 1fr"], [style*="grid-template-columns:1fr 1fr 1fr"], [style*="repeat(3, 1fr)"], [style*="repeat(3,1fr)"]').forEach(el => {
+      el.style.gridTemplateColumns = '1fr';
+    });
+    // Collapse inline 2-col grids inside content
+    document.querySelectorAll('.content [style*="grid-template-columns: 1fr 1fr"]').forEach(el => {
+      el.style.gridTemplateColumns = '1fr';
+    });
+    // Stack multi-button flex rows
+    document.querySelectorAll('.content [style*="display: flex"][style*="gap"], .content [style*="display:flex"][style*="gap"]').forEach(el => {
+      if (el.querySelectorAll('.btn').length > 1) {
+        el.style.flexDirection = 'column';
+      }
+    });
+  }
+}
+window.addEventListener('resize', () => { if (document.getElementById('content')) applyResponsive(); });
 
 render();
 </script>

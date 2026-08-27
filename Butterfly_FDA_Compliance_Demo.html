@@ -132,9 +132,98 @@
 
   .spinner { width: 15px; height: 15px; border: 2px solid rgba(4,20,13,0.3); border-top-color: #04140d; border-radius: 50%; animation: spin 0.7s linear infinite; }
   .banner-done { display: flex; align-items: center; gap: 10px; padding: 16px 20px; background: var(--emerald-dim); border: 1px solid rgba(52,211,153,0.3); border-radius: 12px; margin-top: 24px; font-size: 14px; font-weight: 600; color: var(--emerald); }
+
+/* ─── Responsive base fixes ─── */
+img, video, svg { max-width: 100%; }
+.content { box-sizing: border-box; width: 100%; }
+pre, code, .kv-val { word-break: break-all; overflow-wrap: break-word; }
+table { table-layout: auto; }
+.topbar { gap: 8px; }
+
+/* ─── Hamburger ─── */
+.hamburger { display: none; background: none; border: none; color: var(--white); font-size: 22px; cursor: pointer; padding: 4px 8px; margin-right: 10px; line-height: 1; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+
+/* ─── Sidebar overlay ─── */
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 49; }
+.sidebar-overlay.active { display: block; }
+
+/* ─── Desktop: sidebar visible ─── */
+@media(min-width:1025px) {
+  .hamburger { display: none !important; }
+  .sidebar { transform: none !important; }
+  .main { margin-left: 280px !important; }
+}
+
+/* ─── Tablet & below: sidebar off-canvas ─── */
+@media(max-width:1024px) {
+  .hamburger { display: block; }
+  .sidebar { transform: translateX(-100%); transition: transform .25s ease; z-index: 50; width: 280px; }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0 !important; }
+  .topbar { padding: 12px 16px; }
+  .content { padding: 24px 20px; max-width: 100%; }
+  h1.screen-title { font-size: 22px; }
+  .screen-sub { font-size: 13.5px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; gap: 16px; }
+}
+
+/* ─── Mobile: collapse grids and tighten layout ─── */
+@media(max-width:768px) {
+  .grid-2 { grid-template-columns: 1fr !important; gap: 14px; }
+  .content { padding: 16px 14px; }
+  h1.screen-title { font-size: 20px; }
+  .screen-sub { font-size: 13px; margin-bottom: 20px; }
+  .card { padding: 16px 14px; }
+  .btn { font-size: 13px; padding: 11px 18px; width: 100%; justify-content: center; box-sizing: border-box; }
+  .btn + .btn { margin-top: 8px; }
+  .kv-row { font-size: 12px; flex-wrap: wrap; gap: 4px; }
+  .kv-key { min-width: 120px; }
+  .kv-val { font-size: 11px; }
+  .req-table td { padding: 10px 10px; font-size: 12px; }
+  .req-table { font-size: 12px; width: 100%; }
+  .checklist-mini { margin: 8px 12px 14px; }
+  .signer-row { flex-wrap: wrap; gap: 8px; }
+  .signer-status { font-size: 10.5px; padding: 4px 10px; }
+  .kat-row { font-size: 11.5px; padding: 9px 12px; flex-wrap: wrap; gap: 6px; }
+  .zip-item { font-size: 12px; }
+  .fleet-stat { padding: 14px; }
+  .fleet-num { font-size: 22px; }
+  .vuln-row { flex-wrap: wrap; gap: 10px; }
+  .vuln-chip { min-width: calc(50% - 7px); flex: 1 1 calc(50% - 7px); }
+  .score-ring { width: 66px; height: 66px; }
+  .device-name { font-size: 17px; }
+  .topbar-badge { font-size: 10px; padding: 4px 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
+  .topbar-title { font-size: 14px; }
+  .status-pill { font-size: 10.5px; padding: 4px 9px; }
+  .callout { font-size: 12.5px; padding: 12px 14px; }
+  .banner-done { font-size: 13px; padding: 13px 16px; flex-wrap: wrap; gap: 6px; }
+  /* table overflow for narrow screens */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { min-width: 360px; font-size: 11px; }
+}
+
+/* ─── Very small phones ─── */
+@media(max-width:400px) {
+  .content { padding: 12px 10px; }
+  h1.screen-title { font-size: 18px; }
+  .topbar-badge { display: none; }
+  .brand-name { font-size: 13px; }
+  .vuln-chip { min-width: 100%; }
+}
+
+/* ─── Cross-browser fixes ─── */
+.btn { -webkit-appearance: none; appearance: none; }
+.sidebar { -webkit-overflow-scrolling: touch; }
+.progress-fill { -webkit-transition: width 1.4s cubic-bezier(.2,.8,.2,1); }
+@supports not (backdrop-filter: blur(12px)) {
+  .topbar { background: rgba(6,6,11,0.97); }
+}
+/* Prevent iOS font size bump on orientation change */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 </style>
 </head>
 <body>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
 <div class="app">
 
@@ -163,7 +252,10 @@
   <!-- MAIN -->
   <div class="main">
     <div class="topbar">
-      <div class="topbar-title" id="topTitle">Device Fleet Overview</div>
+      <div style="display:flex;align-items:center">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title" id="topTitle">Device Fleet Overview</div>
+      </div>
       <div class="topbar-badge" id="topBadge">iQ4 · Premarket</div>
     </div>
     <div class="content" id="content"></div>
@@ -172,6 +264,14 @@
 </div>
 
 <script>
+function toggleSidebar(){
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+function closeSidebar(){
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('active');
+}
 // ---------- State ----------
 const REQS = [
   {code: '§5.1', label: 'SBOM provided'},
@@ -208,6 +308,7 @@ let state = {
 function setReq(idx, val) { state.reqStatus[idx] = val; renderSidebar(); }
 
 function goTo(n) {
+  closeSidebar();
   if (n > state.maxUnlocked) return;
   state.screen = n;
   if (n > state.maxUnlocked) state.maxUnlocked = n;
@@ -577,7 +678,40 @@ function render() {
   document.getElementById('topTitle').textContent = STEP_LABELS[state.screen - 1];
   renderSidebar();
   window.scrollTo(0,0);
+  applyResponsive();
 }
+
+// ── Collapse inline multi-column grids on small screens ──────────────────────
+function applyResponsive() {
+  const mobile = window.innerWidth <= 768;
+  const tablet = window.innerWidth <= 1024;
+  // Wrap any bare <table> elements in overflow container
+  document.querySelectorAll('.content table').forEach(t => {
+    if (!t.closest('.table-wrap')) {
+      const wrap = document.createElement('div');
+      wrap.className = 'table-wrap';
+      t.parentNode.insertBefore(wrap, t);
+      wrap.appendChild(t);
+    }
+  });
+  // Collapse inline 3-column grids on mobile
+  if (mobile) {
+    document.querySelectorAll('[style*="grid-template-columns: 1fr 1fr 1fr"], [style*="grid-template-columns:1fr 1fr 1fr"], [style*="repeat(3, 1fr)"], [style*="repeat(3,1fr)"]').forEach(el => {
+      el.style.gridTemplateColumns = '1fr';
+    });
+    // Collapse inline 2-column grids within .content on mobile too
+    document.querySelectorAll('.content [style*="grid-template-columns: 1fr 1fr"]').forEach(el => {
+      el.style.gridTemplateColumns = '1fr';
+    });
+    // Make button groups flex-column
+    document.querySelectorAll('.content [style*="display:flex"][style*="gap"]').forEach(el => {
+      if (el.querySelectorAll('.btn').length > 1) {
+        el.style.flexDirection = 'column';
+      }
+    });
+  }
+}
+window.addEventListener('resize', () => { if (document.getElementById('content')) applyResponsive(); });
 
 render();
 </script>
