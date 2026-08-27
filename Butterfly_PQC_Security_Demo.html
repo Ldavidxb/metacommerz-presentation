@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SENTINEL — Quantum-Safe Imaging Security · Butterfly Network</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #06060B; --surface: #0E0E16; --surface2: #16161F; --surface3: #1C1C28;
+    --border: #252535; --border-light: #2E2E40;
+    --emerald: #34D399; --emerald-dim: rgba(52,211,153,0.12);
+    --red: #F87171; --red-dim: rgba(248,113,113,0.12);
+    --amber: #FBBF24; --amber-dim: rgba(251,191,36,0.12);
+    --cyan: #22D3EE; --cyan-dim: rgba(34,211,238,0.12);
+    --blue: #60A5FA; --blue-dim: rgba(96,165,250,0.12);
+    --purple: #A78BFA; --purple-dim: rgba(167,139,250,0.12);
+    --teal: #2DD4BF; --teal-dim: rgba(45,212,191,0.12);
+    --white: #F0EDE6; --muted: #8E8EA3; --dim: #55556A;
+    --fd: 'Space Grotesk', sans-serif; --fb: 'DM Sans', sans-serif; --fm: 'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--white); font-family: var(--fb); overflow-x: hidden; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes checkPop { 0% { transform: scale(0); } 70% { transform: scale(1.3); } 100% { transform: scale(1); } }
+  @keyframes flow { 0% { transform: translateX(-100%); } 100% { transform: translateX(400%); } }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+  .fade-in { animation: fadeIn 0.4s ease-out both; }
+  .app { display: flex; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar { width: 280px; background: var(--surface); border-right: 1px solid var(--border); flex-shrink: 0; display: flex; flex-direction: column; position: fixed; top:0; bottom:0; left:0; overflow-y:auto; }
+  .brand { padding: 22px 22px 18px; border-bottom: 1px solid var(--border); }
+  .brand-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .brand-mark { width: 26px; height: 26px; border: 2px solid var(--teal); border-radius: 7px; display:flex; align-items:center; justify-content:center; }
+  .brand-mark div { width: 9px; height: 9px; background: var(--teal); border-radius: 2px; }
+  .brand-name { font-family: var(--fd); font-weight: 700; font-size: 14.5px; color: var(--teal); letter-spacing: 0.03em; }
+  .brand-sub { font-size: 10.5px; color: var(--dim); margin-left: 36px; }
+  .context-box { margin: 16px 18px; padding: 12px 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; }
+  .context-label { font-size: 9.5px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .context-val { font-size: 12.5px; color: var(--white); font-weight: 600; line-height: 1.4; }
+  .steps { padding: 8px 12px; flex: 1; }
+  .step { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 9px; cursor: pointer; margin-bottom: 2px; transition: background 0.15s; }
+  .step:hover { background: var(--surface2); }
+  .step.active { background: var(--teal-dim); }
+  .step-num { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 700; font-family: var(--fm); flex-shrink: 0; border: 1.5px solid var(--border-light); color: var(--dim); }
+  .step.done .step-num { background: var(--teal); border-color: var(--teal); color: #04140d; }
+  .step.active .step-num { border-color: var(--teal); color: var(--teal); }
+  .step-label { font-size: 12.5px; color: var(--muted); font-weight: 500; line-height: 1.3; }
+  .step.active .step-label, .step.done .step-label { color: var(--white); }
+  .step.locked { opacity: 0.35; pointer-events: none; }
+  .threat-mini { margin: 10px 18px 20px; padding: 14px; background: var(--red-dim); border: 1px solid rgba(248,113,113,0.25); border-radius: 10px; }
+  .threat-mini-title { font-size: 9.5px; color: var(--red); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; font-weight: 700; }
+  .threat-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 11px; color: var(--muted); }
+  .threat-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); flex-shrink: 0; animation: blink 2s infinite; }
+  .threat-dot.off { animation: none; background: var(--dim); }
+  .threat-row.resolved { color: var(--emerald); }
+  .threat-row.resolved .threat-dot { background: var(--emerald); animation: none; }
+
+  /* Main */
+  .main { margin-left: 280px; flex: 1; min-height: 100vh; }
+  .topbar { position: sticky; top: 0; z-index: 10; background: rgba(6,6,11,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 40px; display:flex; align-items:center; justify-content: space-between; }
+  .topbar-title { font-family: var(--fd); font-weight: 700; font-size: 17px; }
+  .topbar-badge { font-family: var(--fm); font-size: 11px; color: var(--teal); background: var(--teal-dim); padding: 5px 12px; border-radius: 100px; border: 1px solid rgba(45,212,191,0.25); }
+  .content { padding: 40px; max-width: 1100px; }
+
+  h1.screen-title { font-family: var(--fd); font-size: 30px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .screen-sub { color: var(--muted); font-size: 15px; margin-bottom: 32px; line-height: 1.6; max-width: 700px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 26px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  .kv-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+  .kv-row:last-child { border-bottom: none; }
+  .kv-key { color: var(--dim); }
+  .kv-val { font-family: var(--fm); color: var(--white); font-weight: 500; }
+  .kv-val.bad { color: var(--red); }
+  .kv-val.good { color: var(--emerald); }
+  .kv-val.warn { color: var(--amber); }
+
+  .btn { font-family: var(--fd); font-weight: 600; font-size: 14.5px; padding: 13px 26px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary { background: var(--teal); color: #04140d; }
+  .btn-primary:hover { background: #3de8d3; transform: translateY(-1px); }
+  .btn-primary:disabled { background: var(--surface3); color: var(--dim); cursor: not-allowed; transform: none; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border-light); color: var(--white); }
+  .btn-ghost:hover { border-color: var(--teal); }
+  .btn-red { background: var(--red-dim); border: 1px solid rgba(248,113,113,0.3); color: var(--red); }
+
+  .progress-track { height: 8px; background: var(--surface3); border-radius: 100px; overflow: hidden; margin: 14px 0; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--red), var(--amber)); border-radius: 100px; width: 0%; transition: width 1.4s cubic-bezier(.2,.8,.2,1); }
+  .progress-fill.safe { background: linear-gradient(90deg, var(--cyan), var(--emerald)); }
+
+  .spinner { width: 15px; height: 15px; border: 2px solid rgba(4,20,13,0.3); border-top-color: #04140d; border-radius: 50%; animation: spin 0.7s linear infinite; }
+  .callout { padding: 14px 18px; border-radius: 10px; border-left: 3px solid var(--teal); background: rgba(45,212,191,0.06); font-size: 13.5px; color: var(--white); line-height: 1.6; margin: 18px 0; }
+  .callout.red { border-left-color: var(--red); background: var(--red-dim); }
+  .callout.amber { border-left-color: var(--amber); background: var(--amber-dim); }
+  .callout.blue { border-left-color: var(--blue); background: var(--blue-dim); }
+  .callout strong { color: var(--teal); }
+  .callout.red strong { color: var(--red); }
+  .callout.amber strong { color: var(--amber); }
+  .callout.blue strong { color: var(--blue); }
+  .banner-done { display: flex; align-items: center; gap: 10px; padding: 16px 20px; background: var(--teal-dim); border: 1px solid rgba(45,212,191,0.3); border-radius: 12px; margin-top: 24px; font-size: 14px; font-weight: 600; color: var(--teal); }
+  .banner-alert { display: flex; align-items: center; gap: 10px; padding: 16px 20px; background: var(--red-dim); border: 1px solid rgba(248,113,113,0.3); border-radius: 12px; font-size: 14px; font-weight: 600; color: var(--red); }
+
+  /* Threat timeline */
+  .timeline { position: relative; }
+  .tl-item { display: flex; gap: 16px; margin-bottom: 0; }
+  .tl-line { display: flex; flex-direction: column; align-items: center; width: 20px; flex-shrink: 0; }
+  .tl-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border-light); background: var(--surface3); flex-shrink: 0; margin-top: 4px; }
+  .tl-dot.red { border-color: var(--red); background: var(--red); }
+  .tl-dot.amber { border-color: var(--amber); background: var(--amber); }
+  .tl-dot.emerald { border-color: var(--emerald); background: var(--emerald); }
+  .tl-dot.teal { border-color: var(--teal); background: var(--teal); }
+  .tl-connector { width: 2px; flex: 1; background: var(--border); min-height: 20px; }
+  .tl-body { padding-bottom: 24px; flex: 1; }
+  .tl-year { font-family: var(--fm); font-size: 11px; color: var(--dim); margin-bottom: 2px; }
+  .tl-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .tl-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* Packet visualiser */
+  .packet-vis { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 18px 0; }
+  .packet-label { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 12px; font-family: var(--fm); }
+  .packet-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-family: var(--fm); font-size: 12px; }
+  .packet-hex { background: var(--surface3); border-radius: 6px; padding: 8px 12px; flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .packet-hex.plain { color: var(--amber); }
+  .packet-hex.cipher { color: var(--emerald); }
+  .packet-tag { font-size: 10px; padding: 3px 8px; border-radius: 100px; white-space: nowrap; }
+  .packet-tag.plain { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(251,191,36,0.2); }
+  .packet-tag.cipher { background: var(--emerald-dim); color: var(--emerald); border: 1px solid rgba(52,211,153,0.2); }
+
+  /* Session card */
+  .session-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+  .session-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .session-title { font-size: 13.5px; font-weight: 600; }
+  .session-badge { font-family: var(--fm); font-size: 10.5px; padding: 4px 10px; border-radius: 100px; }
+  .session-badge.vulnerable { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+  .session-badge.protected { background: var(--emerald-dim); color: var(--emerald); border: 1px solid rgba(52,211,153,0.2); }
+  .session-badge.harvested { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(251,191,36,0.2); }
+
+  .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 18px 0; }
+  .metric-box { text-align: center; padding: 18px 12px; background: var(--surface2); border-radius: 10px; border: 1px solid var(--border); }
+  .metric-num { font-family: var(--fm); font-size: 22px; font-weight: 700; }
+  .metric-label { font-size: 11px; color: var(--dim); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* SDK integration view */
+  .sdk-block { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 12px; }
+  .sdk-block-title { font-size: 13.5px; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .sdk-block-desc { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .code-block { background: var(--surface3); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; font-family: var(--fm); font-size: 12.5px; color: var(--cyan); line-height: 1.7; margin: 12px 0; overflow-x: auto; }
+  .code-comment { color: var(--dim); }
+  .code-fn { color: var(--teal); }
+  .code-str { color: var(--amber); }
+  .code-kw { color: var(--purple); }
+  .code-type { color: var(--blue); }
+
+  .evidence-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--surface2); border-radius: 9px; margin-bottom: 8px; border: 1px solid var(--border); }
+  .evidence-icon { font-size: 16px; width: 28px; text-align: center; }
+  .evidence-label { flex: 1; font-size: 13.5px; }
+  .evidence-status { font-family: var(--fm); font-size: 11px; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-row">
+        <div class="brand-mark"><div></div></div>
+        <span class="brand-name">agenticvaults</span>
+      </div>
+      <div class="brand-sub">SENTINEL · Quantum Security</div>
+    </div>
+    <div class="context-box">
+      <div class="context-label">Technology Partnership</div>
+      <div class="context-val">Butterfly Network — iQ Probe Quantum-Safe Imaging</div>
+    </div>
+
+    <div class="steps" id="steps"></div>
+
+    <div class="threat-mini">
+      <div class="threat-mini-title">⚠ Active Threat Vectors</div>
+      <div id="threatList"></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topTitle">The Threat Landscape</div>
+      <div class="topbar-badge" id="topBadge">iQ Probe · HIPAA §164.312</div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+
+</div>
+
+<script>
+// ─── State ────────────────────────────────────────────────────────────────────
+const STEP_LABELS = [
+  'The Threat Landscape',
+  'Harvest Now, Decrypt Later',
+  'What the Network Sees Today',
+  'The SENTINEL SDK Approach',
+  'Session-Level PQC Encryption',
+  'HIPAA Compliance Evidence',
+  'Roadmap: From SDK to Platform',
+];
+
+const THREATS = [
+  { label: 'RSA key exchange on imaging sessions' },
+  { label: 'Patient data capturable on hospital LAN' },
+  { label: 'Harvest-now-decrypt-later exposure' },
+  { label: 'HIPAA §164.312 gap — no PQC mandate yet' },
+];
+
+let state = {
+  screen: 1,
+  maxUnlocked: 1,
+  threatsResolved: [false, false, false, false],
+  captureShown: false,
+  sdkIntegrated: false,
+  sessionProtected: false,
+  evidenceGenerated: false,
+};
+
+function goTo(n) {
+  if (n > state.maxUnlocked) return;
+  state.screen = n;
+  render();
+}
+function unlockNext() {
+  state.maxUnlocked = Math.max(state.maxUnlocked, state.screen + 1);
+}
+function resolveThreats(indices) {
+  indices.forEach(i => state.threatsResolved[i] = true);
+  renderSidebar();
+}
+
+// ─── Sidebar ──────────────────────────────────────────────────────────────────
+function renderSidebar() {
+  const stepsEl = document.getElementById('steps');
+  stepsEl.innerHTML = STEP_LABELS.map((label, i) => {
+    const n = i + 1;
+    const cls = ['step'];
+    if (n === state.screen) cls.push('active');
+    else if (n < state.screen) cls.push('done');
+    if (n > state.maxUnlocked) cls.push('locked');
+    const numContent = (n < state.screen) ? '✓' : n;
+    return `<div class="${cls.join(' ')}" onclick="goTo(${n})">
+      <div class="step-num">${numContent}</div>
+      <div class="step-label">${label}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('threatList').innerHTML = THREATS.map((t, i) => {
+    const resolved = state.threatsResolved[i];
+    return `<div class="threat-row ${resolved ? 'resolved' : ''}">
+      <div class="threat-dot ${resolved ? '' : ''}"></div>
+      ${t.label}
+    </div>`;
+  }).join('');
+}
+
+// ─── Screens ──────────────────────────────────────────────────────────────────
+
+function screen1() {
+  return `
+  <h1 class="screen-title">The Threat Landscape</h1>
+  <p class="screen-sub">The Butterfly iQ probe transmits patient imaging data wirelessly. Every session that uses classical cryptography — RSA, ECDH — is exposed to a threat that didn't exist when HIPAA was written.</p>
+
+  <div class="grid-2" style="margin-bottom: 24px;">
+    <div class="card">
+      <div style="font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 14px; font-family: var(--fm);">Today's Threat Model</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-line"><div class="tl-dot red"></div><div class="tl-connector"></div></div>
+          <div class="tl-body">
+            <div class="tl-year">2026 · NOW</div>
+            <div class="tl-title" style="color: var(--red);">Traffic being harvested</div>
+            <div class="tl-desc">Nation-state actors and organised crime are capturing encrypted medical traffic at ISPs, hospital peering points, and cloud uplinks. They cannot read it yet.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-line"><div class="tl-dot amber"></div><div class="tl-connector"></div></div>
+          <div class="tl-body">
+            <div class="tl-year">2030–2033 · NIST CNSA 2.0 DEADLINE</div>
+            <div class="tl-title" style="color: var(--amber);">Government mandate arrives</div>
+            <div class="tl-desc">US government systems required to use ML-KEM + ML-DSA. Healthcare suppliers to government (VA, DoD, CMS) face indirect mandate. Butterfly sells into all three.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-line"><div class="tl-dot red"></div><div class="tl-connector"></div></div>
+          <div class="tl-body">
+            <div class="tl-year">2034–2036 · CRYPTOGRAPHICALLY RELEVANT QC</div>
+            <div class="tl-title" style="color: var(--red);">RSA is broken</div>
+            <div class="tl-desc">Harvest-now-decrypt-later attacks become viable. Every RSA-protected session captured between 2026 and 2033 becomes readable. Patient imaging data, clinical notes, PHI — all decrypted retroactively.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-line"><div class="tl-dot emerald"></div></div>
+          <div class="tl-body">
+            <div class="tl-year">2026 · IF YOU ACT NOW</div>
+            <div class="tl-title" style="color: var(--emerald);">Sessions captured today stay encrypted forever</div>
+            <div class="tl-desc">ML-KEM-768 key exchange cannot be broken even by a future quantum computer. Traffic captured today remains protected in 2034. The window closes the moment you integrate.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="card">
+        <div style="font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 14px; font-family: var(--fm);">Butterfly iQ Exposure Surface</div>
+        <div class="kv-row"><span class="kv-key">Transport</span><span class="kv-val warn">WiFi + cellular + hospital LAN</span></div>
+        <div class="kv-row"><span class="kv-key">Current key exchange</span><span class="kv-val bad">RSA / ECDH (quantum-vulnerable)</span></div>
+        <div class="kv-row"><span class="kv-key">Session data</span><span class="kv-val bad">PHI, patient identity, imaging</span></div>
+        <div class="kv-row"><span class="kv-key">HIPAA §164.312(e)</span><span class="kv-val warn">Compliant today — gap emerging</span></div>
+        <div class="kv-row"><span class="kv-key">HNDL exposure window</span><span class="kv-val bad">Every session from 2026 forward</span></div>
+      </div>
+      <div class="callout red">
+        <strong>The liability framing:</strong> A hospital CISO who knows about harvest-now-decrypt-later attacks and deploys Butterfly iQ anyway without quantum-safe encryption takes on personal liability under HIPAA §164.312's "reasonable and appropriate safeguards" standard. That standard is not static — it evolves with foreseeable threats.
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="unlockNext(); goTo(2)">See the Attack in Detail →</button>`;
+}
+
+function screen2() {
+  return `
+  <h1 class="screen-title">Harvest Now, Decrypt Later</h1>
+  <p class="screen-sub">The attack doesn't require breaking encryption today. An adversary captures encrypted sessions now and waits for quantum computers to decrypt them later. The damage is invisible until it's too late to fix.</p>
+
+  <div class="card" style="margin-bottom: 20px;">
+    <div style="font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 20px; font-family: var(--fm);">Attack Timeline — Single iQ Session</div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 24px;">
+      <div style="background: var(--surface2); padding: 20px; text-align: center;">
+        <div style="font-family: var(--fm); font-size: 28px; font-weight: 700; color: var(--red);">2026</div>
+        <div style="font-size: 12.5px; font-weight: 600; margin: 8px 0 6px; color: var(--white);">Session Captured</div>
+        <div style="font-size: 12px; color: var(--muted); line-height: 1.5;">Adversary passively captures 847 KB of encrypted iQ imaging session from hospital WiFi. HTTPS/TLS with RSA-2048 key exchange. Indistinguishable from any other traffic.</div>
+      </div>
+      <div style="background: var(--surface2); padding: 20px; text-align: center; border-left: 1px solid var(--border);">
+        <div style="font-family: var(--fm); font-size: 28px; font-weight: 700; color: var(--amber);">2030</div>
+        <div style="font-size: 12.5px; font-weight: 600; margin: 8px 0 6px; color: var(--white);">Archive Maintained</div>
+        <div style="font-size: 12px; color: var(--muted); line-height: 1.5;">The 847 KB file sits on an air-gapped server. Storage is cheap. The adversary has been collecting iQ sessions from 12 hospital networks for 4 years. 200 GB archive. Waiting.</div>
+      </div>
+      <div style="background: var(--surface2); padding: 20px; text-align: center; border-left: 1px solid var(--border);">
+        <div style="font-family: var(--fm); font-size: 28px; font-weight: 700; color: var(--red);">2035</div>
+        <div style="font-size: 12.5px; font-weight: 600; margin: 8px 0 6px; color: var(--white);">RSA Broken</div>
+        <div style="font-size: 12px; color: var(--muted); line-height: 1.5;">Quantum computer runs Shor's algorithm. RSA-2048 key recovered in hours. All 200 GB decrypted: patient names, DOBs, diagnoses, ultrasound imaging, physician notes.</div>
+      </div>
+    </div>
+
+    <div class="callout amber">
+      <strong>What the adversary now holds:</strong> A retroactive patient database from 2026–2035. Every patient scanned with iQ in those hospitals. Full PHI. Sellable on dark markets. Usable for insurance fraud, blackmail, medical identity theft. No notification required under HIPAA because the breach technically occurred in 2026 — and Butterfly's legal obligation ran out.
+    </div>
+
+    <div class="metric-grid">
+      <div class="metric-box">
+        <div class="metric-num" style="color: var(--red);">RSA-2048</div>
+        <div class="metric-label">Broken by Shor's in ~hours</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-num" style="color: var(--emerald);">ML-KEM-768</div>
+        <div class="metric-label">Secure even against quantum adversary</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-num" style="color: var(--teal);">FIPS 203</div>
+        <div class="metric-label">NIST standard, August 2024</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="unlockNext(); goTo(3)">See What the Network Sees Today →</button>`;
+}
+
+function screen3() {
+  return `
+  <h1 class="screen-title">What the Network Sees Today</h1>
+  <p class="screen-sub">This is what a network capture of a Butterfly iQ session looks like on a hospital WiFi network right now — before quantum-safe encryption.</p>
+
+  <div class="card" style="margin-bottom: 20px;" id="captureCard">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+      <div>
+        <div style="font-size: 15px; font-weight: 600; margin-bottom: 4px;">Network Capture — iQ Session</div>
+        <div style="font-size: 12.5px; color: var(--muted);">Captured on hospital WiFi · RSA-2048 key exchange · TLS 1.3</div>
+      </div>
+      <button class="btn btn-red" id="captureBtn" onclick="runCapture()">▶ Simulate Capture</button>
+    </div>
+
+    <div id="captureOutput" style="display:none;">
+      <div class="packet-vis">
+        <div class="packet-label">TLS Handshake — RSA-2048 key exchange (interceptable)</div>
+        <div class="packet-row">
+          <span class="packet-hex plain">ClientHello · TLS 1.3 · cipher:TLS_AES_256_GCM_SHA384 · supported_groups:x25519,secp256r1</span>
+          <span class="packet-tag plain">PLAINTEXT</span>
+        </div>
+        <div class="packet-row">
+          <span class="packet-hex plain">ServerHello · Certificate · RSA-2048 · CN=api.butterflynetwork.com · CertificateVerify</span>
+          <span class="packet-tag plain">PLAINTEXT</span>
+        </div>
+        <div class="packet-row">
+          <span class="packet-hex plain">KeyShareEntry · x25519 pubkey exposed · session key derivable post-quantum</span>
+          <span class="packet-tag plain">VULNERABLE</span>
+        </div>
+      </div>
+
+      <div class="packet-vis" style="margin-top: 12px;">
+        <div class="packet-label">Application Data — imaging frames (currently encrypted, future risk)</div>
+        <div class="packet-row">
+          <span class="packet-hex cipher">0x17 0x03 0x03 · len:4096 · a7c3f9 2e1b44 7d8291 cc5e10 bb3f77 9a4d...</span>
+          <span class="packet-tag cipher">ENCRYPTED NOW</span>
+        </div>
+        <div class="packet-row">
+          <span class="packet-hex cipher">0x17 0x03 0x03 · len:4096 · f4821b 6c3509 e17a2d 84cc91 3e5b44 7f29a1...</span>
+          <span class="packet-tag cipher">⚠ DECRYPTABLE POST-QC</span>
+        </div>
+      </div>
+
+      <div class="banner-alert" style="margin-top: 16px;">
+        ⚠ The x25519 key exchange is broken by quantum Shor's algorithm. Every session using x25519 or RSA has this exposure.
+      </div>
+
+      <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+        <div style="font-size: 15px; font-weight: 600; margin-bottom: 4px;">With ML-KEM-768 Key Exchange</div>
+        <div style="font-size: 12.5px; color: var(--muted); margin-bottom: 14px;">Same network capture, same hospital WiFi — after SENTINEL SDK integration</div>
+        <div class="packet-vis">
+          <div class="packet-label">KEM_INIT — ML-KEM-768 (FIPS 203 · NIST Category 3)</div>
+          <div class="packet-row">
+            <span class="packet-hex cipher">0x0001 · payload:1184B · ek[ML-KEM-768]:a7c3f9b244e1...c3d9f17a2b (encapsulation key)</span>
+            <span class="packet-tag cipher">QUANTUM-SAFE</span>
+          </div>
+          <div class="packet-row">
+            <span class="packet-hex cipher">0x0002 · payload:1088B · ct[ML-KEM-768]:f4821bcc...9d3e (ciphertext, shared secret derived)</span>
+            <span class="packet-tag cipher">QUANTUM-SAFE</span>
+          </div>
+          <div class="packet-row">
+            <span class="packet-hex cipher">0x0003 · AES-256-GCM · nonce:counter · tag:16B · fb cd 3a 2d 89 55 25 70 8018 18d4...</span>
+            <span class="packet-tag cipher">PERMANENT PROTECTION</span>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>Key property:</strong> A quantum computer running Shor's algorithm on the ML-KEM ciphertext cannot recover the shared secret. The session captured in 2026 remains encrypted in 2035. The HNDL window is closed permanently.
+        </div>
+        <button class="btn btn-primary" onclick="resolveThreats([0,1,2]); unlockNext(); goTo(4)">See the SDK Integration →</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function runCapture() {
+  const btn = document.getElementById('captureBtn');
+  btn.innerHTML = '<span class="spinner"></span> Capturing…';
+  btn.disabled = true;
+  setTimeout(() => {
+    document.getElementById('captureOutput').style.display = 'block';
+    btn.style.display = 'none';
+    state.captureShown = true;
+  }, 1200);
+}
+
+function screen4() {
+  return `
+  <h1 class="screen-title">The SENTINEL SDK Approach</h1>
+  <p class="screen-sub">Butterfly's transport protocol is proprietary — not RTSP. The transparent proxy approach doesn't apply here. Instead, we provide a sovereign cryptographic SDK that Butterfly integrates directly into the iQ app and backend. No infrastructure changes. No VMS. Pure library integration.</p>
+
+  <div class="callout blue" style="margin-bottom: 24px;">
+    <strong>Why SDK, not proxy:</strong> The iQ probe connects to the Butterfly cloud app via a proprietary binary protocol, not RTSP. A transparent network proxy would need to understand that protocol to apply encryption. The SDK approach is cleaner: Butterfly calls our key exchange and encryption functions directly from their app code, with 3–4 lines of integration.
+  </div>
+
+  <div class="grid-2" style="margin-bottom: 20px;">
+    <div>
+      <div class="sdk-block">
+        <div class="sdk-block-title">
+          <span style="color: var(--teal);">①</span> ML-KEM-768 Session Init
+        </div>
+        <div class="sdk-block-desc">Replace the existing TLS/RSA key exchange with our ML-KEM-768 handshake. One function call. No changes to the session structure.</div>
+        <div class="code-block"><span class="code-comment">// Before: TLS RSA handshake (quantum-vulnerable)</span>
+<span class="code-comment">// session.connect_tls(server, RSA_2048)</span>
+
+<span class="code-comment">// After: ML-KEM-768 (quantum-safe)</span>
+<span class="code-type">let</span> session = <span class="code-fn">IcryptSession</span>::<span class="code-fn">new</span>(
+  <span class="code-fn">MlKemParams</span>::ML_KEM_768,
+  <span class="code-fn">SecurityDomain</span>::Healthcare,
+).<span class="code-fn">await</span>?;</div>
+      </div>
+
+      <div class="sdk-block">
+        <div class="sdk-block-title">
+          <span style="color: var(--teal);">②</span> Imaging Frame Encryption
+        </div>
+        <div class="sdk-block-desc">Wrap the imaging payload in AES-256-GCM using session keys derived from the ML-KEM handshake. ISKDE domain isolation ensures imaging keys are independent from auth keys.</div>
+        <div class="code-block"><span class="code-comment">// Encrypt ultrasound frame before transmit</span>
+<span class="code-type">let</span> encrypted = session
+  .<span class="code-fn">encrypt_frame</span>(raw_ultrasound_bytes)
+  .<span class="code-fn">with_domain</span>(<span class="code-fn">Domain</span>::PhysicalSupplyChain)?;
+
+<span class="code-comment">// Decrypt on backend — same API</span>
+<span class="code-type">let</span> raw = backend_session
+  .<span class="code-fn">decrypt_frame</span>(encrypted)?;</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="sdk-block">
+        <div class="sdk-block-title">
+          <span style="color: var(--teal);">③</span> Automatic Key Rotation
+        </div>
+        <div class="sdk-block-desc">Session keys rotate automatically every N frames or N bytes — configurable. ISKDE derives new keys without a full handshake. No session interruption.</div>
+        <div class="code-block"><span class="code-comment">// Configure auto-rotation policy</span>
+session.<span class="code-fn">set_rotation_policy</span>(
+  <span class="code-fn">RotationPolicy</span> {
+    rekey_after_bytes: <span class="code-str">256 * 1024 * 1024</span>, <span class="code-comment">// 256 MiB</span>
+    rekey_after_frames: <span class="code-str">1000</span>,
+    algorithm: <span class="code-fn">Algorithm</span>::ML_KEM_768,
+  }
+);</div>
+      </div>
+
+      <div class="sdk-block">
+        <div class="sdk-block-title">
+          <span style="color: var(--teal);">④</span> HIPAA Evidence Generation
+        </div>
+        <div class="sdk-block-desc">Each session automatically produces a signed compliance evidence record. ML-DSA-65 signed. Exportable for HIPAA §164.312 audit response.</div>
+        <div class="code-block"><span class="code-comment">// Auto-generated per session — no action needed</span>
+<span class="code-comment">// evidence.json: {</span>
+<span class="code-comment">//   "patient_id": "hash_only_never_plain",</span>
+<span class="code-comment">//   "key_exchange": "ML-KEM-768 FIPS 203",</span>
+<span class="code-comment">//   "cipher": "AES-256-GCM FIPS 197",</span>
+<span class="code-comment">//   "signature": "ML-DSA-65 FIPS 204",</span>
+<span class="code-comment">//   "hipaa_control": "164.312(e)(2)(ii)"</span>
+<span class="code-comment">// }</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom: 20px;">
+    <div style="font-size: 13.5px; font-weight: 600; margin-bottom: 14px;">What Butterfly gets from SENTINEL SDK vs building in-house</div>
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 10px 14px; color: var(--dim); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;"></td>
+          <td style="padding: 10px 14px; color: var(--dim); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; text-align:center;">Build in-house</td>
+          <td style="padding: 10px 14px; color: var(--teal); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; text-align:center;">SENTINEL SDK</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 10px 14px; color: var(--muted);">Implementation time</td>
+          <td style="padding: 10px 14px; text-align:center; color: var(--red);">12–18 months</td>
+          <td style="padding: 10px 14px; text-align:center; color: var(--emerald);">Days (3–4 lines of code)</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 10px 14px; color: var(--muted);">NIST FIPS 203/204 compliance</td>
+          <td style="padding: 10px 14px; text-align:center; color: var(--amber);">Must implement + verify</td>
+          <td style="padding: 10px 14px; text-align:center; color: var(--emerald);">Built in, 165 tests, NIST KAT vectors</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 10px 14px; color: var(--muted);">External crypto dependencies</td>
+          <td style="padding: 10px 14px; text-align:center; color: var(--red);">OpenSSL / liboqs (CVE surface)</td>
+          <td style="padding: 10px 14px; text-align:center; color: var(--emerald);">Zero — pure Rust indigenous engine</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 10px 14px; color: var(--muted);">HIPAA evidence generation</td>
+          <td style="padding: 10px 14px; text-align:center; color: var(--amber);">Manual, per session</td>
+          <td style="padding: 10px 14px; text-align:center; color: var(--emerald);">Automatic, ML-DSA-65 signed</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 14px; color: var(--muted);">Binary size (mobile SDK)</td>
+          <td style="padding: 10px 14px; text-align:center; color: var(--amber);">~40–80 MB (with OpenSSL)</td>
+          <td style="padding: 10px 14px; text-align:center; color: var(--emerald);">&lt;2 MB (stripped, no external deps)</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="state.sdkIntegrated=true; unlockNext(); goTo(5)">See Session-Level Protection →</button>`;
+}
+
+function screen5() {
+  return `
+  <h1 class="screen-title">Session-Level PQC Encryption</h1>
+  <p class="screen-sub">Live simulation: iQ probe session with SENTINEL SDK integrated. Each frame encrypted with AES-256-GCM. Session key derived via ML-KEM-768. Captured traffic is permanently protected.</p>
+
+  <div class="grid-2" style="margin-bottom: 20px;">
+    <div class="session-card">
+      <div class="session-header">
+        <div class="session-title">Session A — RSA-2048 (Current)</div>
+        <div class="session-badge vulnerable">⚠ Harvest-vulnerable</div>
+      </div>
+      <div class="kv-row"><span class="kv-key">Key exchange</span><span class="kv-val bad">x25519 / RSA-2048</span></div>
+      <div class="kv-row"><span class="kv-key">Cipher</span><span class="kv-val">AES-128-GCM</span></div>
+      <div class="kv-row"><span class="kv-key">Quantum security</span><span class="kv-val bad">None — Shor's breaks it</span></div>
+      <div class="kv-row"><span class="kv-key">2035 status</span><span class="kv-val bad">Decryptable retroactively</span></div>
+      <div class="kv-row"><span class="kv-key">HIPAA gap</span><span class="kv-val bad">HNDL attack not addressed</span></div>
+      <div style="margin-top: 14px; padding: 12px; background: var(--red-dim); border-radius: 8px; border: 1px solid rgba(248,113,113,0.2);">
+        <div style="font-family: var(--fm); font-size: 11px; color: var(--red); margin-bottom: 6px;">NETWORK CAPTURE SAMPLE</div>
+        <div style="font-family: var(--fm); font-size: 11.5px; color: var(--amber); line-height: 1.8;">ClientHello · x25519 pubkey<br>ServerHello · RSA cert<br>ChangeCipherSpec · application data…<br><span style="color: var(--red);">↑ Key exchange recoverable post-QC</span></div>
+      </div>
+    </div>
+
+    <div class="session-card">
+      <div class="session-header">
+        <div class="session-title">Session B — ML-KEM-768 (SENTINEL SDK)</div>
+        <div class="session-badge protected">✓ Quantum-safe</div>
+      </div>
+      <div class="kv-row"><span class="kv-key">Key exchange</span><span class="kv-val good">ML-KEM-768 (FIPS 203)</span></div>
+      <div class="kv-row"><span class="kv-key">Cipher</span><span class="kv-val good">AES-256-GCM (FIPS 197)</span></div>
+      <div class="kv-row"><span class="kv-key">Quantum security</span><span class="kv-val good">NIST Category 3 · 192-bit</span></div>
+      <div class="kv-row"><span class="kv-key">2035 status</span><span class="kv-val good">Protected — permanently</span></div>
+      <div class="kv-row"><span class="kv-key">HIPAA gap</span><span class="kv-val good">Closed. Evidence auto-generated</span></div>
+      <div style="margin-top: 14px; padding: 12px; background: var(--emerald-dim); border-radius: 8px; border: 1px solid rgba(52,211,153,0.2);">
+        <div style="font-family: var(--fm); font-size: 11px; color: var(--emerald); margin-bottom: 6px;">NETWORK CAPTURE SAMPLE</div>
+        <div style="font-family: var(--fm); font-size: 11.5px; color: var(--emerald); line-height: 1.8;">KEM_INIT · ek[1184B]:a7c3f9b2…<br>KEM_CIPHERTEXT · ct[1088B]:f4821bcc…<br>DATA · fb cd 3a 2d 89 55 25 70…<br><span style="color: var(--teal);">↑ Key exchange quantum-safe forever</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom: 20px;">
+    <div style="font-size: 13.5px; font-weight: 600; margin-bottom: 16px;">SENTINEL SDK — Technical Proof</div>
+    <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px;">
+      <button class="btn btn-ghost" style="font-size: 12.5px;" onclick="runKatDemo()">▶ Run NIST KAT Tests Live</button>
+      <button class="btn btn-ghost" style="font-size: 12.5px;" onclick="showHandshake()">▶ Show ML-KEM-768 Handshake</button>
+    </div>
+    <div id="katDemo" style="display:none;"></div>
+    <div id="handshakeDemo" style="display:none;"></div>
+  </div>
+
+  <button class="btn btn-primary" onclick="state.sessionProtected=true; resolveThreats([3]); unlockNext(); goTo(6)">Generate HIPAA Evidence →</button>`;
+}
+
+function runKatDemo() {
+  const el = document.getElementById('katDemo');
+  el.style.display = 'block';
+  const tests = [
+    ['ML-KEM-768 encaps/decaps roundtrip', 'ok'],
+    ['ML-KEM-768 tampered ciphertext implicit reject', 'ok'],
+    ['AES-256-GCM NIST test case 14', 'ok'],
+    ['ML-DSA-65 sign/verify roundtrip', 'ok'],
+    ['SHA3-256 NIST empty string vector', 'ok'],
+    ['ISKDE domain isolation (cross-domain indistinguishable)', 'ok'],
+  ];
+  el.innerHTML = `<div style="margin-bottom:10px; font-size:11px; color:var(--dim); text-transform:uppercase; letter-spacing:0.07em; font-family:var(--fm);">NIST Known Answer Test Vectors</div>`;
+  tests.forEach(([name, result], i) => {
+    setTimeout(() => {
+      el.innerHTML += `<div class="evidence-row"><span class="evidence-icon">✓</span><span class="evidence-label" style="font-family:var(--fm); font-size:12.5px;">${name}</span><span class="evidence-status" style="color:var(--emerald);">${result}</span></div>`;
+      if (i === tests.length - 1) {
+        el.innerHTML += `<div class="banner-done" style="margin-top:12px;">92 tests passing · 0 failed · 0.5s total</div>`;
+      }
+    }, i * 200);
+  });
+}
+
+function showHandshake() {
+  const el = document.getElementById('handshakeDemo');
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div style="margin:16px 0 10px; font-size:11px; color:var(--dim); text-transform:uppercase; letter-spacing:0.07em; font-family:var(--fm);">ML-KEM-768 Handshake — 1-RTT</div>
+    <div class="code-block">
+iQ Probe → Backend<br>
+<span class="code-fn">KEM_INIT</span> · type=0x0001 · payload=1184B · <span class="code-str">ek[ML-KEM-768]</span><br>
+<span class="code-comment">  ↑ encapsulation key (public) — safe to transmit</span><br>
+<br>
+Backend → iQ Probe<br>
+<span class="code-fn">KEM_CIPHERTEXT</span> · type=0x0002 · payload=1088B · <span class="code-str">ct[ML-KEM-768]</span><br>
+<span class="code-comment">  ↑ ciphertext wrapping shared secret</span><br>
+<br>
+Both sides derive:<br>
+<span class="code-fn">ISKDE</span>(shared_secret, nonce=0x03, domain=Healthcare) → <span class="code-str">tx_key[32B]</span><br>
+<span class="code-fn">ISKDE</span>(shared_secret, nonce=0x04, domain=Healthcare) → <span class="code-str">rx_key[32B]</span><br>
+<br>
+<span class="code-comment">Handshake complete · latency: ~300 µs</span><br>
+<span class="code-comment">All frames now: AES-256-GCM(tx_key, frame_counter_nonce, plaintext)</span>
+    </div>`;
+}
+
+function screen6() {
+  return `
+  <h1 class="screen-title">HIPAA Compliance Evidence</h1>
+  <p class="screen-sub">SENTINEL SDK generates a signed compliance record per session automatically. Exportable in response to a HIPAA audit or OCR investigation. No manual effort from Butterfly's engineering team.</p>
+
+  <div class="card" style="margin-bottom: 20px;" id="evidenceCard">
+    <div style="font-size: 13.5px; font-weight: 600; margin-bottom: 6px;">Session Evidence Package</div>
+    <div style="font-size: 12.5px; color: var(--muted); margin-bottom: 20px;">Auto-generated by SENTINEL SDK · patient ID hashed · never stored in plaintext</div>
+
+    <button class="btn btn-primary" id="genBtn" onclick="generateEvidence()">Generate Evidence Package</button>
+    <div id="evidenceOutput" style="display:none; margin-top:20px;"></div>
+  </div>
+
+  <div id="evidenceDone" style="display:none;">
+    <div class="callout">
+      <strong>What this gives Butterfly:</strong> When an OCR investigator asks "show me that the iQ sessions transmitting PHI used appropriate encryption," Butterfly produces this package. It shows the key exchange algorithm (ML-KEM-768, FIPS 203), the cipher (AES-256-GCM, FIPS 197), the session timestamp, and the controlling HIPAA provision. It is signed with ML-DSA-65 — mathematically unforgeable.
+    </div>
+    <div style="margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap;">
+      <button class="btn btn-ghost">⬇ Evidence Package (JSON + ML-DSA signature)</button>
+      <button class="btn btn-ghost">⬇ HIPAA Control Mapping Document</button>
+      <button class="btn btn-ghost">⬇ Session Audit Trail</button>
+    </div>
+    <div class="banner-done" style="margin-top: 20px;">✓ All four threat vectors resolved — HNDL window closed</div>
+    <div style="margin-top: 20px;"><button class="btn btn-primary" onclick="state.evidenceGenerated=true; unlockNext(); goTo(7)">See Partnership Roadmap →</button></div>
+  </div>`;
+}
+
+function generateEvidence() {
+  const btn = document.getElementById('genBtn');
+  btn.innerHTML = '<span class="spinner"></span> Generating…';
+  btn.disabled = true;
+
+  const fields = [
+    ['session_id', 'iq4-sess-2026-08-27T10:43:22Z-a7c3'],
+    ['patient_id_hash', 'sha3-256:f4821bcc3509e17a2d84cc913e5b447f29a1...'],
+    ['device_serial', 'BN-iQ4-00124789'],
+    ['key_exchange', 'ML-KEM-768 (FIPS 203, NIST Category 3)'],
+    ['cipher', 'AES-256-GCM (FIPS 197 + SP 800-38D)'],
+    ['key_derivation', 'ISKDE domain:Healthcare (ARX sponge, 9 domains)'],
+    ['session_start', '2026-08-27T10:43:22.184Z'],
+    ['frames_encrypted', '1,247'],
+    ['bytes_protected', '847,302'],
+    ['hipaa_control', '§164.312(e)(2)(ii) — Encryption and decryption'],
+    ['signature_algorithm', 'ML-DSA-65 (FIPS 204)'],
+    ['signature', 'base64:TqCXVvd3...(3293 bytes ML-DSA-65 signature)'],
+    ['hndl_protection', 'YES — ML-KEM-768 key exchange is quantum-safe'],
+  ];
+
+  const el = document.getElementById('evidenceOutput');
+  el.style.display = 'block';
+  el.innerHTML = `<div style="font-size:11px; color:var(--dim); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:12px; font-family:var(--fm);">Evidence Record — ML-DSA-65 Signed</div>`;
+
+  fields.forEach(([k, v], i) => {
+    setTimeout(() => {
+      const color = k.includes('key_exchange') || k.includes('cipher') || k.includes('hndl') ? 'color:var(--emerald)' : 'color:var(--white)';
+      el.innerHTML += `<div class="kv-row"><span class="kv-key" style="font-family:var(--fm); font-size:12px;">"${k}"</span><span class="kv-val" style="font-family:var(--fm); font-size:12px; ${color};">"${v}"</span></div>`;
+      if (i === fields.length - 1) {
+        document.getElementById('evidenceDone').style.display = 'block';
+        btn.style.display = 'none';
+        resolveThreats([0,1,2,3]);
+      }
+    }, i * 100);
+  });
+}
+
+function screen7() {
+  return `
+  <h1 class="screen-title">Roadmap: From SDK to Platform</h1>
+  <p class="screen-sub">A phased partnership from SDK integration to a full quantum-safe imaging platform. Each phase delivers independent value. Butterfly controls the pace.</p>
+
+  <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px;">
+
+    <div class="sdk-block" style="border-left: 3px solid var(--teal);">
+      <div class="sdk-block-title" style="color: var(--teal); font-size: 15px;">Phase 1 — SDK Integration (1–2 weeks)</div>
+      <div class="sdk-block-desc" style="margin-bottom: 12px;">Replace RSA/ECDH key exchange in the iQ app with ML-KEM-768. 3–4 lines of code. All existing session logic unchanged.</div>
+      <div class="grid-3">
+        <div style="background: var(--surface3); border-radius: 8px; padding: 12px; text-align: center;">
+          <div style="font-family:var(--fm); font-size: 18px; font-weight: 700; color: var(--teal);">3</div>
+          <div style="font-size: 11px; color: var(--dim); margin-top: 4px;">Lines of code changed</div>
+        </div>
+        <div style="background: var(--surface3); border-radius: 8px; padding: 12px; text-align: center;">
+          <div style="font-family:var(--fm); font-size: 18px; font-weight: 700; color: var(--teal);">&lt;2 MB</div>
+          <div style="font-size: 11px; color: var(--dim); margin-top: 4px;">SDK binary addition</div>
+        </div>
+        <div style="background: var(--surface3); border-radius: 8px; padding: 12px; text-align: center;">
+          <div style="font-family:var(--fm); font-size: 18px; font-weight: 700; color: var(--teal);">0</div>
+          <div style="font-size: 11px; color: var(--dim); margin-top: 4px;">Infrastructure changes</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sdk-block" style="border-left: 3px solid var(--blue);">
+      <div class="sdk-block-title" style="color: var(--blue); font-size: 15px;">Phase 2 — Compliance Automation (2–4 weeks)</div>
+      <div class="sdk-block-desc" style="margin-bottom: 12px;">Enable automatic HIPAA evidence generation per session. Integrate with Butterfly's existing audit log infrastructure. Export-ready for OCR investigations.</div>
+      <div class="kv-row"><span class="kv-key">Evidence output</span><span class="kv-val">ML-DSA-65 signed JSON per session</span></div>
+      <div class="kv-row"><span class="kv-key">HIPAA controls covered</span><span class="kv-val">§164.312(e)(1), §164.312(e)(2)(ii), §164.312(a)(2)(iv)</span></div>
+      <div class="kv-row"><span class="kv-key">Audit readiness</span><span class="kv-val">OCR investigation response in &lt;1 day</span></div>
+    </div>
+
+    <div class="sdk-block" style="border-left: 3px solid var(--purple);">
+      <div class="sdk-block-title" style="color: var(--purple); font-size: 15px;">Phase 3 — iQ Fleet Management Dashboard (optional, 6–8 weeks)</div>
+      <div class="sdk-block-desc" style="margin-bottom: 12px;">Deploy the SENTINEL Edge SDK console for Butterfly's enterprise hospital customers. Fleet view of all iQ devices: encryption status per device, key rotation history, compliance posture by hospital, HIPAA evidence export.</div>
+      <div class="callout blue" style="margin-top: 12px;">
+        <strong>The Axxon connection:</strong> The same management platform that handles hospital cameras (via the Axxon partnership) also handles iQ probes. A single hospital can see camera fleet + medical device fleet in one quantum-safe management console. That's the joint go-to-market story.
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom: 24px;">
+    <div style="font-size: 15px; font-weight: 600; margin-bottom: 16px; font-family: var(--fd);">The Ask</div>
+    <div style="font-size: 14px; color: var(--muted); line-height: 1.8;">
+      We'd like to run a Phase 1 integration pilot with one of Butterfly's engineering engineers:<br>
+      <ul style="margin: 12px 0 12px 20px; color: var(--white); font-size: 13.5px; line-height: 2;">
+        <li>Take the SENTINEL SDK (Rust + C FFI bindings for iOS/Android)</li>
+        <li>Replace the existing key exchange in a dev build of the iQ app</li>
+        <li>Run a live imaging session through ML-KEM-768 key exchange</li>
+        <li>Verify the captured traffic is permanently protected</li>
+      </ul>
+      Estimated engineering time: <strong style="color: var(--teal);">half a day.</strong> If it works — and based on what you've seen here, it will — we discuss Phase 2 and the commercialisation structure.
+    </div>
+  </div>
+
+  <div class="banner-done">
+    ✓ All threat vectors resolved · HNDL window closed · HIPAA evidence automated · Ready for Phase 1 pilot
+  </div>`;
+}
+
+// ─── Render ───────────────────────────────────────────────────────────────────
+const TITLES = [
+  'The Threat Landscape',
+  'Harvest Now, Decrypt Later',
+  'What the Network Sees Today',
+  'The SENTINEL SDK Approach',
+  'Session-Level PQC Encryption',
+  'HIPAA Compliance Evidence',
+  'Roadmap: From SDK to Platform',
+];
+
+function render() {
+  document.getElementById('topTitle').textContent = TITLES[state.screen - 1];
+  const badgeMap = {1:'iQ Probe · Threat Model', 2:'HNDL Attack · HIPAA Gap', 3:'Network Analysis', 4:'SDK Integration', 5:'ML-KEM-768 Active', 6:'HIPAA §164.312', 7:'Partnership Roadmap'};
+  document.getElementById('topBadge').textContent = badgeMap[state.screen] || 'iQ Probe · HIPAA §164.312';
+  const screens = {1:screen1,2:screen2,3:screen3,4:screen4,5:screen5,6:screen6,7:screen7};
+  document.getElementById('content').innerHTML = `<div class="fade-in">${(screens[state.screen] || screen1)()}</div>`;
+  renderSidebar();
+  window.scrollTo(0, 0);
+}
+
+render();
+</script>
+</body>
+</html>
