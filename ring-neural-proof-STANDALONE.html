@@ -26,6 +26,27 @@
       This page requires JavaScript to display.
     </div>
   </noscript>
+  <script>
+    // Post-unpack: inject logo after the bundled React app renders
+    (function() {
+      var attempts = 0;
+      var timer = setInterval(function() {
+        var root = document.querySelector('.rn-root');
+        if (!root && attempts++ < 50) return;
+        clearInterval(timer);
+        if (!root) return;
+        // Find the header area (first centered div inside rn-root)
+        var header = root.querySelector('div > div > div[style*="text-align"]');
+        if (!header) header = root.querySelector('h1');
+        if (!header) return;
+        var target = header.parentElement || header;
+        var logoDiv = document.createElement('div');
+        logoDiv.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:18px';
+        logoDiv.innerHTML = '<img src="logo-full.png" alt="agenticvaults" style="height:36px;width:auto;object-fit:contain" onerror="this.parentElement.style.display=\'none\'"><span style="font:700 15px/1 Inter,sans-serif;letter-spacing:-.01em;color:#f2f5ff">agenticvaults</span>';
+        target.insertBefore(logoDiv, target.firstChild);
+      }, 100);
+    })();
+  </script>
 </head>
 <body>
   <div id="__bundler_thumbnail">
