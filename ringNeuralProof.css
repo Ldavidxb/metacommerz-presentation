@@ -1,0 +1,35 @@
+/* RingNeuralProof — the only global CSS this section needs.
+   Import once: import '@/components/ring-neural-proof/ringNeuralProof.css'; */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@keyframes rnSpin    { to { transform: rotate(360deg) } }
+@keyframes rnUp      { from { opacity: 0; transform: translateY(9px) } to { opacity: 1; transform: translateY(0) } }
+@keyframes rnFade    { from { opacity: 0 } to { opacity: 1 } }
+@keyframes rnBreathe { 0%, 100% { opacity: .16; r: 104 } 50% { opacity: .04; r: 118 } }
+@keyframes rnSweep   { to { stroke-dashoffset: -720 } }
+@keyframes rnPop     { 0% { opacity: 0; transform: scale(.86) } 60% { transform: scale(1.04) } 100% { opacity: 1; transform: scale(1) } }
+
+.rn-spin    { display: inline-flex; animation: rnSpin .8s linear infinite; }
+.rn-up      { animation: rnUp .3s ease both; }
+.rn-fade    { animation: rnFade .3s ease both; }
+.rn-breathe { animation: rnBreathe 2.2s ease-in-out infinite; }
+.rn-sweep   { animation: rnSweep 2.6s linear infinite; }
+.rn-pop     { animation: rnPop .32s cubic-bezier(.3,1.3,.5,1) both; }
+
+/* The toast is centred with transform: translateX(-50%). A keyframe that
+   animated `transform` would outrank that inline style and drop the centering
+   offset, so rnUp deliberately animates translateY on a NON-centred element
+   only — never reuse it on anything that carries a centring transform. */
+
+.rn-root button { font-family: inherit; }
+.rn-root ::-webkit-scrollbar { width: 9px; height: 9px; }
+.rn-root ::-webkit-scrollbar-track { background: transparent; }
+.rn-root ::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 6px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rn-root *, .rn-root *::before, .rn-root *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
