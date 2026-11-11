@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fleet Cam · Rakuten Global Facilities — Chinese Camera Containment Briefing</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#06060B;--surface:#0E0E16;--surface2:#16161F;--surface3:#1C1C28;
+    --border:#252535;--border-light:#2E2E40;
+    --emerald:#34D399;--emerald-dim:rgba(52,211,153,0.12);
+    --red:#F87171;--red-dim:rgba(248,113,113,0.12);
+    --crimson:#BF0000;--crimson-dim:rgba(191,0,0,0.12);
+    --amber:#FBBF24;--amber-dim:rgba(251,191,36,0.12);
+    --cyan:#22D3EE;--cyan-dim:rgba(34,211,238,0.12);
+    --blue:#60A5FA;--blue-dim:rgba(96,165,250,0.12);
+    --purple:#A78BFA;--purple-dim:rgba(167,139,250,0.12);
+    --indigo:#6366F1;--indigo-dim:rgba(99,102,241,0.12);
+    --rose:#FB7185;--rose-dim:rgba(251,113,133,0.12);
+    --white:#F0EDE6;--muted:#8E8EA3;--dim:#55556A;
+    --fd:'Space Grotesk',sans-serif;--fb:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--white);font-family:var(--fb);overflow-x:hidden}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  @keyframes encBlink{0%,100%{background:var(--emerald-dim);border-color:rgba(52,211,153,.3)}50%{background:rgba(52,211,153,.22);border-color:rgba(52,211,153,.7)}}
+  @keyframes threatBlink{0%,100%{background:var(--crimson-dim);border-color:rgba(191,0,0,.3)}50%{background:rgba(191,0,0,.22);border-color:rgba(191,0,0,.7)}}
+  @keyframes countUp{from{transform:scale(1.3);color:var(--crimson)}to{transform:scale(1)}}
+  @keyframes slideIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+  .fade-in{animation:fadeIn .4s ease-out both}
+  .app{display:flex;min-height:100vh}
+
+  /* ── Sidebar ──────────────────────────────────────────────────────────── */
+  .sidebar{width:280px;background:var(--surface);border-right:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;overflow-y:auto}
+  .brand{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
+  .brand-row{display:flex;align-items:center;gap:9px;margin-bottom:3px}
+  .brand-name{font-family:var(--fd);font-weight:700;font-size:13px;color:var(--cyan);letter-spacing:.03em}
+  .brand-rakuten{font-family:var(--fd);font-weight:700;font-size:13px;color:var(--white)}
+  .brand-sub{font-size:10px;color:var(--dim);margin-top:2px}
+  .context-box{margin:12px 14px;padding:11px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px}
+  .context-label{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+  .context-val{font-size:12px;color:var(--white);font-weight:600;line-height:1.4}
+  .steps{padding:6px 10px;flex:1}
+  .step{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:8px;cursor:pointer;margin-bottom:2px;transition:background .15s}
+  .step:hover{background:var(--surface2)}
+  .step.active{background:var(--indigo-dim)}
+  .step-num{width:21px;height:21px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:var(--fm);flex-shrink:0;border:1.5px solid var(--border-light);color:var(--dim)}
+  .step.done .step-num{background:var(--indigo);border-color:var(--indigo);color:#fff}
+  .step.active .step-num{border-color:var(--indigo);color:var(--indigo)}
+  .step.locked{opacity:.32;pointer-events:none}
+  .step-label{font-size:12px;color:var(--muted);font-weight:500;line-height:1.3}
+  .step.active .step-label,.step.done .step-label{color:var(--white)}
+  .fleet-mini{margin:8px 14px 16px;padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:9px}
+  .fleet-mini-title{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center}
+  .site-row{display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:11px}
+  .site-name{color:var(--muted)}
+  .site-count{font-family:var(--fm);font-size:10px}
+  .site-count.bad{color:var(--crimson)}.site-count.ok{color:var(--emerald)}.site-count.mixed{color:var(--amber)}
+
+  /* ── Main ─────────────────────────────────────────────────────────────── */
+  .main{margin-left:280px;flex:1;min-height:100vh}
+  .topbar{position:sticky;top:0;z-index:10;background:rgba(6,6,11,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:15px 38px;display:flex;align-items:center;justify-content:space-between}
+  .topbar-title{font-family:var(--fd);font-weight:700;font-size:16px}
+  .topbar-badge{font-family:var(--fm);font-size:10.5px;color:var(--indigo);background:var(--indigo-dim);padding:4px 11px;border-radius:100px;border:1px solid rgba(99,102,241,.25)}
+  .content{padding:38px;max-width:1080px}
+  h1.screen-title{font-family:var(--fd);font-size:28px;font-weight:700;margin-bottom:7px;letter-spacing:-.02em}
+  .screen-sub{color:var(--muted);font-size:14.5px;margin-bottom:28px;line-height:1.6;max-width:680px}
+
+  /* ── Components ──────────────────────────────────────────────────────── */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:24px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .kv-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;gap:12px}
+  .kv-row:last-child{border-bottom:none}
+  .kv-key{color:var(--dim);flex-shrink:0}
+  .kv-val{font-family:var(--fm);color:var(--white);font-weight:500;text-align:right}
+  .kv-val.bad{color:var(--crimson)}.kv-val.warn{color:var(--amber)}.kv-val.good{color:var(--emerald)}
+  .btn{font-family:var(--fd);font-weight:600;font-size:14px;padding:12px 24px;border-radius:9px;border:none;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:8px}
+  .btn-primary{background:var(--indigo);color:#fff}
+  .btn-primary:hover{background:#7577f5;transform:translateY(-1px)}
+  .btn-primary:disabled{background:var(--surface3);color:var(--dim);cursor:not-allowed;transform:none}
+  .btn-ghost{background:transparent;border:1px solid var(--border-light);color:var(--white)}
+  .btn-ghost:hover{border-color:var(--indigo)}
+  .btn-threat{background:var(--crimson-dim);border:1px solid rgba(191,0,0,.35);color:var(--red)}
+  .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+  .spinner.dark{border:2px solid rgba(4,20,13,.3);border-top-color:#04140d}
+  .callout{padding:13px 16px;border-radius:9px;border-left:3px solid var(--indigo);background:var(--indigo-dim);font-size:13px;color:var(--white);line-height:1.6;margin:14px 0}
+  .callout.red{border-left-color:var(--crimson);background:var(--crimson-dim)}.callout.red strong{color:var(--red)}
+  .callout.emerald{border-left-color:var(--emerald);background:var(--emerald-dim)}.callout.emerald strong{color:var(--emerald)}
+  .callout.amber{border-left-color:var(--amber);background:var(--amber-dim)}.callout.amber strong{color:var(--amber)}
+  .callout strong{color:var(--indigo)}
+  .progress-track{height:7px;background:var(--surface3);border-radius:100px;overflow:hidden;margin:12px 0}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--indigo),var(--cyan));border-radius:100px;width:0%;transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+  .banner-done{display:flex;align-items:center;gap:9px;padding:15px 18px;background:var(--emerald-dim);border:1px solid rgba(52,211,153,.3);border-radius:11px;margin-top:22px;font-size:13.5px;font-weight:600;color:var(--emerald)}
+  .banner-warning{display:flex;align-items:center;gap:9px;padding:15px 18px;background:var(--crimson-dim);border:1px solid rgba(191,0,0,.3);border-radius:11px;margin-top:22px;font-size:13.5px;font-weight:600;color:var(--red)}
+
+  /* ── Metric grid ─────────────────────────────────────────────────────── */
+  .metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .metric-box{text-align:center;padding:16px 10px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)}
+  .metric-num{font-family:var(--fm);font-size:20px;font-weight:700}
+  .metric-label{font-size:10.5px;color:var(--dim);margin-top:4px;text-transform:uppercase;letter-spacing:.04em}
+
+  /* ── Camera canvas ──────────────────────────────────────────────────── */
+  .cam-container{position:relative;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:16/9}
+  .cam-canvas{width:100%;height:100%;display:block}
+  .cam-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:10px 12px;pointer-events:none}
+  .cam-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;font-family:var(--fm);font-size:11px;font-weight:700;backdrop-filter:blur(8px)}
+  .cam-badge.enc{background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.4);color:var(--emerald);animation:encBlink 2s infinite}
+  .cam-badge.vuln{background:rgba(191,0,0,.15);border:1px solid rgba(191,0,0,.4);color:var(--red);animation:threatBlink 1.8s infinite}
+  .cam-badge.contained{background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.4);color:var(--indigo)}
+  .cam-label{font-family:var(--fm);font-size:10px;color:rgba(255,255,255,.55);background:rgba(0,0,0,.5);padding:3px 8px;border-radius:4px;align-self:flex-start}
+  .cam-metrics{display:flex;gap:8px;flex-wrap:wrap}
+  .cam-metric{background:rgba(0,0,0,.65);padding:4px 9px;border-radius:5px;font-family:var(--fm);font-size:10px;color:rgba(255,255,255,.7)}
+  .pulsedot{width:7px;height:7px;border-radius:50%;background:var(--crimson);display:inline-block;animation:pulse 1s infinite}
+  .pulsedot.green{background:var(--emerald)}.pulsedot.amber{background:var(--amber)}
+
+  /* ── Network capture ─────────────────────────────────────────────────── */
+  .net-vis{background:var(--surface2);border:1px solid var(--border);border-radius:11px;padding:18px;margin:14px 0}
+  .net-label{font-size:10.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:11px;font-family:var(--fm);display:flex;align-items:center;gap:8px}
+  .net-row{display:flex;align-items:center;gap:9px;margin-bottom:7px;font-family:var(--fm);font-size:11.5px}
+  .net-hex{background:var(--surface3);border-radius:5px;padding:7px 11px;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .net-hex.plain{color:var(--amber)}.net-hex.cipher{color:var(--emerald)}.net-hex.threat{color:var(--red)}
+  .net-tag{font-size:10px;padding:3px 8px;border-radius:100px;white-space:nowrap}
+  .net-tag.plain{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,.2)}
+  .net-tag.cipher{background:var(--emerald-dim);color:var(--emerald);border:1px solid rgba(52,211,153,.2)}
+  .net-tag.threat{background:var(--crimson-dim);color:var(--red);border:1px solid rgba(191,0,0,.2)}
+  .net-tag.blocked{background:var(--indigo-dim);color:var(--indigo);border:1px solid rgba(99,102,241,.2)}
+
+  /* ── Evidence rows ────────────────────────────────────────────────────── */
+  .ev-row{display:flex;align-items:center;gap:11px;padding:11px 13px;background:var(--surface2);border-radius:8px;margin-bottom:7px;border:1px solid var(--border);animation:slideIn .3s ease-out both}
+  .ev-icon{font-size:15px;width:26px;text-align:center}
+  .ev-label{flex:1;font-size:13px}
+  .ev-val{font-family:var(--fm);font-size:11px;color:var(--emerald)}
+
+  /* ── Timeline ─────────────────────────────────────────────────────────── */
+  .tl-item{display:flex;gap:14px;margin-bottom:0}
+  .tl-line{display:flex;flex-direction:column;align-items:center;width:18px;flex-shrink:0}
+  .tl-dot{width:11px;height:11px;border-radius:50%;border:2px solid var(--border-light);background:var(--surface3);flex-shrink:0;margin-top:4px}
+  .tl-dot.red{border-color:var(--crimson);background:var(--crimson)}.tl-dot.amber{border-color:var(--amber);background:var(--amber)}.tl-dot.emerald{border-color:var(--emerald);background:var(--emerald)}.tl-dot.indigo{border-color:var(--indigo);background:var(--indigo)}
+  .tl-connector{width:2px;flex:1;background:var(--border);min-height:18px}
+  .tl-body{padding-bottom:22px;flex:1}
+  .tl-year{font-family:var(--fm);font-size:10.5px;color:var(--dim);margin-bottom:2px}
+  .tl-title{font-size:13.5px;font-weight:600;margin-bottom:3px}
+  .tl-desc{font-size:12.5px;color:var(--muted);line-height:1.5}
+
+  /* ── OODA SVG container ──────────────────────────────────────────────── */
+  .ooda-container{display:flex;align-items:center;justify-content:center;padding:16px 0}
+
+  /* ── Phone-home counter ──────────────────────────────────────────────── */
+  .threat-counter{font-family:var(--fm);font-size:32px;font-weight:700;color:var(--crimson);text-align:center;animation:countUp .3s ease-out}
+
+  /* ── Cost comparison ─────────────────────────────────────────────────── */
+  .cost-col{padding:20px;border-radius:11px;border:1px solid var(--border)}
+  .cost-col.threat-col{background:var(--crimson-dim);border-color:rgba(191,0,0,.2)}
+  .cost-col.safe-col{background:var(--emerald-dim);border-color:rgba(52,211,153,.2)}
+  .cost-price{font-family:var(--fm);font-size:28px;font-weight:700;margin:8px 0}
+
+  /* ── Hamburger / mobile ──────────────────────────────────────────────── */
+  .hamburger{display:none;background:none;border:none;color:var(--white);font-size:20px;cursor:pointer;padding:4px 8px;margin-right:12px;line-height:1;flex-shrink:0}
+  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:49}
+  .sidebar-overlay.active{display:block}
+
+  @media (max-width:1024px){
+    .hamburger{display:block}
+    .sidebar{transform:translateX(-100%);transition:transform .25s ease;z-index:50;width:280px}
+    .sidebar.open{transform:translateX(0)}
+    .main{margin-left:0 !important}
+    .topbar{padding:12px 16px}
+    .content{padding:20px 16px}
+    h1.screen-title{font-size:22px}
+    .screen-sub{font-size:13px}
+  }
+  @media (max-width:768px){
+    .grid-2{grid-template-columns:1fr !important}
+    .metric-grid{grid-template-columns:1fr 1fr !important}
+    .net-row{flex-wrap:wrap;gap:6px}
+    .net-hex{min-width:0;font-size:10px}
+    .content{padding:16px 14px}
+    h1.screen-title{font-size:20px}
+    .card{padding:16px}
+    .btn{font-size:13px;padding:10px 18px}
+    table{font-size:11px}
+    .kv-row{font-size:12px;flex-wrap:wrap;gap:4px}
+  }
+</style>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+<div class="app">
+
+<!-- ════ SIDEBAR ═══════════════════════════════════════════════════════════ -->
+<div class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-row">
+      <svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="4" fill="#22D3EE"/><circle cx="10" cy="10" r="8" fill="none" stroke="#6366F1" stroke-width="1.5" stroke-dasharray="3 3"/></svg>
+      <span class="brand-name">Fleet Cam</span>
+      <span style="color:var(--dim);font-size:11px">×</span>
+      <span class="brand-rakuten">Rakuten</span>
+    </div>
+    <div class="brand-sub">Global Facilities Security Briefing · Confidential</div>
+  </div>
+
+  <div class="context-box">
+    <div class="context-label">Facility Scope</div>
+    <div class="context-val">6 Global Sites · ~6,500 Cameras</div>
+    <div class="context-label" style="margin-top:8px">Primary Risk</div>
+    <div class="context-val" style="color:var(--red)">Chinese Manufacturer Backdoors</div>
+  </div>
+
+  <div class="steps" id="steps"></div>
+
+  <div class="fleet-mini">
+    <div class="fleet-mini-title">
+      <span>Camera Fleet</span>
+      <span id="containedCount" style="color:var(--indigo);font-size:10px;font-family:var(--fm)">0 / 6,500 contained</span>
+    </div>
+    <div id="siteList"></div>
+  </div>
+</div>
+
+<!-- ════ MAIN ═══════════════════════════════════════════════════════════════ -->
+<div class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center">
+      <button class="hamburger" onclick="toggleSidebar()">☰</button>
+      <span class="topbar-title" id="topTitle">Rakuten — The Chinese Camera Risk</span>
+    </div>
+    <span class="topbar-badge" id="topBadge">~6,500 Cameras · 6 Countries</span>
+  </div>
+  <div class="content">
+    <div id="content"></div>
+  </div>
+</div>
+</div><!-- /.app -->
+
+<script>
+// ─── State ───────────────────────────────────────────────────────────────────
+const STEP_LABELS = [
+  'Rakuten — The Chinese Camera Risk',
+  'Live: Uncontained Hikvision Feed',
+  'Network: Phone-Home Captured',
+  'Three Walls — Containment Active',
+  'Ring Neural Inference — Firmware Hold',
+  '¥7.5B Decision — Replace vs Contain',
+];
+
+const SITES = [
+  {name:'Tokyo HQ', cameras:2847, contained:0, make:'Hikvision / Dahua', status:'bad'},
+  {name:'Osaka Digital Valley', cameras:1203, contained:0, make:'Hikvision / Axis', status:'bad'},
+  {name:'Singapore Hub', cameras:892, contained:0, make:'Dahua / Hanwha', status:'bad'},
+  {name:'London Fulham', cameras:614, contained:0, make:'Hikvision / Bosch', status:'bad'},
+  {name:'Frankfurt', cameras:441, contained:0, make:'Dahua / Axis', status:'bad'},
+  {name:'New York', cameras:503, contained:0, make:'Hikvision / Avigilon', status:'bad'},
+];
+
+let state = {
+  screen:1, maxUnlocked:1,
+  containmentDone:false, captureDone:false,
+  rniDone:false, evidenceDone:false,
+  phoneHomeCount:0, phoneHomeTimer:null,
+};
+
+function goTo(n){if(n>state.maxUnlocked)return;state.screen=n;closeSidebar();render();}
+function unlockNext(){state.maxUnlocked=Math.max(state.maxUnlocked,state.screen+1);}
+
+// ─── Sidebar ──────────────────────────────────────────────────────────────────
+function renderSidebar(){
+  document.getElementById('steps').innerHTML=STEP_LABELS.map((label,i)=>{
+    const n=i+1,cls=['step'];
+    if(n===state.screen)cls.push('active');
+    else if(n<state.screen)cls.push('done');
+    if(n>state.maxUnlocked)cls.push('locked');
+    return `<div class="${cls.join(' ')}" onclick="goTo(${n})">
+      <div class="step-num">${n<state.screen?'✓':n}</div>
+      <div class="step-label">${label}</div></div>`;
+  }).join('');
+
+  const totalContained=state.containmentDone?6500:0;
+  document.getElementById('containedCount').textContent=`${totalContained.toLocaleString()} / 6,500 contained`;
+
+  document.getElementById('siteList').innerHTML=SITES.map(s=>{
+    const cls=state.containmentDone?'ok':s.status;
+    const count=state.containmentDone?s.cameras+'✓':s.cameras;
+    return `<div class="site-row">
+      <span class="site-name">${s.name}</span>
+      <span class="site-count ${cls}">${count}</span>
+    </div>`;
+  }).join('');
+}
+
+// ─── Sidebar mobile ───────────────────────────────────────────────────────────
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('active');
+}
+
+// ─── Canvas functions ─────────────────────────────────────────────────────────
+let animFrames={};
+function stopAllAnims(){Object.keys(animFrames).forEach(k=>{cancelAnimationFrame(animFrames[k]);delete animFrames[k];});}
+
+function drawFacilityFeed(canvasId, mode='uncontained', t=0){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width=canvas.offsetWidth||640;
+  const H=canvas.height=canvas.offsetHeight||360;
+  ctx.clearRect(0,0,W,H);
+
+  // Sky
+  const sky=ctx.createLinearGradient(0,0,0,H*0.52);
+  sky.addColorStop(0,'#07040d');sky.addColorStop(1,'#0e1020');
+  ctx.fillStyle=sky;ctx.fillRect(0,0,W,H*0.52);
+
+  // Ground / plaza
+  const gnd=ctx.createLinearGradient(0,H*0.52,0,H);
+  gnd.addColorStop(0,'#0a0a0a');gnd.addColorStop(1,'#050505');
+  ctx.fillStyle=gnd;ctx.fillRect(0,H*0.52,W,H*0.48);
+
+  // Stars
+  for(let i=0;i<50;i++){
+    const sx=((i*137.5+t*0.008)%W),sy=((i*79+t*0.004)%(H*0.44));
+    ctx.globalAlpha=0.25+0.4*Math.sin(t*0.04+i);
+    ctx.fillStyle='#fff';ctx.fillRect(sx,sy,1,1);
+  }
+  ctx.globalAlpha=1;
+
+  // Tokyo skyline buildings
+  const bldgs=[
+    {x:.02,w:.10,h:.38,c:'#0d1023'},{x:.14,w:.07,h:.28,c:'#0f1228'},
+    {x:.22,w:.12,h:.46,c:'#080c1c'},{x:.35,w:.08,h:.32,c:'#0d1023'},
+    {x:.45,w:.14,h:.50,c:'#09102a'},{x:.60,w:.07,h:.24,c:'#0f1228'},
+    {x:.68,w:.13,h:.44,c:'#080c1c'},{x:.82,w:.08,h:.30,c:'#0d1023'},
+    {x:.91,w:.10,h:.38,c:'#0f1228'},
+  ];
+  bldgs.forEach(b=>{
+    const bx=b.x*W,bw=b.w*W,bh=b.h*H,by=H*0.52-bh;
+    ctx.fillStyle=b.c;ctx.fillRect(bx,by,bw,bh);
+    // Window grid
+    const cols=Math.floor(bw/11),rows=Math.floor(bh/15);
+    for(let r=0;r<rows;r++)for(let c2=0;c2<cols;c2++){
+      const lit=Math.sin(t*0.015+r*5+c2*11+b.x*100)>0.08;
+      ctx.fillStyle=lit?'rgba(255,230,160,0.65)':'rgba(15,20,45,0.9)';
+      ctx.fillRect(bx+c2*11+2,by+r*15+3,7,9);
+    }
+  });
+
+  // Tokyo Tower silhouette (landmark)
+  const tx=W*0.46;
+  ctx.fillStyle='#0a0c1a';
+  ctx.beginPath();ctx.moveTo(tx-18,H*0.52);ctx.lineTo(tx,H*0.52-H*0.48);ctx.lineTo(tx+18,H*0.52);ctx.fill();
+  // Tower light blink
+  if(Math.sin(t*0.08)>0.5){
+    ctx.fillStyle='rgba(255,50,50,0.9)';
+    ctx.beginPath();ctx.arc(tx,H*0.52-H*0.48,2.5,0,Math.PI*2);ctx.fill();
+  }
+
+  // Ground level glow
+  if(mode==='uncontained'){
+    // Red menace glow on right side (Chinese cloud direction)
+    const rg=ctx.createRadialGradient(W,H*0.5,30,W,H*0.5,W*0.6);
+    rg.addColorStop(0,'rgba(191,0,0,0.08)');rg.addColorStop(1,'rgba(191,0,0,0)');
+    ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+  } else if(mode==='contained'){
+    // Blue containment glow on left (proxy)
+    const bg2=ctx.createRadialGradient(W*0.3,H*0.5,30,W*0.3,H*0.5,W*0.4);
+    bg2.addColorStop(0,'rgba(99,102,241,0.08)');bg2.addColorStop(1,'rgba(99,102,241,0)');
+    ctx.fillStyle=bg2;ctx.fillRect(0,0,W,H);
+  }
+
+  // Animated phone-home packet (only in uncontained mode)
+  if(mode==='uncontained'){
+    const packetX=((t*1.2)%(W*0.75));
+    const packetY=H*0.18;
+    if(packetX<W*0.75){
+      ctx.globalAlpha=0.8;
+      ctx.strokeStyle='rgba(191,0,0,0.6)';ctx.lineWidth=1.5;ctx.setLineDash([4,6]);
+      ctx.beginPath();ctx.moveTo(W*0.08,H*0.35);ctx.lineTo(W*0.08+packetX,packetY);ctx.stroke();
+      ctx.setLineDash([]);
+      // Packet dot
+      ctx.fillStyle='#BF0000';
+      ctx.beginPath();ctx.arc(W*0.08+packetX,packetY,4,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=1;
+      // China cloud destination indicator
+      const cloudX=W*0.88,cloudY=H*0.1;
+      ctx.strokeStyle='rgba(191,0,0,0.45)';ctx.lineWidth=1.2;ctx.setLineDash([3,4]);
+      ctx.strokeRect(cloudX-30,cloudY-14,60,28);
+      ctx.setLineDash([]);
+      ctx.fillStyle='rgba(191,0,0,0.75)';ctx.font=`9px 'JetBrains Mono',monospace`;
+      ctx.textAlign='center';ctx.fillText('CHINA CLOUD',cloudX,cloudY+2);ctx.textAlign='left';
+    }
+  }
+
+  // In contained mode: show the proxy wall blocking
+  if(mode==='contained'){
+    const wallX=W*0.52;
+    // Proxy wall line
+    ctx.strokeStyle='rgba(99,102,241,0.6)';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(wallX,H*0.1);ctx.lineTo(wallX,H*0.9);ctx.stroke();
+    // Blocked packet animation
+    const packetX=Math.min(((t*1.2)%(W*0.6)),W*0.42);
+    if(packetX>W*0.38){
+      // BLOCKED badge at wall
+      ctx.fillStyle='rgba(99,102,241,0.2)';ctx.fillRect(wallX-26,H*0.15,52,20);
+      ctx.strokeStyle='rgba(99,102,241,0.6)';ctx.strokeRect(wallX-26,H*0.15,52,20);
+      ctx.fillStyle='rgba(99,102,241,0.9)';ctx.font=`bold 9px 'JetBrains Mono',monospace`;
+      ctx.textAlign='center';ctx.fillText('BLOCKED',wallX,H*0.15+13);ctx.textAlign='left';
+      // Show emerald dot = contained camera
+      ctx.fillStyle=`rgba(52,211,153,0.9)`;
+      ctx.beginPath();ctx.arc(W*0.08,H*0.35,5,0,Math.PI*2);ctx.fill();
+    } else {
+      ctx.globalAlpha=0.7;
+      ctx.fillStyle='#6366F1';
+      ctx.beginPath();ctx.arc(W*0.08+packetX,H*0.22,4,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=1;
+    }
+    ctx.fillStyle='rgba(99,102,241,0.6)';ctx.font=`8px 'JetBrains Mono',monospace`;
+    ctx.fillText('icrypt-proxy',wallX+4,H*0.1-3);
+  }
+
+  // Camera timestamp
+  ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(W-178,6,172,22);
+  ctx.fillStyle='rgba(255,255,255,.65)';ctx.font=`10px 'JetBrains Mono',monospace`;
+  const now=new Date();
+  ctx.fillText(`HK-TYO-14  ${now.toTimeString().slice(0,8)}`,W-172,21);
+
+  // Encrypted noise overlay
+  if(mode==='contained'){
+    ctx.globalAlpha=0.03+0.015*Math.sin(t*0.1);
+    for(let i=0;i<50;i++){
+      const nx=(Math.random()*W)|0,ny=(Math.random()*H)|0;
+      const nv=(Math.random()*255)|0;
+      ctx.fillStyle=`rgb(${nv},${nv},${nv})`;ctx.fillRect(nx,ny,1,1);
+    }
+    ctx.globalAlpha=1;
+    // Scan line
+    const scanY=(t*2.2)%H;
+    const sg=ctx.createLinearGradient(0,scanY-3,0,scanY+3);
+    sg.addColorStop(0,'rgba(52,211,153,0)');sg.addColorStop(0.5,'rgba(52,211,153,0.12)');sg.addColorStop(1,'rgba(52,211,153,0)');
+    ctx.fillStyle=sg;ctx.fillRect(0,scanY-3,W,6);
+  }
+
+  animFrames[canvasId]=requestAnimationFrame(()=>drawFacilityFeed(canvasId,mode,t+1));
+}
+
+// ─── OODA Ring SVG ─────────────────────────────────────────────────────────
+function oodaRingSVG(step, cameraId){
+  const C=200,R=160;
+  const nodes=[{x:C,y:C-R},{x:C+R,y:C},{x:C,y:C+R},{x:C-R,y:C}];
+  const steps=[
+    {label:'OBSERVE',sub:'Frame + packet',color:'#22D3EE'},
+    {label:'ORIENT', sub:'Ring inference',color:'#A78BFA'},
+    {label:'DECIDE', sub:'Policy + risk', color:'#FBBF24'},
+    {label:'ACT',    sub:'Hold + sign',  color:'#34D399'},
+  ];
+  const arc=(i)=>{
+    const a=nodes[i],b=nodes[(i+1)%4];
+    return `M ${a.x} ${a.y} A ${R} ${R} 0 0 1 ${b.x} ${b.y}`;
+  };
+  const rings=[
+    {r:52,label:'RING 1 · proxy',color:'#22D3EE',dur:'28s'},
+    {r:90,label:'RING 2 · site',color:'#A78BFA',dur:'42s'},
+    {r:128,label:'RING 3 · sovereign',color:'#6366F1',dur:'60s'},
+  ];
+  let svg=`<svg viewBox="-20 -20 440 440" width="380" height="380" role="img" aria-label="Ring Neural Inference OODA loop">
+  <defs>
+    <radialGradient id="bg-grad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0d0d1a"/>
+      <stop offset="100%" stop-color="#06060b"/>
+    </radialGradient>
+  </defs>
+  <circle cx="${C}" cy="${C}" r="220" fill="url(#bg-grad)" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>`;
+
+  // Rings
+  rings.forEach((r,i)=>{
+    const opacity=step===1?0.6:0.22;
+    svg+=`<g>
+      <circle cx="${C}" cy="${C}" r="${r.r}" fill="none" stroke="${r.color}" stroke-opacity="${opacity}" stroke-width="1" stroke-dasharray="3 6">
+        <animateTransform attributeName="transform" type="rotate" from="${i%2?360:0} ${C} ${C}" to="${i%2?0:360} ${C} ${C}" dur="${r.dur}" repeatCount="indefinite"/>
+      </circle>
+      <text x="${C}" y="${C-r.r+11}" text-anchor="middle" font-size="7.5" fill="${r.color}" fill-opacity="0.8" font-family="'JetBrains Mono',monospace">${r.label}</text>
+    </g>`;
+    if(step===1){
+      svg+=`<circle cx="${C}" cy="${C}" r="${r.r}" fill="none" stroke="${r.color}" stroke-width="2" stroke-opacity="0.5">
+        <animate attributeName="stroke-opacity" values="0;0.7;0" dur="1.3s" begin="${i*0.3}s" repeatCount="indefinite"/>
+      </circle>`;
+    }
+  });
+
+  // OODA arcs
+  steps.forEach((s,i)=>{
+    const w=i===step?2.5:1.3;
+    const op=i===step?0.95:0.2;
+    svg+=`<path d="${arc(i)}" fill="none" stroke="${s.color}" stroke-width="${w}" stroke-opacity="${op}" stroke-dasharray="8 5">
+      <animate attributeName="stroke-dashoffset" values="0;-26" dur="1s" repeatCount="indefinite"/>
+    </path>`;
+  });
+  if(step<4){
+    svg+=`<circle r="5" fill="${steps[step].color}">
+      <animateMotion dur="1.8s" fill="freeze" path="${arc(step)}"/>
+    </circle>`;
+  }
+
+  // Center node
+  svg+=`<circle cx="${C}" cy="${C}" r="32" fill="#09091a" stroke="${steps[step]?.color||'#22D3EE'}" stroke-opacity="0.6" stroke-width="1.5"/>
+  <text x="${C}" y="${C-6}" text-anchor="middle" font-size="8" fill="rgba(255,255,255,0.5)" font-family="'JetBrains Mono',monospace">📷</text>
+  <text x="${C}" y="${C+9}" text-anchor="middle" font-size="7.5" fill="rgba(255,255,255,0.45)" font-family="'JetBrains Mono',monospace">${cameraId}</text>`;
+
+  // OODA nodes
+  steps.forEach((s,i)=>{
+    const n=nodes[i],on=i===step;
+    if(on) svg+=`<rect x="${n.x-52}" y="${n.y-23}" width="104" height="46" rx="12" fill="${s.color}" opacity="0.15"/>`;
+    svg+=`<rect x="${n.x-48}" y="${n.y-20}" width="96" height="40" rx="10" fill="#09091a" stroke="${s.color}" stroke-opacity="${on?1:0.35}" stroke-width="${on?1.8:1}"/>
+    <text y="${n.y-2}" x="${n.x}" text-anchor="middle" font-size="10" font-weight="700" fill="${s.color}" fill-opacity="${on?1:0.6}" font-family="'Space Grotesk',sans-serif">${s.label}</text>
+    <text y="${n.y+13}" x="${n.x}" text-anchor="middle" font-size="8" fill="rgba(142,142,163,0.9)" font-family="'DM Sans',sans-serif">${s.sub}</text>`;
+  });
+
+  svg+='</svg>';
+  return svg;
+}
+
+// ─── Screen 1: The Threat ─────────────────────────────────────────────────────
+function screen1(){
+  startPhoneHomeCounter();
+  return `
+  <h1 class="screen-title">Rakuten — The Chinese Camera Risk</h1>
+  <p class="screen-sub">Your management is right that there's a threat. But the solution they've been given — replace all Chinese cameras with Honeywell — will cost ¥7.5B+ and take 18 months. This briefing shows you don't need to spend a yen on hardware.</p>
+
+  <div class="banner-warning" style="margin-bottom:24px">
+    ⚠ Right now, your uncontained Hikvision and Dahua cameras are attempting to phone home to Chinese servers.
+    <span id="phoneHomeBanner" style="margin-left:12px;font-family:var(--fm);font-size:16px;color:var(--red);font-weight:700">0</span>
+    <span style="font-size:12px;margin-left:4px">attempts in this session</span>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:22px">
+    <div class="card">
+      <div style="font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:14px;font-family:var(--fm)">The Five Chinese Threat Vectors</div>
+      <div class="tl-item">
+        <div class="tl-line"><div class="tl-dot red"></div><div class="tl-connector"></div></div>
+        <div class="tl-body"><div class="tl-title" style="color:var(--red)">Cloud phone-home (active now)</div><div class="tl-desc">Hikvision uses Hik-Connect (203.107.x.x, 210.22.x.x China Unicom). Every uncontained camera is streaming metadata to Chinese servers in real time. CVE-free — it's a feature, not a bug.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-line"><div class="tl-dot red"></div><div class="tl-connector"></div></div>
+        <div class="tl-body"><div class="tl-title" style="color:var(--red)">CVE-2021-36260 (CVSS 9.8)</div><div class="tl-desc">Unauthenticated root shell via single HTTP request to any unpatched Hikvision camera. Affects 70+ models. Camera models in your fleet include DS-2CD2143G2, DS-2CD2385G1, IPC-HDW2831T. Have all been patched?</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-line"><div class="tl-dot red"></div><div class="tl-connector"></div></div>
+        <div class="tl-body"><div class="tl-title" style="color:var(--red)">Firmware-as-backdoor-delivery</div><div class="tl-desc">China's National Intelligence Law (Art. 7, 2017) compels Hikvision and Dahua to cooperate with MSS on request. A signed firmware update can silently install surveillance modules. No indicator on the camera.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-line"><div class="tl-dot amber"></div><div class="tl-connector"></div></div>
+        <div class="tl-body"><div class="tl-title" style="color:var(--amber)">RTSP stream interception</div><div class="tl-desc">Without ML-KEM-768, the stream key exchange uses classical TLS. Any device on the network path can record encrypted frames today and decrypt them in 2035–2037 when quantum computers break x25519/RSA.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-line"><div class="tl-dot amber"></div></div>
+        <div class="tl-body"><div class="tl-title" style="color:var(--amber)">Remote control / hijack</div><div class="tl-desc">CVE-2021-36260 root gives silent stream redirect, feed blanking during physical intrusion, or botnet recruitment. Replacing with Honeywell does not eliminate future CVEs — it resets the clock to zero, not permanently.</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div style="font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;font-family:var(--fm)">China National Intelligence Law — Article 7</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;padding:12px 14px;background:var(--surface2);border-left:3px solid var(--crimson);border-radius:6px;font-style:italic">
+          "Any organization or citizen shall support, assist and cooperate with the state intelligence work in accordance with the law, and keep the secrets of the national intelligence work known to the individual."
+        </div>
+        <div style="font-size:11.5px;color:var(--dim);margin-top:9px">People's Republic of China — National Intelligence Law, 2017. Applies to Hikvision Corp (SZSE: 002415) and Dahua Technology (SZSE: 002236) under Chinese jurisdiction.</div>
+      </div>
+      <div class="card">
+        <div style="font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;font-family:var(--fm)">Your Fleet Right Now</div>
+        <div class="kv-row"><span class="kv-key">Total cameras</span><span class="kv-val">~6,500 across 6 sites</span></div>
+        <div class="kv-row"><span class="kv-key">Hikvision (NDAA banned)</span><span class="kv-val bad">~3,200 (est. 49%)</span></div>
+        <div class="kv-row"><span class="kv-key">Dahua (NDAA banned)</span><span class="kv-val bad">~1,800 (est. 28%)</span></div>
+        <div class="kv-row"><span class="kv-key">Axis / Hanwha / Bosch</span><span class="kv-val good">~1,500 (est. 23%)</span></div>
+        <div class="kv-row"><span class="kv-key">Cameras currently contained</span><span class="kv-val bad">0 — none</span></div>
+        <div class="kv-row"><span class="kv-key">Management's proposed fix</span><span class="kv-val warn">Replace all — ¥7.5B+</span></div>
+        <div class="kv-row"><span class="kv-key">Fleet Cam approach</span><span class="kv-val good">Contain all — ¥0 hardware</span></div>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-primary" onclick="unlockNext();goTo(2)">See a Live Uncontained Camera →</button>`;
+}
+
+// ─── Screen 2: Live uncontained feed ──────────────────────────────────────────
+function screen2(){
+  setTimeout(()=>drawFacilityFeed('liveCam1','uncontained',0),80);
+  return `
+  <h1 class="screen-title">Live Camera — Hikvision TYO-14 · Uncontained</h1>
+  <p class="screen-sub">This is Hikvision DS-2CD2143G2 camera TYO-14 at Tokyo HQ. It's producing a perfect video feed — Rakuten security operations sees this and assumes all is well. Meanwhile, every 60 seconds, the camera is sending data to Hik-Connect relay servers in Beijing.</p>
+
+  <div style="margin-bottom:20px">
+    <div class="cam-container" style="max-width:min(700px,100%)">
+      <canvas id="liveCam1" class="cam-canvas"></canvas>
+      <div class="cam-overlay">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <span class="cam-badge vuln"><span class="pulsedot" style="background:var(--crimson)"></span> PHONE-HOME ACTIVE — UNCONTAINED</span>
+          <span class="cam-label">HK-TYO-14 · DS-2CD2143G2 · Level 3F</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end">
+          <div class="cam-metrics">
+            <span class="cam-metric">H.265+ · 4MP · 25fps</span>
+            <span class="cam-metric">rtsp://10.100.1.114:554/live</span>
+          </div>
+          <span class="cam-badge vuln">🔴 EXFIL RISK · x25519 KEY</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="kv-row"><span class="kv-key">Camera model</span><span class="kv-val">Hikvision DS-2CD2143G2-I</span></div>
+      <div class="kv-row"><span class="kv-key">Firmware version</span><span class="kv-val warn">V5.7.14 (CVE-2021-36260 risk)</span></div>
+      <div class="kv-row"><span class="kv-key">Key exchange</span><span class="kv-val bad">x25519 — Shor-breakable by 2037</span></div>
+      <div class="kv-row"><span class="kv-key">Hik-Connect status</span><span class="kv-val bad">ACTIVE · connecting to 203.107.x.x</span></div>
+      <div class="kv-row"><span class="kv-key">Last phone-home</span><span class="kv-val bad">58 seconds ago</span></div>
+      <div class="kv-row"><span class="kv-key">Data exfiltrated</span><span class="kv-val bad">Unknown — TLS content opaque</span></div>
+      <div class="kv-row"><span class="kv-key">NDAA §889 status</span><span class="kv-val bad">NON-COMPLIANT — banned hardware</span></div>
+    </div>
+    <div>
+      <div class="callout red">
+        <strong>What is "Hik-Connect" sending?</strong> Hikvision's official documentation says "device status and event notifications." Independent researchers (IPVM, 2022) have documented these connections also transmitting: device serial numbers, firmware versions, local IP topology, motion detection logs, and in some configurations — thumbnail frames from motion events. All encrypted with classical TLS. All storable for future quantum decryption.
+      </div>
+      <div class="callout amber" style="margin-top:0">
+        <strong>The video looks fine — that's the problem.</strong> Rakuten Facility Management has no indicator that anything is wrong. The stream is perfect. The compliance report says "camera operational." Only a network layer inspection reveals the outbound connections. Fleet Cam makes this visible in real time.
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-primary" onclick="unlockNext();goTo(3)">Show the Network Capture →</button>`;
+}
+
+// ─── Screen 3: Network capture ────────────────────────────────────────────────
+function screen3(){
+  return `
+  <h1 class="screen-title">Network Capture — Hikvision TYO-14 Traffic</h1>
+  <p class="screen-sub">This is what your network team sees when they run a packet capture on HK-TYO-14. Two simultaneous conversations: the RTSP stream to your NVR, and a separate connection to Hikvision's cloud infrastructure in mainland China.</p>
+
+  <div class="card" style="margin-bottom:20px" id="captureCard">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div>
+        <div style="font-size:14px;font-weight:600;margin-bottom:3px">Network Traffic Analysis — HK-TYO-14</div>
+        <div style="font-size:12px;color:var(--muted)">Interface: tokyo-cam-vlan · Capture duration: 60s · Tool: Wireshark / tcpdump</div>
+      </div>
+      <button class="btn btn-threat" id="capBtn" onclick="runCapture()">▶ Run Capture</button>
+    </div>
+    <div id="capOutput" style="display:none">
+      <div class="net-vis">
+        <div class="net-label"><span class="pulsedot"></span> Conversation A — Camera → Rakuten NVR (legitimate)</div>
+        <div class="net-row">
+          <span class="net-hex plain">RTSP/1.0 PLAY rtsp://10.100.1.114:554/live · Session: 4f3c7a · CSeq: 7</span>
+          <span class="net-tag plain">RTSP</span>
+        </div>
+        <div class="net-row">
+          <span class="net-hex cipher">RTP/0x80 0x61 · seq=28841 · ts=1680930147 · H.265+ encoded frame · AES-128-GCM</span>
+          <span class="net-tag plain">x25519 KEY</span>
+        </div>
+        <div class="net-row">
+          <span class="net-hex cipher">x25519 KeyShareEntry: a9f201c4 44e10f27 … (32 bytes) · Shor's algorithm can recover session key</span>
+          <span class="net-tag threat">HNDL RISK</span>
+        </div>
+      </div>
+      <div class="net-vis" style="border-color:rgba(191,0,0,0.3);background:rgba(191,0,0,0.04)">
+        <div class="net-label" style="color:var(--red)"><span class="pulsedot" style="background:var(--crimson)"></span> Conversation B — Camera → 203.107.44.182 (Hik-Connect · China Unicom Beijing)</div>
+        <div class="net-row">
+          <span class="net-hex threat">TLSv1.3 · SNI: hik-connect.com · CN=*.hik-connect.com · issuer: Alibaba Cloud CA · Beijing</span>
+          <span class="net-tag threat">CHINA ENDPOINT</span>
+        </div>
+        <div class="net-row">
+          <span class="net-hex threat">POST /api/device/heartbeat · device_id=DS4B42… · serial_no=Q2… · fw_ver=V5.7.14 · local_ip=10.100.1.114</span>
+          <span class="net-tag threat">DEVICE PROFILE</span>
+        </div>
+        <div class="net-row">
+          <span class="net-hex threat">Application data · 2,841 bytes · encrypted · content unknown · sent every 60 seconds</span>
+          <span class="net-tag threat">UNKNOWN PAYLOAD</span>
+        </div>
+        <div class="net-row">
+          <span class="net-hex threat">Destination ASN: AS4808 · CNCGROUP-CN Beijing · Registry: APNIC · Owner: China Unicom</span>
+          <span class="net-tag threat">CHINA UNICOM</span>
+        </div>
+      </div>
+      <div class="callout red">
+        <strong>What you're seeing:</strong> Two simultaneous connections. The left column is the legitimate camera stream to your NVR — but with a quantum-vulnerable x25519 key exchange that makes all footage decrypt-able in 2035–2037. The right column is the Chinese cloud connection. This happens on every Hikvision camera in your fleet, every 60 seconds, right now.
+      </div>
+      <div style="margin-top:20px">
+        <button class="btn btn-primary" onclick="unlockNext();goTo(4)">Deploy Containment →</button>
+      </div>
+    </div>
+    <div class="progress-track" id="capBar" style="display:none"><div class="progress-fill" id="capFill"></div></div>
+    <div id="capStatus" style="display:none;font-family:var(--fm);font-size:12px;color:var(--muted)">Initialising capture…</div>
+  </div>`;
+}
+
+function runCapture(){
+  const btn=document.getElementById('capBtn');
+  btn.innerHTML='<span class="spinner dark"></span> Capturing…';
+  btn.disabled=true;
+  document.getElementById('capBar').style.display='block';
+  document.getElementById('capStatus').style.display='block';
+  document.getElementById('capStatus').textContent='Starting packet capture on tokyo-cam-vlan…';
+  setTimeout(()=>{document.getElementById('capFill').style.width='35%';document.getElementById('capStatus').textContent='Identifying conversations… 2 endpoints found';},700);
+  setTimeout(()=>{document.getElementById('capFill').style.width='70%';document.getElementById('capStatus').textContent='Resolving ASN for 203.107.44.182…';},1500);
+  setTimeout(()=>{document.getElementById('capFill').style.width='100%';document.getElementById('capStatus').textContent='Capture complete — 2 conversations, 1 to China';},2300);
+  setTimeout(()=>{
+    document.getElementById('capOutput').style.display='block';
+    document.getElementById('capBar').style.display='none';
+    document.getElementById('capStatus').style.display='none';
+    btn.style.display='none';
+    state.captureDone=true;
+  },2700);
+}
+
+// ─── Screen 4: Containment active ─────────────────────────────────────────────
+function screen4(){
+  setTimeout(()=>drawFacilityFeed('liveCam2','contained',0),80);
+  return `
+  <h1 class="screen-title">Three Walls — Containment Deployed · HK-TYO-14</h1>
+  <p class="screen-sub">icrypt-proxy is deployed in front of HK-TYO-14. Zero changes to the camera. Zero changes to your NVR. One proxy between the camera and the network. Same perfect video feed — but now completely isolated from Chinese servers and quantum-safe encrypted.</p>
+
+  <div style="margin-bottom:20px">
+    <div class="cam-container" style="max-width:min(700px,100%)">
+      <canvas id="liveCam2" class="cam-canvas"></canvas>
+      <div class="cam-overlay">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <span class="cam-badge enc">🔒 ML-KEM-768 + AES-256-GCM · CONTAINED</span>
+          <span class="cam-label">HK-TYO-14 → icrypt-proxy:8556 → NVR</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end">
+          <div class="cam-metrics">
+            <span class="cam-metric">H.265+ · 4MP · 25fps</span>
+            <span class="cam-metric">FIPS 203 + FIPS 197</span>
+          </div>
+          <span class="cam-badge enc"><span class="pulsedot green"></span> HNDL-PROOF · D04 KMS KEY</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px" id="wallGrid">
+    <div id="wall1" style="border-radius:11px;padding:16px;border:1px solid var(--border);background:var(--surface2)">
+      <div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;font-family:var(--fm)">Wall 1</div>
+      <div style="font-size:13.5px;font-weight:600;color:var(--cyan);margin-bottom:8px">Network Isolation</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6">icrypt-proxy terminates ALL connections. Camera cannot reach Hik-Connect. <strong style="color:var(--red)">Hik-Connect blocked.</strong> Easy4IP blocked. DMSS blocked. Every attempt logged and ML-DSA-65 signed.</div>
+      <div id="w1status" style="margin-top:10px;font-family:var(--fm);font-size:10px;color:var(--dim)">— not deployed</div>
+    </div>
+    <div id="wall2" style="border-radius:11px;padding:16px;border:1px solid var(--border);background:var(--surface2)">
+      <div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;font-family:var(--fm)">Wall 2</div>
+      <div style="font-size:13.5px;font-weight:600;color:var(--purple);margin-bottom:8px">Stream Encryption</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6">ML-KEM-768 key encapsulation on every RTSP frame. Session keys stored only in <strong style="color:var(--amber)">your Sovereign KMS</strong>. Even if intercepted today, quantum-safe permanently.</div>
+      <div id="w2status" style="margin-top:10px;font-family:var(--fm);font-size:10px;color:var(--dim)">— not deployed</div>
+    </div>
+    <div id="wall3" style="border-radius:11px;padding:16px;border:1px solid var(--border);background:var(--surface2)">
+      <div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;font-family:var(--fm)">Wall 3</div>
+      <div style="font-size:13.5px;font-weight:600;color:var(--emerald);margin-bottom:8px">Signed Evidence</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6">SHA3-256 hash-chained recording segments. Each ML-DSA-65 signed via KMS using the proxy's D04 key. <strong style="color:var(--emerald)">Tamper-evident chain</strong>. Break = instant alert.</div>
+      <div id="w3status" style="margin-top:10px;font-family:var(--fm);font-size:10px;color:var(--dim)">— not deployed</div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-bottom:20px" id="deploySection">
+    <button class="btn btn-primary" id="deployBtn" onclick="deployWalls()">🚀 Deploy icrypt-proxy to HK-TYO-14</button>
+    <div style="font-size:11px;color:var(--dim);margin-top:8px">Zero changes to camera firmware · Zero changes to NVR · ~4 minutes</div>
+  </div>
+
+  <div id="deployComplete" style="display:none">
+    <div class="metric-grid">
+      <div class="metric-box"><div class="metric-num" style="color:var(--emerald)">3/3</div><div class="metric-label">Walls Active</div></div>
+      <div class="metric-box"><div class="metric-num" style="color:var(--cyan)">ML-KEM-768</div><div class="metric-label">Key Exchange</div></div>
+      <div class="metric-box"><div class="metric-num" style="color:var(--amber)">D04</div><div class="metric-label">KMS Key ID</div></div>
+      <div class="metric-box"><div class="metric-num" style="color:var(--purple)">0</div><div class="metric-label">Phone-homes</div></div>
+    </div>
+    <div class="banner-done">✓ HK-TYO-14 contained · Chinese government cannot phone home · stream quantum-safe · recordings signed</div>
+    <div style="margin-top:20px"><button class="btn btn-primary" onclick="completeContainment();unlockNext();goTo(5)">See Ring Neural Inference in Action →</button></div>
+  </div>`;
+}
+
+function deployWalls(){
+  const btn=document.getElementById('deployBtn');
+  btn.innerHTML='<span class="spinner dark"></span> Deploying…';
+  btn.disabled=true;
+
+  const walls=[
+    {id:'wall1',status:'w1status',color:'rgba(34,211,238,0.15)',border:'rgba(34,211,238,0.35)',msg:'✓ Egress locked · 0 phone-home paths'},
+    {id:'wall2',status:'w2status',color:'rgba(167,139,250,0.15)',border:'rgba(167,139,250,0.35)',msg:'✓ ML-KEM-768 session active · key: D04'},
+    {id:'wall3',status:'w3status',color:'rgba(52,211,153,0.15)',border:'rgba(52,211,153,0.35)',msg:'✓ Hash chain started · seg #1 signed'},
+  ];
+
+  walls.forEach((w,i)=>{
+    setTimeout(()=>{
+      const el=document.getElementById(w.id);
+      el.style.background=w.color;el.style.borderColor=w.border;
+      document.getElementById(w.status).style.color='var(--emerald)';
+      document.getElementById(w.status).textContent=w.msg;
+    },800+i*700);
+  });
+
+  setTimeout(()=>{
+    document.getElementById('deploySection').style.display='none';
+    document.getElementById('deployComplete').style.display='block';
+  },800+walls.length*700+400);
+}
+
+function completeContainment(){
+  state.containmentDone=true;
+  renderSidebar();
+}
+
+// ─── Screen 5: RNI / OODA ─────────────────────────────────────────────────────
+function screen5(){
+  return `
+  <h1 class="screen-title">Ring Neural Inference — Firmware Hold · DH-OSK-14</h1>
+  <p class="screen-sub">Ring Neural Inference runs on icrypt-proxy in real time. It observes every packet, correlates across cameras on the same site, and makes ML-DSA-65 signed decisions in microseconds. Here's what happened last week at Osaka Digital Valley — before Fleet Cam, this would have been invisible.</p>
+
+  <div class="grid-2" style="margin-bottom:20px;align-items:start">
+    <div>
+      <div class="ooda-container" id="oodaSvg">
+        ${oodaRingSVG(0,'DH-OSK-14')}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+        ${[{l:'OBSERVE',sub:'Frame + packet',c:'var(--cyan)'},{l:'ORIENT',sub:'Ring inference',c:'var(--purple)'},{l:'DECIDE',sub:'Policy + risk',c:'var(--amber)'},{l:'ACT',sub:'Hold + sign',c:'var(--emerald)'}].map((s,i)=>`
+        <button onclick="setOodaStep(${i})" id="oodaBtn${i}" style="padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);cursor:pointer;text-align:left;transition:all .15s">
+          <div style="font-size:10px;font-weight:700;color:${s.c};font-family:var(--fm)">${s.l}</div>
+          <div style="font-size:10px;color:var(--dim)">${s.sub}</div>
+        </button>`).join('')}
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:11px;overflow:hidden">
+        <div style="padding:12px 14px;background:var(--surface3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+          <span style="width:9px;height:9px;border-radius:50%;background:var(--rose);display:inline-block;animation:pulse 1s infinite"></span>
+          <span style="font-size:10px;font-weight:700;color:var(--rose);font-family:var(--fm);text-transform:uppercase;letter-spacing:.07em">Live RNI Decision · DH-OSK-14</span>
+          <button onclick="replayOoda()" style="margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px">↺ Replay</button>
+        </div>
+        <div style="padding:14px;font-family:var(--fm);font-size:11.5px;line-height:1.9" id="oodaLog">
+          <div id="ooda-line-0" style="opacity:0.25;display:flex;gap:8px"><span style="color:var(--cyan);width:68px;flex-shrink:0">OBSERVE</span><span style="color:var(--muted)">DH-OSK-14 receives firmware v9.2.1 from 114.113.x.x · 41.3 MB · source: Dahua update server</span></div>
+          <div id="ooda-line-1" style="opacity:0.25;display:flex;gap:8px"><span style="color:var(--purple);width:68px;flex-shrink:0">ORIENT</span><span style="color:var(--muted)">Ring 1: no Dahua signature on binary · Ring 2: no approved v9.x for IPC-HDW2831T-AS · confidence 99.8%</span></div>
+          <div id="ooda-line-2" style="opacity:0.25;display:flex;gap:8px"><span style="color:var(--amber);width:68px;flex-shrink:0">DECIDE</span><span style="color:var(--muted)">Policy IEC62443-SR3.4 → HOLD · route to Rakuten security admin review · severity HIGH</span></div>
+          <div id="ooda-line-3" style="opacity:0.25;display:flex;gap:8px"><span style="color:var(--emerald);width:68px;flex-shrink:0">ACT</span><span style="color:var(--muted)">Push held at proxy · camera stays on v8.9.1 · signed hold record written · admin paged</span></div>
+          <div id="ooda-resolve" style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;opacity:0;display:flex;align-items:center;gap:8px">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--emerald);display:inline-block"></span>
+            <span style="font-size:10px;color:var(--emerald)">Resolved in 455µs · ML-DSA-65 signed · zero human intervention required</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;font-family:var(--fm)">Hold Record — ML-DSA-65 Signed</div>
+        <div class="kv-row"><span class="kv-key">camera_id</span><span class="kv-val">"DH-OSK-14 · IPC-HDW2831T-AS"</span></div>
+        <div class="kv-row"><span class="kv-key">firmware_attempted</span><span class="kv-val warn">"v9.2.1 · 41.3 MB"</span></div>
+        <div class="kv-row"><span class="kv-key">source_ip</span><span class="kv-val bad">"114.113.44.9 · Dahua DDNS · CN"</span></div>
+        <div class="kv-row"><span class="kv-key">vendor_signature</span><span class="kv-val bad">"MISSING — unsigned binary"</span></div>
+        <div class="kv-row"><span class="kv-key">policy_applied</span><span class="kv-val good">"IEC62443-SR3.4 HOLD"</span></div>
+        <div class="kv-row"><span class="kv-key">camera_firmware_now</span><span class="kv-val good">"v8.9.1 — unchanged"</span></div>
+        <div class="kv-row"><span class="kv-key">decision_time</span><span class="kv-val good">"455µs"</span></div>
+        <div class="kv-row"><span class="kv-key">signature</span><span class="kv-val good">"ML-DSA-65 · D04 · 3,309 bytes"</span></div>
+      </div>
+
+      <div class="callout emerald">
+        <strong>What would have happened without Fleet Cam:</strong> This firmware would have installed silently on DH-OSK-14. No indicator. No log entry visible to Rakuten. Camera still streams perfectly. New surveillance capability — if any — is active from that moment. You would never know.
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="unlockNext();goTo(6)">See the ¥7.5B Decision →</button>`;
+}
+
+let currentOodaStep=0;
+let oodaAutoTimer=null;
+function setOodaStep(n){
+  currentOodaStep=n;
+  document.getElementById('oodaSvg').innerHTML=oodaRingSVG(n,'DH-OSK-14');
+  for(let i=0;i<4;i++){
+    const el=document.getElementById(`ooda-line-${i}`);
+    if(el){el.style.opacity=i<=n?1:0.25;el.querySelector('span:last-child').style.color=i===n?'var(--white)':'var(--muted)';}
+  }
+  if(n===3&&document.getElementById('ooda-resolve')){
+    document.getElementById('ooda-resolve').style.opacity=1;
+  }
+  // Update button highlights
+  for(let i=0;i<4;i++){
+    const btn=document.getElementById(`oodaBtn${i}`);
+    if(btn) btn.style.borderColor=i===n?['var(--cyan)','var(--purple)','var(--amber)','var(--emerald)'][i]:'var(--border)';
+  }
+}
+function replayOoda(){
+  currentOodaStep=0;setOodaStep(0);
+  if(oodaAutoTimer)clearInterval(oodaAutoTimer);
+  oodaAutoTimer=setInterval(()=>{
+    if(currentOodaStep<3){setOodaStep(currentOodaStep+1);}
+    else{clearInterval(oodaAutoTimer);oodaAutoTimer=null;}
+  },1600);
+}
+
+// ─── Screen 6: Business case ──────────────────────────────────────────────────
+function screen6(){
+  setTimeout(()=>animateSavings(),400);
+  return `
+  <h1 class="screen-title">The ¥7.5B Decision</h1>
+  <p class="screen-sub">Rakuten management has two options. This screen gives you the numbers your CFO needs to make the right call. The technical risk is identical — only the cost and timeline differ.</p>
+
+  <div class="grid-2" style="margin-bottom:22px">
+    <div class="cost-col threat-col">
+      <div style="font-size:11px;color:var(--red);text-transform:uppercase;letter-spacing:.08em;font-family:var(--fm);margin-bottom:8px">Option A — Replace All Hardware</div>
+      <div class="cost-price" style="color:var(--red)">¥7.5B–¥10B</div>
+      <div style="font-size:11px;color:var(--dim);margin-bottom:14px">one-time capex · 18–24 months</div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">Hardware cost (6,500 Honeywell)</span><span class="kv-val bad">¥5.2B est.</span></div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">Installation (6 countries)</span><span class="kv-val bad">¥1.8B est.</span></div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">Facility downtime / disruption</span><span class="kv-val bad">¥400–800M est.</span></div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">New vendor risk introduced</span><span class="kv-val warn">Yes — Honeywell CVEs exist</span></div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">Time to security improvement</span><span class="kv-val warn">18–24 months</span></div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">Compliance reports included</span><span class="kv-val bad">No — separate GRC cost</span></div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">Quantum-safe streams</span><span class="kv-val bad">No — TLS only</span></div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">Signed recording evidence</span><span class="kv-val bad">No</span></div>
+    </div>
+
+    <div class="cost-col safe-col">
+      <div style="font-size:11px;color:var(--emerald);text-transform:uppercase;letter-spacing:.08em;font-family:var(--fm);margin-bottom:8px">Option B — Fleet Cam Containment</div>
+      <div class="cost-price" style="color:var(--emerald)">¥0 hardware</div>
+      <div style="font-size:11px;color:var(--dim);margin-bottom:14px">opex only · 4–6 weeks global</div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">Hardware cost</span><span class="kv-val good">¥0 — cameras stay in place</span></div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">Fleet Cam (6,500 cams, Pro tier)</span><span class="kv-val good">¥340M/year est.</span></div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">Facility disruption</span><span class="kv-val good">Zero — cameras keep running</span></div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">Vendor risk going forward</span><span class="kv-val good">Neutralised — 3 walls</span></div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">Time to security improvement</span><span class="kv-val good">4–6 weeks globally</span></div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">NDAA §889 signed report</span><span class="kv-val good">Yes — per facility, on demand</span></div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">Quantum-safe streams</span><span class="kv-val good">Yes — ML-KEM-768 (FIPS 203)</span></div>
+      <div class="kv-row" style="font-size:12px"><span class="kv-key">Signed recording evidence</span><span class="kv-val good">Yes — ML-DSA-65 hash-chained</span></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div style="font-size:13.5px;font-weight:600;margin-bottom:14px">Total Cost of Ownership — 5 Year Horizon</div>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+        <tr style="border-bottom:1px solid var(--border)">
+          <td style="padding:9px 13px;color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.06em">Item</td>
+          <td style="padding:9px 13px;color:var(--red);font-size:11px;text-transform:uppercase;letter-spacing:.06em;text-align:center">Replace Hardware</td>
+          <td style="padding:9px 13px;color:var(--emerald);font-size:11px;text-transform:uppercase;letter-spacing:.06em;text-align:center">Fleet Cam</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:9px 13px;color:var(--muted)">Year 1 capex</td><td style="padding:9px 13px;text-align:center;color:var(--red)">¥7.5B–¥10B</td><td style="padding:9px 13px;text-align:center;color:var(--emerald)">¥0</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:9px 13px;color:var(--muted)">Year 1 opex</td><td style="padding:9px 13px;text-align:center;color:var(--amber)">¥200M (project mgmt)</td><td style="padding:9px 13px;text-align:center;color:var(--emerald)">¥340M (subscriptions)</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:9px 13px;color:var(--muted)">Years 2–5 opex</td><td style="padding:9px 13px;text-align:center;color:var(--amber)">¥500M (maint, refresh)</td><td style="padding:9px 13px;text-align:center;color:var(--emerald)">¥1.36B (subscriptions)</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:9px 13px;color:var(--muted)">Compliance reporting</td><td style="padding:9px 13px;text-align:center;color:var(--red)">¥150M+ (GRC, auditors)</td><td style="padding:9px 13px;text-align:center;color:var(--emerald)">¥0 — included</td></tr>
+        <tr style="border-bottom:1px solid var(--border);font-weight:600"><td style="padding:9px 13px;color:var(--white)">5-Year Total</td><td style="padding:9px 13px;text-align:center;color:var(--red)">¥8.3B–¥10.9B</td><td style="padding:9px 13px;text-align:center;color:var(--emerald)">¥1.7B</td></tr>
+        <tr><td style="padding:9px 13px;color:var(--white);font-weight:600">Saving vs replacement</td><td colspan="2" style="padding:9px 13px;text-align:center;color:var(--emerald);font-weight:700;font-size:14px">¥6.6B–¥9.2B saved with Fleet Cam</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-bottom:20px">
+    <div style="font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;font-family:var(--fm);margin-bottom:6px">Estimated 5-Year Saving</div>
+    <div id="savingsMeter" style="font-family:var(--fm);font-size:48px;font-weight:700;color:var(--emerald)">¥0</div>
+    <div style="font-size:12px;color:var(--dim);margin-top:4px">vs hardware replacement scenario (midpoint estimate)</div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div style="font-size:13.5px;font-weight:600;margin-bottom:12px">90-Day Deployment Plan — Global Rollout</div>
+    <div class="tl-item">
+      <div class="tl-line"><div class="tl-dot indigo"></div><div class="tl-connector"></div></div>
+      <div class="tl-body"><div class="tl-year">Week 1–2 · Pilot</div><div class="tl-title">Tokyo HQ — 100 cameras</div><div class="tl-desc">Deploy icrypt-proxy on 100 cameras at Shibuya HQ. Cameras continue operating. Zero disruption. Signed NDAA §889 report generated for pilot cameras. Deliverable: "Pilot Containment Certificate."</div></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-line"><div class="tl-dot cyan"></div><div class="tl-connector"></div></div>
+      <div class="tl-body"><div class="tl-year">Week 3–6 · Japan Full Rollout</div><div class="tl-title">Tokyo + Osaka + Fukuoka — all Japan cameras</div><div class="tl-desc">Full Japan fleet contained. Signed NDAA §889 report covers all Japan facilities. Phone-home blocking active across all Hikvision/Dahua cameras. RNI decision engine live. Deliverable: "Japan Facility Compliance Package."</div></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-line"><div class="tl-dot emerald"></div><div class="tl-connector"></div></div>
+      <div class="tl-body"><div class="tl-year">Month 2–3 · Global</div><div class="tl-title">Singapore · London · Frankfurt · New York</div><div class="tl-desc">All 6 regional sites contained. Global compliance package covering NDAA §889, NERC CIP-006 (data centers), HIPAA (any healthcare adjacency), SOC 2. Deliverable: "Global Facility Trust Attestation — ML-DSA-65 signed."</div></div>
+    </div>
+  </div>
+
+  <div class="banner-done">✓ Full briefing complete · Chinese threat vectors neutralised · ¥7.5B+ capex avoidable · Compliance evidence included</div>
+
+  <div style="margin-top:20px;text-align:center">
+    <a href="https://cal.com/agenticvaults" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
+      <button class="btn btn-primary" style="font-size:15px;padding:14px 32px">Book 60-Minute Technical Pilot Briefing →</button>
+    </a>
+    <div style="font-size:11px;color:var(--dim);margin-top:8px">One camera · One afternoon · icrypt-proxy + your existing NVR · Zero changes</div>
+  </div>`;
+}
+
+function animateSavings(){
+  const target=7900; // ¥7.9B midpoint
+  let current=0;
+  const step=target/60;
+  const timer=setInterval(()=>{
+    current=Math.min(current+step,target);
+    const el=document.getElementById('savingsMeter');
+    if(el) el.textContent=`¥${(current/1000).toFixed(1)}B`;
+    if(current>=target)clearInterval(timer);
+  },30);
+}
+
+// ─── Phone-home counter ───────────────────────────────────────────────────────
+function startPhoneHomeCounter(){
+  if(state.phoneHomeTimer)clearInterval(state.phoneHomeTimer);
+  state.phoneHomeTimer=setInterval(()=>{
+    // On average Hikvision phones home every 60s across 5,000 cameras = ~83/min
+    const inc=Math.floor(Math.random()*3)+1;
+    state.phoneHomeCount+=inc;
+    const el=document.getElementById('phoneHomeBanner');
+    if(el){el.textContent=state.phoneHomeCount.toLocaleString();el.style.animation='none';void el.offsetWidth;el.style.animation='countUp .3s ease-out';}
+  },700);
+}
+function stopPhoneHomeCounter(){
+  if(state.phoneHomeTimer){clearInterval(state.phoneHomeTimer);state.phoneHomeTimer=null;}
+}
+
+// ─── Titles / Badges ──────────────────────────────────────────────────────────
+const TITLES=[
+  'Rakuten — The Chinese Camera Risk',
+  'Live: Uncontained Hikvision Feed',
+  'Network: Phone-Home Captured',
+  'Three Walls — Containment Active',
+  'Ring Neural Inference — Firmware Hold',
+  '¥7.5B Decision — Replace vs Contain',
+];
+const BADGES=[
+  '~6,500 Cameras · 6 Countries · Chinese Govt. Threat',
+  'HK-TYO-14 · Hikvision DS-2CD2143G2 · Tokyo HQ',
+  'Wireshark · Hik-Connect · 203.107.44.182 China Unicom',
+  'icrypt-proxy · ML-KEM-768 · FIPS 203 Active',
+  'DH-OSK-14 · Dahua Osaka · Firmware Hold · 455µs',
+  'Replace ¥7.5B+ vs Contain ¥340M/yr · 5-Year TCO',
+];
+
+// ─── Render ───────────────────────────────────────────────────────────────────
+function render(){
+  stopAllAnims();
+  stopPhoneHomeCounter();
+  if(oodaAutoTimer){clearInterval(oodaAutoTimer);oodaAutoTimer=null;}
+
+  document.getElementById('topTitle').textContent=TITLES[state.screen-1];
+  document.getElementById('topBadge').textContent=BADGES[state.screen-1]||'';
+
+  const screens={1:screen1,2:screen2,3:screen3,4:screen4,5:screen5,6:screen6};
+  document.getElementById('content').innerHTML=`<div class="fade-in">${(screens[state.screen]||screen1)()}</div>`;
+  renderSidebar();
+  window.scrollTo(0,0);
+
+  // Auto-start OODA animation on screen 5
+  if(state.screen===5){
+    setTimeout(()=>replayOoda(),600);
+  }
+}
+
+render();
+</script>
+</body>
+</html>
